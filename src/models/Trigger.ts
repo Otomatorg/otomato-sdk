@@ -77,6 +77,7 @@ export class Trigger {
   private validateType(expectedType: string, value: any): boolean {
     switch (expectedType) {
       case 'int':
+      case 'integer':
       case 'uint256':
       case 'int256':
         return Number.isInteger(value);
