@@ -22,10 +22,7 @@ npm install otomato-sdk
 Here's how to create a trigger using the Otomato SDK:
 
 ```typescript
-import { TRIGGERS } from 'otomato-sdk/constants/ActionBlocks';
-import { CHAINS } from 'otomato-sdk/constants/chain';
-import { TOKENS } from 'otomato-sdk/constants/tokens';
-import { Trigger } from 'otomato-sdk/models/Trigger';
+import { TRIGGERS, CHAINS, TOKENS, Trigger } from 'otomato-sdk';
 
 const transferTrigger = new Trigger(TRIGGERS.ETHEREUM.ERC20.TRANSFER);
 
