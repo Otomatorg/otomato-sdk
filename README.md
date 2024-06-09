@@ -60,9 +60,8 @@ We welcome contributions to the Otomato SDK. Please make sure you have Node.js v
     npm run build
     ```
 
-4. Run the example:
+4. Run an example:
     ```bash
-    npx tsc
     node dist/examples/create-trigger.js
     ```
 
