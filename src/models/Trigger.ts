@@ -1,4 +1,4 @@
-import { Parameter } from './Parameter';
+import { Parameter } from './Parameter.js';
 import { ethers } from 'ethers';
 
 export class Trigger {
@@ -24,7 +24,7 @@ export class Trigger {
   }
 
   setChainId(value: number): void {
-    this.setParameter('chainid', value);
+    this.setParameter('chainId', value);
   }
 
   setContractAddress(value: string): void {
@@ -119,11 +119,6 @@ export class Trigger {
       id: this.id,
       parameters: this.getParameters(),
     };
-    if (this.type === 1) { // POLLING type
-      json['condition'] = this.getParameter('condition');
-      json['comparisonValue'] = this.getParameter('comparisonValue');
-      json['interval'] = this.getParameter('interval');
-    }
     return json;
   }
 

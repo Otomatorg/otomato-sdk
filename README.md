@@ -22,14 +22,14 @@ npm install otomato-sdk
 Here's how to create a trigger using the Otomato SDK:
 
 ```typescript
-import { TRIGGERS, CHAINS, TOKENS, Trigger } from 'otomato-sdk';
+import { TRIGGERS, CHAINS, getToken, Trigger } from 'otomato-sdk';
 
 const transferTrigger = new Trigger(TRIGGERS.ETHEREUM.ERC20.TRANSFER);
 
 transferTrigger.setChainId(CHAINS.ETHEREUM);
-transferTrigger.setParams("value", 1000); // using setParams for abiParams.value
-transferTrigger.setParams("to", "0x987654321"); // using setParams for abiParams.to
-transferTrigger.setContractAddress(TOKENS.ETHEREUM.USDC);
+transferTrigger.setParams("value", 1000);
+transferTrigger.setParams("to", "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045");
+transferTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC'));
 
 console.log(transferTrigger.getParameters());
 console.log(transferTrigger.toJSON());
@@ -43,7 +43,7 @@ We welcome contributions to the Otomato SDK. Please make sure you have Node.js v
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/otomato-sdk.git
+    git clone https://github.com/otomatorg/otomato-sdk.git
     cd otomato-sdk
     ```
 

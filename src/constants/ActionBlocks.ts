@@ -1,4 +1,4 @@
-import { Parameter } from '../models/Parameter';
+import { Parameter } from '../models/Parameter.js';
 
 const TRIGGER_TYPE = {
   SUBSCRIPTION: 0,
@@ -14,7 +14,7 @@ export const TRIGGERS = {
       type: TRIGGER_TYPE.SUBSCRIPTION,
       parameters: [
         {
-          key: "chainid",
+          key: "chainId",
           type: "int",
           description: "Chain ID of the ETH blockchain"
         },
@@ -42,7 +42,7 @@ export const TRIGGERS = {
       type: TRIGGER_TYPE.POLLING,
       parameters: [
         {
-          key: "chainid",
+          key: "chainId",
           type: "int",
           description: "Chain ID of the ETH blockchain"
         },
@@ -248,7 +248,7 @@ export const TRIGGERS = {
         type: TRIGGER_TYPE.SUBSCRIPTION,
         parameters: [
           {
-            key: "chainid",
+            key: "chainId",
             type: "int",
             description: "Chain ID of the ETH blockchain"
           },

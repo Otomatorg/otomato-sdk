@@ -1,4 +1,4 @@
-import { TRIGGERS, TOKENS, CHAINS, Trigger } from '../src/index';
+import { TRIGGERS, getToken, TOKENS, CHAINS, Trigger } from '../src/index.js';
 
 const generateDefaultTriggers = (): any[] => {
     const triggersList: any[] = [];
@@ -7,11 +7,23 @@ const generateDefaultTriggers = (): any[] => {
         const triggerInstance = new Trigger(trigger);
 
         // Set common parameters if they exist
-        if (trigger.parameters.some((p: any) => p.key === "chainid")) {
+        if (trigger.parameters.some((p: any) => p.key === "chainId")) {
             triggerInstance.setChainId(CHAINS.ETHEREUM);
         }
         if (trigger.parameters.some((p: any) => p.key === "contractAddress")) {
-            triggerInstance.setContractAddress(TOKENS.ETHEREUM.USDC);
+            triggerInstance.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+        }
+        if (trigger.parameters.some((p: any) => p.key === "condition")) {
+            triggerInstance.setCondition('>');
+        }
+        if (trigger.parameters.some((p: any) => p.key === "comparisonValue")) {
+            triggerInstance.setComparisonValue(1000);
+        }
+        if (trigger.parameters.some((p: any) => p.key === "interval")) {
+            triggerInstance.setInterval(60000); // 1 minute interval
+        }
+        if (trigger.parameters.some((p: any) => p.key === "abiParams.account")) {
+            triggerInstance.setParams('account', '0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6');
         }
 
         return triggerInstance.toJSON();
@@ -19,7 +31,6 @@ const generateDefaultTriggers = (): any[] => {
 
     // Explicitly create each trigger
     triggersList.push(createDefaultTrigger(TRIGGERS.ERC20.TRANSFER));
-    triggersList.push(createDefaultTrigger(TRIGGERS.ERC20.BALANCE));
     triggersList.push(createDefaultTrigger(TRIGGERS.YIELD.SPLICE_FI.SWAP));
     triggersList.push(createDefaultTrigger(TRIGGERS.YIELD.SPLICE_FI.LIQUIDITY_REMOVED));
     triggersList.push(createDefaultTrigger(TRIGGERS.YIELD.SPLICE_FI.MARKET_CREATION));
@@ -31,13 +42,52 @@ const generateDefaultTriggers = (): any[] => {
     return triggersList;
 };
 
+function generateTriggersForAllTokens(chain: number) {
+    if (!(chain in TOKENS)) {
+        throw new Error(`Unsupported chain: ${chain}`);
+    }
+
+    const tokens = TOKENS[chain];
+    const triggersList: any[] = [];
+
+    tokens.forEach(token => {
+        // Generate transfer trigger
+        const transferTrigger = new Trigger(TRIGGERS.ERC20.TRANSFER);
+        transferTrigger.setChainId(chain);
+        // transferTrigger.setParams("value", 1000);
+        // transferTrigger.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+        transferTrigger.setContractAddress(token.contractAddress);
+        triggersList.push(transferTrigger);
+
+        // Generate balance trigger
+        const balanceTrigger = new Trigger(TRIGGERS.ERC20.BALANCE);
+        balanceTrigger.setChainId(chain);
+        balanceTrigger.setParams("account", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+        balanceTrigger.setContractAddress(token.contractAddress);
+        balanceTrigger.setCondition(">");
+        balanceTrigger.setComparisonValue(10);
+        balanceTrigger.setInterval(5000);
+        triggersList.push(balanceTrigger);
+    });
+
+    return triggersList.map(t => t.toJSON());
+}
+
 const generateSpecificTriggers = (): any[] => {
     // Create individual triggers
     const transferTrigger = new Trigger(TRIGGERS.ERC20.TRANSFER);
     transferTrigger.setChainId(CHAINS.ETHEREUM);
     transferTrigger.setParams("value", 1000);
     transferTrigger.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    transferTrigger.setContractAddress(TOKENS.ETHEREUM.USDC);
+    transferTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+
+    const balanceTrigger = new Trigger(TRIGGERS.ERC20.BALANCE);
+    balanceTrigger.setChainId(CHAINS.ETHEREUM);
+    balanceTrigger.setParams("account", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    balanceTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    balanceTrigger.setCondition(">");
+    balanceTrigger.setComparisonValue(45000);
+    balanceTrigger.setInterval(5000);
 
     const spliceFiSwapTrigger = new Trigger(TRIGGERS.YIELD.SPLICE_FI.SWAP);
     spliceFiSwapTrigger.setParams("caller", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
@@ -87,6 +137,7 @@ const generateSpecificTriggers = (): any[] => {
 
     return [
         transferTrigger.toJSON(),
+        balanceTrigger.toJSON(),
         spliceFiSwapTrigger.toJSON(),
         liquidityRemovedTrigger.toJSON(),
         marketCreationTrigger.toJSON(),
@@ -99,6 +150,8 @@ const generateSpecificTriggers = (): any[] => {
 
 // Collect all triggers in a list
 const triggersList = [
+    ...generateTriggersForAllTokens(CHAINS.ETHEREUM),
+    ...generateTriggersForAllTokens(CHAINS.MODE),
     ...generateDefaultTriggers(),
     ...generateSpecificTriggers()
 ];

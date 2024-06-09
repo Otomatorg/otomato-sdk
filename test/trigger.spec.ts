@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Trigger, TRIGGERS, TOKENS, CHAINS } from '../src/index';
+import { Trigger, TRIGGERS, getToken, CHAINS } from '../src/index';
 
 const DEFAULT_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -9,7 +9,7 @@ describe('Trigger Class', () => {
     const transferTrigger = new Trigger(TRIGGERS.ERC20.TRANSFER);
     const params = transferTrigger.getParameters();
 
-    expect(params.chainid).to.be.null;
+    expect(params.chainId).to.be.null;
     expect(params['abiParams.value']).to.be.null;
     expect(params['abiParams.to']).to.be.null;
     expect(params.contractAddress).to.be.null;
@@ -20,13 +20,13 @@ describe('Trigger Class', () => {
     transferTrigger.setChainId(CHAINS.ETHEREUM);
     transferTrigger.setParams("value", 1000);
     transferTrigger.setParams("to", DEFAULT_ADDRESS);
-    transferTrigger.setContractAddress(TOKENS.ETHEREUM.USDC);
+    transferTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
     const params = transferTrigger.getParameters();
-    expect(params.chainid).to.equal(CHAINS.ETHEREUM);
+    expect(params.chainId).to.equal(CHAINS.ETHEREUM);
     expect(params['abiParams.value']).to.equal(1000);
     expect(params['abiParams.to']).to.equal(DEFAULT_ADDRESS);
-    expect(params.contractAddress).to.equal(TOKENS.ETHEREUM.USDC);
+    expect(params.contractAddress).to.equal(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
   });
 
   it('should be able to export a trigger as json', () => {
@@ -34,16 +34,16 @@ describe('Trigger Class', () => {
     transferTrigger.setChainId(CHAINS.ETHEREUM);
     transferTrigger.setParams("value", 1000);
     transferTrigger.setParams("to", DEFAULT_ADDRESS);
-    transferTrigger.setContractAddress(TOKENS.ETHEREUM.USDC);
+    transferTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
     const json = transferTrigger.toJSON();
     expect(json).to.deep.equal({
       id: TRIGGERS.ERC20.TRANSFER.id,
       parameters: {
-        chainid: CHAINS.ETHEREUM,
+        chainId: CHAINS.ETHEREUM,
         'abiParams.value': 1000,
         'abiParams.to': DEFAULT_ADDRESS,
-        contractAddress: TOKENS.ETHEREUM.USDC
+        contractAddress: getToken(CHAINS.ETHEREUM, 'USDC').contractAddress
       }
     });
   });
@@ -52,15 +52,15 @@ describe('Trigger Class', () => {
     const balanceTrigger = new Trigger(TRIGGERS.ERC20.BALANCE);
     balanceTrigger.setChainId(CHAINS.ETHEREUM);
     balanceTrigger.setParams("account", DEFAULT_ADDRESS);
-    balanceTrigger.setContractAddress(TOKENS.ETHEREUM.USDC);
+    balanceTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
     balanceTrigger.setCondition(">");
     balanceTrigger.setComparisonValue(45000);
     balanceTrigger.setInterval(5000);
 
     const params = balanceTrigger.getParameters();
-    expect(params.chainid).to.equal(CHAINS.ETHEREUM);
+    expect(params.chainId).to.equal(CHAINS.ETHEREUM);
     expect(params['abiParams.account']).to.equal(DEFAULT_ADDRESS);
-    expect(params.contractAddress).to.equal(TOKENS.ETHEREUM.USDC);
+    expect(params.contractAddress).to.equal(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
     expect(balanceTrigger.toJSON().condition).to.equal(">");
     expect(balanceTrigger.toJSON().comparisonValue).to.equal(45000);
     expect(balanceTrigger.toJSON().interval).to.equal(5000);
