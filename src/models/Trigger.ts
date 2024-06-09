@@ -5,13 +5,15 @@ export class Trigger {
   id: number;
   name: string;
   description: string;
+  type: number;
   parameters: { [key: string]: Parameter };
   keyMap: { [key: string]: string };
 
-  constructor(trigger: { id: number; name: string; description: string; parameters: Parameter[] }) {
+  constructor(trigger: { id: number; name: string; description: string; type: number; parameters: Parameter[] }) {
     this.id = trigger.id;
     this.name = trigger.name;
     this.description = trigger.description;
+    this.type = trigger.type;
     this.parameters = {};
     this.keyMap = {};
     trigger.parameters.forEach(param => {
@@ -22,11 +24,32 @@ export class Trigger {
   }
 
   setChainId(value: number): void {
-    this.setParameter("chainid", value);
+    this.setParameter('chainid', value);
   }
 
   setContractAddress(value: string): void {
-    this.setParameter("contractAddress", value);
+    this.setParameter('contractAddress', value);
+  }
+
+  setCondition(value: string): void {
+    if (this.type !== 1) {
+      throw new Error('Condition setting is not applicable for subscription based triggers.');
+    }
+    this.setParameter('condition', value);
+  }
+
+  setComparisonValue(value: number): void {
+    if (this.type !== 1) {
+      throw new Error('Comparison value setting is not applicable for subscription based triggers.');
+    }
+    this.setParameter('comparisonValue', value);
+  }
+
+  setInterval(value: number): void {
+    if (this.type !== 1) {
+      throw new Error('Interval setting is not applicable for subscription based triggers.');
+    }
+    this.setParameter('interval', value);
   }
 
   setParams(key: string, value: any): void {
@@ -54,14 +77,18 @@ export class Trigger {
   private validateType(expectedType: string, value: any): boolean {
     switch (expectedType) {
       case 'int':
-        return Number.isInteger(value);
       case 'uint256':
       case 'int256':
-        return Number.isInteger(value); // For simplicity, we're treating int256 and uint256 similarly here
+        return Number.isInteger(value);
       case 'address':
         return typeof value === 'string' && this.isAddress(value);
       case 'float':
         return typeof value === 'number';
+      case 'logic_operator':
+        const validOperators = new Set(['<', '>', '<=', '>=', '==']);
+        return typeof value === 'string' && validOperators.has(value);
+      case 'any':
+        return true;
       default:
         return false;
     }
@@ -87,10 +114,16 @@ export class Trigger {
   }
 
   toJSON(): { [key: string]: any } {
-    return {
+    const json: { [key: string]: any } = {
       id: this.id,
       parameters: this.getParameters(),
     };
+    if (this.type === 1) { // POLLING type
+      json['condition'] = this.getParameter('condition');
+      json['comparisonValue'] = this.getParameter('comparisonValue');
+      json['interval'] = this.getParameter('interval');
+    }
+    return json;
   }
 
   private getSimplifiedKey(key: string): string {

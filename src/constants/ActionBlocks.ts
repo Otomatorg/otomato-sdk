@@ -1,11 +1,17 @@
 import { Parameter } from '../models/Parameter';
 
+const TRIGGER_TYPE = {
+  SUBSCRIPTION: 0,
+  POLLING: 1,
+}
+
 export const TRIGGERS = {
   ERC20: {
     TRANSFER: {
       id: 1,
       name: "Transfer token",
       description: "Transfer an ERC-20 token",
+      type: TRIGGER_TYPE.SUBSCRIPTION,
       parameters: [
         {
           key: "chainid",
@@ -25,11 +31,49 @@ export const TRIGGERS = {
         {
           key: "contractAddress",
           type: "address",
-          description: "The address from which to send value"
+          description: "The contract address of the ERC20"
         }
       ] as Parameter[]
     },
-    // todo: APPROVAL
+    BALANCE: {
+      id: 1000,
+      name: "ERC20 balance check",
+      description: "Fetches the balance of an ERC20 and checks it against the specified condition.",
+      type: TRIGGER_TYPE.POLLING,
+      parameters: [
+        {
+          key: "chainid",
+          type: "int",
+          description: "Chain ID of the ETH blockchain"
+        },
+        {
+          key: "abiParams.account",
+          type: "address",
+          description: "Amount of crypto to transfer"
+        },
+        {
+          key: "contractAddress",
+          type: "address",
+          description: "The contract address of the ERC20"
+        },
+        {
+          key: "condition",
+          type: "logic_operator",
+          description: "Logic operator used for the comparison: <, >, <=, >=, ==, ..."
+        },
+        // todo: it should be in the same type as the output of the function
+        {
+          key: "comparisonValue",
+          type: "any",
+          description: "The value to compare to"
+        },
+        {
+          key: "interval",
+          type: "integer",
+          description: "The waiting time between each polling"
+        },
+      ] as Parameter[],
+    }
   },
   YIELD: {
     SPLICE_FI: {
@@ -37,6 +81,7 @@ export const TRIGGERS = {
         id: 2,
         name: "Splice Finance Swap",
         description: "Swap in Splice Finance",
+        type: TRIGGER_TYPE.SUBSCRIPTION,
         parameters: [
           {
             key: "abiParams.caller",
@@ -69,6 +114,7 @@ export const TRIGGERS = {
         id: 6,
         name: "Liquidity Removed",
         description: "Liquidity removed in Splice Finance",
+        type: TRIGGER_TYPE.SUBSCRIPTION,
         parameters: [
           {
             key: "abiParams.caller",
@@ -106,6 +152,7 @@ export const TRIGGERS = {
         id: 7,
         name: "Market Creation",
         description: "Market creation in Splice Finance",
+        type: TRIGGER_TYPE.SUBSCRIPTION,
         parameters: [
           {
             key: "abiParams.market",
@@ -138,6 +185,7 @@ export const TRIGGERS = {
         id: 9,
         name: "Interest Rate Update",
         description: "Interest rate update in Splice Finance",
+        type: TRIGGER_TYPE.SUBSCRIPTION,
         parameters: [
           {
             key: "abiParams.timestamp",
@@ -170,6 +218,7 @@ export const TRIGGERS = {
         id: 8,
         name: "Lend Recalled",
         description: "Lend recalled in Astaria",
+        type: TRIGGER_TYPE.SUBSCRIPTION,
         parameters: [
           {
             key: "abiParams.loanId",
@@ -196,6 +245,7 @@ export const TRIGGERS = {
         id: 4,
         name: "Odos Swap",
         description: "Swap on Odos",
+        type: TRIGGER_TYPE.SUBSCRIPTION,
         parameters: [
           {
             key: "chainid",
@@ -242,6 +292,7 @@ export const TRIGGERS = {
         id: 3,
         name: "Name Registered",
         description: "Name registered in Mode Name Service",
+        type: TRIGGER_TYPE.SUBSCRIPTION,
         parameters: [
           {
             key: "abiParams.id",

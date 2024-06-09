@@ -19,6 +19,7 @@ const generateDefaultTriggers = (): any[] => {
 
     // Explicitly create each trigger
     triggersList.push(createDefaultTrigger(TRIGGERS.ERC20.TRANSFER));
+    triggersList.push(createDefaultTrigger(TRIGGERS.ERC20.BALANCE));
     triggersList.push(createDefaultTrigger(TRIGGERS.YIELD.SPLICE_FI.SWAP));
     triggersList.push(createDefaultTrigger(TRIGGERS.YIELD.SPLICE_FI.LIQUIDITY_REMOVED));
     triggersList.push(createDefaultTrigger(TRIGGERS.YIELD.SPLICE_FI.MARKET_CREATION));
@@ -102,4 +103,4 @@ const triggersList = [
     ...generateSpecificTriggers()
 ];
 
-console.log(triggersList);
+console.log(JSON.stringify(triggersList));

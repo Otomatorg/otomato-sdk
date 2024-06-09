@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "module": "CommonJS",
+    "module": "ESNext",
     "outDir": "./dist",
     "declaration": true,
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "types": ["node", "mocha", "chai"]
   },
-  "include": ["src", "examples"],
+  "include": ["src", "examples", "test"],
   "exclude": ["node_modules"]
 }
