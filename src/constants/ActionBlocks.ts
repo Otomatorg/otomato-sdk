@@ -1,4 +1,5 @@
 import { Parameter } from '../models/Parameter.js';
+import { CHAINS } from './chains.js';
 
 const TRIGGER_TYPE = {
   SUBSCRIPTION: 0,
@@ -6,77 +7,81 @@ const TRIGGER_TYPE = {
 }
 
 export const TRIGGERS = {
-  ERC20: {
-    TRANSFER: {
-      id: 1,
-      name: "Transfer token",
-      description: "Transfer an ERC-20 token",
-      type: TRIGGER_TYPE.SUBSCRIPTION,
-      parameters: [
-        {
-          key: "chainId",
-          type: "int",
-          description: "Chain ID of the ETH blockchain"
-        },
-        {
-          key: "abiParams.value",
-          type: "uint256",
-          description: "Amount of crypto to transfer"
-        },
-        {
-          key: "abiParams.to",
-          type: "address",
-          description: "Address to transfer crypto to"
-        },
-        {
-          key: "contractAddress",
-          type: "address",
-          description: "The contract address of the ERC20"
-        }
-      ] as Parameter[]
+  TOKENS: {
+    ERC20: {
+      CHAINS: [CHAINS.ALL],
+      TRANSFER: {
+        id: 1,
+        name: "Transfer token",
+        description: "Transfer an ERC-20 token",
+        type: TRIGGER_TYPE.SUBSCRIPTION,
+        parameters: [
+          {
+            key: "chainId",
+            type: "int",
+            description: "Chain ID of the ETH blockchain"
+          },
+          {
+            key: "abiParams.value",
+            type: "uint256",
+            description: "Amount of crypto to transfer"
+          },
+          {
+            key: "abiParams.to",
+            type: "address",
+            description: "Address to transfer crypto to"
+          },
+          {
+            key: "contractAddress",
+            type: "address",
+            description: "The contract address of the ERC20"
+          }
+        ] as Parameter[]
+      },
+      BALANCE: {
+        id: 1000,
+        name: "ERC20 balance check",
+        description: "Fetches the balance of an ERC20 and checks it against the specified condition.",
+        type: TRIGGER_TYPE.POLLING,
+        parameters: [
+          {
+            key: "chainId",
+            type: "int",
+            description: "Chain ID of the ETH blockchain"
+          },
+          {
+            key: "abiParams.account",
+            type: "address",
+            description: "Amount of crypto to transfer"
+          },
+          {
+            key: "contractAddress",
+            type: "address",
+            description: "The contract address of the ERC20"
+          },
+          {
+            key: "condition",
+            type: "logic_operator",
+            description: "Logic operator used for the comparison: <, >, <=, >=, ==, ..."
+          },
+          // todo: it should be in the same type as the output of the function
+          {
+            key: "comparisonValue",
+            type: "any",
+            description: "The value to compare to"
+          },
+          {
+            key: "interval",
+            type: "integer",
+            description: "The waiting time between each polling"
+          },
+        ] as Parameter[],
+      }
     },
-    BALANCE: {
-      id: 1000,
-      name: "ERC20 balance check",
-      description: "Fetches the balance of an ERC20 and checks it against the specified condition.",
-      type: TRIGGER_TYPE.POLLING,
-      parameters: [
-        {
-          key: "chainId",
-          type: "int",
-          description: "Chain ID of the ETH blockchain"
-        },
-        {
-          key: "abiParams.account",
-          type: "address",
-          description: "Amount of crypto to transfer"
-        },
-        {
-          key: "contractAddress",
-          type: "address",
-          description: "The contract address of the ERC20"
-        },
-        {
-          key: "condition",
-          type: "logic_operator",
-          description: "Logic operator used for the comparison: <, >, <=, >=, ==, ..."
-        },
-        // todo: it should be in the same type as the output of the function
-        {
-          key: "comparisonValue",
-          type: "any",
-          description: "The value to compare to"
-        },
-        {
-          key: "interval",
-          type: "integer",
-          description: "The waiting time between each polling"
-        },
-      ] as Parameter[],
-    }
   },
   YIELD: {
     SPLICE_FI: {
+      CHAINS: [CHAINS.MODE],
       SWAP: {
         id: 2,
         name: "Splice Finance Swap",
@@ -214,6 +219,7 @@ export const TRIGGERS = {
   },
   LENDING: {
     ASTARIA: {
+      CHAINS: [CHAINS.MODE],
       LEND_RECALLED: {
         id: 8,
         name: "Lend Recalled",
@@ -241,6 +247,7 @@ export const TRIGGERS = {
   },
   DEXES: {
     ODOS: {
+      CHAINS: [CHAINS.MODE, CHAINS.ETHEREUM],
       SWAP: {
         id: 4,
         name: "Odos Swap",
@@ -288,6 +295,7 @@ export const TRIGGERS = {
   },
   SOCIALS: {
     MODE_NAME_SERVICE: {
+      CHAINS: [CHAINS.MODE],
       NAME_REGISTERED: {
         id: 3,
         name: "Name Registered",
