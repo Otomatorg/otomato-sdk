@@ -61,9 +61,9 @@ describe('Trigger Class', () => {
     expect(params.chainId).to.equal(CHAINS.ETHEREUM);
     expect(params['abiParams.account']).to.equal(DEFAULT_ADDRESS);
     expect(params.contractAddress).to.equal(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
-    expect(balanceTrigger.toJSON().condition).to.equal(">");
-    expect(balanceTrigger.toJSON().comparisonValue).to.equal(45000);
-    expect(balanceTrigger.toJSON().interval).to.equal(5000);
+    expect(balanceTrigger.toJSON().parameters.condition).to.equal(">");
+    expect(balanceTrigger.toJSON().parameters.comparisonValue).to.equal(45000);
+    expect(balanceTrigger.toJSON().parameters.interval).to.equal(5000);
   });
 
   it('should not be able to set conditions, comparison value and interval for subscription based triggers', () => {

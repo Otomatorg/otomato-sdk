@@ -1,5 +1,5 @@
 import { Parameter } from './Parameter.js';
-import { ethers } from 'ethers';
+import { validateType } from '../utils/typeValidator.js';
 
 export class Trigger {
   id: number;
@@ -53,18 +53,14 @@ export class Trigger {
   }
 
   setParams(key: string, value: any): void {
-    const fullKey = `abiParams.${key}`;
-    if (fullKey in this.parameters) {
-      this.setParameter(fullKey, value);
-    } else {
-      throw new Error(`Parameter with simplified key ${key} not found in abiParams`);
-    }
+    const fullKey = this.parameters[`abiParams.${key}`] ? `abiParams.${key}` : key;
+    this.setParameter(fullKey, value);
   }
 
   private setParameter(key: string, value: any): void {
     if (key in this.parameters) {
       const param = this.parameters[key];
-      if (this.validateType(param.type, value)) {
+      if (validateType(param.type, value)) {
         this.parameters[key].value = value;
       } else {
         throw new Error(`Invalid type for parameter ${key}. Expected ${param.type}.`);
@@ -72,31 +68,6 @@ export class Trigger {
     } else {
       throw new Error(`Parameter with key ${key} not found`);
     }
-  }
-
-  private validateType(expectedType: string, value: any): boolean {
-    switch (expectedType) {
-      case 'int':
-      case 'integer':
-      case 'uint256':
-      case 'int256':
-        return Number.isInteger(value);
-      case 'address':
-        return typeof value === 'string' && this.isAddress(value);
-      case 'float':
-        return typeof value === 'number';
-      case 'logic_operator':
-        const validOperators = new Set(['<', '>', '<=', '>=', '==']);
-        return typeof value === 'string' && validOperators.has(value);
-      case 'any':
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  private isAddress(value: string): boolean {
-    return ethers.isAddress(value);
   }
 
   getParameter(key: string): any {

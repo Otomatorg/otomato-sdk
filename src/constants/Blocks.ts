@@ -322,3 +322,74 @@ export const TRIGGERS = {
     }
   }
 };
+
+export const ACTIONS = {
+  TOKENS: {
+    ERC20: {
+      CHAINS: [CHAINS.ALL],
+      TRANSFER: {
+        id: 1,
+        name: "Transfer ERC-20 Token",
+        description: "Transfer an ERC-20 token",
+        parameters: [
+          {
+            key: "chainId",
+            type: "int",
+            description: "Chain ID of the blockchain"
+          },
+          {
+            key: "abiParams.value",
+            type: "uint256",
+            description: "Amount of crypto to transfer"
+          },
+          {
+            key: "abiParams.to",
+            type: "address",
+            description: "Address to transfer crypto to"
+          },
+          {
+            key: "contractAddress",
+            type: "address",
+            description: "The contract address of the ERC-20 token"
+          }
+        ] as Parameter[]
+      },
+    },
+  },
+  NOTIFICATIONS: {
+    SMS: {
+      id: 3,
+      name: "Send SMS",
+      description: "Send an SMS notification to a specified phone number",
+      parameters: [
+        {
+          key: "phoneNumber",
+          type: "phone_number",
+          description: "Phone number to send the message to"
+        },
+        {
+          key: "text",
+          type: "paragraph",
+          description: "Content of the SMS message"
+        },
+      ] as Parameter[]
+    },
+    SLACK: {
+      id: 4,
+      name: "Send Slack Message",
+      description: "Send a message to a specified Slack channel via webhook",
+      parameters: [
+        {
+          key: "webhook",
+          type: "url",
+          description: "Slack channel webhook URL"
+        },
+        {
+          key: "text",
+          type: "paragraph",
+          description: "Content of the Slack message"
+        },
+      ] as Parameter[]
+    },
+  }
+};

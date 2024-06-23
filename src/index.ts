@@ -1,5 +1,5 @@
 // Exporting constants
-export * from './constants/ActionBlocks.js';
+export * from './constants/Blocks.js';
 export * from './constants/chains.js';
 export * from './constants/tokens.js';
 
