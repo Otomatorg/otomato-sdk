@@ -1,14 +1,23 @@
 {
   "name": "otomato-sdk",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "1.0.1",
+  "description": "An SDK for building and managing automations on Otomato",
+  "main": "dist/src/index.js",
+  "types": "dist/types/src/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "npx tsc",
     "test": "mocha --config .mocharc.json"
   },
-  "keywords": [],
+  "keywords": [
+    "sdk",
+    "automation",
+    "typescript",
+    "javascript",
+    "crypto",
+    "evm",
+    "ethereum"
+  ],
   "author": "otomato",
   "license": "ISC",
   "devDependencies": {

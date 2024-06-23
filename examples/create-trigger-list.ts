@@ -30,7 +30,7 @@ const generateDefaultTriggers = (): any[] => {
     };
 
     // Explicitly create each trigger
-    triggersList.push(createDefaultTrigger(TRIGGERS.ERC20.TRANSFER));
+    triggersList.push(createDefaultTrigger(TRIGGERS.TOKENS.ERC20.TRANSFER));
     triggersList.push(createDefaultTrigger(TRIGGERS.YIELD.SPLICE_FI.SWAP));
     triggersList.push(createDefaultTrigger(TRIGGERS.YIELD.SPLICE_FI.LIQUIDITY_REMOVED));
     triggersList.push(createDefaultTrigger(TRIGGERS.YIELD.SPLICE_FI.MARKET_CREATION));
@@ -52,7 +52,7 @@ function generateTriggersForAllTokens(chain: number) {
 
     tokens.forEach(token => {
         // Generate transfer trigger
-        const transferTrigger = new Trigger(TRIGGERS.ERC20.TRANSFER);
+        const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
         transferTrigger.setChainId(chain);
         // transferTrigger.setParams("value", 1000);
         // transferTrigger.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
@@ -60,7 +60,7 @@ function generateTriggersForAllTokens(chain: number) {
         triggersList.push(transferTrigger);
 
         // Generate balance trigger
-        const balanceTrigger = new Trigger(TRIGGERS.ERC20.BALANCE);
+        const balanceTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.BALANCE);
         balanceTrigger.setChainId(chain);
         balanceTrigger.setParams("account", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
         balanceTrigger.setContractAddress(token.contractAddress);
@@ -75,13 +75,13 @@ function generateTriggersForAllTokens(chain: number) {
 
 const generateSpecificTriggers = (): any[] => {
     // Create individual triggers
-    const transferTrigger = new Trigger(TRIGGERS.ERC20.TRANSFER);
+    const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
     transferTrigger.setChainId(CHAINS.ETHEREUM);
     transferTrigger.setParams("value", 1000);
     transferTrigger.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
     transferTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
-    const balanceTrigger = new Trigger(TRIGGERS.ERC20.BALANCE);
+    const balanceTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.BALANCE);
     balanceTrigger.setChainId(CHAINS.ETHEREUM);
     balanceTrigger.setParams("account", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
     balanceTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);

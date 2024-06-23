@@ -2,7 +2,7 @@ import { TRIGGERS, getToken, CHAINS, Trigger } from '../src/index.js';
 
 
 
-const transferTrigger = new Trigger(TRIGGERS.ERC20.TRANSFER);
+const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
 
 transferTrigger.setChainId(CHAINS.ETHEREUM);
 // transferTrigger.setParams("value", 1000);
