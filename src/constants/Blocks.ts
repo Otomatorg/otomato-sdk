@@ -18,7 +18,7 @@ export const TRIGGERS = {
         parameters: [
           {
             key: "chainId",
-            type: "int",
+            type: "chainId",
             description: "Chain ID of the ETH blockchain"
           },
           {
@@ -46,7 +46,7 @@ export const TRIGGERS = {
         parameters: [
           {
             key: "chainId",
-            type: "int",
+            type: "chainId",
             description: "Chain ID of the ETH blockchain"
           },
           {
@@ -334,7 +334,7 @@ export const ACTIONS = {
         parameters: [
           {
             key: "chainId",
-            type: "int",
+            type: "chainId",
             description: "Chain ID of the blockchain"
           },
           {
