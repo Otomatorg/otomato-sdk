@@ -82,6 +82,48 @@ export const TOKENS: Tokens = {
   ]
 };
 
+export interface NFT {
+  contractAddress: string;
+  name: string;
+}
+
+export interface NFTs {
+  [key: number]: NFT[];
+}
+
+export const NFTS: NFTs = {
+  1: [
+    {
+      contractAddress: "0x60e4d786628fea6478f785a6d7e704777c86a7c6",
+      name: "MutantApeYachtClub"
+    },
+    {
+      contractAddress: "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d",
+      name: "BoredApeYachtClub"
+    },
+    
+    {
+      contractAddress: "0xbd3531da5cf5857e7cfaa92426877b022e612cf8",
+      name: "Pudgy Penguins"
+    },
+    {
+      contractAddress: "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e",
+      name: "Doodles"
+    },
+    {
+      contractAddress: "0x524cab2ec69124574082676e6f654a18df49a048",
+      name: "Lil Pudgies"
+    },
+
+  ],
+  43334: [
+    {
+      contractAddress: "0x2ad86eeec513ac16804bb05310214c3fd496835b",
+      name: "Space id"
+    }
+  ]
+};
+
 export function getToken(chain: number, symbol: string): Token {
   if (!(chain in TOKENS)) {
     throw new Error(`Unsupported chain: ${chain}`);
@@ -94,4 +136,18 @@ export function getToken(chain: number, symbol: string): Token {
   }
 
   return token;
+}
+
+export function getNFT(chain: number, name: string): NFT {
+  if (!(chain in NFTS)) {
+    throw new Error(`Unsupported chain: ${chain}`);
+  }
+
+  const nft = NFTS[chain].find(nft => nft.name === name);
+
+  if (!nft) {
+    throw new Error(`NFT ${name} not found on chain ${chain}`);
+  }
+
+  return nft;
 }
