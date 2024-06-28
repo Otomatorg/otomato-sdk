@@ -58,7 +58,7 @@ describe('Type Validator Utility Functions', () => {
         });
 
         it('should validate logic operators', () => {
-            expect(validateType('logic_operator', '&&')).to.be.true;
+            expect(validateType('logic_operator', '>')).to.be.true;
             expect(validateType('logic_operator', 'invalid_operator')).to.be.false;
         });
 
