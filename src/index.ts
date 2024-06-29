@@ -9,6 +9,7 @@ export * from './models/Automation.js';
 export * from './models/Condition.js';
 export * from './models/Parameter.js';
 export * from './models/Trigger.js';
+export * from './models/Node.js';
 
 // Exporting services
 export * from './services/ApiService.js';
