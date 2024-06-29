@@ -13,4 +13,3 @@ export * from './models/Node.js';
 
 // Exporting services
 export * from './services/ApiService.js';
-export * from './services/AutomationService.js';

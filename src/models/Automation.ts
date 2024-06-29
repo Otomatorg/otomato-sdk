@@ -1,5 +1,6 @@
 import { Trigger } from './Trigger.js';
 import { Action } from './Action.js';
+import { apiServices } from '../services/ApiService.js';
 
 export class Automation {
   name: string;
@@ -30,5 +31,9 @@ export class Automation {
       trigger: this.trigger.toJSON(),
       actions: this.actions.map(action => action.toJSON()),
     };
+  }
+
+  async save() {
+    return apiServices.post('/workflows', this.toJSON());
   }
 }
