@@ -1,16 +1,20 @@
 import { Parameter } from './Parameter.js';
 import { validateType } from '../utils/typeValidator.js';
 
+interface Position {
+  x: number;
+  y: number;
+}
+
 export class Node {
   id: number;
   name: string;
   description: string;
   parameters: { [key: string]: Parameter };
   keyMap: { [key: string]: string };
-  x?: number;
-  y?: number;
+  position?: Position;
 
-  constructor(node: { id: number; name: string; description: string; parameters: Parameter[], x?: number, y?: number }) {
+  constructor(node: { id: number; name: string; description: string; parameters: Parameter[], position?: Position }) {
     this.id = node.id;
     this.name = node.name;
     this.description = node.description;
@@ -21,8 +25,9 @@ export class Node {
       const simplifiedKey = this.getSimplifiedKey(param.key);
       this.keyMap[simplifiedKey] = param.key;
     });
-    this.x = node.x;
-    this.y = node.y;
+    if (node.position) {
+      this.position = node.position;
+    }
   }
 
   setChainId(value: number): void {
@@ -38,9 +43,8 @@ export class Node {
     this.setParameter(fullKey, value);
   }
 
-  setCoordinates(x: number, y: number): void {
-    this.x = x;
-    this.y = y;
+  setPosition(x: number, y: number): void {
+    this.position = { x, y };
   }
 
   protected setParameter(key: string, value: any): void {
@@ -76,8 +80,9 @@ export class Node {
       id: this.id,
       parameters: this.getParameters(),
     };
-    if (this.x !== undefined) json.x = this.x;
-    if (this.y !== undefined) json.y = this.y;
+    if (this.position) {
+      json.position = this.position;
+    }
     return json;
   }
 

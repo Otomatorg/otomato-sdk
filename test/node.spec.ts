@@ -16,8 +16,7 @@ describe('Node Class', () => {
       parameters: DEFAULT_PARAMETERS
     });
 
-    expect(node.x).to.be.undefined;
-    expect(node.y).to.be.undefined;
+    expect(node.position).to.be.undefined;
   });
 
   it('should create a node with coordinates', () => {
@@ -26,12 +25,11 @@ describe('Node Class', () => {
       name: 'Test Node with Coordinates',
       description: 'A node for testing with coordinates',
       parameters: DEFAULT_PARAMETERS,
-      x: 100,
-      y: 200
+      position: {x: 100, y: 200}
     });
 
-    expect(node.x).to.equal(100);
-    expect(node.y).to.equal(200);
+    expect(node.position?.x).to.equal(100);
+    expect(node.position?.y).to.equal(200);
   });
 
   it('should set and get coordinates correctly', () => {
@@ -42,9 +40,9 @@ describe('Node Class', () => {
       parameters: DEFAULT_PARAMETERS
     });
 
-    node.setCoordinates(300, 400);
-    expect(node.x).to.equal(300);
-    expect(node.y).to.equal(400);
+    node.setPosition(300, 400);
+    expect(node.position?.x).to.equal(300);
+    expect(node.position?.y).to.equal(400);
   });
 
   it('should create a node and set parameters correctly', () => {
@@ -90,8 +88,7 @@ describe('Node Class', () => {
       name: 'Test Node for JSON with Coordinates',
       description: 'A node for testing JSON export with coordinates',
       parameters: DEFAULT_PARAMETERS,
-      x: 100,
-      y: 200
+      position: {x: 1, y: 2}
     });
 
     node.setChainId(1);
@@ -104,8 +101,7 @@ describe('Node Class', () => {
         chainId: 1,
         contractAddress: "0x0000000000000000000000000000000000000000"
       },
-      x: 100,
-      y: 200
+      position: {x: 1, y: 2}
     });
   });
 
