@@ -1,35 +1,43 @@
-import { Trigger } from './Trigger.js';
-import { Action } from './Action.js';
+import { Node } from './Node.js';
+import { Edge } from './Edge.js';
 import { apiServices } from '../services/ApiService.js';
 
 export class Automation {
   name: string;
-  trigger: Trigger;
-  actions: Action[];
+  nodes: Node[];
+  edges: Edge[];
 
-  constructor(name: string, trigger: Trigger, actions: Action[] = []) {
+  constructor(name: string, nodes: Node[] = [], edges: Edge[] = []) {
     this.name = name;
-    this.trigger = trigger;
-    this.actions = actions;
+    this.nodes = nodes;
+    this.edges = edges;
   }
 
   setName(name: string): void {
     this.name = name;
   }
 
-  addTrigger(trigger: Trigger): void {
-    this.trigger = trigger;
+  addNode(node: Node): void {
+    this.nodes.push(node);
   }
 
-  addAction(action: Action): void {
-    this.actions.push(action);
+  addNodes(nodes: Node[]): void {
+    this.nodes.push(...nodes);
+  }
+
+  addEdge(edge: Edge): void {
+    this.edges.push(edge);
+  }
+
+  addEdges(edges: Edge[]): void {
+    this.edges.push(...edges);
   }
 
   toJSON() {
     return {
       name: this.name,
-      trigger: this.trigger.toJSON(),
-      actions: this.actions.map(action => action.toJSON()),
+      nodes: this.nodes.map(node => node.toJSON()),
+      edges: this.edges.map(edge => edge.toJSON()),
     };
   }
 

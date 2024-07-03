@@ -1,10 +1,13 @@
 import { Parameter } from './Parameter.js';
 import { validateType } from '../utils/typeValidator.js';
 
-interface Position {
+export interface Position {
   x: number;
   y: number;
 }
+
+let nodeCounter = 0;
+const generatedRefs = new Set<string>();
 
 export class Node {
   id: number;
@@ -13,18 +16,33 @@ export class Node {
   parameters: { [key: string]: Parameter };
   keyMap: { [key: string]: string };
   position?: Position;
+  ref: string;
+  class: string;  // Updated to use class instead of type
 
-  constructor(node: { id: number; name: string; description: string; parameters: Parameter[], position?: Position }) {
+  constructor(node: { id: number; name: string; description: string; parameters: Parameter[], ref?: string, position?: Position, class: string }) {
     this.id = node.id;
     this.name = node.name;
     this.description = node.description;
     this.parameters = {};
     this.keyMap = {};
+    this.class = node.class;  // Set class property
+
+    if (node.ref) {
+      this.ref = node.ref;
+    } else {
+      this.ref = `n-${++nodeCounter}`;
+      while (generatedRefs.has(this.ref)) {
+        this.ref = `n-${++nodeCounter}`;
+      }
+    }
+    generatedRefs.add(this.ref);
+
     node.parameters.forEach(param => {
       this.parameters[param.key] = { ...param, value: null };
       const simplifiedKey = this.getSimplifiedKey(param.key);
       this.keyMap[simplifiedKey] = param.key;
     });
+
     if (node.position) {
       this.position = node.position;
     }
@@ -45,6 +63,10 @@ export class Node {
 
   setPosition(x: number, y: number): void {
     this.position = { x, y };
+  }
+
+  getRef(): string {
+    return this.ref;
   }
 
   protected setParameter(key: string, value: any): void {
@@ -78,7 +100,11 @@ export class Node {
   toJSON(): { [key: string]: any } {
     const json: { [key: string]: any } = {
       id: this.id,
-      parameters: this.getParameters(),
+      ref: this.ref,
+      type: this.class,
+      data: {
+        parameters: this.getParameters(),
+      }
     };
     if (this.position) {
       json.position = this.position;

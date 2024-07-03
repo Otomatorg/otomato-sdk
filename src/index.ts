@@ -10,6 +10,7 @@ export * from './models/Condition.js';
 export * from './models/Parameter.js';
 export * from './models/Trigger.js';
 export * from './models/Node.js';
+export * from './models/Edge.js';
 
 // Exporting services
 export * from './services/ApiService.js';

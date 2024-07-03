@@ -1,11 +1,11 @@
 import { Parameter } from './Parameter.js';
-import { Node } from './Node.js';
+import { Node, Position } from './Node.js';
 
 export class Trigger extends Node {
   type: number;
 
-  constructor(trigger: { id: number; name: string; description: string; type: number; parameters: Parameter[], x?: number, y?: number }) {
-    super(trigger);
+  constructor(trigger: { id: number; name: string; description: string; type: number; parameters: Parameter[], ref?: string, position?: Position }) {
+    super({ ...trigger, class: 'trigger' });
     this.type = trigger.type;
   }
 

@@ -13,7 +13,8 @@ describe('Node Class', () => {
       id: 1,
       name: 'Test Node',
       description: 'A node for testing',
-      parameters: DEFAULT_PARAMETERS
+      parameters: DEFAULT_PARAMETERS,
+      class: 'testClass'
     });
 
     expect(node.position).to.be.undefined;
@@ -25,6 +26,7 @@ describe('Node Class', () => {
       name: 'Test Node with Coordinates',
       description: 'A node for testing with coordinates',
       parameters: DEFAULT_PARAMETERS,
+      class: 'testClass',
       position: {x: 100, y: 200}
     });
 
@@ -37,7 +39,8 @@ describe('Node Class', () => {
       id: 3,
       name: 'Test Node for Coordinates',
       description: 'A node for testing coordinate setting',
-      parameters: DEFAULT_PARAMETERS
+      parameters: DEFAULT_PARAMETERS,
+      class: 'testClass'
     });
 
     node.setPosition(300, 400);
@@ -50,7 +53,8 @@ describe('Node Class', () => {
       id: 4,
       name: 'Test Node for Parameters',
       description: 'A node for testing parameter setting',
-      parameters: DEFAULT_PARAMETERS
+      parameters: DEFAULT_PARAMETERS,
+      class: 'testClass'
     });
 
     node.setChainId(1);
@@ -66,7 +70,8 @@ describe('Node Class', () => {
       id: 5,
       name: 'Test Node for JSON',
       description: 'A node for testing JSON export',
-      parameters: DEFAULT_PARAMETERS
+      parameters: DEFAULT_PARAMETERS,
+      class: 'testClass'
     });
 
     node.setChainId(1);
@@ -75,9 +80,13 @@ describe('Node Class', () => {
     const json = node.toJSON();
     expect(json).to.deep.equal({
       id: 5,
-      parameters: {
-        chainId: 1,
-        contractAddress: "0x0000000000000000000000000000000000000000"
+      ref: node.getRef(),
+      class: 'testClass',
+      data: {
+        parameters: {
+          chainId: 1,
+          contractAddress: "0x0000000000000000000000000000000000000000"
+        }
       }
     });
   });
@@ -88,6 +97,7 @@ describe('Node Class', () => {
       name: 'Test Node for JSON with Coordinates',
       description: 'A node for testing JSON export with coordinates',
       parameters: DEFAULT_PARAMETERS,
+      class: 'testClass',
       position: {x: 1, y: 2}
     });
 
@@ -97,9 +107,13 @@ describe('Node Class', () => {
     const json = node.toJSON();
     expect(json).to.deep.equal({
       id: 6,
-      parameters: {
-        chainId: 1,
-        contractAddress: "0x0000000000000000000000000000000000000000"
+      ref: node.getRef(),
+      class: 'testClass',
+      data: {
+        parameters: {
+          chainId: 1,
+          contractAddress: "0x0000000000000000000000000000000000000000"
+        }
       },
       position: {x: 1, y: 2}
     });
@@ -110,7 +124,8 @@ describe('Node Class', () => {
       id: 7,
       name: 'Test Node for Invalid Parameter Type',
       description: 'A node for testing invalid parameter type',
-      parameters: DEFAULT_PARAMETERS
+      parameters: DEFAULT_PARAMETERS,
+      class: 'testClass'
     });
     expect(() => node.setParams("chainId", "invalid")).to.throw('Invalid type for parameter chainId. Expected integer.');
   });
@@ -120,7 +135,8 @@ describe('Node Class', () => {
       id: 8,
       name: 'Test Node for Invalid Address',
       description: 'A node for testing invalid address',
-      parameters: DEFAULT_PARAMETERS
+      parameters: DEFAULT_PARAMETERS,
+      class: 'testClass'
     });
     expect(() => node.setParams("contractAddress", "invalid_address")).to.throw('Invalid type for parameter contractAddress. Expected address.');
   });
