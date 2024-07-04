@@ -18,9 +18,9 @@ describe('Automation Class', () => {
     action1.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
     action1.setPosition(1, 0);
 
-    const action2 = new Action(ACTIONS.NOTIFICATIONS.SMS);
-    action2.setParams("phoneNumber", "+1234567890");
-    action2.setParams("text", "This is a test message");
+    const action2 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+    action2.setParams("webhook", "https://webhook.url");
+    action2.setParams("message", "This is a test message");
     action2.setPosition(2, 0);
 
     const automation = new Automation("Test Automation", [trigger, action1, action2]);
@@ -29,6 +29,7 @@ describe('Automation Class', () => {
     expect(json).to.deep.equal({
       name: "Test Automation",
       nodes: [trigger.toJSON(), action1.toJSON(), action2.toJSON()],
+      edges: []
     });
   });
 
@@ -74,9 +75,9 @@ describe('Automation Class', () => {
     action1.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
     action1.setPosition(1, 0);
 
-    const action2 = new Action(ACTIONS.NOTIFICATIONS.SMS);
-    action2.setParams("phoneNumber", "+1234567890");
-    action2.setParams("text", "This is a test message");
+    const action2 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+    action2.setParams("webhook", "https://webhook.url");
+    action2.setParams("message", "This is a test message");
     action2.setPosition(2, 0);
 
     const automation = new Automation("Test Automation", [trigger]);

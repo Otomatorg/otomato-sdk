@@ -37,13 +37,19 @@ describe('Trigger Class', () => {
     transferTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
     const json = transferTrigger.toJSON();
+    console.log(json);
     expect(json).to.deep.equal({
       id: TRIGGERS.TOKENS.ERC20.TRANSFER.id,
-      parameters: {
-        chainId: CHAINS.ETHEREUM,
-        'abiParams.value': 1000,
-        'abiParams.to': DEFAULT_ADDRESS,
-        contractAddress: getToken(CHAINS.ETHEREUM, 'USDC').contractAddress
+      ref: transferTrigger.getRef(),
+      type: 'trigger',
+      data: {
+        parameters: {
+          chainId: CHAINS.ETHEREUM,
+          'abiParams.value': 1000,
+          'abiParams.to': DEFAULT_ADDRESS,
+          'abiParams.from': null,
+          contractAddress: getToken(CHAINS.ETHEREUM, 'USDC').contractAddress
+        }
       }
     });
   });
@@ -61,9 +67,10 @@ describe('Trigger Class', () => {
     expect(params.chainId).to.equal(CHAINS.ETHEREUM);
     expect(params['abiParams.account']).to.equal(DEFAULT_ADDRESS);
     expect(params.contractAddress).to.equal(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
-    expect(balanceTrigger.toJSON().parameters.condition).to.equal(">");
-    expect(balanceTrigger.toJSON().parameters.comparisonValue).to.equal(45000);
-    expect(balanceTrigger.toJSON().parameters.interval).to.equal(5000);
+    console.log(balanceTrigger.toJSON());
+    expect(balanceTrigger.toJSON().data.parameters.condition).to.equal(">");
+    expect(balanceTrigger.toJSON().data.parameters.comparisonValue).to.equal(45000);
+    expect(balanceTrigger.toJSON().data.parameters.interval).to.equal(5000);
   });
 
   it('should not be able to set conditions, comparison value and interval for subscription based triggers', () => {

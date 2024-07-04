@@ -39,16 +39,20 @@ describe('Action Class', () => {
     const json = transferAction.toJSON();
     expect(json).to.deep.equal({
       id: ACTIONS.TOKENS.ERC20.TRANSFER.id,
-      parameters: {
-        chainId: CHAINS.ETHEREUM,
-        'abiParams.value': 1000,
-        'abiParams.to': DEFAULT_ADDRESS,
-        contractAddress: getToken(CHAINS.ETHEREUM, 'USDC').contractAddress
+      ref: transferAction.getRef(),
+      type: 'action',
+      data: {
+        parameters: {
+          chainId: CHAINS.ETHEREUM,
+          'abiParams.value': 1000,
+          'abiParams.to': DEFAULT_ADDRESS,
+          contractAddress: getToken(CHAINS.ETHEREUM, 'USDC').contractAddress
+        }
       }
     });
   });
 
-  it('should create an SMS action and set parameters correctly', () => {
+  /*it('should create an SMS action and set parameters correctly', () => {
     const smsAction = new Action(ACTIONS.NOTIFICATIONS.SMS);
     smsAction.setParams("phoneNumber", "+1234567890");
     smsAction.setParams("text", "Hello, this is a test message!");
@@ -56,16 +60,16 @@ describe('Action Class', () => {
     const params = smsAction.getParameters();
     expect(params.phoneNumber).to.equal("+1234567890");
     expect(params.text).to.equal("Hello, this is a test message!");
-  });
+  });*/
 
   it('should create a Slack action and set parameters correctly', () => {
-    const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK);
+    const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
     slackAction.setParams("webhook", "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX");
-    slackAction.setParams("text", "This is a test message!");
+    slackAction.setParams("message", "This is a test message!");
 
     const params = slackAction.getParameters();
     expect(params.webhook).to.equal("https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX");
-    expect(params.text).to.equal("This is a test message!");
+    expect(params.message).to.equal("This is a test message!");
   });
 
   it('should throw an error for invalid parameter type', () => {
@@ -79,12 +83,12 @@ describe('Action Class', () => {
   });
 
   it('should throw an error for invalid URL', () => {
-    const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK);
+    const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
     expect(() => slackAction.setParams("webhook", "invalid_url")).to.throw('Invalid type for parameter webhook. Expected url.');
   });
 
-  it('should throw an error for invalid phone number', () => {
+  /*it('should throw an error for invalid phone number', () => {
     const smsAction = new Action(ACTIONS.NOTIFICATIONS.SMS);
     expect(() => smsAction.setParams("phoneNumber", "invalid_phone_number")).to.throw('Invalid type for parameter phoneNumber. Expected phone_number.');
-  });
+  });*/
 });

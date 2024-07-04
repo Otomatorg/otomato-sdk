@@ -81,7 +81,7 @@ describe('Node Class', () => {
     expect(json).to.deep.equal({
       id: 5,
       ref: node.getRef(),
-      class: 'testClass',
+      type: 'testClass',
       data: {
         parameters: {
           chainId: 1,
@@ -106,9 +106,9 @@ describe('Node Class', () => {
 
     const json = node.toJSON();
     expect(json).to.deep.equal({
+      type: 'testClass',
       id: 6,
       ref: node.getRef(),
-      class: 'testClass',
       data: {
         parameters: {
           chainId: 1,

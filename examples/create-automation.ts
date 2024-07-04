@@ -13,15 +13,9 @@ const main = async () => {
     usdcTransferTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
     usdcTransferTrigger.setPosition(0, 0);
 
-    const slackAction = new Action({
-        id: ACTIONS.NOTIFICATIONS.SLACK.id,
-        name: ACTIONS.NOTIFICATIONS.SLACK.name,
-        description: ACTIONS.NOTIFICATIONS.SLACK.description,
-        parameters: ACTIONS.NOTIFICATIONS.SLACK.parameters,
-        // not forced to provide a ref id, it will generate it
-    });
+    const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
     slackAction.setParams("webhook", "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX");
-    slackAction.setParams("text", "USDC has been transferred!");
+    slackAction.setParams("message", "USDC has been transferred!");
     slackAction.setPosition(0, -10);
 
     const automation = new Automation("USDC Transfer Notification", [usdcTransferTrigger, slackAction]);
