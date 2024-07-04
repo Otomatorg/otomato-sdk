@@ -378,6 +378,11 @@ export const TRIGGERS = {
             "type": "logic_operator",
             "description": "The logic operator used for the comparison (e.g., >, <, >=, <=, ==, !=)"
           },
+          {
+            "key": "contractAddress",
+            "type": "erc20",
+            "description": "The asset that you want to track"
+          },
         ] as Parameter[]
       }
     }
