@@ -41,13 +41,11 @@ describe('Action Class', () => {
       id: ACTIONS.TOKENS.ERC20.TRANSFER.id,
       ref: transferAction.getRef(),
       type: 'action',
-      data: {
-        parameters: {
-          chainId: CHAINS.ETHEREUM,
-          'abiParams.value': 1000,
-          'abiParams.to': DEFAULT_ADDRESS,
-          contractAddress: getToken(CHAINS.ETHEREUM, 'USDC').contractAddress
-        }
+      parameters: {
+        chainId: CHAINS.ETHEREUM,
+        'abiParams.value': 1000,
+        'abiParams.to': DEFAULT_ADDRESS,
+        contractAddress: getToken(CHAINS.ETHEREUM, 'USDC').contractAddress
       }
     });
   });

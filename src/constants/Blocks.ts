@@ -48,7 +48,7 @@ export const TRIGGERS = {
         ] as Parameter[]
       },
       "BALANCE": {
-        "id": 1000,
+        "id": 5,
         "name": "ERC20 balance check",
         "description": "Fetches the balance of an ERC20 and checks it against the specified condition.",
         "type": 1,
@@ -339,6 +339,44 @@ export const TRIGGERS = {
             "key": "abiParams.expires",
             "type": "uint256",
             "description": "Expiration time"
+          },
+        ] as Parameter[]
+      }
+    }
+  },
+  "PRICE_ACTION": {
+    "ON_CHAIN_PRICE_MOVEMENT": {
+      "CHAINS": [
+        0
+      ],
+      "PRICE_MOVEMENT_AGAINST_CURRENCY": {
+        "id": 10,
+        "name": "On-Chain Price Movement Against Fiat Currency",
+        "description": "This trigger activates when the on-chain price of an asset moves against a specified currency based on the given condition.",
+        "type": 2,
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the blockchain to monitor"
+          },
+          {
+            "key": "comparisonValue",
+            "type": "float",
+            "description": "The price to compare against"
+          },
+          {
+            "key": "currency",
+            "type": "string",
+            "description": "The currency in which the comparison price is denominated",
+            "enum": [
+              "USD"
+            ]
+          },
+          {
+            "key": "condition",
+            "type": "logic_operator",
+            "description": "The logic operator used for the comparison (e.g., >, <, >=, <=, ==, !=)"
           },
         ] as Parameter[]
       }

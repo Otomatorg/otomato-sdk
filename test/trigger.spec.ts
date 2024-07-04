@@ -42,14 +42,12 @@ describe('Trigger Class', () => {
       id: TRIGGERS.TOKENS.ERC20.TRANSFER.id,
       ref: transferTrigger.getRef(),
       type: 'trigger',
-      data: {
-        parameters: {
-          chainId: CHAINS.ETHEREUM,
-          'abiParams.value': 1000,
-          'abiParams.to': DEFAULT_ADDRESS,
-          'abiParams.from': null,
-          contractAddress: getToken(CHAINS.ETHEREUM, 'USDC').contractAddress
-        }
+      parameters: {
+        chainId: CHAINS.ETHEREUM,
+        'abiParams.value': 1000,
+        'abiParams.to': DEFAULT_ADDRESS,
+        'abiParams.from': null,
+        contractAddress: getToken(CHAINS.ETHEREUM, 'USDC').contractAddress
       }
     });
   });
@@ -59,7 +57,7 @@ describe('Trigger Class', () => {
     balanceTrigger.setChainId(CHAINS.ETHEREUM);
     balanceTrigger.setParams("account", DEFAULT_ADDRESS);
     balanceTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
-    balanceTrigger.setCondition(">");
+    balanceTrigger.setCondition("gte");
     balanceTrigger.setComparisonValue(45000);
     balanceTrigger.setInterval(5000);
 
@@ -68,9 +66,9 @@ describe('Trigger Class', () => {
     expect(params['abiParams.account']).to.equal(DEFAULT_ADDRESS);
     expect(params.contractAddress).to.equal(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
     console.log(balanceTrigger.toJSON());
-    expect(balanceTrigger.toJSON().data.parameters.condition).to.equal(">");
-    expect(balanceTrigger.toJSON().data.parameters.comparisonValue).to.equal(45000);
-    expect(balanceTrigger.toJSON().data.parameters.interval).to.equal(5000);
+    expect(balanceTrigger.toJSON().parameters.condition).to.equal("gte");
+    expect(balanceTrigger.toJSON().parameters.comparisonValue).to.equal(45000);
+    expect(balanceTrigger.toJSON().parameters.interval).to.equal(5000);
   });
 
   it('should not be able to set conditions, comparison value and interval for subscription based triggers', () => {

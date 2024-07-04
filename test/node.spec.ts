@@ -82,11 +82,9 @@ describe('Node Class', () => {
       id: 5,
       ref: node.getRef(),
       type: 'testClass',
-      data: {
-        parameters: {
-          chainId: 1,
-          contractAddress: "0x0000000000000000000000000000000000000000"
-        }
+      parameters: {
+        chainId: 1,
+        contractAddress: "0x0000000000000000000000000000000000000000"
       }
     });
   });
@@ -109,11 +107,9 @@ describe('Node Class', () => {
       type: 'testClass',
       id: 6,
       ref: node.getRef(),
-      data: {
-        parameters: {
-          chainId: 1,
-          contractAddress: "0x0000000000000000000000000000000000000000"
-        }
+      parameters: {
+        chainId: 1,
+        contractAddress: "0x0000000000000000000000000000000000000000"
       },
       position: {x: 1, y: 2}
     });

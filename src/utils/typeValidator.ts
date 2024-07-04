@@ -24,10 +24,11 @@ export function validateType(expectedType: string, value: any): boolean {
             return typeof value === 'string' && isValidUrl(value);
         case 'phone_number':
             return typeof value === 'string' && isValidPhoneNumber(value);
+        case 'string':
         case 'paragraph':
             return typeof value === 'string';
         case 'logic_operator':
-            const validOperators = new Set(['<', '>', '<=', '>=', '==', '!=']);
+            const validOperators = new Set(['gte', 'gt', 'lte', 'lt', 'eq', 'neq']);
             return typeof value === 'string' && validOperators.has(value);
         case 'any':
             return true;

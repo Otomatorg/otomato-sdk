@@ -102,9 +102,7 @@ export class Node {
       id: this.id,
       ref: this.ref,
       type: this.class,
-      data: {
-        parameters: this.getParameters(),
-      }
+      parameters: this.getParameters(),
     };
     if (this.position) {
       json.position = this.position;
