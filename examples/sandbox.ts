@@ -6,6 +6,7 @@ trigger.setChainId(CHAINS.MODE);
 trigger.setComparisonValue(3200);
 trigger.setCondition("gte");
 trigger.setParams('currency', 'USD');
+trigger.setParams('contractAddress', getToken(CHAINS.MODE, 'MODE').contractAddress);
 trigger.setPosition(1, 0);
 
-console.log(trigger.toJSON());
+console.log(JSON.stringify(trigger.toJSON(), null, 2));

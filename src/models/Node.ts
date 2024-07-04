@@ -92,7 +92,15 @@ export class Node {
 
   getParameters(): { [key: string]: any } {
     return Object.keys(this.parameters).reduce((acc, key) => {
-      acc[key] = this.parameters[key].value;
+      if (key.startsWith('abiParams.')) {
+        const abiKey = key.replace('abiParams.', '');
+        if (!acc.abi) {
+          acc.abi = { parameters: {} };
+        }
+        acc.abi.parameters[abiKey] = this.parameters[key].value;
+      } else {
+        acc[key] = this.parameters[key].value;
+      }
       return acc;
     }, {} as { [key: string]: any });
   }
