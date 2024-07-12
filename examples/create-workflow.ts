@@ -30,10 +30,14 @@ const main = async () => {
 
     workflow.addEdge(edge);
 
-    console.log(JSON.stringify(workflow.toJSON(), null, 2));
+    // console.log(JSON.stringify(workflow.toJSON(), null, 2));
 
     const res = await workflow.create();
     console.log(res);
+    console.log(`Workflow ID: ${workflow.id}`);  // This will print the ID of the created workflow
+    workflow.nodes.forEach(node => {
+        console.log(`Node ${node.getRef()} ID: ${node.id}`);
+    });
 }
 
 main();
