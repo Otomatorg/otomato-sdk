@@ -39,7 +39,7 @@ describe('Trigger Class', () => {
     const json = transferTrigger.toJSON();
     console.log(json);
     expect(json).to.deep.equal({
-      id: TRIGGERS.TOKENS.ERC20.TRANSFER.id,
+      blockId: TRIGGERS.TOKENS.ERC20.TRANSFER.blockId,
       ref: transferTrigger.getRef(),
       type: 'trigger',
       parameters: {

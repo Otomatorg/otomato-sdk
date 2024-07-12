@@ -38,7 +38,7 @@ describe('Action Class', () => {
 
     const json = transferAction.toJSON();
     expect(json).to.deep.equal({
-      id: ACTIONS.TOKENS.ERC20.TRANSFER.id,
+      blockId: ACTIONS.TOKENS.ERC20.TRANSFER.blockId,
       ref: transferAction.getRef(),
       type: 'action',
       parameters: {

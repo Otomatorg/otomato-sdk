@@ -10,7 +10,7 @@ describe('Node Class', () => {
   
   it('should create a node without coordinates', () => {
     const node = new Node({
-      id: 1,
+      blockId: 1,
       name: 'Test Node',
       description: 'A node for testing',
       parameters: DEFAULT_PARAMETERS,
@@ -22,7 +22,7 @@ describe('Node Class', () => {
 
   it('should create a node with coordinates', () => {
     const node = new Node({
-      id: 2,
+      blockId: 2,
       name: 'Test Node with Coordinates',
       description: 'A node for testing with coordinates',
       parameters: DEFAULT_PARAMETERS,
@@ -36,7 +36,7 @@ describe('Node Class', () => {
 
   it('should set and get coordinates correctly', () => {
     const node = new Node({
-      id: 3,
+      blockId: 3,
       name: 'Test Node for Coordinates',
       description: 'A node for testing coordinate setting',
       parameters: DEFAULT_PARAMETERS,
@@ -50,7 +50,7 @@ describe('Node Class', () => {
 
   it('should create a node and set parameters correctly', () => {
     const node = new Node({
-      id: 4,
+      blockId: 4,
       name: 'Test Node for Parameters',
       description: 'A node for testing parameter setting',
       parameters: DEFAULT_PARAMETERS,
@@ -67,7 +67,7 @@ describe('Node Class', () => {
 
   it('should be able to export a node as json without coordinates', () => {
     const node = new Node({
-      id: 5,
+      blockId: 5,
       name: 'Test Node for JSON',
       description: 'A node for testing JSON export',
       parameters: DEFAULT_PARAMETERS,
@@ -79,7 +79,7 @@ describe('Node Class', () => {
 
     const json = node.toJSON();
     expect(json).to.deep.equal({
-      id: 5,
+      blockId: 5,
       ref: node.getRef(),
       type: 'testClass',
       parameters: {
@@ -91,7 +91,7 @@ describe('Node Class', () => {
 
   it('should be able to export a node as json with coordinates', () => {
     const node = new Node({
-      id: 6,
+      blockId: 6,
       name: 'Test Node for JSON with Coordinates',
       description: 'A node for testing JSON export with coordinates',
       parameters: DEFAULT_PARAMETERS,
@@ -105,7 +105,7 @@ describe('Node Class', () => {
     const json = node.toJSON();
     expect(json).to.deep.equal({
       type: 'testClass',
-      id: 6,
+      blockId: 6,
       ref: node.getRef(),
       parameters: {
         chainId: 1,
@@ -117,7 +117,7 @@ describe('Node Class', () => {
 
   it('should throw an error for invalid parameter type', () => {
     const node = new Node({
-      id: 7,
+      blockId: 7,
       name: 'Test Node for Invalid Parameter Type',
       description: 'A node for testing invalid parameter type',
       parameters: DEFAULT_PARAMETERS,
@@ -128,7 +128,7 @@ describe('Node Class', () => {
 
   it('should throw an error for invalid address', () => {
     const node = new Node({
-      id: 8,
+      blockId: 8,
       name: 'Test Node for Invalid Address',
       description: 'A node for testing invalid address',
       parameters: DEFAULT_PARAMETERS,

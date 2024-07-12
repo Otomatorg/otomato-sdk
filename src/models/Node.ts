@@ -10,22 +10,23 @@ let nodeCounter = 0;
 const generatedRefs = new Set<string>();
 
 export class Node {
-  id: number;
+  id: number | null = null;
+  blockId: number;
   name: string;
   description: string;
   parameters: { [key: string]: Parameter };
   keyMap: { [key: string]: string };
   position?: Position;
   ref: string;
-  class: string;  // Updated to use class instead of type
+  class: string;
 
-  constructor(node: { id: number; name: string; description: string; parameters: Parameter[], ref?: string, position?: Position, class: string }) {
-    this.id = node.id;
+  constructor(node: { blockId: number; name: string; description: string; parameters: Parameter[], ref?: string, position?: Position, class: string }) {
+    this.blockId = node.blockId;
     this.name = node.name;
     this.description = node.description;
     this.parameters = {};
     this.keyMap = {};
-    this.class = node.class;  // Set class property
+    this.class = node.class;
 
     if (node.ref) {
       this.ref = node.ref;
@@ -46,6 +47,10 @@ export class Node {
     if (node.position) {
       this.position = node.position;
     }
+  }
+
+  setId(value: number): void {
+    this.id = value;
   }
 
   setChainId(value: number): void {
@@ -108,6 +113,7 @@ export class Node {
   toJSON(): { [key: string]: any } {
     const json: { [key: string]: any } = {
       id: this.id,
+      blockId: this.blockId,
       ref: this.ref,
       type: this.class,
       parameters: this.getParameters(),

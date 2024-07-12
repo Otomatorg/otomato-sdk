@@ -1,11 +1,11 @@
 import { expect } from 'chai';
-import { Automation } from '../src/models/Automation.js';
+import { Workflow } from '../src/models/Workflow.js';
 import { Trigger } from '../src/models/Trigger.js';
 import { Action } from '../src/models/Action.js';
 import { TRIGGERS, ACTIONS, getToken, CHAINS } from '../src/index.js';
 
-describe('Automation Class', () => {
-  it('should create an automation with a trigger and actions', () => {
+describe('Workflow Class', () => {
+  it('should create a workflow with a trigger and actions', () => {
     const trigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
     trigger.setChainId(CHAINS.ETHEREUM);
     trigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
@@ -23,29 +23,29 @@ describe('Automation Class', () => {
     action2.setParams("message", "This is a test message");
     action2.setPosition(2, 0);
 
-    const automation = new Automation("Test Automation", [trigger, action1, action2]);
+    const workflow = new Workflow("Test Workflow", [trigger, action1, action2]);
 
-    const json = automation.toJSON();
+    const json = workflow.toJSON();
     expect(json).to.deep.equal({
-      name: "Test Automation",
+      name: "Test Workflow",
       nodes: [trigger.toJSON(), action1.toJSON(), action2.toJSON()],
       edges: []
     });
   });
 
-  it('should set the name of the automation', () => {
+  it('should set the name of the workflow', () => {
     const trigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
     trigger.setChainId(CHAINS.ETHEREUM);
     trigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
     trigger.setPosition(0, 0);
 
-    const automation = new Automation("Initial Name", [trigger]);
-    automation.setName("Updated Name");
+    const workflow = new Workflow("Initial Name", [trigger]);
+    workflow.setName("Updated Name");
 
-    expect(automation.name).to.equal("Updated Name");
+    expect(workflow.name).to.equal("Updated Name");
   });
 
-  it('should add a trigger to the automation', () => {
+  it('should add a trigger to the workflow', () => {
     const initialTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
     initialTrigger.setChainId(CHAINS.ETHEREUM);
     initialTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
@@ -56,13 +56,13 @@ describe('Automation Class', () => {
     newTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
     newTrigger.setPosition(1, 0);
 
-    const automation = new Automation("Test Automation", [initialTrigger]);
-    automation.addNode(newTrigger);
+    const workflow = new Workflow("Test Workflow", [initialTrigger]);
+    workflow.addNode(newTrigger);
 
-    expect(automation.nodes).to.deep.equal([initialTrigger, newTrigger]);
+    expect(workflow.nodes).to.deep.equal([initialTrigger, newTrigger]);
   });
 
-  it('should add actions to the automation', () => {
+  it('should add actions to the workflow', () => {
     const trigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
     trigger.setChainId(CHAINS.ETHEREUM);
     trigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
@@ -80,10 +80,10 @@ describe('Automation Class', () => {
     action2.setParams("message", "This is a test message");
     action2.setPosition(2, 0);
 
-    const automation = new Automation("Test Automation", [trigger]);
-    automation.addNode(action1);
-    automation.addNode(action2);
+    const workflow = new Workflow("Test Workflow", [trigger]);
+    workflow.addNode(action1);
+    workflow.addNode(action2);
 
-    expect(automation.nodes).to.deep.equal([trigger, action1, action2]);
+    expect(workflow.nodes).to.deep.equal([trigger, action1, action2]);
   });
 });

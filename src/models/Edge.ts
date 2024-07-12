@@ -25,7 +25,6 @@ export class Edge {
 
     toJSON(): { [key: string]: any } {
         return {
-            id: this.id,
             source: this.source.getRef(),
             target: this.target.getRef(),
         };

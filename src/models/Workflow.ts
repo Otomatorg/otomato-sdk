@@ -2,7 +2,7 @@ import { Node } from './Node.js';
 import { Edge } from './Edge.js';
 import { apiServices } from '../services/ApiService.js';
 
-export class Automation {
+export class Workflow {
   name: string;
   nodes: Node[];
   edges: Edge[];
@@ -41,7 +41,7 @@ export class Automation {
     };
   }
 
-  async save() {
+  async create() {
     return apiServices.post('/workflows', this.toJSON());
   }
 }

@@ -2,30 +2,31 @@
 import axios from 'axios';
 
 const API_CONFIG = {
-  BASE_URL: 'http://localhost:3040/api',
+  BASE_URL: 'https://staging-api.otomato.xyz/api',
   HEADERS: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   }
-}
+};
 
 const axiosInstance = axios.create({
   baseURL: API_CONFIG.BASE_URL,
   headers: API_CONFIG.HEADERS
 });
 
-export const apiServices = {
-  async post(endpoint: string, data: any) {
-    try {
-      const response = await axiosInstance.post(endpoint, data);
-      return response.data;
-    } catch (error) {
-      console.error('Network request failed', error);
-      throw error;
-    }
-  },
+class ApiServices {
+  private cookie: string | null = null;
 
-  // Add other HTTP methods if needed
-  // async get(endpoint: string) { ... }
-  // async put(endpoint: string, data: any) { ... }
-  // async delete(endpoint: string) { ... }
-};
+  setCookie(cookie: string) {
+    this.cookie = `token=${cookie}`;
+  }
+
+  async post(url: string, data: any) {
+    const headers = this.cookie ? { 'Cookie': this.cookie } : {};
+    const response = await axiosInstance.post(url, data, { headers });
+    return response.data;
+  }
+
+  // You can add other methods (get, put, delete) similarly
+}
+
+export const apiServices = new ApiServices();

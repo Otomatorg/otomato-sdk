@@ -5,7 +5,7 @@ export * from './constants/tokens.js';
 
 // Exporting models
 export * from './models/Action.js';
-export * from './models/Automation.js';
+export * from './models/Workflow.js';
 export * from './models/Condition.js';
 export * from './models/Parameter.js';
 export * from './models/Trigger.js';

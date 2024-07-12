@@ -7,8 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "npx tsc",
-    "test": "mocha --config .mocharc.json",
-    "publish": "npm publish"
+    "test": "mocha --config .mocharc.json"
   },
   "keywords": [
     "sdk",

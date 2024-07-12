@@ -4,7 +4,7 @@ import { Node, Position } from './Node.js';
 export class Trigger extends Node {
   type: number;
 
-  constructor(trigger: { id: number; name: string; description: string; type: number; parameters: Parameter[], ref?: string, position?: Position }) {
+  constructor(trigger: { blockId: number; name: string; description: string; type: number; parameters: Parameter[], ref?: string, position?: Position }) {
     super({ ...trigger, class: 'trigger' });
     this.type = trigger.type;
   }

@@ -13,7 +13,6 @@ export const TRIGGERS = {
         0
       ],
       "TRANSFER": {
-        "id": 1,
         "name": "Transfer token",
         "description": "This block gets triggered when someone transfers the ERC20 configured in the params",
         "type": 0,
@@ -45,10 +44,10 @@ export const TRIGGERS = {
             "description": "The contract address of the ERC20",
             "mandatory": true
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 1
       },
       "BALANCE": {
-        "id": 5,
         "name": "ERC20 balance check",
         "description": "Fetches the balance of an ERC20 and checks it against the specified condition.",
         "type": 1,
@@ -85,7 +84,8 @@ export const TRIGGERS = {
             "type": "integer",
             "description": "The waiting time between each polling"
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 5
       }
     }
   },
@@ -95,7 +95,6 @@ export const TRIGGERS = {
         43334
       ],
       "SWAP": {
-        "id": 2,
         "name": "Splice Finance Swap",
         "description": "Swap in Splice Finance",
         "type": 0,
@@ -126,10 +125,10 @@ export const TRIGGERS = {
             "type": "int256",
             "description": "Net SY to account"
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 2
       },
       "LIQUIDITY_REMOVED": {
-        "id": 6,
         "name": "Liquidity Removed",
         "description": "Liquidity removed in Splice Finance",
         "type": 0,
@@ -165,10 +164,10 @@ export const TRIGGERS = {
             "type": "uint256",
             "description": "Net SY out"
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 6
       },
       "MARKET_CREATION": {
-        "id": 7,
         "name": "Market Creation",
         "description": "Market creation in Splice Finance",
         "type": 0,
@@ -199,10 +198,10 @@ export const TRIGGERS = {
             "type": "uint256",
             "description": "LN fee rate root"
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 7
       },
       "INTEREST_RATE_UPDATE": {
-        "id": 9,
         "name": "Interest Rate Update",
         "description": "Interest rate update in Splice Finance",
         "type": 0,
@@ -230,7 +229,8 @@ export const TRIGGERS = {
               "0xbF14932e1A7962C77D0b31be80075936bE1A43D4"
             ]
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 9
       }
     }
   },
@@ -240,7 +240,6 @@ export const TRIGGERS = {
         43334
       ],
       "LEND_RECALLED": {
-        "id": 8,
         "name": "Lend Recalled",
         "description": "Lend recalled in Astaria",
         "type": 0,
@@ -261,7 +260,8 @@ export const TRIGGERS = {
             "type": "uint256",
             "description": "End time"
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 8
       }
     }
   },
@@ -272,7 +272,6 @@ export const TRIGGERS = {
         1
       ],
       "SWAP": {
-        "id": 4,
         "name": "Odos Swap",
         "description": "Swap on Odos",
         "type": 0,
@@ -309,7 +308,8 @@ export const TRIGGERS = {
             "type": "address",
             "description": "Output token address"
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 4
       }
     }
   },
@@ -319,7 +319,6 @@ export const TRIGGERS = {
         43334
       ],
       "NAME_REGISTERED": {
-        "id": 3,
         "name": "Name Registered",
         "description": "Name registered in Mode Name Service",
         "type": 0,
@@ -340,7 +339,8 @@ export const TRIGGERS = {
             "type": "uint256",
             "description": "Expiration time"
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 3
       }
     }
   },
@@ -350,7 +350,6 @@ export const TRIGGERS = {
         0
       ],
       "PRICE_MOVEMENT_AGAINST_CURRENCY": {
-        "id": 10,
         "name": "On-Chain Price Movement Against Fiat Currency",
         "description": "This trigger activates when the on-chain price of an asset moves against a specified currency based on the given condition.",
         "type": 2,
@@ -383,7 +382,8 @@ export const TRIGGERS = {
             "type": "erc20",
             "description": "The asset that you want to track"
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 10
       }
     }
   }
@@ -393,7 +393,6 @@ export const ACTIONS = {
   "NOTIFICATIONS": {
     "SLACK": {
       "SEND_MESSAGE": {
-        "id": 100002,
         "name": "Send message",
         "type": 0,
         "description": "Notifies you by sending a Slack message to the channel of your choice",
@@ -408,12 +407,12 @@ export const ACTIONS = {
             "type": "paragraph",
             "description": "The text content to send"
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 100002
       }
     },
     "DISCORD": {
       "SEND_MESSAGE": {
-        "id": 100003,
         "name": "Send message",
         "type": 0,
         "description": "Notifies you by sending a Discord message to the channel of your choice",
@@ -428,12 +427,12 @@ export const ACTIONS = {
             "type": "paragraph",
             "description": "The text content to send"
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 100003
       }
     },
     "TELEGRAM": {
       "SEND_MESSAGE": {
-        "id": 100001,
         "name": "Send message",
         "type": 0,
         "description": "Notifies you by sending a Telegram message to the chat of your choice",
@@ -448,7 +447,8 @@ export const ACTIONS = {
             "type": "paragraph",
             "description": "The text content to send"
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 100001
       }
     }
   },
@@ -458,7 +458,6 @@ export const ACTIONS = {
         0
       ],
       "TRANSFER": {
-        "id": 100004,
         "name": "Transfer token",
         "description": "Transfers an ERC20 token",
         "type": 1,
@@ -484,7 +483,8 @@ export const ACTIONS = {
             "type": "erc20",
             "description": "The contract address of the ERC20"
           },
-        ] as Parameter[]
+        ] as Parameter[],
+        "blockId": 100004
       }
     }
   }
