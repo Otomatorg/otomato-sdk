@@ -9,9 +9,11 @@ const TRIGGER_TYPE = {
 export const TRIGGERS = {
   "TOKENS": {
     "ERC20": {
-      "CHAINS": [
+      "description": "The most used standard for tokens on ethereum compatible blockchains",
+      "chains": [
         0
       ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp",
       "TRANSFER": {
         "name": "Transfer token",
         "description": "This block gets triggered when someone transfers the ERC20 configured in the params",
@@ -91,9 +93,11 @@ export const TRIGGERS = {
   },
   "YIELD": {
     "SPLICE_FI": {
-      "CHAINS": [
+      "description": "Split any yield-bearing asset into separate yield and principal components",
+      "chains": [
         43334
       ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png",
       "SWAP": {
         "name": "Splice Finance Swap",
         "description": "Swap in Splice Finance",
@@ -236,9 +240,11 @@ export const TRIGGERS = {
   },
   "LENDING": {
     "ASTARIA": {
-      "CHAINS": [
+      "description": "Astaria is an oracle-less, intent-based, fixed-rate lending protocol supporting unlimited loan durations for any asset",
+      "chains": [
         43334
       ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/astaria.png",
       "LEND_RECALLED": {
         "name": "Lend Recalled",
         "description": "Lend recalled in Astaria",
@@ -267,10 +273,12 @@ export const TRIGGERS = {
   },
   "DEXES": {
     "ODOS": {
-      "CHAINS": [
+      "description": "Smart Order Routing across multiple blockchain protocols, 700+ Liquidity Sources and thousands of token pairs, delivering ultimate savings to users",
+      "chains": [
         43334,
         1
       ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.jpg",
       "SWAP": {
         "name": "Odos Swap",
         "description": "Swap on Odos",
@@ -315,9 +323,11 @@ export const TRIGGERS = {
   },
   "SOCIALS": {
     "MODE_NAME_SERVICE": {
-      "CHAINS": [
+      "description": "Next generation of Mode Mainnet Domains",
+      "chains": [
         43334
       ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/modens.png",
       "NAME_REGISTERED": {
         "name": "Name Registered",
         "description": "Name registered in Mode Name Service",
@@ -346,9 +356,11 @@ export const TRIGGERS = {
   },
   "PRICE_ACTION": {
     "ON_CHAIN_PRICE_MOVEMENT": {
-      "CHAINS": [
+      "description": "Triggers based on the movement of on-chain prices against specified currencies",
+      "chains": [
         0
       ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/trend-up.png",
       "PRICE_MOVEMENT_AGAINST_CURRENCY": {
         "name": "On-Chain Price Movement Against Fiat Currency",
         "description": "This trigger activates when the on-chain price of an asset moves against a specified currency based on the given condition.",
@@ -392,6 +404,8 @@ export const TRIGGERS = {
 export const ACTIONS = {
   "NOTIFICATIONS": {
     "SLACK": {
+      "description": "Slack is a messaging app for businesses that connects people to the information they need.",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/slack.png",
       "SEND_MESSAGE": {
         "name": "Send message",
         "type": 0,
@@ -412,6 +426,8 @@ export const ACTIONS = {
       }
     },
     "DISCORD": {
+      "description": "Discord is a communication service to talk with your favorite communities.",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png",
       "SEND_MESSAGE": {
         "name": "Send message",
         "type": 0,
@@ -432,6 +448,8 @@ export const ACTIONS = {
       }
     },
     "TELEGRAM": {
+      "description": "Telegram is a cloud-based mobile and desktop messaging app with a focus on security and speed.",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg",
       "SEND_MESSAGE": {
         "name": "Send message",
         "type": 0,
@@ -454,7 +472,8 @@ export const ACTIONS = {
   },
   "TOKENS": {
     "ERC20": {
-      "CHAINS": [
+      "description": "The most used standard for tokens on ethereum compatible blockchains",
+      "chains": [
         0
       ],
       "TRANSFER": {
