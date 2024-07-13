@@ -29,4 +29,11 @@ export class Edge {
             target: this.target.getRef(),
         };
     }
+
+    static fromJSON(json: { [key: string]: any }): Edge {
+        return new Edge({
+            source: json.source,
+            target: json.target,
+        });
+    }
 }

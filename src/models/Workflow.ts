@@ -8,7 +8,7 @@ export class Workflow {
   nodes: Node[];
   edges: Edge[];
 
-  constructor(name: string, nodes: Node[] = [], edges: Edge[] = []) {
+  constructor(name: string = '', nodes: Node[] = [], edges: Edge[] = []) {
     this.name = name;
     this.nodes = nodes;
     this.edges = edges;
@@ -36,6 +36,7 @@ export class Workflow {
 
   toJSON() {
     return {
+      id: this.id,
       name: this.name,
       nodes: this.nodes.map(node => node.toJSON()),
       edges: this.edges.map(edge => edge.toJSON()),
@@ -55,5 +56,14 @@ export class Workflow {
     });
 
     return response;
+  }
+
+  async load(workflowId: string): Promise<Workflow> {
+    const response = await apiServices.get(`/workflows/${workflowId}`);
+    this.id = response.id;
+    this.name = response.name;
+    this.nodes = response.nodes.map((nodeData: any) => Node.fromJSON(nodeData));
+    this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData));
+    return this;
   }
 }

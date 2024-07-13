@@ -26,6 +26,12 @@ class ApiServices {
     return response.data;
   }
 
+  async get(url: string) {
+    const headers = this.cookie ? { 'Cookie': this.cookie } : {};
+    const response = await axiosInstance.get(url, { headers });
+    return response.data;
+  }
+
   // You can add other methods (get, put, delete) similarly
 }
 

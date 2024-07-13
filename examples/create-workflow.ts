@@ -10,6 +10,7 @@ const main = async () => {
         description: TRIGGERS.TOKENS.ERC20.TRANSFER.description,
         type: TRIGGERS.TOKENS.ERC20.TRANSFER.type,
         parameters: TRIGGERS.TOKENS.ERC20.TRANSFER.parameters,
+        image: TRIGGERS.TOKENS.ERC20.TRANSFER.image,
         ref: 'n-1',
     });
     usdcTransferTrigger.setChainId(CHAINS.ETHEREUM);
@@ -31,7 +32,7 @@ const main = async () => {
     workflow.addEdge(edge);
 
     // console.log(JSON.stringify(workflow.toJSON(), null, 2));
-
+return;
     const res = await workflow.create();
     console.log(res);
     console.log(`Workflow ID: ${workflow.id}`);  // This will print the ID of the created workflow

@@ -47,7 +47,8 @@ export const TRIGGERS = {
             "mandatory": true
           },
         ] as Parameter[],
-        "blockId": 1
+        "blockId": 1,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp"
       },
       "BALANCE": {
         "name": "ERC20 balance check",
@@ -87,7 +88,8 @@ export const TRIGGERS = {
             "description": "The waiting time between each polling"
           },
         ] as Parameter[],
-        "blockId": 5
+        "blockId": 5,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp"
       }
     }
   },
@@ -130,7 +132,8 @@ export const TRIGGERS = {
             "description": "Net SY to account"
           },
         ] as Parameter[],
-        "blockId": 2
+        "blockId": 2,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
       },
       "LIQUIDITY_REMOVED": {
         "name": "Liquidity Removed",
@@ -169,7 +172,8 @@ export const TRIGGERS = {
             "description": "Net SY out"
           },
         ] as Parameter[],
-        "blockId": 6
+        "blockId": 6,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
       },
       "MARKET_CREATION": {
         "name": "Market Creation",
@@ -203,7 +207,8 @@ export const TRIGGERS = {
             "description": "LN fee rate root"
           },
         ] as Parameter[],
-        "blockId": 7
+        "blockId": 7,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
       },
       "INTEREST_RATE_UPDATE": {
         "name": "Interest Rate Update",
@@ -234,7 +239,8 @@ export const TRIGGERS = {
             ]
           },
         ] as Parameter[],
-        "blockId": 9
+        "blockId": 9,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
       }
     }
   },
@@ -267,7 +273,8 @@ export const TRIGGERS = {
             "description": "End time"
           },
         ] as Parameter[],
-        "blockId": 8
+        "blockId": 8,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/astaria.png"
       }
     }
   },
@@ -317,7 +324,8 @@ export const TRIGGERS = {
             "description": "Output token address"
           },
         ] as Parameter[],
-        "blockId": 4
+        "blockId": 4,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.jpg"
       }
     }
   },
@@ -350,7 +358,8 @@ export const TRIGGERS = {
             "description": "Expiration time"
           },
         ] as Parameter[],
-        "blockId": 3
+        "blockId": 3,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/modens.png"
       }
     }
   },
@@ -395,7 +404,8 @@ export const TRIGGERS = {
             "description": "The asset that you want to track"
           },
         ] as Parameter[],
-        "blockId": 10
+        "blockId": 10,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/trend-up.png"
       }
     }
   }
@@ -422,7 +432,8 @@ export const ACTIONS = {
             "description": "The text content to send"
           },
         ] as Parameter[],
-        "blockId": 100002
+        "blockId": 100002,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/slack.png"
       }
     },
     "DISCORD": {
@@ -444,7 +455,8 @@ export const ACTIONS = {
             "description": "The text content to send"
           },
         ] as Parameter[],
-        "blockId": 100003
+        "blockId": 100003,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png"
       }
     },
     "TELEGRAM": {
@@ -466,7 +478,8 @@ export const ACTIONS = {
             "description": "The text content to send"
           },
         ] as Parameter[],
-        "blockId": 100001
+        "blockId": 100001,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg"
       }
     }
   },
@@ -476,6 +489,7 @@ export const ACTIONS = {
       "chains": [
         0
       ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp",
       "TRANSFER": {
         "name": "Transfer token",
         "description": "Transfers an ERC20 token",
@@ -503,7 +517,8 @@ export const ACTIONS = {
             "description": "The contract address of the ERC20"
           },
         ] as Parameter[],
-        "blockId": 100004
+        "blockId": 100004,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp"
       }
     }
   }

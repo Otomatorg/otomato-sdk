@@ -1,5 +1,8 @@
+// Assuming you have the ACTIONS constant defined as you provided
+
 import { Parameter } from './Parameter.js';
 import { validateType } from '../utils/typeValidator.js';
+import { ACTIONS, TRIGGERS } from '../constants/Blocks.js';
 
 export interface Position {
   x: number;
@@ -10,7 +13,7 @@ let nodeCounter = 0;
 const generatedRefs = new Set<string>();
 
 export class Node {
-  id: number | null = null;
+  id: string | null = null;
   blockId: number;
   name: string;
   description: string;
@@ -19,15 +22,18 @@ export class Node {
   position?: Position;
   ref: string;
   class: string;
+  image: string;
 
-  constructor(node: { blockId: number; name: string; description: string; parameters: Parameter[], ref?: string, position?: Position, class: string }) {
+  constructor(node: { blockId: number; name: string; description: string; parameters: Parameter[], ref?: string, position?: Position, class: string; image: string }) {
+    this.id = null;
     this.blockId = node.blockId;
     this.name = node.name;
     this.description = node.description;
+    this.image = node.image;
     this.parameters = {};
     this.keyMap = {};
     this.class = node.class;
-
+    
     if (node.ref) {
       this.ref = node.ref;
     } else {
@@ -49,8 +55,8 @@ export class Node {
     }
   }
 
-  setId(value: number): void {
-    this.id = value;
+  setId(id: string): void {
+    this.id = id;
   }
 
   setChainId(value: number): void {
@@ -113,8 +119,8 @@ export class Node {
   toJSON(): { [key: string]: any } {
     const json: { [key: string]: any } = {
       id: this.id,
-      blockId: this.blockId,
       ref: this.ref,
+      blockId: this.blockId,
       type: this.class,
       parameters: this.getParameters(),
     };
@@ -127,4 +133,66 @@ export class Node {
   private getSimplifiedKey(key: string): string {
     return key.replace(/[.\[\]]/g, '_');
   }
+
+  static fromJSON(json: { [key: string]: any }): Node {
+
+    let enriched = findActionByBlockId(json.blockId);
+    if (!enriched) 
+      enriched = findTriggerByBlockId(json.blockId);
+    if (!enriched)
+      enriched = {name: "Unknown", description: "Unknown", image: "Unknown"}
+
+    const parameters = Object.keys(json.parameters).map(key => ({
+      key,
+      type: typeof json.parameters[key], // Assuming type can be derived from the value's type
+      description: '', // Add appropriate description if needed
+      value: json.parameters[key]
+    }));
+    const node = new Node({
+      blockId: json.blockId,
+      name: enriched.name,
+      description: enriched.description,
+      image: enriched.image,
+      parameters,
+      ref: json.ref,
+      position: json.position,
+      class: json.type
+    });
+    node.setId(json.id);
+    return node;
+  }
 }
+
+const findActionByBlockId = (blockId: number): { name: string; description: string; image: string } | null => {
+  for (const category in ACTIONS) {
+    for (const service in (ACTIONS as any)[category]) {
+      for (const actionKey in (ACTIONS as any)[category][service]) {
+        if ((ACTIONS as any)[category][service][actionKey].blockId === blockId) {
+          return {
+            name: (ACTIONS as any)[category][service][actionKey].name,
+            description: (ACTIONS as any)[category][service][actionKey].description,
+            image: (ACTIONS as any)[category][service][actionKey].image,
+          };
+        }
+      }
+    }
+  }
+  return null;
+};
+
+const findTriggerByBlockId = (blockId: number): { name: string; description: string; image: string } | null => {
+  for (const category in TRIGGERS) {
+    for (const service in (TRIGGERS as any)[category]) {
+      for (const triggerKey in (TRIGGERS as any)[category][service]) {
+        if ((TRIGGERS as any)[category][service][triggerKey].blockId === blockId) {
+          return {
+            name: (TRIGGERS as any)[category][service][triggerKey].name,
+            description: (TRIGGERS as any)[category][service][triggerKey].description,
+            image: (TRIGGERS as any)[category][service][triggerKey].image,
+          };
+        }
+      }
+    }
+  }
+  return null;
+};

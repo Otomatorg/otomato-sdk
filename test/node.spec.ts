@@ -14,7 +14,8 @@ describe('Node Class', () => {
       name: 'Test Node',
       description: 'A node for testing',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass'
+      class: 'testClass',
+      image: 'a',
     });
 
     expect(node.position).to.be.undefined;
@@ -27,7 +28,8 @@ describe('Node Class', () => {
       description: 'A node for testing with coordinates',
       parameters: DEFAULT_PARAMETERS,
       class: 'testClass',
-      position: {x: 100, y: 200}
+      position: {x: 100, y: 200},
+      image: 'a',
     });
 
     expect(node.position?.x).to.equal(100);
@@ -40,7 +42,8 @@ describe('Node Class', () => {
       name: 'Test Node for Coordinates',
       description: 'A node for testing coordinate setting',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass'
+      class: 'testClass',
+      image: 'a',
     });
 
     node.setPosition(300, 400);
@@ -54,7 +57,8 @@ describe('Node Class', () => {
       name: 'Test Node for Parameters',
       description: 'A node for testing parameter setting',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass'
+      class: 'testClass',
+      image: 'a',
     });
 
     node.setChainId(1);
@@ -71,7 +75,8 @@ describe('Node Class', () => {
       name: 'Test Node for JSON',
       description: 'A node for testing JSON export',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass'
+      class: 'testClass',
+      image: 'a',
     });
 
     node.setChainId(1);
@@ -96,7 +101,8 @@ describe('Node Class', () => {
       description: 'A node for testing JSON export with coordinates',
       parameters: DEFAULT_PARAMETERS,
       class: 'testClass',
-      position: {x: 1, y: 2}
+      position: {x: 1, y: 2},
+      image: 'a',
     });
 
     node.setChainId(1);
@@ -121,7 +127,8 @@ describe('Node Class', () => {
       name: 'Test Node for Invalid Parameter Type',
       description: 'A node for testing invalid parameter type',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass'
+      class: 'testClass',
+      image: 'a',
     });
     expect(() => node.setParams("chainId", "invalid")).to.throw('Invalid type for parameter chainId. Expected integer.');
   });
@@ -132,7 +139,8 @@ describe('Node Class', () => {
       name: 'Test Node for Invalid Address',
       description: 'A node for testing invalid address',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass'
+      class: 'testClass',
+      image: 'a',
     });
     expect(() => node.setParams("contractAddress", "invalid_address")).to.throw('Invalid type for parameter contractAddress. Expected address.');
   });

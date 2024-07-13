@@ -1,6 +1,6 @@
 export interface COndition {
-    key: string;
-    type: string;
-    description: string;
-    value: any;
-  }
+  key: string;
+  type: string;
+  description: string;
+  value: any;
+}
