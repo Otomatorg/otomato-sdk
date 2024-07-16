@@ -21,7 +21,6 @@ class ApiServices {
   }
 
   async post(url: string, data: any) {
-    console.log(JSON.stringify(data));
     const headers = this.auth ? { 'Authorization': this.auth } : {};
     const response = await axiosInstance.post(url, data, { headers });
     return response.data;
@@ -46,18 +45,9 @@ class ApiServices {
       signature,
     };
     const response = await axiosInstance.post('/auth/token', body, { headers });
-    
-    const cookie = response.headers['set-cookie'];
     const token = response.data.token;
-    
-    console.log('cookie:', cookie);
-    console.log('token:', token);
 
-    // Decode the JWT token
-    const decodedToken: any = jwt.decode(token, { complete: true });
-    console.log('decodedToken:', decodedToken);
-
-    return { token, cookie, decodedToken };
+    return { token };
   }
 
   async verifyToken(token: string) {
