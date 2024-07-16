@@ -14,20 +14,20 @@ const axiosInstance = axios.create({
 });
 
 class ApiServices {
-  private cookie: string | null = null;
+  private auth: string | null = null;
 
-  setCookie(cookie: string) {
-    this.cookie = `token=${cookie}`;
+  setAuth(auth: string) {
+    this.auth = auth;
   }
 
   async post(url: string, data: any) {
-    const headers = this.cookie ? { 'Cookie': this.cookie } : {};
+    const headers = this.auth ? { 'Cookie': this.auth } : {};
     const response = await axiosInstance.post(url, data, { headers });
     return response.data;
   }
 
   async get(url: string) {
-    const headers = this.cookie ? { 'Cookie': this.cookie } : {};
+    const headers = this.auth ? { 'Authorization': this.auth } : {};
     const response = await axiosInstance.get(url, { headers });
     return response.data;
   }
