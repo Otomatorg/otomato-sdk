@@ -33,7 +33,7 @@ export class Node {
     this.parameters = {};
     this.keyMap = {};
     this.class = node.class;
-    
+
     if (node.ref) {
       this.ref = node.ref;
     } else {
@@ -117,6 +117,20 @@ export class Node {
   }
 
   toJSON(): { [key: string]: any } {
+    const serializeBigInt = (key: string, value: any) => {
+      if (typeof value === 'bigint') {
+        return value.toString();
+      } else if (typeof value === 'object' && value !== null) {
+        // Recursively call serializeBigInt for nested objects
+        return Object.entries(value).reduce((acc, [k, v]) => {
+          acc[k] = serializeBigInt(k, v);
+          return acc;
+        }, {} as { [key: string]: any });
+      } else {
+        return value;
+      }
+    };
+
     const json: { [key: string]: any } = {
       id: this.id,
       ref: this.ref,
@@ -127,7 +141,7 @@ export class Node {
     if (this.position) {
       json.position = this.position;
     }
-    return json;
+    return JSON.parse(JSON.stringify(json, serializeBigInt));
   }
 
   private getSimplifiedKey(key: string): string {
@@ -137,10 +151,10 @@ export class Node {
   static fromJSON(json: { [key: string]: any }): Node {
 
     let enriched = findActionByBlockId(json.blockId);
-    if (!enriched) 
+    if (!enriched)
       enriched = findTriggerByBlockId(json.blockId);
     if (!enriched)
-      enriched = {name: "Unknown", description: "Unknown", image: "Unknown"}
+      enriched = { name: "Unknown", description: "Unknown", image: "Unknown" }
 
     const parameters = Object.keys(json.parameters).map(key => ({
       key,

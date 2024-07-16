@@ -101,7 +101,7 @@ export const NFTS: NFTs = {
       contractAddress: "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d",
       name: "BoredApeYachtClub"
     },
-    
+
     {
       contractAddress: "0xbd3531da5cf5857e7cfaa92426877b022e612cf8",
       name: "Pudgy Penguins"
@@ -124,7 +124,21 @@ export const NFTS: NFTs = {
   ]
 };
 
-export function getToken(chain: number, symbol: string): Token {
+export function getToken(chain: number, contractAddress: string): Token {
+  if (!(chain in TOKENS)) {
+    throw new Error(`Unsupported chain: ${chain}`);
+  }
+
+  const token = TOKENS[chain].find(token => token.contractAddress.toLowerCase() === contractAddress.toLowerCase());
+
+  if (!token) {
+    throw new Error(`Token with contract address ${contractAddress} not found on chain ${chain}`);
+  }
+
+  return token;
+}
+
+export function getTokenFromSymbol(chain: number, symbol: string): Token {
   if (!(chain in TOKENS)) {
     throw new Error(`Unsupported chain: ${chain}`);
   }

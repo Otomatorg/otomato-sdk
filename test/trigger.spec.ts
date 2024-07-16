@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Trigger, TRIGGERS, getToken, CHAINS } from '../src/index';
+import { Trigger, TRIGGERS, getTokenFromSymbol, CHAINS } from '../src/index';
 
 const DEFAULT_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -20,13 +20,13 @@ describe('Trigger Class', () => {
     transferTrigger.setChainId(CHAINS.ETHEREUM);
     transferTrigger.setParams("value", 1000);
     transferTrigger.setParams("to", DEFAULT_ADDRESS);
-    transferTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    transferTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
     const params = transferTrigger.getParameters();
     expect(params.chainId).to.equal(CHAINS.ETHEREUM);
     expect(params.abi.parameters.value).to.equal(1000);
     expect(params.abi.parameters.to).to.equal(DEFAULT_ADDRESS);
-    expect(params.contractAddress).to.equal(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    expect(params.contractAddress).to.equal(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
   });
 
   it('should be able to export a trigger as json', () => {
@@ -34,10 +34,10 @@ describe('Trigger Class', () => {
     transferTrigger.setChainId(CHAINS.ETHEREUM);
     transferTrigger.setParams("value", 1000);
     transferTrigger.setParams("to", DEFAULT_ADDRESS);
-    transferTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    transferTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
     const json = transferTrigger.toJSON();
-    console.log(json);
+
     expect(json).to.deep.equal({
       blockId: TRIGGERS.TOKENS.ERC20.TRANSFER.blockId,
       ref: transferTrigger.getRef(),
@@ -52,7 +52,7 @@ describe('Trigger Class', () => {
             from: null
           }
         },
-        contractAddress: getToken(CHAINS.ETHEREUM, 'USDC').contractAddress
+        contractAddress: getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress
       }
     });
   });
@@ -61,7 +61,7 @@ describe('Trigger Class', () => {
     const balanceTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.BALANCE);
     balanceTrigger.setChainId(CHAINS.ETHEREUM);
     balanceTrigger.setParams("account", DEFAULT_ADDRESS);
-    balanceTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    balanceTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     balanceTrigger.setCondition("gte");
     balanceTrigger.setComparisonValue(45000);
     balanceTrigger.setInterval(5000);
@@ -69,8 +69,7 @@ describe('Trigger Class', () => {
     const params = balanceTrigger.getParameters();
     expect(params.chainId).to.equal(CHAINS.ETHEREUM);
     expect(params.abi.parameters.account).to.equal(DEFAULT_ADDRESS);
-    expect(params.contractAddress).to.equal(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
-    console.log(balanceTrigger.toJSON());
+    expect(params.contractAddress).to.equal(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     expect(balanceTrigger.toJSON().parameters.condition).to.equal("gte");
     expect(balanceTrigger.toJSON().parameters.comparisonValue).to.equal(45000);
     expect(balanceTrigger.toJSON().parameters.interval).to.equal(5000);

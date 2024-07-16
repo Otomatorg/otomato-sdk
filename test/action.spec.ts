@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Action, ACTIONS, getToken, CHAINS } from '../src/index';
+import { Action, ACTIONS, getTokenFromSymbol, CHAINS } from '../src/index';
 
 const DEFAULT_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -8,8 +8,6 @@ describe('Action Class', () => {
   it('should create a transfer action without parameters', () => {
     const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
     const params = transferAction.getParameters();
-
-    console.log(params)
 
     expect(params.chainId).to.be.null;
     expect(params.abi.parameters.value).to.be.null;
@@ -22,13 +20,13 @@ describe('Action Class', () => {
     transferAction.setChainId(CHAINS.ETHEREUM);
     transferAction.setParams("value", 1000);
     transferAction.setParams("to", DEFAULT_ADDRESS);
-    transferAction.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
     const params = transferAction.getParameters();
     expect(params.chainId).to.equal(CHAINS.ETHEREUM);
     expect(params.abi.parameters.value).to.equal(1000);
     expect(params.abi.parameters.to).to.equal(DEFAULT_ADDRESS);
-    expect(params.contractAddress).to.equal(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    expect(params.contractAddress).to.equal(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
   });
 
   it('should be able to export an action as json', () => {
@@ -36,7 +34,7 @@ describe('Action Class', () => {
     transferAction.setChainId(CHAINS.ETHEREUM);
     transferAction.setParams("value", 1000);
     transferAction.setParams("to", DEFAULT_ADDRESS);
-    transferAction.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
     const json = transferAction.toJSON();
     expect(json).to.deep.equal({
@@ -52,7 +50,7 @@ describe('Action Class', () => {
             value: 1000
           }
         },
-        contractAddress: getToken(CHAINS.ETHEREUM, 'USDC').contractAddress
+        contractAddress: getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress
       }
     });
   });

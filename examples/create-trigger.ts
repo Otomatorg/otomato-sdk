@@ -1,12 +1,19 @@
-import { TRIGGERS, getToken, CHAINS, Trigger } from '../src/index.js';
+import { TRIGGERS, getToken, CHAINS, Trigger, getTokenFromSymbol, convertToTokenUnits } from '../src/index.js';
 
 
+const main = async () => {
 
-const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
+    const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
 
-transferTrigger.setChainId(CHAINS.ETHEREUM);
-// transferTrigger.setParams("value", 1000);
-transferTrigger.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-transferTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    const contractAddr = getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress;
+    console.log(contractAddr);
 
-console.log(JSON.stringify(transferTrigger.toJSON(), null, 2));
+    transferTrigger.setChainId(CHAINS.ETHEREUM);
+    transferTrigger.setParams("value", await convertToTokenUnits(1, CHAINS.ETHEREUM, contractAddr));
+    transferTrigger.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    transferTrigger.setContractAddress(contractAddr);
+
+    console.log(transferTrigger.toJSON());
+}
+
+main();

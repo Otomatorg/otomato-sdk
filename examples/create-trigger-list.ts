@@ -1,4 +1,4 @@
-import { TRIGGERS, getToken, TOKENS, CHAINS, Trigger } from '../src/index.js';
+import { TRIGGERS, getTokenFromSymbol, TOKENS, CHAINS, Trigger } from '../src/index.js';
 
 const generateDefaultTriggers = (): any[] => {
     const triggersList: any[] = [];
@@ -11,7 +11,7 @@ const generateDefaultTriggers = (): any[] => {
             triggerInstance.setChainId(CHAINS.ETHEREUM);
         }
         if (trigger.parameters.some((p: any) => p.key === "contractAddress")) {
-            triggerInstance.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+            triggerInstance.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
         }
         if (trigger.parameters.some((p: any) => p.key === "condition")) {
             triggerInstance.setCondition('>');
@@ -79,12 +79,12 @@ const generateSpecificTriggers = (): any[] => {
     transferTrigger.setChainId(CHAINS.ETHEREUM);
     transferTrigger.setParams("value", 1000);
     transferTrigger.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    transferTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    transferTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
     const balanceTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.BALANCE);
     balanceTrigger.setChainId(CHAINS.ETHEREUM);
     balanceTrigger.setParams("account", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    balanceTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    balanceTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     balanceTrigger.setCondition(">");
     balanceTrigger.setComparisonValue(45000);
     balanceTrigger.setInterval(5000);
@@ -156,4 +156,4 @@ const triggersList = [
     ...generateSpecificTriggers()
 ];
 
-console.log(JSON.stringify(triggersList));
+console.log(triggersList);

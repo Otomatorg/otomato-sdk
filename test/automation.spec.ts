@@ -2,20 +2,20 @@ import { expect } from 'chai';
 import { Workflow } from '../src/models/Workflow.js';
 import { Trigger } from '../src/models/Trigger.js';
 import { Action } from '../src/models/Action.js';
-import { TRIGGERS, ACTIONS, getToken, CHAINS } from '../src/index.js';
+import { TRIGGERS, ACTIONS, getTokenFromSymbol, CHAINS } from '../src/index.js';
 
 describe('Workflow Class', () => {
   it('should create a workflow with a trigger and actions', () => {
     const trigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
     trigger.setChainId(CHAINS.ETHEREUM);
-    trigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     trigger.setPosition(0, 0);
 
     const action1 = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
     action1.setChainId(CHAINS.ETHEREUM);
     action1.setParams("value", 1000);
     action1.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    action1.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    action1.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     action1.setPosition(1, 0);
 
     const action2 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
@@ -37,7 +37,7 @@ describe('Workflow Class', () => {
   it('should set the name of the workflow', () => {
     const trigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
     trigger.setChainId(CHAINS.ETHEREUM);
-    trigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     trigger.setPosition(0, 0);
 
     const workflow = new Workflow("Initial Name", [trigger]);
@@ -49,12 +49,12 @@ describe('Workflow Class', () => {
   it('should add a trigger to the workflow', () => {
     const initialTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
     initialTrigger.setChainId(CHAINS.ETHEREUM);
-    initialTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    initialTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     initialTrigger.setPosition(0, 0);
 
     const newTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
     newTrigger.setChainId(CHAINS.ETHEREUM);
-    newTrigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    newTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     newTrigger.setPosition(1, 0);
 
     const workflow = new Workflow("Test Workflow", [initialTrigger]);
@@ -66,14 +66,14 @@ describe('Workflow Class', () => {
   it('should add actions to the workflow', () => {
     const trigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
     trigger.setChainId(CHAINS.ETHEREUM);
-    trigger.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     trigger.setPosition(0, 0);
 
     const action1 = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
     action1.setChainId(CHAINS.ETHEREUM);
     action1.setParams("value", 1000);
     action1.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    action1.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    action1.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     action1.setPosition(1, 0);
 
     const action2 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);

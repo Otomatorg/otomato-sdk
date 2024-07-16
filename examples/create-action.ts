@@ -1,4 +1,4 @@
-import { ACTIONS, getToken, CHAINS, Action } from '../src/index.js';
+import { ACTIONS, getTokenFromSymbol, CHAINS, Action } from '../src/index.js';
 
 const createAction = () => {
   // Create an ERC20 transfer action
@@ -6,7 +6,7 @@ const createAction = () => {
   transferAction.setChainId(CHAINS.ETHEREUM);
   transferAction.setParams("value", 1000);
   transferAction.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-  transferAction.setContractAddress(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
+  transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
   console.log(transferAction.toJSON());
 
