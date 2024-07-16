@@ -21,7 +21,8 @@ class ApiServices {
   }
 
   async post(url: string, data: any) {
-    const headers = this.auth ? { 'Cookie': this.auth } : {};
+    console.log(JSON.stringify(data));
+    const headers = this.auth ? { 'Authorization': this.auth } : {};
     const response = await axiosInstance.post(url, data, { headers });
     return response.data;
   }
