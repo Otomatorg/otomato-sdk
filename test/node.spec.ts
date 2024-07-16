@@ -7,7 +7,7 @@ const DEFAULT_PARAMETERS: Parameter[] = [
 ];
 
 describe('Node Class', () => {
-  
+
   it('should create a node without coordinates', () => {
     const node = new Node({
       blockId: 1,
@@ -28,7 +28,7 @@ describe('Node Class', () => {
       description: 'A node for testing with coordinates',
       parameters: DEFAULT_PARAMETERS,
       class: 'testClass',
-      position: {x: 100, y: 200},
+      position: { x: 100, y: 200 },
       image: 'a',
     });
 
@@ -85,6 +85,7 @@ describe('Node Class', () => {
     const json = node.toJSON();
     expect(json).to.deep.equal({
       blockId: 5,
+      id: null,
       ref: node.getRef(),
       type: 'testClass',
       parameters: {
@@ -101,7 +102,7 @@ describe('Node Class', () => {
       description: 'A node for testing JSON export with coordinates',
       parameters: DEFAULT_PARAMETERS,
       class: 'testClass',
-      position: {x: 1, y: 2},
+      position: { x: 1, y: 2 },
       image: 'a',
     });
 
@@ -112,12 +113,13 @@ describe('Node Class', () => {
     expect(json).to.deep.equal({
       type: 'testClass',
       blockId: 6,
+      id: null,
       ref: node.getRef(),
       parameters: {
         chainId: 1,
         contractAddress: "0x0000000000000000000000000000000000000000"
       },
-      position: {x: 1, y: 2}
+      position: { x: 1, y: 2 }
     });
   });
 

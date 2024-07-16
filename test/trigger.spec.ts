@@ -10,8 +10,8 @@ describe('Trigger Class', () => {
     const params = transferTrigger.getParameters();
 
     expect(params.chainId).to.be.null;
-    expect(params['abiParams.value']).to.be.null;
-    expect(params['abiParams.to']).to.be.null;
+    expect(params.abi.parameters.value).to.equal(null);
+    expect(params.abi.parameters.to).to.equal(null);
     expect(params.contractAddress).to.be.null;
   });
 
@@ -24,8 +24,8 @@ describe('Trigger Class', () => {
 
     const params = transferTrigger.getParameters();
     expect(params.chainId).to.equal(CHAINS.ETHEREUM);
-    expect(params['abiParams.value']).to.equal(1000);
-    expect(params['abiParams.to']).to.equal(DEFAULT_ADDRESS);
+    expect(params.abi.parameters.value).to.equal(1000);
+    expect(params.abi.parameters.to).to.equal(DEFAULT_ADDRESS);
     expect(params.contractAddress).to.equal(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
   });
 
@@ -41,12 +41,17 @@ describe('Trigger Class', () => {
     expect(json).to.deep.equal({
       blockId: TRIGGERS.TOKENS.ERC20.TRANSFER.blockId,
       ref: transferTrigger.getRef(),
+      id: null,
       type: 'trigger',
       parameters: {
         chainId: CHAINS.ETHEREUM,
-        'abiParams.value': 1000,
-        'abiParams.to': DEFAULT_ADDRESS,
-        'abiParams.from': null,
+        abi: {
+          parameters: {
+            value: 1000,
+            to: DEFAULT_ADDRESS,
+            from: null
+          }
+        },
         contractAddress: getToken(CHAINS.ETHEREUM, 'USDC').contractAddress
       }
     });
@@ -63,7 +68,7 @@ describe('Trigger Class', () => {
 
     const params = balanceTrigger.getParameters();
     expect(params.chainId).to.equal(CHAINS.ETHEREUM);
-    expect(params['abiParams.account']).to.equal(DEFAULT_ADDRESS);
+    expect(params.abi.parameters.account).to.equal(DEFAULT_ADDRESS);
     expect(params.contractAddress).to.equal(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
     console.log(balanceTrigger.toJSON());
     expect(balanceTrigger.toJSON().parameters.condition).to.equal("gte");

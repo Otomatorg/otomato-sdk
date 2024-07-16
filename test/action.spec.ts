@@ -9,9 +9,11 @@ describe('Action Class', () => {
     const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
     const params = transferAction.getParameters();
 
+    console.log(params)
+
     expect(params.chainId).to.be.null;
-    expect(params['abiParams.value']).to.be.null;
-    expect(params['abiParams.to']).to.be.null;
+    expect(params.abi.parameters.value).to.be.null;
+    expect(params.abi.parameters.to).to.be.null;
     expect(params.contractAddress).to.be.null;
   });
 
@@ -24,8 +26,8 @@ describe('Action Class', () => {
 
     const params = transferAction.getParameters();
     expect(params.chainId).to.equal(CHAINS.ETHEREUM);
-    expect(params['abiParams.value']).to.equal(1000);
-    expect(params['abiParams.to']).to.equal(DEFAULT_ADDRESS);
+    expect(params.abi.parameters.value).to.equal(1000);
+    expect(params.abi.parameters.to).to.equal(DEFAULT_ADDRESS);
     expect(params.contractAddress).to.equal(getToken(CHAINS.ETHEREUM, 'USDC').contractAddress);
   });
 
@@ -41,10 +43,15 @@ describe('Action Class', () => {
       blockId: ACTIONS.TOKENS.ERC20.TRANSFER.blockId,
       ref: transferAction.getRef(),
       type: 'action',
+      id: null,
       parameters: {
         chainId: CHAINS.ETHEREUM,
-        'abiParams.value': 1000,
-        'abiParams.to': DEFAULT_ADDRESS,
+        abi: {
+          parameters: {
+            to: DEFAULT_ADDRESS,
+            value: 1000
+          }
+        },
         contractAddress: getToken(CHAINS.ETHEREUM, 'USDC').contractAddress
       }
     });
