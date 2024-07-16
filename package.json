@@ -23,6 +23,7 @@
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/chai": "^4.3.16",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.14.2",
     "chai": "^5.1.1",
@@ -32,6 +33,7 @@
   },
   "dependencies": {
     "axios": "^1.7.2",
-    "ethers": "^6.13.0"
+    "ethers": "^6.13.0",
+    "jsonwebtoken": "^9.0.2"
   }
 }

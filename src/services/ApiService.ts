@@ -1,5 +1,5 @@
-// networkService.ts
 import axios from 'axios';
+import jwt from 'jsonwebtoken';
 
 const API_CONFIG = {
   BASE_URL: 'https://staging-api.otomato.xyz/api',
@@ -33,7 +33,38 @@ class ApiServices {
     return response.data;
   }
 
-  // You can add other methods (get, put, delete) similarly
+  async generateLoginPayload(address: string, chainId: number) {
+    const headers = { 'Content-Type': 'application/json' };
+    const response = await axiosInstance.post('/auth/generate-payload', { address, chainId }, { headers });
+    return response.data;
+  }
+
+  async getToken(loginPayload: any, signature: string) {
+    const headers = { 'Content-Type': 'application/json' };
+    const body = {
+      payload: loginPayload,
+      signature,
+    };
+    const response = await axiosInstance.post('/auth/token', body, { headers });
+    
+    const cookie = response.headers['set-cookie'];
+    const token = response.data.token;
+    
+    console.log('cookie:', cookie);
+    console.log('token:', token);
+
+    // Decode the JWT token
+    const decodedToken: any = jwt.decode(token, { complete: true });
+    console.log('decodedToken:', decodedToken);
+
+    return { token, cookie, decodedToken };
+  }
+
+  async verifyToken(token: string) {
+    const headers = { 'Content-Type': 'application/json' };
+    const response = await axiosInstance.post('/auth/verify-token', { token }, { headers });
+    return response.data;
+  }
 }
 
 export const apiServices = new ApiServices();
