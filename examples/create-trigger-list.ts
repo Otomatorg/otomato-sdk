@@ -19,9 +19,6 @@ const generateDefaultTriggers = (): any[] => {
         if (trigger.parameters.some((p: any) => p.key === "comparisonValue")) {
             triggerInstance.setComparisonValue(1000);
         }
-        if (trigger.parameters.some((p: any) => p.key === "interval")) {
-            triggerInstance.setInterval(60000); // 1 minute interval
-        }
         if (trigger.parameters.some((p: any) => p.key === "abiParams.account")) {
             triggerInstance.setParams('account', '0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6');
         }
@@ -66,7 +63,6 @@ function generateTriggersForAllTokens(chain: number) {
         balanceTrigger.setContractAddress(token.contractAddress);
         balanceTrigger.setCondition(">");
         balanceTrigger.setComparisonValue(10);
-        balanceTrigger.setInterval(5000);
         triggersList.push(balanceTrigger);
     });
 
@@ -87,7 +83,6 @@ const generateSpecificTriggers = (): any[] => {
     balanceTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     balanceTrigger.setCondition(">");
     balanceTrigger.setComparisonValue(45000);
-    balanceTrigger.setInterval(5000);
 
     const spliceFiSwapTrigger = new Trigger(TRIGGERS.YIELD.SPLICE_FI.SWAP);
     spliceFiSwapTrigger.setParams("caller", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");

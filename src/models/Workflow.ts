@@ -44,18 +44,27 @@ export class Workflow {
   }
 
   async create() {
-    const response = await apiServices.post('/workflows', this.toJSON());
-    this.id = response.id; // Assign the returned ID to the workflow instance
+    try {
+      const response = await apiServices.post('/workflows', this.toJSON());
 
-    // Assign IDs to the nodes based on the response
-    response.nodes.forEach((nodeResponse: any) => {
-      const node = this.nodes.find(n => n.getRef() === nodeResponse.ref);
-      if (node) {
-        node.setId(nodeResponse.id);
+      if (response.status === 201) {
+        this.id = response.data.id; // Assign the returned ID to the workflow instance
+
+        // Assign IDs to the nodes based on the response
+        response.data.nodes.forEach((nodeResponse: any) => {
+          const node = this.nodes.find(n => n.getRef() === nodeResponse.ref);
+          if (node) {
+            node.setId(nodeResponse.id);
+          }
+        });
+
+        return { success: true };
+      } else {
+        return { success: false, error: response.data?.error || 'Unknown error' };
       }
-    });
-
-    return response;
+    } catch (error: any) {
+      return { success: false, error: error.message || 'Unknown error' };
+    }
   }
 
   async load(workflowId: string): Promise<Workflow> {
@@ -65,5 +74,23 @@ export class Workflow {
     this.nodes = response.nodes.map((nodeData: any) => Node.fromJSON(nodeData));
     this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData));
     return this;
+  }
+
+  async run() {
+    if (!this.id) {
+      throw new Error('The workflow needs to be published first');
+    }
+  
+    try {
+      const response = await apiServices.post(`/workflows/${this.id}/run`, this.toJSON());
+  
+      if (response.status === 204) {
+        return { success: true };
+      } else {
+        return { success: false, error: response.data?.error || 'Unknown error' };
+      }
+    } catch (error: any) {
+      return { success: false, error: error.message || 'Unknown error' };
+    }
   }
 }

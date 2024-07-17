@@ -1,5 +1,4 @@
 import axios from 'axios';
-import jwt from 'jsonwebtoken';
 
 const API_CONFIG = {
   BASE_URL: 'https://staging-api.otomato.xyz/api',
@@ -22,8 +21,7 @@ class ApiServices {
 
   async post(url: string, data: any) {
     const headers = this.auth ? { 'Authorization': this.auth } : {};
-    const response = await axiosInstance.post(url, data, { headers });
-    return response.data;
+    return await axiosInstance.post(url, data, { headers });
   }
 
   async get(url: string) {

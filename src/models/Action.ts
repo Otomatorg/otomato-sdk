@@ -5,4 +5,8 @@ export class Action extends Node {
   constructor(action: { blockId: number; name: string; description: string; parameters: Parameter[], image: string, ref?: string, position?: Position }) {
     super({ ...action, class: 'action' });
   }
+
+  getStaticParameters(): null {
+    return null;
+  }
 }

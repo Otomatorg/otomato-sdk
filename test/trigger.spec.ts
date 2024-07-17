@@ -64,7 +64,6 @@ describe('Trigger Class', () => {
     balanceTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     balanceTrigger.setCondition("gte");
     balanceTrigger.setComparisonValue(45000);
-    balanceTrigger.setInterval(5000);
 
     const params = balanceTrigger.getParameters();
     expect(params.chainId).to.equal(CHAINS.ETHEREUM);
@@ -80,7 +79,6 @@ describe('Trigger Class', () => {
 
     expect(() => transferTrigger.setCondition(">")).to.throw('Condition setting is not applicable for subscription based triggers.');
     expect(() => transferTrigger.setComparisonValue(45000)).to.throw('Comparison value setting is not applicable for subscription based triggers.');
-    expect(() => transferTrigger.setInterval(5000)).to.throw('Interval setting is not applicable for subscription based triggers.');
   });
 
   it('should throw an error for invalid parameter type', () => {

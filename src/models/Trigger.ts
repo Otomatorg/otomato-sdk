@@ -27,10 +27,10 @@ export class Trigger extends Node {
     this.setParameter('comparisonValue', value);
   }
 
-  setInterval(value: number): void {
-    if (this.notAPollingTrigger()) {
-      throw new Error('Interval setting is not applicable for subscription based triggers.');
+  getStaticParameters(): { interval: number } | null {
+    if (!this.notAPollingTrigger()) {
+      return { interval: 5000 };
     }
-    this.setParameter('interval', value);
+    return null;
   }
 }

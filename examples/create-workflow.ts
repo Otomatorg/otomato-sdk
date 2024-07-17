@@ -3,44 +3,40 @@ import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbo
 const main = async () => {
     apiServices.setAuth("eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIweDdjRUI4ZDgxNDdBYWE5ZEI4MUFjQkRGRTVjMzA1MERGQ2ZGMTg1MzciLCJzdWIiOiIweDg3RkU4YjRmMkZlODM3MGY2Y0M5YTk2MzQ0MmYwN0IwMmY0OTA5QTciLCJhdWQiOiJvdG9tYXRvLXRlc3QubmV0bGlmeS5hcHAiLCJleHAiOjE3MjMzODMxOTksIm5iZiI6MTcyMDc4OTM5OSwiaWF0IjoxNzIwNzkxMTk5LCJqdGkiOiIweDY4ZDkxOWEyMGZiYjIyNDUwZDZmOTFjMzM2ZTBmYjBjMmYyYTc3MmU3Zjg4NWU1ZjRmNzg1NTM2ZGIyYTY5YTAiLCJjdHgiOnt9fQ.MHgyOTM1NTM3MWYwOWM1YzllNWE3YjI4MjVkZTNjMDljZTkwMTQ3OTQwZmU1ZWRlMjM5YTk0MmFjYTQ5YTcwZWI0MGJlNmJiZDk2MDA4ZTIxMzJmNGM3ZTVlZGIzZDZiZjYyMDE4Mzc1MzUwMTRmNTc0ODM0ZDk4YWU3NDQwNDQzOTFi");
 
-    const transferTrigger = new Trigger({
-        blockId: TRIGGERS.TOKENS.ERC20.TRANSFER.blockId,
-        name: TRIGGERS.TOKENS.ERC20.TRANSFER.name,
-        description: TRIGGERS.TOKENS.ERC20.TRANSFER.description,
-        type: TRIGGERS.TOKENS.ERC20.TRANSFER.type,
-        parameters: TRIGGERS.TOKENS.ERC20.TRANSFER.parameters,
-        image: TRIGGERS.TOKENS.ERC20.TRANSFER.image,
-        ref: 'n-1',
-    });
-
-    const contractAddr = getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress;
-    console.log(contractAddr);
-
-    transferTrigger.setChainId(CHAINS.ETHEREUM);
-    transferTrigger.setParams("value", await convertToTokenUnits(1, CHAINS.ETHEREUM, contractAddr));
-    transferTrigger.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    transferTrigger.setContractAddress(contractAddr);
-    transferTrigger.setPosition(0, 0);
+    const trigger = new Trigger(TRIGGERS.PRICE_ACTION.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY);
+    trigger.setChainId(CHAINS.MODE);
+    trigger.setComparisonValue(3000);
+    trigger.setCondition('gte');
+    trigger.setParams('currency', 'USD');
+    trigger.setContractAddress(getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
+    trigger.setPosition(0, 0);
 
     const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-    slackAction.setParams("webhook", "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX");
-    slackAction.setParams("message", "USDC has been transferred!");
+    slackAction.setParams("webhook", "https://hooks.slack.com/services/REPLACE_WITH_YOUR_DATA");
+    slackAction.setParams("message", "Notification from the SDK");
     slackAction.setPosition(0, -10);
 
-    const workflow = new Workflow("USDC Transfer Notification", [transferTrigger, slackAction]);
+    const workflow = new Workflow("USDC Transfer Notification", [trigger, slackAction]);
 
     const edge = new Edge({
-        source: transferTrigger,
+        source: trigger,
         target: slackAction,
     });
 
     workflow.addEdge(edge);
-    const res = await workflow.create();
-    console.log(res);
-    console.log(`Workflow ID: ${workflow.id}`);  // This will print the ID of the created workflow
-    workflow.nodes.forEach(node => {
-        console.log(`Node ${node.getRef()} ID: ${node.id}`);
-    });
+    const creationResult = await workflow.create();
+    
+    if (!creationResult.success) {
+        throw new Error("An error occurred when publishing the workflow")
+    }
+
+    const runResult = await workflow.run();
+
+    if (!runResult.success) {
+        throw new Error("An error occurred when running the workflow")
+    }
+
+    console.log(`Workflow ${workflow.id} is running`);
 }
 
 main();

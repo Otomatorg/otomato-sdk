@@ -18,7 +18,7 @@ export const TOKENS: Tokens = {
       decimals: 6
     },
   ],
-  43334: [
+  34443: [
     {
       contractAddress: "0x0000000000000000000000000000000000000000",
       name: "ETH",
@@ -116,7 +116,7 @@ export const NFTS: NFTs = {
     },
 
   ],
-  43334: [
+  34443: [
     {
       contractAddress: "0x2ad86eeec513ac16804bb05310214c3fd496835b",
       name: "Space id"

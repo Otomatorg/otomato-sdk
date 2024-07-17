@@ -116,6 +116,10 @@ export class Node {
     }, {} as { [key: string]: any });
   }
 
+  getStaticParameters(): { [key: string]: any } | null {
+    return null;
+  }
+
   toJSON(): { [key: string]: any } {
     const serializeBigInt = (key: string, value: any) => {
       if (typeof value === 'bigint') {
@@ -131,12 +135,17 @@ export class Node {
       }
     };
 
+    const staticParameters = this.getStaticParameters() || {};
+
     const json: { [key: string]: any } = {
       id: this.id,
       ref: this.ref,
       blockId: this.blockId,
       type: this.class,
-      parameters: this.getParameters(),
+      parameters: {
+        ...this.getParameters(),
+        ...staticParameters,
+      },
     };
     if (this.position) {
       json.position = this.position;
@@ -175,6 +184,7 @@ export class Node {
     node.setId(json.id);
     return node;
   }
+
 }
 
 const findActionByBlockId = (blockId: number): { name: string; description: string; image: string } | null => {

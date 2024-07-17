@@ -97,7 +97,7 @@ export const TRIGGERS = {
     "SPLICE_FI": {
       "description": "Split any yield-bearing asset into separate yield and principal components",
       "chains": [
-        43334
+        34443
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png",
       "SWAP": {
@@ -248,7 +248,7 @@ export const TRIGGERS = {
     "ASTARIA": {
       "description": "Astaria is an oracle-less, intent-based, fixed-rate lending protocol supporting unlimited loan durations for any asset",
       "chains": [
-        43334
+        34443
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/astaria.png",
       "LEND_RECALLED": {
@@ -282,7 +282,7 @@ export const TRIGGERS = {
     "ODOS": {
       "description": "Smart Order Routing across multiple blockchain protocols, 700+ Liquidity Sources and thousands of token pairs, delivering ultimate savings to users",
       "chains": [
-        43334,
+        34443,
         1
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.jpg",
@@ -333,7 +333,7 @@ export const TRIGGERS = {
     "MODE_NAME_SERVICE": {
       "description": "Next generation of Mode Mainnet Domains",
       "chains": [
-        43334
+        34443
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/modens.png",
       "NAME_REGISTERED": {
