@@ -94,4 +94,63 @@ describe('Action Class', () => {
     const smsAction = new Action(ACTIONS.NOTIFICATIONS.SMS);
     expect(() => smsAction.setParams("phoneNumber", "invalid_phone_number")).to.throw('Invalid type for parameter phoneNumber. Expected phone_number.');
   });*/
+
+  it('should create an action from JSON correctly', async () => {
+    const json = {
+      "id": "755671a7-adac-4aeb-a759-73c00dd397bc",
+      "ref": "n-2",
+      "blockId": 100002,
+      "type": "action",
+      "position": {
+        "x": 0,
+        "y": -10
+      },
+      "parameters": {
+        "message": "ETH is at 3550 :pepe_joy:",
+        "webhook": "https://hooks.slack.com/services/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"
+      }
+    };
+
+    const action = await Action.fromJSON(json);
+
+    expect(action.id).to.equal("755671a7-adac-4aeb-a759-73c00dd397bc");
+    expect(action.getRef()).to.equal("n-2");
+    expect(action.blockId).to.equal(100002);
+    expect(action.getParameters().message).to.equal("ETH is at 3550 :pepe_joy:");
+    expect(action.getParameters().webhook).to.equal("https://hooks.slack.com/services/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");
+    expect(action.getParentInfo()?.name).to.equal("SLACK");
+    expect(action.toJSON()).to.deep.equal(json);
+  });
+
+  it('should create an action with abi parameters from JSON correctly', async () => {
+    const json = {
+      "id": "d6e6884f-cd8f-4c96-b36c-e5539b3599fc",
+      "ref": "n-3",
+      "blockId": 100004,
+      "type": "action",
+      "parameters": {
+        "abi": {
+          "parameters": {
+            "to": "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6",
+            "value": 1000
+          }
+        },
+        "chainId": 1,
+        "contractAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+      }
+    };
+
+    const action = await Action.fromJSON(json);
+    console.log(action)
+
+    expect(action.id).to.equal("d6e6884f-cd8f-4c96-b36c-e5539b3599fc");
+    expect(action.getRef()).to.equal("n-3");
+    expect(action.blockId).to.equal(100004);
+    expect(action.getParameters().chainId).to.equal(1);
+    expect(action.getParameters().contractAddress).to.equal("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48");
+    expect(action.getParameters().abi.parameters.to).to.equal("0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    expect(action.getParameters().abi.parameters.value).to.equal(1000);
+    expect(action.getParentInfo()?.name).to.equal("ERC20");
+    expect(action.toJSON()).to.deep.equal(json);
+  });
 });

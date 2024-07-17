@@ -90,4 +90,72 @@ describe('Trigger Class', () => {
     const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
     expect(() => transferTrigger.setParams("to", "invalid_address")).to.throw('Invalid type for parameter abiParams.to. Expected address.');
   });
+
+  it('should create a trigger from JSON correctly', async () => {
+    const json = {
+      "id": "5c87bcd2-8771-417f-aab6-c23998caa9ae",
+      "ref": "n-1",
+      "blockId": 10,
+      "type": "trigger",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "parameters": {
+        "chainId": 34443,
+        "currency": "USD",
+        "interval": 5000,
+        "condition": "gte",
+        "comparisonValue": 3550,
+        "contractAddress": "0x4200000000000000000000000000000000000006"
+      }
+    };
+
+    const trigger = await Trigger.fromJSON(json);
+
+    expect(trigger.id).to.equal("5c87bcd2-8771-417f-aab6-c23998caa9ae");
+    expect(trigger.getRef()).to.equal("n-1");
+    expect(trigger.blockId).to.equal(10);
+    expect(trigger.getParameters().chainId).to.equal(34443);
+    expect(trigger.getParameters().currency).to.equal("USD");
+    expect(trigger.getParameters().condition).to.equal("gte");
+    expect(trigger.getParameters().comparisonValue).to.equal(3550);
+    expect(trigger.getParameters().contractAddress).to.equal("0x4200000000000000000000000000000000000006");
+    expect(trigger.getParentInfo()?.name).to.equal("ON_CHAIN_PRICE_MOVEMENT");
+    expect(trigger.toJSON()).to.deep.equal(json);
+  });
+
+  it('should create a trigger from JSON correctly - 2', async () => {
+    const json = {
+      "id": null,
+      "ref": "n-1",
+      "blockId": 1,
+      "type": "trigger",
+      "parameters": {
+        "chainId": 1,
+        "abi": {
+          "parameters": {
+            "from": null,
+            "value": "1000000n",
+            "to": "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6"
+          }
+        },
+        "contractAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+      }
+    };
+
+    const trigger = await Trigger.fromJSON(json);
+
+    expect(trigger.id).to.be.null;
+    expect(trigger.getRef()).to.equal("n-1");
+    expect(trigger.blockId).to.equal(1);
+    expect(trigger.getParameters().chainId).to.equal(1);
+    expect(trigger.getParameters().abi.parameters.from).to.be.null;
+    expect(trigger.getParameters().abi.parameters.value).to.equal(BigInt(1000000));
+    expect(trigger.getParameters().abi.parameters.to).to.equal("0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    expect(trigger.getParameters().contractAddress).to.equal("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48");
+    expect(trigger.getParentInfo()?.name).to.equal("ERC20");
+    expect(trigger.toJSON()).to.deep.equal(json);
+  });
+
 });

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Node, Parameter } from '../src/index'; // Adjust the import path according to your project structure
+import { Action, Node, Parameter } from '../src/index'; // Adjust the import path according to your project structure
 
 const DEFAULT_PARAMETERS: Parameter[] = [
   { key: 'chainId', type: 'integer', description: 'Chain ID', value: null },
@@ -9,12 +9,11 @@ const DEFAULT_PARAMETERS: Parameter[] = [
 describe('Node Class', () => {
 
   it('should create a node without coordinates', () => {
-    const node = new Node({
+    const node = new Action({
       blockId: 1,
       name: 'Test Node',
       description: 'A node for testing',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass',
       image: 'a',
     });
 
@@ -22,12 +21,11 @@ describe('Node Class', () => {
   });
 
   it('should create a node with coordinates', () => {
-    const node = new Node({
+    const node = new Action({
       blockId: 2,
       name: 'Test Node with Coordinates',
       description: 'A node for testing with coordinates',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass',
       position: { x: 100, y: 200 },
       image: 'a',
     });
@@ -37,12 +35,11 @@ describe('Node Class', () => {
   });
 
   it('should set and get coordinates correctly', () => {
-    const node = new Node({
+    const node = new Action({
       blockId: 3,
       name: 'Test Node for Coordinates',
       description: 'A node for testing coordinate setting',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass',
       image: 'a',
     });
 
@@ -52,12 +49,11 @@ describe('Node Class', () => {
   });
 
   it('should create a node and set parameters correctly', () => {
-    const node = new Node({
+    const node = new Action({
       blockId: 4,
       name: 'Test Node for Parameters',
       description: 'A node for testing parameter setting',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass',
       image: 'a',
     });
 
@@ -70,12 +66,11 @@ describe('Node Class', () => {
   });
 
   it('should be able to export a node as json without coordinates', () => {
-    const node = new Node({
+    const node = new Action({
       blockId: 5,
       name: 'Test Node for JSON',
       description: 'A node for testing JSON export',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass',
       image: 'a',
     });
 
@@ -87,7 +82,7 @@ describe('Node Class', () => {
       blockId: 5,
       id: null,
       ref: node.getRef(),
-      type: 'testClass',
+      type: 'action',
       parameters: {
         chainId: 1,
         contractAddress: "0x0000000000000000000000000000000000000000"
@@ -96,12 +91,11 @@ describe('Node Class', () => {
   });
 
   it('should be able to export a node as json with coordinates', () => {
-    const node = new Node({
+    const node = new Action({
       blockId: 6,
       name: 'Test Node for JSON with Coordinates',
       description: 'A node for testing JSON export with coordinates',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass',
       position: { x: 1, y: 2 },
       image: 'a',
     });
@@ -111,7 +105,7 @@ describe('Node Class', () => {
 
     const json = node.toJSON();
     expect(json).to.deep.equal({
-      type: 'testClass',
+      type: 'action',
       blockId: 6,
       id: null,
       ref: node.getRef(),
@@ -124,24 +118,22 @@ describe('Node Class', () => {
   });
 
   it('should throw an error for invalid parameter type', () => {
-    const node = new Node({
+    const node = new Action({
       blockId: 7,
       name: 'Test Node for Invalid Parameter Type',
       description: 'A node for testing invalid parameter type',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass',
       image: 'a',
     });
     expect(() => node.setParams("chainId", "invalid")).to.throw('Invalid type for parameter chainId. Expected integer.');
   });
 
   it('should throw an error for invalid address', () => {
-    const node = new Node({
+    const node = new Action({
       blockId: 8,
       name: 'Test Node for Invalid Address',
       description: 'A node for testing invalid address',
       parameters: DEFAULT_PARAMETERS,
-      class: 'testClass',
       image: 'a',
     });
     expect(() => node.setParams("contractAddress", "invalid_address")).to.throw('Invalid type for parameter contractAddress. Expected address.');

@@ -16,19 +16,36 @@ const main = async () => {
     slackAction.setParams("message", "Notification from the SDK");
     slackAction.setPosition(0, -10);
 
-    const workflow = new Workflow("USDC Transfer Notification", [trigger, slackAction]);
+    const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
+    transferAction.setChainId(CHAINS.ETHEREUM);
+    transferAction.setParams("value", 1000);
+    transferAction.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+  
+    const workflow = new Workflow("test from SDK", [trigger, slackAction, transferAction]);
 
     const edge = new Edge({
         source: trigger,
         target: slackAction,
     });
 
+    const edge2 = new Edge({
+        source: slackAction,
+        target: transferAction,
+    });
+
     workflow.addEdge(edge);
+    workflow.addEdge(edge2);
+
+    console.log(JSON.stringify(workflow.toJSON()))
+
     const creationResult = await workflow.create();
     
     if (!creationResult.success) {
         throw new Error("An error occurred when publishing the workflow")
     }
+
+    console.log(workflow.id);
 
     const runResult = await workflow.run();
 

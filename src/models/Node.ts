@@ -1,18 +1,24 @@
-// Assuming you have the ACTIONS constant defined as you provided
-
 import { Parameter } from './Parameter.js';
 import { validateType } from '../utils/typeValidator.js';
 import { ACTIONS, TRIGGERS } from '../constants/Blocks.js';
+import { Trigger } from './Trigger.js';
+import { Action } from './Action.js';
 
 export interface Position {
   x: number;
   y: number;
 }
 
+export interface ParentInfo {
+  name: string;
+  description: string;
+  image: string;
+}
+
 let nodeCounter = 0;
 const generatedRefs = new Set<string>();
 
-export class Node {
+export abstract class Node {
   id: string | null = null;
   blockId: number;
   name: string;
@@ -23,8 +29,9 @@ export class Node {
   ref: string;
   class: string;
   image: string;
+  parentInfo?: ParentInfo;
 
-  constructor(node: { blockId: number; name: string; description: string; parameters: Parameter[], ref?: string, position?: Position, class: string; image: string }) {
+  constructor(node: { blockId: number; name: string; description: string; parameters: Parameter[], ref?: string, position?: Position, class: string; image: string; parentInfo?: ParentInfo }) {
     this.id = null;
     this.blockId = node.blockId;
     this.name = node.name;
@@ -33,6 +40,7 @@ export class Node {
     this.parameters = {};
     this.keyMap = {};
     this.class = node.class;
+    this.parentInfo = node.parentInfo;
 
     if (node.ref) {
       this.ref = node.ref;
@@ -78,6 +86,10 @@ export class Node {
 
   getRef(): string {
     return this.ref;
+  }
+
+  getParentInfo(): ParentInfo | undefined {
+    return this.parentInfo;
   }
 
   protected setParameter(key: string, value: any): void {
@@ -157,66 +169,19 @@ export class Node {
     return key.replace(/[.\[\]]/g, '_');
   }
 
-  static fromJSON(json: { [key: string]: any }): Node {
-
-    let enriched = findActionByBlockId(json.blockId);
-    if (!enriched)
-      enriched = findTriggerByBlockId(json.blockId);
-    if (!enriched)
-      enriched = { name: "Unknown", description: "Unknown", image: "Unknown" }
-
-    const parameters = Object.keys(json.parameters).map(key => ({
-      key,
-      type: typeof json.parameters[key], // Assuming type can be derived from the value's type
-      description: '', // Add appropriate description if needed
-      value: json.parameters[key]
-    }));
-    const node = new Node({
-      blockId: json.blockId,
-      name: enriched.name,
-      description: enriched.description,
-      image: enriched.image,
-      parameters,
-      ref: json.ref,
-      position: json.position,
-      class: json.type
-    });
-    node.setId(json.id);
-    return node;
+  static async fromJSON(json: { [key: string]: any }): Promise<Node> {
+    switch (json.type) {
+      case 'trigger': {
+        const { Trigger } = await import('./Trigger.js');
+        return Trigger.fromJSON(json);
+      }
+      case 'action': {
+        const { Action } = await import('./Action.js');
+        return Action.fromJSON(json);
+      }
+      default:
+        throw new Error(`Unsupported type: ${json.type}`);
+    }
   }
 
 }
-
-const findActionByBlockId = (blockId: number): { name: string; description: string; image: string } | null => {
-  for (const category in ACTIONS) {
-    for (const service in (ACTIONS as any)[category]) {
-      for (const actionKey in (ACTIONS as any)[category][service]) {
-        if ((ACTIONS as any)[category][service][actionKey].blockId === blockId) {
-          return {
-            name: (ACTIONS as any)[category][service][actionKey].name,
-            description: (ACTIONS as any)[category][service][actionKey].description,
-            image: (ACTIONS as any)[category][service][actionKey].image,
-          };
-        }
-      }
-    }
-  }
-  return null;
-};
-
-const findTriggerByBlockId = (blockId: number): { name: string; description: string; image: string } | null => {
-  for (const category in TRIGGERS) {
-    for (const service in (TRIGGERS as any)[category]) {
-      for (const triggerKey in (TRIGGERS as any)[category][service]) {
-        if ((TRIGGERS as any)[category][service][triggerKey].blockId === blockId) {
-          return {
-            name: (TRIGGERS as any)[category][service][triggerKey].name,
-            description: (TRIGGERS as any)[category][service][triggerKey].description,
-            image: (TRIGGERS as any)[category][service][triggerKey].image,
-          };
-        }
-      }
-    }
-  }
-  return null;
-};
