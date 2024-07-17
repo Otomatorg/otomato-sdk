@@ -119,7 +119,7 @@ export class Node {
   toJSON(): { [key: string]: any } {
     const serializeBigInt = (key: string, value: any) => {
       if (typeof value === 'bigint') {
-        return value.toString();
+        return value.toString() + 'n';
       } else if (typeof value === 'object' && value !== null) {
         // Recursively call serializeBigInt for nested objects
         return Object.entries(value).reduce((acc, [k, v]) => {
