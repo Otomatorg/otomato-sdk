@@ -1,4 +1,4 @@
-import { ACTIONS, getTokenFromSymbol, CHAINS, Action } from '../src/index.js';
+import { ACTIONS, getTokenFromSymbol, CHAINS, Action, isAddress } from '../src/index.js';
 
 const createAction = () => {
   // Create an ERC20 transfer action

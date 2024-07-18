@@ -15,3 +15,4 @@ export * from './models/Edge.js';
 // Exporting services
 export * from './services/ApiService.js';
 export * from './utils/helpers.js';
+export * from './utils/typeValidator.js';
