@@ -71,10 +71,10 @@ export class Workflow {
     const response = await apiServices.get(`/workflows/${workflowId}`);
     this.id = response.id;
     this.name = response.name;
-    this.nodes = response.nodes.map((nodeData: any) => Node.fromJSON(nodeData));
+    this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
     this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData));
     return this;
-  }
+}
 
   async run() {
     if (!this.id) {
