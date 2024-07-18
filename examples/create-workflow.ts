@@ -47,13 +47,18 @@ const main = async () => {
 
     console.log(workflow.id);
 
-    const runResult = await workflow.run();
+    /*const runResult = await workflow.run();
 
     if (!runResult.success) {
         throw new Error("An error occurred when running the workflow")
     }
 
-    console.log(`Workflow ${workflow.id} is running`);
+    console.log(`Workflow ${workflow.id} is running`);*/
+
+    workflow.setName("ABC");
+
+    const patchResult = await workflow.update();
+    console.log(patchResult);
 }
 
 main();

@@ -67,6 +67,28 @@ export class Workflow {
     }
   }
 
+  async update(): Promise<{ success: boolean; error?: string }> {
+    try {
+      const response = await apiServices.patch(`/workflows/${this.id}`, this.toJSON());
+  
+      if (response.status === 200) {
+        // Assign IDs to the nodes based on the response
+        response.data.nodes.forEach((nodeResponse: any) => {
+          const node = this.nodes.find(n => n.getRef() === nodeResponse.ref);
+          if (node) {
+            node.setId(nodeResponse.id);
+          }
+        });
+  
+        return { success: true };
+      } else {
+        return { success: false, error: response.data?.error || 'Unknown error' };
+      }
+    } catch (error: any) {
+      return { success: false, error: error.message || 'Unknown error' };
+    }
+  }
+
   async load(workflowId: string): Promise<Workflow> {
     const response = await apiServices.get(`/workflows/${workflowId}`);
     this.id = response.id;

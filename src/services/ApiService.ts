@@ -24,6 +24,11 @@ class ApiServices {
     return await axiosInstance.post(url, data, { headers });
   }
 
+  async patch(url: string, data: any) {
+    const headers = this.auth ? { 'Authorization': this.auth } : {};
+    return await axiosInstance.patch(url, data, { headers });
+  }
+
   async get(url: string) {
     const headers = this.auth ? { 'Authorization': this.auth } : {};
     const response = await axiosInstance.get(url, { headers });
