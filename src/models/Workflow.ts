@@ -30,6 +30,16 @@ export class Workflow {
     this.edges.push(edge);
   }
 
+  updateEdge(edgeId: string, newEdge: Edge): void {
+    const edgeToUpdate = this.edges.find(e => e.id === edgeId);
+    if (edgeToUpdate) {
+      edgeToUpdate.source = newEdge.source;
+      edgeToUpdate.target = newEdge.target;
+    } else {
+      throw new Error(`Edge with id ${edgeId} not found`);
+    }
+  }
+
   addEdges(edges: Edge[]): void {
     this.edges.push(...edges);
   }
