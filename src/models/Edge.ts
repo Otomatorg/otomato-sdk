@@ -30,10 +30,16 @@ export class Edge {
         };
     }
 
-    static fromJSON(json: { [key: string]: any }): Edge {
+    static fromJSON(json: { [key: string]: any }, nodes: Node[]): Edge {
+        const source = nodes.find(n => n.getRef() === json.source);
+        const target = nodes.find(n => n.getRef() === json.target);
+
+        if (!source || !target)
+            throw new Error("Edge refer to non existing node");
+
         return new Edge({
-            source: json.source,
-            target: json.target,
+            source,
+            target
         });
     }
 }

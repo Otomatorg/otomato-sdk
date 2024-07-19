@@ -94,7 +94,7 @@ export class Workflow {
     this.id = response.id;
     this.name = response.name;
     this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
-    this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData));
+    this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
     return this;
 }
 
