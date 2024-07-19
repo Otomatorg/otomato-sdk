@@ -2,16 +2,20 @@ import { Node } from './Node.js';
 import { Edge } from './Edge.js';
 import { apiServices } from '../services/ApiService.js';
 
+export type WorkflowState = 'inactive' | 'active' | 'failed' | 'completed';
+
 export class Workflow {
   id: string | null = null;
   name: string;
   nodes: Node[];
   edges: Edge[];
+  state: WorkflowState;
 
   constructor(name: string = '', nodes: Node[] = [], edges: Edge[] = []) {
     this.name = name;
     this.nodes = nodes;
     this.edges = edges;
+    this.state = 'inactive';
   }
 
   setName(name: string): void {
@@ -44,16 +48,21 @@ export class Workflow {
     this.edges.push(...edges);
   }
 
+  getState(): WorkflowState {
+    return this.state;
+  }
+
   toJSON() {
     return {
       id: this.id,
       name: this.name,
+      state: this.state,
       nodes: this.nodes.map(node => node.toJSON()),
       edges: this.edges.map(edge => edge.toJSON()),
     };
   }
 
-  async create() {
+  async create(): Promise<{ success: boolean; error?: string }> {
     try {
       const response = await apiServices.post('/workflows', this.toJSON());
 
@@ -80,7 +89,7 @@ export class Workflow {
   async update(): Promise<{ success: boolean; error?: string }> {
     try {
       const response = await apiServices.patch(`/workflows/${this.id}`, this.toJSON());
-  
+
       if (response.status === 200) {
         // Assign IDs to the nodes based on the response
         response.data.nodes.forEach((nodeResponse: any) => {
@@ -89,7 +98,7 @@ export class Workflow {
             node.setId(nodeResponse.id);
           }
         });
-  
+
         return { success: true };
       } else {
         return { success: false, error: response.data?.error || 'Unknown error' };
@@ -103,20 +112,22 @@ export class Workflow {
     const response = await apiServices.get(`/workflows/${workflowId}`);
     this.id = response.id;
     this.name = response.name;
+    this.state = response.state as WorkflowState;
     this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
     this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
     return this;
-}
+  }
 
-  async run() {
+  async run(): Promise<{ success: boolean; error?: string }> {
     if (!this.id) {
       throw new Error('The workflow needs to be published first');
     }
-  
+
     try {
       const response = await apiServices.post(`/workflows/${this.id}/run`, this.toJSON());
-  
+
       if (response.status === 204) {
+        this.state = 'active';
         return { success: true };
       } else {
         return { success: false, error: response.data?.error || 'Unknown error' };

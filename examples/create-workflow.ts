@@ -13,52 +13,50 @@ const main = async () => {
 
     const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
     slackAction.setParams("webhook", "https://hooks.slack.com/services/REPLACE_WITH_YOUR_DATA");
-    slackAction.setParams("message", "Notification from the SDK");
+    slackAction.setParams("message", "Notification from the SDK - testing the state");
     slackAction.setPosition(0, -10);
 
-    const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
+    /*const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
     transferAction.setChainId(CHAINS.ETHEREUM);
     transferAction.setParams("value", 1000);
     transferAction.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);*/
   
-    const workflow = new Workflow("test from SDK", [trigger, slackAction, transferAction]);
+    const workflow = new Workflow("test from SDK", [trigger, slackAction]);
 
     const edge = new Edge({
         source: trigger,
         target: slackAction,
     });
 
-    const edge2 = new Edge({
-        source: slackAction,
-        target: transferAction,
-    });
-
     workflow.addEdge(edge);
-    workflow.addEdge(edge2);
 
     console.log(JSON.stringify(workflow.toJSON()))
 
     const creationResult = await workflow.create();
-    
+    console.log(workflow.getState());
+
     if (!creationResult.success) {
         throw new Error("An error occurred when publishing the workflow")
     }
 
     console.log(workflow.id);
 
-    /*const runResult = await workflow.run();
+    const runResult = await workflow.run();
+    console.log(workflow.getState());
 
     if (!runResult.success) {
         throw new Error("An error occurred when running the workflow")
     }
 
-    console.log(`Workflow ${workflow.id} is running`);*/
+    console.log(`Workflow ${workflow.id} is running`);
+    console.log(workflow.getState());
 
     workflow.setName("ABC");
 
     const patchResult = await workflow.update();
     console.log(patchResult);
+    console.log(workflow.getState());
 }
 
 main();

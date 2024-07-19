@@ -81,6 +81,7 @@ describe('Node Class', () => {
     expect(json).to.deep.equal({
       blockId: 5,
       id: null,
+      state: 'inactive',
       ref: node.getRef(),
       type: 'action',
       parameters: {
@@ -108,6 +109,7 @@ describe('Node Class', () => {
       type: 'action',
       blockId: 6,
       id: null,
+      state: 'inactive',
       ref: node.getRef(),
       parameters: {
         chainId: 1,

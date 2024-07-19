@@ -1,11 +1,11 @@
 import { Parameter } from './Parameter.js';
-import { Node, ParentInfo, Position } from './Node.js';
+import { Node, ParentInfo, Position, NodeState } from './Node.js';
 import { ACTIONS } from '../constants/Blocks.js';
 import { ethers } from 'ethers';
 import { typeIsNumber } from '../utils/typeValidator.js';
 
 export class Action extends Node {
-  constructor(action: { blockId: number; name: string; description: string; parameters: Parameter[], image: string, ref?: string, position?: Position,  parentInfo?: ParentInfo }) {
+  constructor(action: { blockId: number; name: string; description: string; parameters: Parameter[], image: string, ref?: string, position?: Position,  parentInfo?: ParentInfo, state?: NodeState }) {
     super({ ...action, class: 'action' });
   }
 
@@ -20,7 +20,8 @@ export class Action extends Node {
       ...enriched.block,
       ref: json.ref,
       position: json.position,
-      parentInfo: enriched.parentInfo
+      parentInfo: enriched.parentInfo,
+      state: json.state
     });
 
     for (const [key, value] of Object.entries(json.parameters)) {

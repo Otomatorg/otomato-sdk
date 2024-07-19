@@ -1,4 +1,4 @@
-import { Node, ParentInfo, Position } from './Node.js';
+import { Node, ParentInfo, Position, NodeState } from './Node.js';
 import { Parameter } from './Parameter.js';
 import { TRIGGERS } from '../constants/Blocks.js';
 import { ethers } from 'ethers';
@@ -7,7 +7,7 @@ import { typeIsNumber } from '../utils/typeValidator.js';
 export class Trigger extends Node {
   type: number;
 
-  constructor(trigger: { blockId: number; name: string; description: string; type: number; parameters: Parameter[], image: string, ref?: string, position?: Position, parentInfo?: ParentInfo }) {
+  constructor(trigger: { blockId: number; name: string; description: string; type: number; parameters: Parameter[], image: string, ref?: string, position?: Position, parentInfo?: ParentInfo, state?: NodeState }) {
     super({ ...trigger, class: 'trigger' });
     this.type = trigger.type;
   }
@@ -44,7 +44,8 @@ export class Trigger extends Node {
       ...enriched.block,
       ref: json.ref,
       position: json.position,
-      parentInfo: enriched.parentInfo
+      parentInfo: enriched.parentInfo,
+      state: json.state
     });
 
     for (const [key, value] of Object.entries(json.parameters)) {

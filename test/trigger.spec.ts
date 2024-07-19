@@ -43,6 +43,7 @@ describe('Trigger Class', () => {
       ref: transferTrigger.getRef(),
       id: null,
       type: 'trigger',
+      state: "inactive",
       parameters: {
         chainId: CHAINS.ETHEREUM,
         abi: {
@@ -97,6 +98,7 @@ describe('Trigger Class', () => {
       "ref": "n-1",
       "blockId": 10,
       "type": "trigger",
+      "state": "inactive",
       "position": {
         "x": 0,
         "y": 0
@@ -131,6 +133,7 @@ describe('Trigger Class', () => {
       "ref": "n-1",
       "blockId": 1,
       "type": "trigger",
+      "state": "inactive",
       "parameters": {
         "chainId": 1,
         "abi": {

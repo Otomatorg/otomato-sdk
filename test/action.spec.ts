@@ -42,6 +42,7 @@ describe('Action Class', () => {
       ref: transferAction.getRef(),
       type: 'action',
       id: null,
+      state: 'inactive',
       parameters: {
         chainId: CHAINS.ETHEREUM,
         abi: {
@@ -101,6 +102,7 @@ describe('Action Class', () => {
       "ref": "n-2",
       "blockId": 100002,
       "type": "action",
+      "state": "inactive",
       "position": {
         "x": 0,
         "y": -10
@@ -128,6 +130,7 @@ describe('Action Class', () => {
       "ref": "n-3",
       "blockId": 100004,
       "type": "action",
+      "state": "inactive",
       "parameters": {
         "abi": {
           "parameters": {

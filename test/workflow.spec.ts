@@ -30,7 +30,8 @@ describe('Workflow Class', () => {
       name: "Test Workflow",
       id: null,
       nodes: [trigger.toJSON(), action1.toJSON(), action2.toJSON()],
-      edges: []
+      edges: [],
+      state: 'inactive'
     });
   });
 

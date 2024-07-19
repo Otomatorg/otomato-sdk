@@ -1,8 +1,6 @@
 import { Parameter } from './Parameter.js';
 import { validateType } from '../utils/typeValidator.js';
 import { ACTIONS, TRIGGERS } from '../constants/Blocks.js';
-import { Trigger } from './Trigger.js';
-import { Action } from './Action.js';
 
 export interface Position {
   x: number;
@@ -14,6 +12,8 @@ export interface ParentInfo {
   description: string;
   image: string;
 }
+
+export type NodeState = 'inactive' | 'active' | 'failed' | 'completed';
 
 let nodeCounter = 0;
 const generatedRefs = new Set<string>();
@@ -30,8 +30,9 @@ export abstract class Node {
   class: string;
   image: string;
   parentInfo?: ParentInfo;
+  state: NodeState;
 
-  constructor(node: { blockId: number; name: string; description: string; parameters: Parameter[], ref?: string, position?: Position, class: string; image: string; parentInfo?: ParentInfo }) {
+  constructor(node: { blockId: number; name: string; description: string; parameters: Parameter[], ref?: string, position?: Position, class: string; image: string; parentInfo?: ParentInfo, state?: NodeState }) {
     this.id = null;
     this.blockId = node.blockId;
     this.name = node.name;
@@ -41,6 +42,7 @@ export abstract class Node {
     this.keyMap = {};
     this.class = node.class;
     this.parentInfo = node.parentInfo;
+    this.state = node.state || 'inactive';
 
     if (node.ref) {
       this.ref = node.ref;
@@ -90,6 +92,10 @@ export abstract class Node {
 
   getParentInfo(): ParentInfo | undefined {
     return this.parentInfo;
+  }
+
+  getState(): NodeState {
+    return this.state;
   }
 
   protected setParameter(key: string, value: any): void {
@@ -154,6 +160,7 @@ export abstract class Node {
       ref: this.ref,
       blockId: this.blockId,
       type: this.class,
+      state: this.state,
       parameters: {
         ...this.getParameters(),
         ...staticParameters,
@@ -183,5 +190,4 @@ export abstract class Node {
         throw new Error(`Unsupported type: ${json.type}`);
     }
   }
-
 }
