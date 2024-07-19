@@ -58,6 +58,12 @@ class ApiServices {
     const response = await axiosInstance.post('/auth/verify-token', { token }, { headers });
     return response.data;
   }
+
+  async getWorkflowsOfUser() {
+    const headers = this.auth ? { 'Authorization': this.auth } : {};
+    const response = await axiosInstance.get('/workflows', { headers });
+    return response.data;
+  }
 }
 
 export const apiServices = new ApiServices();
