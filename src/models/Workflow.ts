@@ -131,13 +131,17 @@ export class Workflow {
   }
 
   async load(workflowId: string): Promise<Workflow> {
-    const response = await apiServices.get(`/workflows/${workflowId}`);
-    this.id = response.id;
-    this.name = response.name;
-    this.state = response.state as WorkflowState;
-    this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
-    this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
-    return this;
+    try {
+      const response = await apiServices.get(`/workflows/${workflowId}`);
+      this.id = response.id;
+      this.name = response.name;
+      this.state = response.state as WorkflowState;
+      this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
+      this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
+      return this;
+    } catch (error: any) {
+      throw new Error(`Failed to load workflow: ${error.message}`);
+    }
   }
 
   async reload(): Promise<Workflow> {
@@ -157,6 +161,31 @@ export class Workflow {
 
       if (response.status === 204) {
         this.state = 'active';
+        return { success: true };
+      } else {
+        return { success: false, error: response.data?.error || 'Unknown error' };
+      }
+    } catch (error: any) {
+      return { success: false, error: error.message || 'Unknown error' };
+    }
+  }
+
+  async delete(): Promise<{ success: boolean; error?: string }> {
+    if (!this.id) {
+      throw new Error('Cannot delete a workflow without an ID.');
+    }
+
+    try {
+      const response = await apiServices.delete(`/workflows/${this.id}`);
+
+      if (response.status === 204) {
+        // Optionally, you can clean up the instance's properties here
+        this.id = null;
+        this.name = '';
+        this.nodes = [];
+        this.edges = [];
+        this.state = 'inactive';
+
         return { success: true };
       } else {
         return { success: false, error: response.data?.error || 'Unknown error' };
