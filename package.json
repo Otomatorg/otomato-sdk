@@ -18,6 +18,11 @@
     "evm",
     "ethereum"
   ],
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
   "author": "otomato",
   "license": "ISC",
   "devDependencies": {
