@@ -5,7 +5,7 @@ const createAction = () => {
   const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
   transferAction.setChainId(CHAINS.ETHEREUM);
   transferAction.setParams("value", 1000);
-  transferAction.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+  transferAction.setParams("to", "0x888888888889758f76e7103c6cbf23abbf58f946");
   transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
   console.log(JSON.stringify(transferAction.toJSON()));

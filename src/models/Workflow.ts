@@ -77,6 +77,17 @@ export class Workflow {
           }
         });
 
+        // Assign IDs to the edges based on the source and target nodes
+        response.data.edges.forEach((edgeResponse: any) => {
+          const edge = this.edges.find(e => 
+            e.source.getRef() === edgeResponse.source && 
+            e.target.getRef() === edgeResponse.target
+          );
+          if (edge) {
+            edge.id = edgeResponse.id;
+          }
+        });
+
         return { success: true };
       } else {
         return { success: false, error: response.data?.error || 'Unknown error' };
@@ -99,6 +110,17 @@ export class Workflow {
           }
         });
 
+        // Assign IDs to the edges based on the source and target nodes
+        response.data.edges.forEach((edgeResponse: any) => {
+          const edge = this.edges.find(e => 
+            e.source.getRef() === edgeResponse.source && 
+            e.target.getRef() === edgeResponse.target
+          );
+          if (edge) {
+            edge.id = edgeResponse.id;
+          }
+        });
+
         return { success: true };
       } else {
         return { success: false, error: response.data?.error || 'Unknown error' };
@@ -116,6 +138,13 @@ export class Workflow {
     this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
     this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
     return this;
+  }
+
+  async reload(): Promise<Workflow> {
+    if (!this.id) {
+      throw new Error('Cannot reload a workflow without an ID.');
+    }
+    return this.load(this.id);
   }
 
   async run(): Promise<{ success: boolean; error?: string }> {

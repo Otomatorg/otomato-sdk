@@ -1,6 +1,7 @@
 import { Parameter } from './Parameter.js';
 import { validateType } from '../utils/typeValidator.js';
 import { ACTIONS, TRIGGERS } from '../constants/Blocks.js';
+import { apiServices } from '../services/ApiService.js';
 
 export interface Position {
   x: number;
@@ -170,6 +171,39 @@ export abstract class Node {
       json.position = this.position;
     }
     return JSON.parse(JSON.stringify(json, serializeBigInt));
+  }
+
+  async delete(): Promise<{ success: boolean; error?: string }> {
+    if (!this.id) {
+      throw new Error('Cannot delete a node without an ID.');
+    }
+    try {
+      console.log(this.id);
+      const response = await apiServices.delete(`/nodes/${this.id}`);
+      if (response.status === 204) {
+        return { success: true };
+      } else {
+        return { success: false, error: response.data?.error || 'Unknown error' };
+      }
+    } catch (error: any) {
+      return { success: false, error: error.message || 'Unknown error' };
+    }
+  }
+
+  async update(): Promise<{ success: boolean; error?: string }> {
+    if (!this.id) {
+      throw new Error('Cannot update a node without an ID.');
+    }
+    try {
+      const response = await apiServices.patch(`/nodes/${this.id}`, this.toJSON());
+      if (response.status === 200) {
+        return { success: true };
+      } else {
+        return { success: false, error: response.data?.error || 'Unknown error' };
+      }
+    } catch (error: any) {
+      return { success: false, error: error.message || 'Unknown error' };
+    }
   }
 
   private getSimplifiedKey(key: string): string {

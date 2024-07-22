@@ -16,47 +16,40 @@ const main = async () => {
     slackAction.setParams("message", "Notification from the SDK - testing the state");
     slackAction.setPosition(0, -10);
 
-    /*const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
-    transferAction.setChainId(CHAINS.ETHEREUM);
-    transferAction.setParams("value", 1000);
-    transferAction.setParams("to", "0x888888888889758f76e7103c6cbf23abbf58f946");
-    transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);*/
+    const slackAction2 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+    slackAction2.setParams("webhook", "https://hooks.slack.com/services/REPLACE_WITH_YOUR_DATA");
+    slackAction2.setParams("message", "Notification from the SDK - message 2");
+    slackAction2.setPosition(0, -10);
   
-    const workflow = new Workflow("test from SDK", [trigger, slackAction]);
-
     const edge = new Edge({
         source: trigger,
         target: slackAction,
     });
 
-    workflow.addEdge(edge);
-
-    console.log(JSON.stringify(workflow.toJSON()))
+    const edge2 = new Edge({
+        source: slackAction,
+        target: slackAction2,
+    });
+    let workflow = new Workflow("test from SDK", [trigger, slackAction, slackAction2], [edge, edge2]);
 
     const creationResult = await workflow.create();
-    console.log(workflow.getState());
+    console.log("creationResult: ", creationResult)
 
-    if (!creationResult.success) {
-        throw new Error("An error occurred when publishing the workflow")
-    }
+    console.log(JSON.stringify(workflow));
 
-    console.log(workflow.id);
+    slackAction.setParams("message", "Notification from the SDK - update");
 
-    const runResult = await workflow.run();
-    console.log(workflow.getState());
-
-    if (!runResult.success) {
-        throw new Error("An error occurred when running the workflow")
-    }
-
-    console.log(`Workflow ${workflow.id} is running`);
-    console.log(workflow.getState());
-
-    workflow.setName("ABC");
-
-    const patchResult = await workflow.update();
+    const patchResult = await slackAction.update();
     console.log(patchResult);
-    console.log(workflow.getState());
+    console.log(JSON.stringify(workflow));
+
+    // now let's delete the second slack action
+    const deleteResult = await slackAction2.delete();
+
+    console.log(deleteResult);
+    
+    await workflow.reload(); // let's reload not to have the slackAction2 locally anymore
+    console.log(JSON.stringify(workflow));
 }
 
 main();

@@ -20,7 +20,7 @@ const generateDefaultTriggers = (): any[] => {
             triggerInstance.setComparisonValue(1000);
         }
         if (trigger.parameters.some((p: any) => p.key === "abiParams.account")) {
-            triggerInstance.setParams('account', '0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6');
+            triggerInstance.setParams('account', '0x888888888889758f76e7103c6cbf23abbf58f946');
         }
 
         return triggerInstance.toJSON();
@@ -59,7 +59,7 @@ function generateTriggersForAllTokens(chain: number) {
         // Generate balance trigger
         const balanceTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.BALANCE);
         balanceTrigger.setChainId(chain);
-        balanceTrigger.setParams("account", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+        balanceTrigger.setParams("account", "0x888888888889758f76e7103c6cbf23abbf58f946");
         balanceTrigger.setContractAddress(token.contractAddress);
         balanceTrigger.setCondition(">");
         balanceTrigger.setComparisonValue(10);
@@ -74,34 +74,34 @@ const generateSpecificTriggers = (): any[] => {
     const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
     transferTrigger.setChainId(CHAINS.ETHEREUM);
     transferTrigger.setParams("value", 1000);
-    transferTrigger.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    transferTrigger.setParams("to", "0x888888888889758f76e7103c6cbf23abbf58f946");
     transferTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
     const balanceTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.BALANCE);
     balanceTrigger.setChainId(CHAINS.ETHEREUM);
-    balanceTrigger.setParams("account", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    balanceTrigger.setParams("account", "0x888888888889758f76e7103c6cbf23abbf58f946");
     balanceTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     balanceTrigger.setCondition(">");
     balanceTrigger.setComparisonValue(45000);
 
     const spliceFiSwapTrigger = new Trigger(TRIGGERS.YIELD.SPLICE_FI.SWAP);
-    spliceFiSwapTrigger.setParams("caller", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    spliceFiSwapTrigger.setParams("market", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    spliceFiSwapTrigger.setParams("receiver", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    spliceFiSwapTrigger.setParams("caller", "0x888888888889758f76e7103c6cbf23abbf58f946");
+    spliceFiSwapTrigger.setParams("market", "0x888888888889758f76e7103c6cbf23abbf58f946");
+    spliceFiSwapTrigger.setParams("receiver", "0x888888888889758f76e7103c6cbf23abbf58f946");
     spliceFiSwapTrigger.setParams("netPtToAccount", 1000);
     spliceFiSwapTrigger.setParams("netSyToAccount", 2000);
 
     const liquidityRemovedTrigger = new Trigger(TRIGGERS.YIELD.SPLICE_FI.LIQUIDITY_REMOVED);
-    liquidityRemovedTrigger.setParams("caller", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    liquidityRemovedTrigger.setParams("market", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    liquidityRemovedTrigger.setParams("receiver", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    liquidityRemovedTrigger.setParams("caller", "0x888888888889758f76e7103c6cbf23abbf58f946");
+    liquidityRemovedTrigger.setParams("market", "0x888888888889758f76e7103c6cbf23abbf58f946");
+    liquidityRemovedTrigger.setParams("receiver", "0x888888888889758f76e7103c6cbf23abbf58f946");
     liquidityRemovedTrigger.setParams("netLpToRemove", 1000);
     liquidityRemovedTrigger.setParams("netPtOut", 500);
     liquidityRemovedTrigger.setParams("netSyOut", 1500);
 
     const marketCreationTrigger = new Trigger(TRIGGERS.YIELD.SPLICE_FI.MARKET_CREATION);
-    marketCreationTrigger.setParams("market", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    marketCreationTrigger.setParams("PT", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    marketCreationTrigger.setParams("market", "0x888888888889758f76e7103c6cbf23abbf58f946");
+    marketCreationTrigger.setParams("PT", "0x888888888889758f76e7103c6cbf23abbf58f946");
     marketCreationTrigger.setParams("scalarRoot", 1234);
     marketCreationTrigger.setParams("initialAnchor", 5678);
     marketCreationTrigger.setParams("lnFeeRateRoot", 91011);
@@ -113,21 +113,21 @@ const generateSpecificTriggers = (): any[] => {
 
     const lendRecalledTrigger = new Trigger(TRIGGERS.LENDING.ASTARIA.LEND_RECALLED);
     lendRecalledTrigger.setParams("loanId", 123456);
-    lendRecalledTrigger.setParams("recaller", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    lendRecalledTrigger.setParams("recaller", "0x888888888889758f76e7103c6cbf23abbf58f946");
     lendRecalledTrigger.setParams("end", 1627848271);
 
     const odosSwapTrigger = new Trigger(TRIGGERS.DEXES.ODOS.SWAP);
     odosSwapTrigger.setChainId(CHAINS.ETHEREUM);
-    odosSwapTrigger.setParams("sender", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    odosSwapTrigger.setParams("sender", "0x888888888889758f76e7103c6cbf23abbf58f946");
     odosSwapTrigger.setParams("inputAmount", 1000);
-    odosSwapTrigger.setParams("inputToken", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    odosSwapTrigger.setParams("inputToken", "0x888888888889758f76e7103c6cbf23abbf58f946");
     odosSwapTrigger.setParams("amountOut", 500);
-    odosSwapTrigger.setParams("outputToken", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    odosSwapTrigger.setParams("outputToken", "0x888888888889758f76e7103c6cbf23abbf58f946");
     odosSwapTrigger.setParams("exchangeRate", 1.23);
 
     const nameRegisteredTrigger = new Trigger(TRIGGERS.SOCIALS.MODE_NAME_SERVICE.NAME_REGISTERED);
     nameRegisteredTrigger.setParams("id", 123456);
-    nameRegisteredTrigger.setParams("owner", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    nameRegisteredTrigger.setParams("owner", "0x888888888889758f76e7103c6cbf23abbf58f946");
     nameRegisteredTrigger.setParams("expires", 1627848271);
 
     return [

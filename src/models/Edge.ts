@@ -1,4 +1,5 @@
 import { Node } from './Node.js';
+import { apiServices } from '../services/ApiService.js';
 
 let edgeCounter = 0;
 const generatedEdgeIds = new Set<string>();
@@ -43,5 +44,24 @@ export class Edge {
             source,
             target
         });
+    }
+
+    async delete(): Promise<{ success: boolean; error?: string }> {
+        if (!this.id) {
+            throw new Error('Cannot delete an edge without an ID.');
+        }
+        try {
+            console.log('trying...')
+            console.log(this.id);
+            const response = await apiServices.delete(`/edges/${this.id}`);
+            console.log(response.status);
+            if (response.status === 204) {
+                return { success: true };
+            } else {
+                return { success: false, error: response.data?.error || 'Unknown error' };
+            }
+        } catch (error: any) {
+            return { success: false, error: error.message || 'Unknown error' };
+        }
     }
 }
