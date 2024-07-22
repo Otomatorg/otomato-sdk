@@ -6,7 +6,7 @@ import { typeIsNumber } from '../utils/typeValidator.js';
 
 export class Action extends Node {
   constructor(action: { blockId: number; name: string; description: string; parameters: Parameter[], image: string, ref?: string, position?: Position,  parentInfo?: ParentInfo, state?: NodeState }) {
-    super({ ...action, class: 'action' });
+    super({ ...action, class: 'action', parentInfo: findActionByBlockId(action.blockId).parentInfo });
   }
 
   getStaticParameters(): null {

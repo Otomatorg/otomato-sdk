@@ -5,7 +5,7 @@
   "main": "dist/src/index.js",
   "types": "dist/types/src/index.d.ts",
   "type": "module",
-  "prepublishOnly": "rm -rf dist/examples dist/test",
+  "prepublishOnly": "npm run build; npm run test",
   "scripts": {
     "build": "npx tsc",
     "test": "mocha --config .mocharc.json"
@@ -20,7 +20,8 @@
     "ethereum"
   ],
   "files": [
-    "dist/",
+    "dist/src",
+    "dist/types",
     "README.md",
     "LICENSE"
   ],
