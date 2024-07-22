@@ -25,6 +25,7 @@ export class Edge {
 
     toJSON(): { [key: string]: any } {
         return {
+            id: this.id,
             source: this.source.getRef(),
             target: this.target.getRef(),
         };
@@ -34,10 +35,13 @@ export class Edge {
         const source = nodes.find(n => n.getRef() === json.source);
         const target = nodes.find(n => n.getRef() === json.target);
 
+        console.log(json);
+
         if (!source || !target)
             throw new Error("Edge refer to non existing node");
 
         return new Edge({
+            id: json.id,
             source,
             target
         });
