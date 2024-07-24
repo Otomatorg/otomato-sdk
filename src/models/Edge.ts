@@ -1,25 +1,13 @@
 import { Node } from './Node.js';
 import { apiServices } from '../services/ApiService.js';
 
-let edgeCounter = 0;
-const generatedEdgeIds = new Set<string>();
-
 export class Edge {
-    id: string;
+    id: string | null;
     source: Node;
     target: Node;
 
-    constructor(edge: { id?: string, source: Node, target: Node }) {
-        if (edge.id) {
-            this.id = edge.id;
-        } else {
-            this.id = `e-${++edgeCounter}`;
-            while (generatedEdgeIds.has(this.id)) {
-                this.id = `e-${++edgeCounter}`;
-            }
-        }
-        generatedEdgeIds.add(this.id);
-
+    constructor(edge: { id?: string | null, source: Node, target: Node }) {
+        this.id = edge.id ?? null;
         this.source = edge.source;
         this.target = edge.target;
     }
@@ -36,8 +24,9 @@ export class Edge {
         const source = nodes.find(n => n.getRef() === json.source);
         const target = nodes.find(n => n.getRef() === json.target);
 
-        if (!source || !target)
-            throw new Error("Edge refer to non existing node");
+        if (!source || !target) {
+            throw new Error("Edge refers to a non-existing node");
+        }
 
         return new Edge({
             id: json.id,
@@ -51,10 +40,7 @@ export class Edge {
             throw new Error('Cannot delete an edge without an ID.');
         }
         try {
-            console.log('trying...')
-            console.log(this.id);
             const response = await apiServices.delete(`/edges/${this.id}`);
-            console.log(response.status);
             if (response.status === 204) {
                 return { success: true };
             } else {
