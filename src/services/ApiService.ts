@@ -40,9 +40,9 @@ class ApiServices {
     return await axiosInstance.delete(url, { headers });
   }
 
-  async generateLoginPayload(address: string, chainId: number) {
+  async generateLoginPayload(address: string, chainId: number, accessCode: string) {
     const headers = { 'Content-Type': 'application/json' };
-    const response = await axiosInstance.post('/auth/generate-payload', { address, chainId }, { headers });
+    const response = await axiosInstance.post('/auth/generate-payload', { address, chainId, accessCode }, { headers });
     return response.data;
   }
 
