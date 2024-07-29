@@ -361,6 +361,22 @@ export const TRIGGERS = {
         "blockId": 3,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/modens.png"
       }
+    },
+    "FEAR_AND_GREED": {
+      "description": "Fetches the Fear and Greed Index",
+      "tags": {},
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/modens.png",
+      "GET_FEAR_AND_GREED_INDEX": {
+        "name": "Fear and Greed Index",
+        "description": "Fetches the Fear and Greed Index from the specified API and processes the result.",
+        "type": 3,
+        "url": "https://api.alternative.me/fng/",
+        "handler": "async (res) => { return res.data?.[0]?.value }",
+        "parameters": [
+        ] as Parameter[],
+        "blockId": 11,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/modens.png"
+      }
     }
   },
   "PRICE_ACTION": {
