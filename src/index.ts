@@ -2,6 +2,7 @@
 export * from './constants/Blocks.js';
 export * from './constants/chains.js';
 export * from './constants/tokens.js';
+export * from './constants/WorkflowTemplates.js';
 
 // Exporting models
 export * from './models/Action.js';

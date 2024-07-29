@@ -373,6 +373,16 @@ export const TRIGGERS = {
         "url": "https://api.alternative.me/fng/",
         "handler": "async (res) => { return res.data?.[0]?.value }",
         "parameters": [
+          {
+            "key": "condition",
+            "type": "logic_operator",
+            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ..."
+          },
+          {
+            "key": "comparisonValue",
+            "type": "integer",
+            "description": "The value to compare to"
+          },
         ] as Parameter[],
         "blockId": 11,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/modens.png"
