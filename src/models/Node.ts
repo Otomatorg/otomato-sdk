@@ -135,10 +135,6 @@ export abstract class Node {
     }, {} as { [key: string]: any });
   }
 
-  getStaticParameters(): { [key: string]: any } | null {
-    return null;
-  }
-
   toJSON(): { [key: string]: any } {
     const serializeBigInt = (key: string, value: any) => {
       if (typeof value === 'bigint') {

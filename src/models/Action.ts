@@ -9,10 +9,6 @@ export class Action extends Node {
     super({ ...action, class: 'action', parentInfo: findActionByBlockId(action.blockId).parentInfo });
   }
 
-  getStaticParameters(): null {
-    return null;
-  }
-
   static async fromJSON(json: { [key: string]: any }): Promise<Action> {
     const enriched = findActionByBlockId(json.blockId);
 
