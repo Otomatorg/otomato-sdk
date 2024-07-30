@@ -3,10 +3,20 @@ import { Node, ParentInfo, Position, NodeState } from './Node.js';
 import { ACTIONS } from '../constants/Blocks.js';
 import { ethers } from 'ethers';
 import { typeIsNumber } from '../utils/typeValidator.js';
+import { SessionKeyPermission } from './SessionKeyPermission.js';
 
 export class Action extends Node {
   constructor(action: { blockId: number; name: string; description: string; parameters: Parameter[], image: string, ref?: string, position?: Position,  parentInfo?: ParentInfo, state?: NodeState }) {
     super({ ...action, class: 'action', parentInfo: findActionByBlockId(action.blockId).parentInfo });
+  }
+
+  getSessionKeyPermissions()  {
+    const parentBlock = findActionByBlockId(this.blockId).block;
+    if (!parentBlock.permissions)
+        return null;
+    const permissions = SessionKeyPermission.fromJSON(parentBlock.permissions);
+    permissions.fill('contractAddress', this.getParameter('contractAddress'));
+    return permissions;
   }
 
   static async fromJSON(json: { [key: string]: any }): Promise<Action> {

@@ -1,6 +1,8 @@
 import { Node } from './Node.js';
 import { Edge } from './Edge.js';
 import { apiServices } from '../services/ApiService.js';
+import { SessionKeyPermission } from './SessionKeyPermission.js';
+import { Action } from './Action.js';
 
 export type WorkflowState = 'inactive' | 'active' | 'failed' | 'completed';
 
@@ -193,5 +195,24 @@ export class Workflow {
     } catch (error: any) {
       return { success: false, error: error.message || 'Unknown error' };
     }
+  }
+
+  getSessionKeyPermissions(): SessionKeyPermission {
+    const permissions = new SessionKeyPermission();
+
+    for (const node of this.nodes) {
+      try {
+        if (node.class === 'action' && 'getSessionKeyPermissions' in node) {
+          const nodePermissions = (node as Action).getSessionKeyPermissions();
+          if (nodePermissions) {
+            permissions.merge(nodePermissions);
+          }
+        }
+      } catch (error) {
+        console.error(`Error getting session key permissions for node ${node.getRef()}:`, error);
+      }
+    }
+
+    return permissions;
   }
 }

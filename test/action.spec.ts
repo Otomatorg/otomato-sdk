@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Action, ACTIONS, getTokenFromSymbol, CHAINS } from '../src/index';
+import { Action, ACTIONS, getTokenFromSymbol, CHAINS, SessionKeyPermission } from '../src/index';
 
 const DEFAULT_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -56,16 +56,6 @@ describe('Action Class', () => {
     });
   });
 
-  /*it('should create an SMS action and set parameters correctly', () => {
-    const smsAction = new Action(ACTIONS.NOTIFICATIONS.SMS);
-    smsAction.setParams("phoneNumber", "+1234567890");
-    smsAction.setParams("text", "Hello, this is a test message!");
-
-    const params = smsAction.getParameters();
-    expect(params.phoneNumber).to.equal("+1234567890");
-    expect(params.text).to.equal("Hello, this is a test message!");
-  });*/
-
   it('should create a Slack action and set parameters correctly', () => {
     const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
     slackAction.setParams("webhook", "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX");
@@ -90,11 +80,6 @@ describe('Action Class', () => {
     const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
     expect(() => slackAction.setParams("webhook", "invalid_url")).to.throw('Invalid type for parameter webhook. Expected url.');
   });
-
-  /*it('should throw an error for invalid phone number', () => {
-    const smsAction = new Action(ACTIONS.NOTIFICATIONS.SMS);
-    expect(() => smsAction.setParams("phoneNumber", "invalid_phone_number")).to.throw('Invalid type for parameter phoneNumber. Expected phone_number.');
-  });*/
 
   it('should create an action from JSON correctly', async () => {
     const json = {
@@ -144,7 +129,7 @@ describe('Action Class', () => {
     };
 
     const action = await Action.fromJSON(json);
-    console.log(action)
+    console.log(action);
 
     expect(action.id).to.equal("d6e6884f-cd8f-4c96-b36c-e5539b3599fc");
     expect(action.getRef()).to.equal("n-3");
@@ -155,5 +140,26 @@ describe('Action Class', () => {
     expect(action.getParameters().abi.parameters.value).to.equal(1000);
     expect(action.getParentInfo()?.name).to.equal("ERC20");
     expect(action.toJSON()).to.deep.equal(json);
+  });
+
+  it('should get session key permissions correctly for ERC20 transfer action', () => {
+    const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
+    transferAction.setChainId(CHAINS.ETHEREUM);
+    transferAction.setParams("value", 1000);
+    transferAction.setParams("to", DEFAULT_ADDRESS);
+    transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+
+    const permissions = transferAction.getSessionKeyPermissions();
+    expect(permissions).to.be.an.instanceOf(SessionKeyPermission);
+    expect(permissions?.approvedTargets).to.deep.equal([getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress]);
+  });
+
+  it('should return null session key permissions for Slack action', () => {
+    const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+    slackAction.setParams("webhook", "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX");
+    slackAction.setParams("message", "This is a test message!");
+
+    const permissions = slackAction.getSessionKeyPermissions();
+    expect(permissions).to.be.null;
   });
 });

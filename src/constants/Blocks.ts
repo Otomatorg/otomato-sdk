@@ -1,10 +1,4 @@
 import { Parameter } from '../models/Parameter.js';
-import { CHAINS } from './chains.js';
-
-const TRIGGER_TYPE = {
-  SUBSCRIPTION: 0,
-  POLLING: 1,
-}
 
 export const TRIGGERS = {
   "TOKENS": {
@@ -543,6 +537,11 @@ export const ACTIONS = {
             "description": "The contract address of the ERC20"
           },
         ] as Parameter[],
+        "permissions": {
+          "approvedTargets": [
+            "$contractAddress"
+          ]
+        },
         "blockId": 100004,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp"
       }
