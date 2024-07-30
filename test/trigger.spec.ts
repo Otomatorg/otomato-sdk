@@ -72,10 +72,9 @@ describe('Trigger Class', () => {
     expect(params.contractAddress).to.equal(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     expect(balanceTrigger.toJSON().parameters.condition).to.equal("gte");
     expect(balanceTrigger.toJSON().parameters.comparisonValue).to.equal(45000);
-    expect(balanceTrigger.toJSON().parameters.interval).to.equal(5000);
   });
 
-  it('should not be able to set conditions, comparison value and interval for subscription based triggers', () => {
+  it('should not be able to set conditions, comparison value for subscription based triggers', () => {
     const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
 
     expect(() => transferTrigger.setCondition(">")).to.throw('Condition setting is not applicable for subscription based triggers.');
@@ -106,7 +105,6 @@ describe('Trigger Class', () => {
       "parameters": {
         "chainId": 34443,
         "currency": "USD",
-        "interval": 5000,
         "condition": "gte",
         "comparisonValue": 3550,
         "contractAddress": "0x4200000000000000000000000000000000000006"

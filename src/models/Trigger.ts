@@ -30,13 +30,6 @@ export class Trigger extends Node {
     this.setParameter('comparisonValue', value);
   }
 
-  getStaticParameters(): { interval: number } | null {
-    if (!this.notAPollingTrigger()) {
-      return { interval: 5000 };
-    }
-    return null;
-  }
-
   static async fromJSON(json: { [key: string]: any }): Promise<Trigger> {
     const enriched = findTriggerByBlockId(json.blockId);
 
@@ -78,9 +71,6 @@ export class Trigger extends Node {
             }
 
           }
-          break;
-        case 'interval':
-          // ignore
           break;
         default:
           trigger.setParams(key, value);

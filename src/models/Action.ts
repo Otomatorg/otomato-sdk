@@ -48,9 +48,6 @@ export class Action extends Node {
             }
           }
           break;
-        case 'interval':
-          // ignore
-          break;
         default:
           action.setParams(key, value);
           break;

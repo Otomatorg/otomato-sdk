@@ -154,7 +154,6 @@ export abstract class Node {
       }
     };
 
-    const staticParameters = this.getStaticParameters() || {};
 
     const json: { [key: string]: any } = {
       id: this.id,
@@ -164,7 +163,6 @@ export abstract class Node {
       state: this.state,
       parameters: {
         ...this.getParameters(),
-        ...staticParameters,
       },
     };
     if (this.position) {
