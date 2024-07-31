@@ -540,6 +540,12 @@ export const ACTIONS = {
         "permissions": {
           "approvedTargets": [
             "$contractAddress"
+          ],
+          "label": [
+            "Transfer $tokenSymbol($chainId, $contractAddress)"
+          ],
+          "labelNotAuthorized": [
+            "Transfer $otherTokenSymbol($chainId, $contractAddress)"
           ]
         },
         "blockId": 100004,

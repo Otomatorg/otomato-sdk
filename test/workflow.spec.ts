@@ -155,12 +155,17 @@ describe('Workflow Class', () => {
     const workflow = new Workflow("Test Workflow", [transferTrigger, transferAction1, transferAction2, slackAction], [edge1, edge2, edge3]);
 
     const permissions = workflow.getSessionKeyPermissions();
-    
-    expect(permissions).to.deep.equal({
-      approvedTargets: [
-        getTokenFromSymbol(CHAINS.ETHEREUM, 'USDT').contractAddress,
-        getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress
-      ]
-    });
+
+    expect(permissions.approvedTargets).to.deep.equal([
+      getTokenFromSymbol(CHAINS.ETHEREUM, 'USDT').contractAddress,
+      getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress
+    ]);
+    expect(permissions.label).to.deep.equal([
+      'Transfer USDT',
+      'Transfer USDC',
+    ])
+    expect(permissions.labelNotAuthorized).to.deep.equal([
+      'Transfer WETH',
+    ])
   });
 });
