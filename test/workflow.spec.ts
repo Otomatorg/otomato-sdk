@@ -29,6 +29,8 @@ describe('Workflow Class', () => {
     expect(json).to.deep.equal({
       name: "Test Workflow",
       id: null,
+      dateCreated: null,
+      dateModified: null,
       nodes: [trigger.toJSON(), action1.toJSON(), action2.toJSON()],
       edges: [],
       state: 'inactive'
