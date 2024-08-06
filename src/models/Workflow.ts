@@ -4,7 +4,7 @@ import { apiServices } from '../services/ApiService.js';
 import { SessionKeyPermission } from './SessionKeyPermission.js';
 import { Action } from './Action.js';
 
-export type WorkflowState = 'inactive' | 'active' | 'failed' | 'completed';
+export type WorkflowState = 'inactive' | 'active' | 'failed' | 'completed' | 'waiting';
 
 export class Workflow {
   id: string | null = null;
@@ -12,6 +12,8 @@ export class Workflow {
   nodes: Node[];
   edges: Edge[];
   state: WorkflowState;
+  dateCreated: string | null = null;
+  dateModified: string | null = null;
 
   constructor(name: string = '', nodes: Node[] = [], edges: Edge[] = []) {
     this.name = name;
@@ -59,6 +61,8 @@ export class Workflow {
       id: this.id,
       name: this.name,
       state: this.state,
+      dateCreated: this.dateCreated,
+      dateModified: this.dateModified,
       nodes: this.nodes.map(node => node.toJSON()),
       edges: this.edges.map(edge => edge.toJSON()),
     };
@@ -70,6 +74,8 @@ export class Workflow {
 
       if (response.status === 201) {
         this.id = response.data.id; // Assign the returned ID to the workflow instance
+        this.dateCreated = response.data.dateCreated;
+        this.dateModified = response.data.dateModified;
 
         // Assign IDs to the nodes based on the response
         response.data.nodes.forEach((nodeResponse: any) => {
@@ -104,6 +110,8 @@ export class Workflow {
       const response = await apiServices.patch(`/workflows/${this.id}`, this.toJSON());
 
       if (response.status === 200) {
+        this.dateModified = response.data.dateModified;
+
         // Assign IDs to the nodes based on the response
         response.data.nodes.forEach((nodeResponse: any) => {
           const node = this.nodes.find(n => n.getRef() === nodeResponse.ref);
@@ -138,6 +146,8 @@ export class Workflow {
       this.id = response.id;
       this.name = response.name;
       this.state = response.state as WorkflowState;
+      this.dateCreated = response.dateCreated;
+      this.dateModified = response.dateModified;
       this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
       this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
       return this;
