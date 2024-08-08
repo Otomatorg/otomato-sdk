@@ -183,7 +183,7 @@ export function getTokenFromSymbol(chain: number, symbol: string): Token {
     throw new Error(`Unsupported chain: ${chain}`);
   }
 
-  const token = TOKENS[chain].find(token => token.symbol === symbol);
+  const token = TOKENS[chain].find(token => token.symbol.toLowerCase() === symbol.toLowerCase());
 
   if (!token) {
     throw new Error(`Token ${symbol} not found on chain ${chain}`);
