@@ -84,7 +84,7 @@ export class Trigger extends Node {
 }
 
 // Assuming findTriggerByBlockId function is defined as mentioned
-const findTriggerByBlockId = (blockId: number): { parentInfo: ParentInfo; block: any } => {
+export const findTriggerByBlockId = (blockId: number): { parentInfo: ParentInfo; block: any } => {
   for (const category in TRIGGERS) {
     for (const service in (TRIGGERS as any)[category]) {
       for (const triggerKey in (TRIGGERS as any)[category][service]) {

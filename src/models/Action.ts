@@ -67,7 +67,7 @@ export class Action extends Node {
   }
 }
 
-const findActionByBlockId = (blockId: number): { parentInfo: ParentInfo; block: any } => {
+export const findActionByBlockId = (blockId: number): { parentInfo: ParentInfo; block: any } => {
   for (const category in ACTIONS) {
     for (const service in (ACTIONS as any)[category]) {
       for (const actionKey in (ACTIONS as any)[category][service]) {
