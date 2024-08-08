@@ -68,5 +68,15 @@ describe('Type Validator Utility Functions', () => {
             expect(validateType('any', 12345)).to.be.true;
             expect(validateType('any', true)).to.be.true;
         });
+
+        // New tests for percentage validation
+        it('should validate percentage values between 0 and 100', () => {
+            expect(validateType('percentage', 0)).to.be.true;
+            expect(validateType('percentage', 50)).to.be.true;
+            expect(validateType('percentage', 100)).to.be.true;
+            expect(validateType('percentage', -1)).to.be.false;
+            expect(validateType('percentage', 101)).to.be.false;
+            expect(validateType('percentage', '50')).to.be.false;
+        });
     });
 });
