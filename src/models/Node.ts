@@ -48,9 +48,9 @@ export abstract class Node {
     if (node.ref) {
       this.ref = node.ref;
     } else {
-      this.ref = `n-${++nodeCounter}`;
+      this.ref = `${++nodeCounter}`;
       while (generatedRefs.has(this.ref)) {
-        this.ref = `n-${++nodeCounter}`;
+        this.ref = `${++nodeCounter}`;
       }
     }
     generatedRefs.add(this.ref);
