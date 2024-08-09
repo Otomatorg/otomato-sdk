@@ -6,14 +6,14 @@ import { typeIsNumber } from '../utils/typeValidator.js';
 import { SessionKeyPermission } from './SessionKeyPermission.js';
 
 export class Action extends Node {
-  constructor(action: { blockId: number; name: string; description: string; parameters: Parameter[], image: string, ref?: string, position?: Position,  parentInfo?: ParentInfo, state?: NodeState }) {
+  constructor(action: { blockId: number; name: string; description: string; parameters: Parameter[], image: string, ref?: string, position?: Position, parentInfo?: ParentInfo, state?: NodeState }) {
     super({ ...action, class: 'action', parentInfo: findActionByBlockId(action.blockId).parentInfo });
   }
 
-  getSessionKeyPermissions()  {
+  getSessionKeyPermissions() {
     const parentBlock = findActionByBlockId(this.blockId).block;
     if (!parentBlock.permissions)
-        return null;
+      return null;
     const permissions = SessionKeyPermission.fromJSON(parentBlock.permissions);
     permissions.fill('contractAddress', this.getParameter('contractAddress'));
     permissions.fill('chainId', this.getParameter('chainId'));
@@ -33,6 +33,10 @@ export class Action extends Node {
     });
 
     for (const [key, value] of Object.entries(json.parameters)) {
+      if (!value) {
+        continue;
+      }
+
       switch (key) {
         case 'chainId':
           action.setChainId(value as number);

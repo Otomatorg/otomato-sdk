@@ -42,6 +42,11 @@ export class Trigger extends Node {
     });
 
     for (const [key, value] of Object.entries(json.parameters)) {
+
+      if (!value) {
+        continue;
+      }
+
       switch (key) {
         case 'chainId':
           trigger.setChainId(value as number);
@@ -76,6 +81,7 @@ export class Trigger extends Node {
           trigger.setParams(key, value);
           break;
       }
+
     }
 
     trigger.setId(json.id);
