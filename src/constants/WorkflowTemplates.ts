@@ -13,9 +13,11 @@ const createModeTransferNotificationWorkflow = () => {
     modeTransferTrigger.setChainId(CHAINS.MODE);
     modeTransferTrigger.setContractAddress(getTokenFromSymbol(CHAINS.MODE, 'MODE').contractAddress);
     modeTransferTrigger.setParams('from', '0x74B847b308BD89Ef15639E6e4a2544E4b8b8C6B4');
+    modeTransferTrigger.setPosition(400, 120);
 
     const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
     telegramAction.setParams("message", "0x74B8....C6B4 transferred $MODE");
+    telegramAction.setPosition(400, 240);
 
     const edge = new Edge({ source: modeTransferTrigger, target: telegramAction });
 
@@ -27,9 +29,11 @@ const createETHFearAndGreedBuy = () => {
 
     trigger.setCondition('lt');
     trigger.setComparisonValue(30);
+    trigger.setPosition(400, 120);
 
     const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
     telegramAction.setParams("message", "The market sentiment is extremely fearful. Consider buying ETH.");
+    telegramAction.setPosition(400, 240);
 
     const edge = new Edge({ source: trigger, target: telegramAction });
 
