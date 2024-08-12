@@ -4,5 +4,4 @@ export interface Parameter {
   description: string;
   value?: any;
   mandatory?: boolean;
-  default?: any;
 }

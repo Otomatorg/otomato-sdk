@@ -714,7 +714,7 @@ export const ACTIONS = {
             "key": "slippage",
             "type": "percentage",
             "description": "The maximum allowable difference between the expected price and the actual price at the time of execution, expressed as a percentage. This protects the transaction from significant price fluctuations.",
-            "default": 0.3,
+            "value": 0.3,
             "mandatory": true
           },
         ] as Parameter[],
