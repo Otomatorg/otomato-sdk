@@ -3,4 +3,6 @@ export interface Parameter {
   type: string;
   description: string;
   value?: any;
+  mandatory?: boolean;
+  default?: any;
 }

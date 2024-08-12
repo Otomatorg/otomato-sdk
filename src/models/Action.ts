@@ -16,7 +16,9 @@ export class Action extends Node {
       return null;
     const permissions = SessionKeyPermission.fromJSON(parentBlock.permissions);
     permissions.fill('contractAddress', this.getParameter('contractAddress'));
+    permissions.fill('parameters.contractAddress', this.getParameter('contractAddress'));
     permissions.fill('chainId', this.getParameter('chainId'));
+    permissions.fill('parameters.chainId', this.getParameter('chainId'));
     permissions.fillMethod();
     return permissions;
   }

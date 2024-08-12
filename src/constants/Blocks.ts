@@ -49,37 +49,37 @@ export const TRIGGERS = {
         "description": "Fetches the balance of an ERC20 and checks it against the specified condition.",
         "type": 1,
         "method": "function balanceOf(address account) view returns (uint256)",
-        "handler": "output => { const params=JSON.parse(output);const balance = BigInt(params)/1000000n; return Number(balance); }",
+        "handler": "output => { const params=JSON.parse(output);const balance = BigInt(params)/1000000n; return {balance: Number(balance)}; }",
         "parameters": [
           {
             "key": "chainId",
             "type": "chainId",
-            "description": "Chain ID of the ETH blockchain"
+            "description": "Chain ID of the ETH blockchain",
+            "mandatory": true
           },
           {
             "key": "abiParams.account",
             "type": "address",
-            "description": "Amount of crypto to transfer"
+            "description": "Amount of crypto to transfer",
+            "mandatory": true
           },
           {
             "key": "contractAddress",
             "type": "address",
-            "description": "The contract address of the ERC20"
+            "description": "The contract address of the ERC20",
+            "mandatory": true
           },
           {
             "key": "condition",
             "type": "logic_operator",
-            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ..."
+            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ...",
+            "mandatory": true
           },
           {
             "key": "comparisonValue",
             "type": "any",
-            "description": "The value to compare to"
-          },
-          {
-            "key": "interval",
-            "type": "integer",
-            "description": "The waiting time between each polling"
+            "description": "The value to compare to",
+            "mandatory": true
           },
         ] as Parameter[],
         "blockId": 5,
@@ -222,8 +222,8 @@ export const TRIGGERS = {
           },
           {
             "key": "contractAddress",
-            "type": "address",
-            "description": "Contract address to monitor",
+            "type": "erc20",
+            "description": "Token to monitor",
             "mandatory": true,
             "enum": [
               "0xDE95511418EBD8Bd36294B11C86314DdFA50e212",
@@ -318,6 +318,38 @@ export const TRIGGERS = {
             "description": "Output token address"
           },
         ] as Parameter[],
+        "templates": [
+          {
+            "name": "Any Odos swap",
+            "description": "Gets triggered when someone does a swap on Mode using Odos",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              }
+            ]
+          },
+          {
+            "name": "Sell ETH",
+            "description": "Gets triggered when someone sells ETH on Mode using Odos",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "abiParams.inputToken",
+                "value": {
+                  "contractAddress": "0x4200000000000000000000000000000000000006",
+                  "symbol": "WETH",
+                  "name": "Wrapped Ether",
+                  "decimals": 18,
+                  "image": "https://static.debank.com/image/mtr_token/logo_url/0x79a61d3a28f8c8537a3df63092927cfa1150fb3c/61844453e63cf81301f845d7864236f6.png"
+                }
+              }
+            ]
+          }
+        ],
         "blockId": 4,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.jpg"
       }
@@ -365,17 +397,19 @@ export const TRIGGERS = {
         "description": "Fetches the Fear and Greed Index from the specified API and processes the result.",
         "type": 3,
         "url": "https://api.alternative.me/fng/",
-        "handler": "async (res) => { return res.data?.[0]?.value }",
+        "handler": "async (res) => { return {value: res.data?.[0]?.value} }",
         "parameters": [
           {
             "key": "condition",
             "type": "logic_operator",
-            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ..."
+            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ...",
+            "mandatory": true
           },
           {
             "key": "comparisonValue",
             "type": "integer",
-            "description": "The value to compare to"
+            "description": "The value to compare to",
+            "mandatory": true
           },
         ] as Parameter[],
         "blockId": 11,
@@ -398,12 +432,14 @@ export const TRIGGERS = {
           {
             "key": "chainId",
             "type": "chainId",
-            "description": "Chain ID of the blockchain to monitor"
+            "description": "Chain ID of the blockchain to monitor",
+            "mandatory": true
           },
           {
             "key": "comparisonValue",
             "type": "float",
-            "description": "The price to compare against"
+            "description": "The price to compare against",
+            "mandatory": true
           },
           {
             "key": "currency",
@@ -411,17 +447,20 @@ export const TRIGGERS = {
             "description": "The currency in which the comparison price is denominated",
             "enum": [
               "USD"
-            ]
+            ],
+            "mandatory": true
           },
           {
             "key": "condition",
             "type": "logic_operator",
-            "description": "The logic operator used for the comparison (e.g., >, <, >=, <=, ==, !=)"
+            "description": "The logic operator used for the comparison (e.g., >, <, >=, <=, ==, !=)",
+            "mandatory": true
           },
           {
             "key": "contractAddress",
             "type": "erc20",
-            "description": "The asset that you want to track"
+            "description": "The asset that you want to track",
+            "mandatory": true
           },
         ] as Parameter[],
         "blockId": 10,
@@ -444,12 +483,15 @@ export const ACTIONS = {
           {
             "key": "webhook",
             "type": "url",
-            "description": "The webhook URL for the Slack channel"
+            "description": "The webhook URL for the Slack channel (e.g https://hooks.slack.com/services/T087SUVQ0DA/B07DEEGF9PK/FKkRaqagLR)",
+            "mandatory": true,
+            "private": true
           },
           {
             "key": "message",
             "type": "paragraph",
-            "description": "The text content to send"
+            "description": "The text content to send",
+            "mandatory": true
           },
         ] as Parameter[],
         "blockId": 100002,
@@ -467,12 +509,15 @@ export const ACTIONS = {
           {
             "key": "webhook",
             "type": "url",
-            "description": "The webhook URL for the Discord channel"
+            "description": "The webhook URL for the Discord channel",
+            "mandatory": true,
+            "private": true
           },
           {
             "key": "message",
             "type": "paragraph",
-            "description": "The text content to send"
+            "description": "The text content to send",
+            "mandatory": true
           },
         ] as Parameter[],
         "blockId": 100003,
@@ -490,12 +535,15 @@ export const ACTIONS = {
           {
             "key": "webhook",
             "type": "url",
-            "description": "The webhook URL for the Telegram bot"
+            "description": "The webhook URL for the Telegram bot",
+            "mandatory": true,
+            "private": true
           },
           {
             "key": "message",
             "type": "paragraph",
-            "description": "The text content to send"
+            "description": "The text content to send",
+            "mandatory": true
           },
         ] as Parameter[],
         "blockId": 100001,
@@ -514,42 +562,176 @@ export const ACTIONS = {
         "name": "Transfer token",
         "description": "Transfers an ERC20 token",
         "type": 1,
-        "method": "Transfer(address from, address to, uint256 value)",
+        "method": "function transfer(address from, address to, uint256 value)",
         "parameters": [
           {
             "key": "chainId",
             "type": "chainId",
-            "description": "Chain ID of the network"
+            "description": "Chain ID of the network",
+            "mandatory": true
           },
           {
             "key": "abiParams.value",
             "type": "uint256",
-            "description": "Amount of crypto to transfer"
+            "description": "Amount of crypto to transfer",
+            "mandatory": true
           },
           {
             "key": "abiParams.to",
             "type": "address",
-            "description": "Address to transfer crypto to"
+            "description": "Address to transfer crypto to",
+            "mandatory": true
           },
           {
             "key": "contractAddress",
             "type": "erc20",
-            "description": "The contract address of the ERC20"
+            "description": "The contract address of the ERC20",
+            "mandatory": true
           },
         ] as Parameter[],
         "permissions": {
           "approvedTargets": [
-            "$contractAddress"
+            "$parameters.contractAddress"
           ],
           "label": [
-            "Transfer $tokenSymbol($chainId, $contractAddress)"
+            "Transfer $tokenSymbol($parameters.chainId, $parameters.contractAddress)"
           ],
           "labelNotAuthorized": [
-            "Transfer $otherTokenSymbol($chainId, $contractAddress)"
+            "Transfer $otherTokenSymbol($parameters.chainId, $parameters.contractAddress)"
           ]
         },
         "blockId": 100004,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp"
+      }
+    }
+  },
+  "LENDING": {
+    "IONIC": {
+      "description": "#1 money market for Yield Bearing Assets on the OP Superchain",
+      "chains": [
+        34443
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg",
+      "DEPOSIT": {
+        "name": "Lend asset",
+        "description": "Deposit token in any Ionic lending pool",
+        "type": 1,
+        "method": "function mint(uint256 mintAmount) public returns (uint256)",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true
+          },
+          {
+            "key": "abiParams.mintAmount",
+            "type": "uint256",
+            "description": "Amount of crypto to deposit",
+            "mandatory": true
+          },
+          {
+            "key": "contractAddress",
+            "type": "erc20",
+            "description": "The token to deposit",
+            "mandatory": true,
+            "enum": [
+              "0xf0F161fDA2712DB8b566946122a5af183995e2eD",
+              "0xd988097fb8612cc24eeC14542bC03424c656005f",
+              "0x4200000000000000000000000000000000000006",
+              "0x2416092f143378750bb29b79eD961ab195CcEea5"
+            ]
+          },
+        ] as Parameter[],
+        "requiredApprovals": [
+          {
+            "address": "$parameters.contractAddress",
+            "amount": "$parameters.mintAmount",
+            "to": "$before.ionicTokenContractAddress"
+          }
+        ],
+        "permissions": {
+          "approvedTargets": [
+            "$before.ionicTokenContractAddress"
+          ],
+          "label": [
+            "Transfer $tokenSymbol($parameters.chainId, $parameters.contractAddress)"
+          ],
+          "labelNotAuthorized": [
+            "Transfer $otherTokenSymbol($parameters.chainId, $parameters.contractAddress)"
+          ]
+        },
+        "blockId": 100006,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
+      }
+    }
+  },
+  "SWAP": {
+    "ODOS": {
+      "description": "Smart Order Routing across multiple blockchain protocols, 700+ Liquidity Sources and thousands of token pairs, delivering ultimate savings to users",
+      "chains": [
+        34443
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.jpg",
+      "SWAP": {
+        "name": "Odos swap",
+        "description": "Swap on Odos to get the best market rates accross multiple pools",
+        "type": 1,
+        "contractAddress": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874",
+        "requiredApprovals": [
+          {
+            "address": "$parameters.tokenIn",
+            "amount": "$parameters.value",
+            "to": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874"
+          }
+        ],
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true
+          },
+          {
+            "key": "tokenIn",
+            "type": "erc20",
+            "description": "Token to sell",
+            "mandatory": true
+          },
+          {
+            "key": "tokenOut",
+            "type": "erc20",
+            "description": "Token to buy",
+            "mandatory": true
+          },
+          {
+            "key": "amount",
+            "type": "uint256",
+            "description": "Amount to sell",
+            "mandatory": true
+          },
+          {
+            "key": "slippage",
+            "type": "percentage",
+            "description": "The maximum allowable difference between the expected price and the actual price at the time of execution, expressed as a percentage. This protects the transaction from significant price fluctuations.",
+            "default": 0.3,
+            "mandatory": true
+          },
+        ] as Parameter[],
+        "permissions": {
+          "approvedTargets": [
+            "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874",
+            "$parameters.tokenIn"
+          ],
+          "label": [
+            "Swap $tokenSymbol($parameters.chainId, $parameters.tokenIn) to $tokenSymbol($parameters.chainId, $parameters.tokenOut)"
+          ],
+          "labelNotAuthorized": [
+            "Transfer ETH"
+          ]
+        },
+        "blockId": 100005,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.jpg"
       }
     }
   }
