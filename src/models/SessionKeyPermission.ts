@@ -1,4 +1,5 @@
 import { getToken } from "../constants/tokens.js";
+import { Parameter } from "./Parameter.js";
 
 export class SessionKeyPermission {
   approvedTargets: string[];
@@ -21,11 +22,8 @@ export class SessionKeyPermission {
 
   fill(key: string, value: any): void {
     const replacePlaceholder = (target: string) => {
-      const placeholder = `$${key}`;
-      if (target.includes(placeholder)) {
-        return target.replace(placeholder, value);
-      }
-      return target;
+      const placeholder = new RegExp(`{{${key}}}`, 'g');
+      return target.replace(placeholder, value);
     };
 
     this.approvedTargets = this.approvedTargets.map(replacePlaceholder);
@@ -33,9 +31,24 @@ export class SessionKeyPermission {
     this.labelNotAuthorized = this.labelNotAuthorized.map(replacePlaceholder);
   }
 
+  fillParameters(params: { [key: string]: any }): void {
+    // 1. replace non abi params
+    for (let key in params) {
+      if (key !== 'abi') {
+        this.fill(`parameters.${key}`, params[key]);
+      }
+    }
+
+    // 2. replace abi params
+    const abiParams = params.abi?.parameters;
+    for (let key in abiParams) {
+      this.fill(`parameters.abiParams.${key}`, abiParams[key]);
+    }
+  }
+
   fillMethod(): void {
     const executeMethod = (target: string) => {
-      const methodPattern = /\$(\w+)\(([^)]+)\)/g;
+      const methodPattern = /\{\{(\w+)\(([^)]+)\)\}\}/g;
       return target.replace(methodPattern, (match, methodName, params) => {
         const paramList = params.split(',').map((param: string) => param.trim());
 
@@ -104,7 +117,7 @@ export class SessionKeyPermission {
     this.labelNotAuthorized = this.labelNotAuthorized.filter(lbl => !this.label.includes(lbl));
   }
 
-  
+
 }
 
 const getDifferentToken = (chain: number, contractAddress: string) => {

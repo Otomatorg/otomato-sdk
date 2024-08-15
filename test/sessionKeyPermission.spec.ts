@@ -24,9 +24,9 @@ describe('SessionKeyPermission Class', () => {
   });
 
   it('should replace placeholders in approved targets, labels, and labels not authorized correctly', () => {
-    const approvedTargets = ['$paramA/endpoint', 'another/$paramB'];
-    const label = ['$paramA label', 'label $paramB'];
-    const labelNotAuthorized = ['$paramA not authorized', 'not authorized $paramB'];
+    const approvedTargets = ['{{paramA}}/endpoint', 'another/{{paramB}}'];
+    const label = ['{{paramA}} label', 'label {{paramB}}'];
+    const labelNotAuthorized = ['{{paramA}} not authorized', 'not authorized {{paramB}}'];
 
     const permission = new SessionKeyPermission({ approvedTargets, label, labelNotAuthorized });
 

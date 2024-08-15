@@ -129,7 +129,6 @@ describe('Action Class', () => {
     };
 
     const action = await Action.fromJSON(json);
-    console.log(action);
 
     expect(action.id).to.equal("d6e6884f-cd8f-4c96-b36c-e5539b3599fc");
     expect(action.getRef()).to.equal("n-3");
@@ -152,6 +151,29 @@ describe('Action Class', () => {
     const permissions = transferAction.getSessionKeyPermissions();
     expect(permissions).to.be.an.instanceOf(SessionKeyPermission);
     expect(permissions?.approvedTargets).to.deep.equal([getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress]);
+  });
+
+  
+  it('should get session key permissions correctly for any variable parameter', () => {
+    const transferAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
+    transferAction.setChainId(CHAINS.ETHEREUM);
+    transferAction.setParams("tokenIn", getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    transferAction.setParams("tokenOut", getTokenFromSymbol(CHAINS.ETHEREUM, 'USDT').contractAddress);
+    transferAction.setParams("amount", 1);
+    transferAction.setParams("slippage", 0.1);
+
+    const permissions = transferAction.getSessionKeyPermissions();
+    expect(permissions).to.be.an.instanceOf(SessionKeyPermission);
+    expect(permissions?.approvedTargets).to.deep.equal([
+      '0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874', 
+      getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress
+    ]);
+    expect(permissions?.label).to.deep.equal([
+      'Swap USDC to USDT'
+    ]);
+    expect(permissions?.labelNotAuthorized).to.deep.equal([
+      'Transfer ETH'
+    ]);
   });
 
   it('should return null session key permissions for Slack action', () => {

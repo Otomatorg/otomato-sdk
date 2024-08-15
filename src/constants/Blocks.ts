@@ -494,6 +494,12 @@ export const ACTIONS = {
             "mandatory": true
           },
         ] as Parameter[],
+        "template": {
+          "url": "{{webhook}}",
+          "body": {
+            "text": "{{message}}"
+          }
+        },
         "blockId": 100002,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/slack.png"
       }
@@ -520,6 +526,12 @@ export const ACTIONS = {
             "mandatory": true
           },
         ] as Parameter[],
+        "template": {
+          "url": "{{webhook}}",
+          "body": {
+            "content": "{{message}}"
+          }
+        },
         "blockId": 100003,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png"
       }
@@ -545,7 +557,21 @@ export const ACTIONS = {
             "description": "The text content to send",
             "mandatory": true
           },
+          {
+            "key": "chat_id",
+            "type": "string",
+            "description": "Channel id",
+            "mandatory": true,
+            "private": true
+          },
         ] as Parameter[],
+        "template": {
+          "url": "{{webhook}}",
+          "body": {
+            "chat_id": "{{chat_id}}",
+            "text": "{{message}}"
+          }
+        },
         "blockId": 100001,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg"
       }
@@ -591,13 +617,13 @@ export const ACTIONS = {
         ] as Parameter[],
         "permissions": {
           "approvedTargets": [
-            "$parameters.contractAddress"
+            "{{parameters.contractAddress}}"
           ],
           "label": [
-            "Transfer $tokenSymbol($parameters.chainId, $parameters.contractAddress)"
+            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.contractAddress}})}}"
           ],
           "labelNotAuthorized": [
-            "Transfer $otherTokenSymbol($parameters.chainId, $parameters.contractAddress)"
+            "Transfer {{otherTokenSymbol({{parameters.chainId}}, {{parameters.contractAddress}})}}"
           ]
         },
         "blockId": 100004,
@@ -645,20 +671,20 @@ export const ACTIONS = {
         ] as Parameter[],
         "requiredApprovals": [
           {
-            "address": "$parameters.contractAddress",
-            "amount": "$parameters.mintAmount",
-            "to": "$before.ionicTokenContractAddress"
+            "address": "{{parameters.contractAddress}}",
+            "amount": "{{parameters.mintAmount}}",
+            "to": "{{before.ionicTokenContractAddress}}"
           }
         ],
         "permissions": {
           "approvedTargets": [
-            "$before.ionicTokenContractAddress"
+            "{{before.ionicTokenContractAddress}}"
           ],
           "label": [
-            "Transfer $tokenSymbol($parameters.chainId, $parameters.contractAddress)"
+            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.contractAddress}})}}"
           ],
           "labelNotAuthorized": [
-            "Transfer $otherTokenSymbol($parameters.chainId, $parameters.contractAddress)"
+            "Transfer {{otherTokenSymbol({{parameters.chainId}}, {{parameters.contractAddress}})}}"
           ]
         },
         "blockId": 100006,
@@ -680,8 +706,8 @@ export const ACTIONS = {
         "contractAddress": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874",
         "requiredApprovals": [
           {
-            "address": "$parameters.tokenIn",
-            "amount": "$parameters.value",
+            "address": "{{parameters.tokenIn}}",
+            "amount": "{{parameters.value}}",
             "to": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874"
           }
         ],
@@ -721,10 +747,10 @@ export const ACTIONS = {
         "permissions": {
           "approvedTargets": [
             "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874",
-            "$parameters.tokenIn"
+            "{{parameters.tokenIn}}"
           ],
           "label": [
-            "Swap $tokenSymbol($parameters.chainId, $parameters.tokenIn) to $tokenSymbol($parameters.chainId, $parameters.tokenOut)"
+            "Swap {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenIn}})}} to {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenOut}})}}"
           ],
           "labelNotAuthorized": [
             "Transfer ETH"
