@@ -171,7 +171,7 @@ export class Workflow {
     try {
       const response = await apiServices.post(`/workflows/${this.id}/run`, this.toJSON());
 
-      if (response.status === 204) {
+      if (response.status === 200) {
         this.state = 'active';
         return { success: true };
       } else {

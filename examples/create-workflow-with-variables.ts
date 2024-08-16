@@ -40,7 +40,7 @@ const main = async () => {
     console.log(workflow.getState());
 
     if (!runResult.success) {
-        throw new Error("An error occurred when running the workflow")
+        throw new Error("An error occurred when running the workflow");
     }
 
     console.log(`Workflow ${workflow.id} is running`);
