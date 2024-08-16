@@ -169,3 +169,41 @@ describe('Node Class', () => {
     expect(() => node.setParams("contractAddress", "invalid_address")).to.throw('Invalid type for parameter contractAddress. Expected address.');
   });
 });
+
+describe('Node Variable Name Generation', () => {
+
+  it('should return the correct output variable name', () => {
+    const node = new Action({
+      blockId: 100001,
+      name: 'Test Node for Output Variable Name',
+      description: 'A node for testing output variable name generation',
+      parameters: DEFAULT_PARAMETERS,
+      output: DEFAULT_OUTPUTS,
+      image: 'a',
+    });
+
+    const outputVarName = node.getOutputVariableName('value');
+    expect(outputVarName).to.equal(`{{nodeMap.${node.getRef()}.output.value}}`);
+
+    const outputVarNameFrom = node.getOutputVariableName('from');
+    expect(outputVarNameFrom).to.equal(`{{nodeMap.${node.getRef()}.output.from}}`);
+  });
+
+  it('should return the correct parameter variable name', () => {
+    const node = new Action({
+      blockId: 100001,
+      name: 'Test Node for Parameter Variable Name',
+      description: 'A node for testing parameter variable name generation',
+      parameters: DEFAULT_PARAMETERS,
+      output: DEFAULT_OUTPUTS,
+      image: 'a',
+    });
+
+    const paramVarNameChainId = node.getParameterVariableName('chainId');
+    expect(paramVarNameChainId).to.equal(`{{nodeMap.${node.getRef()}.parameters.chainId}}`);
+
+    const paramVarNameContractAddress = node.getParameterVariableName('contractAddress');
+    expect(paramVarNameContractAddress).to.equal(`{{nodeMap.${node.getRef()}.parameters.contractAddress}}`);
+  });
+
+});

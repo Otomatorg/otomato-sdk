@@ -137,9 +137,16 @@ export abstract class Node {
     }, {} as { [key: string]: any });
   }
 
-  // New method to retrieve outputs
   getOutputs(): { [key: string]: string } {
     return this.outputs;
+  }
+
+  getOutputVariableName(outputKey: string): string {
+    return `{{nodeMap.${this.getRef()}.output.${outputKey}}}`;
+  }
+
+  getParameterVariableName(parameterKey: string): string {
+    return `{{nodeMap.${this.getRef()}.parameters.${parameterKey}}}`;
   }
 
   toJSON(): { [key: string]: any } {
