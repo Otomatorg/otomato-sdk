@@ -7,7 +7,7 @@ import { typeIsNumber } from '../utils/typeValidator.js';
 export class Trigger extends Node {
   type: number;
 
-  constructor(trigger: { blockId: number; name: string; description: string; type: number; parameters: Parameter[], image: string, ref?: string, position?: Position, parentInfo?: ParentInfo, state?: NodeState }) {
+  constructor(trigger: { blockId: number; name: string; description: string; type: number; parameters: Parameter[], output?: { [key: string]: string }, image: string, ref?: string, position?: Position, parentInfo?: ParentInfo, state?: NodeState }) {
     super({ ...trigger, class: 'trigger', parentInfo: findTriggerByBlockId(trigger.blockId).parentInfo });
     this.type = trigger.type;
   }

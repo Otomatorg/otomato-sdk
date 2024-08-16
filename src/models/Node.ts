@@ -25,6 +25,7 @@ export abstract class Node {
   name: string;
   description: string;
   parameters: { [key: string]: Parameter };
+  outputs: { [key: string]: string };
   keyMap: { [key: string]: string };
   position?: Position;
   ref: string;
@@ -33,13 +34,14 @@ export abstract class Node {
   parentInfo?: ParentInfo;
   state: NodeState;
 
-  constructor(node: { blockId: number; name: string; description: string; parameters: Parameter[], ref?: string, position?: Position, class: string; image: string; parentInfo?: ParentInfo, state?: NodeState }) {
+  constructor(node: { blockId: number; name: string; description: string; parameters: Parameter[], output?: { [key: string]: string }, ref?: string, position?: Position, class: string; image: string; parentInfo?: ParentInfo, state?: NodeState }) {
     this.id = null;
     this.blockId = node.blockId;
     this.name = node.name;
     this.description = node.description;
     this.image = node.image;
     this.parameters = {};
+    this.outputs = node.output || {};
     this.keyMap = {};
     this.class = node.class;
     this.parentInfo = node.parentInfo;
@@ -135,6 +137,11 @@ export abstract class Node {
     }, {} as { [key: string]: any });
   }
 
+  // New method to retrieve outputs
+  getOutputs(): { [key: string]: string } {
+    return this.outputs;
+  }
+
   toJSON(): { [key: string]: any } {
     const serializeBigInt = (key: string, value: any) => {
       if (typeof value === 'bigint') {
@@ -150,7 +157,6 @@ export abstract class Node {
       }
     };
 
-
     const json: { [key: string]: any } = {
       id: this.id,
       ref: this.ref,
@@ -159,7 +165,7 @@ export abstract class Node {
       state: this.state,
       parameters: {
         ...this.getParameters(),
-      },
+      }
     };
     if (this.position) {
       json.position = this.position;

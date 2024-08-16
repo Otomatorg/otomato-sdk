@@ -12,6 +12,11 @@ export const TRIGGERS = {
         "name": "Transfer token",
         "description": "This block gets triggered when someone transfers the ERC20 configured in the params",
         "type": 0,
+        "output": {
+          "value": "uint256",
+          "from": "address",
+          "to": "address"
+        },
         "parameters": [
           {
             "key": "chainId",
@@ -50,6 +55,9 @@ export const TRIGGERS = {
         "type": 1,
         "method": "function balanceOf(address account) view returns (uint256)",
         "handler": "output => { const params=JSON.parse(output);const balance = BigInt(params)/1000000n; return {balance: Number(balance)}; }",
+        "output": {
+          "balance": "integer"
+        },
         "parameters": [
           {
             "key": "chainId",
@@ -99,6 +107,13 @@ export const TRIGGERS = {
         "description": "Swap in Splice Finance",
         "type": 0,
         "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
+        "output": {
+          "caller": "address",
+          "market": "address",
+          "receiver": "address",
+          "netPtToAccount": "int256",
+          "netSyToAccount": "int256"
+        },
         "parameters": [
           {
             "key": "abiParams.caller",
@@ -134,6 +149,14 @@ export const TRIGGERS = {
         "description": "Liquidity removed in Splice Finance",
         "type": 0,
         "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
+        "output": {
+          "caller": "address",
+          "market": "address",
+          "receiver": "address",
+          "netLpToRemove": "uint256",
+          "netPtOut": "uint256",
+          "netSyOut": "uint256"
+        },
         "parameters": [
           {
             "key": "abiParams.caller",
@@ -174,6 +197,13 @@ export const TRIGGERS = {
         "description": "Market creation in Splice Finance",
         "type": 0,
         "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
+        "output": {
+          "market": "address",
+          "PT": "erc20",
+          "scalarRoot": "int256",
+          "initialAnchor": "int256",
+          "lnFeeRateRoot": "uint256"
+        },
         "parameters": [
           {
             "key": "abiParams.market",
@@ -209,6 +239,10 @@ export const TRIGGERS = {
         "description": "Interest rate update in Splice Finance",
         "type": 0,
         "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
+        "output": {
+          "timestamp": "uint256",
+          "lastLnImpliedRate": "int256"
+        },
         "parameters": [
           {
             "key": "abiParams.timestamp",
@@ -250,6 +284,11 @@ export const TRIGGERS = {
         "description": "Lend recalled in Astaria",
         "type": 0,
         "contractAddress": "0x34cf9BF641bd5f34197060A3f3478a1f97f78f0a",
+        "output": {
+          "loanId": "uint256",
+          "recaller": "address",
+          "end": "uint256"
+        },
         "parameters": [
           {
             "key": "abiParams.loanId",
@@ -285,6 +324,14 @@ export const TRIGGERS = {
         "description": "Swap on Odos",
         "type": 0,
         "contractAddress": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874",
+        "output": {
+          "sender": "address",
+          "inputAmount": "uint256",
+          "inputToken": "erc20",
+          "amountOut": "uint256",
+          "outputToken": "erc20",
+          "exchangeRate": "float"
+        },
         "parameters": [
           {
             "key": "chainId",
@@ -367,6 +414,11 @@ export const TRIGGERS = {
         "description": "Name registered in Mode Name Service",
         "type": 0,
         "contractAddress": "0x2aD86eeEC513AC16804bb05310214C3Fd496835B",
+        "output": {
+          "id": "uint256",
+          "owner": "address",
+          "expires": "uint256"
+        },
         "parameters": [
           {
             "key": "abiParams.id",
@@ -398,6 +450,9 @@ export const TRIGGERS = {
         "type": 3,
         "url": "https://api.alternative.me/fng/",
         "handler": "async (res) => { return {value: res.data?.[0]?.value} }",
+        "output": {
+          "value": "integer"
+        },
         "parameters": [
           {
             "key": "condition",
@@ -428,6 +483,9 @@ export const TRIGGERS = {
         "name": "On-Chain Price Movement Against Fiat Currency",
         "description": "This trigger activates when the on-chain price of an asset moves against a specified currency based on the given condition.",
         "type": 2,
+        "output": {
+          "price": "float"
+        },
         "parameters": [
           {
             "key": "chainId",
@@ -479,6 +537,9 @@ export const ACTIONS = {
         "name": "Send message",
         "type": 0,
         "description": "Notifies you by sending a Slack message to the channel of your choice",
+        "output": {
+          "message": "string"
+        },
         "parameters": [
           {
             "key": "webhook",
@@ -511,6 +572,9 @@ export const ACTIONS = {
         "name": "Send message",
         "type": 0,
         "description": "Notifies you by sending a Discord message to the channel of your choice",
+        "output": {
+          "message": "string"
+        },
         "parameters": [
           {
             "key": "webhook",
@@ -543,6 +607,9 @@ export const ACTIONS = {
         "name": "Send message",
         "type": 0,
         "description": "Notifies you by sending a Telegram message to the chat of your choice",
+        "output": {
+          "message": "string"
+        },
         "parameters": [
           {
             "key": "webhook",
@@ -589,6 +656,9 @@ export const ACTIONS = {
         "description": "Transfers an ERC20 token",
         "type": 1,
         "method": "function transfer(address from, address to, uint256 value)",
+        "output": {
+          "transactionHash": "string"
+        },
         "parameters": [
           {
             "key": "chainId",
@@ -676,6 +746,9 @@ export const ACTIONS = {
             "to": "{{before.ionicTokenContractAddress}}"
           }
         ],
+        "output": {
+          "transactionHash": "string"
+        },
         "permissions": {
           "approvedTargets": [
             "{{before.ionicTokenContractAddress}}"
@@ -711,6 +784,13 @@ export const ACTIONS = {
             "to": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874"
           }
         ],
+        "output": {
+          "amountIn": "uint256",
+          "tokenIn": "erc20",
+          "amountOut": "uint256",
+          "tokenOut": "erc20",
+          "transactionHash": "string"
+        },
         "parameters": [
           {
             "key": "chainId",
