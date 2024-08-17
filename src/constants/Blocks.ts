@@ -15,13 +15,14 @@ export const TRIGGERS = {
         "output": {
           "value": "uint256",
           "from": "address",
-          "to": "address"
+          "to": "address",
+          "transactionHash": "string"
         },
         "parameters": [
           {
             "key": "chainId",
             "type": "chainId",
-            "description": "Chain ID of the ETH blockchain",
+            "description": "Chain ID of the EVM blockchain",
             "mandatory": true
           },
           {
@@ -46,6 +47,22 @@ export const TRIGGERS = {
             "mandatory": true
           },
         ] as Parameter[],
+        "examples": [
+          {
+            "name": "Mode transfer",
+            "description": "Gets triggered when someone transfers MODE",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "contractAddress",
+                "value": "0xDfc7C877a950e49D2610114102175A06C2e3167a"
+              }
+            ]
+          }
+        ],
         "blockId": 1,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp"
       },
@@ -62,7 +79,7 @@ export const TRIGGERS = {
           {
             "key": "chainId",
             "type": "chainId",
-            "description": "Chain ID of the ETH blockchain",
+            "description": "Chain ID of the EVM blockchain",
             "mandatory": true
           },
           {
@@ -90,6 +107,34 @@ export const TRIGGERS = {
             "mandatory": true
           },
         ] as Parameter[],
+        "examples": [
+          {
+            "name": "Mode balance check",
+            "description": "Gets triggered when the MODE balance of vitalik.eth falls below 10,000",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "comparisonValue",
+                "value": 10000
+              },
+              {
+                "key": "condition",
+                "value": "lt"
+              },
+              {
+                "key": "contractAddress",
+                "value": "0xDfc7C877a950e49D2610114102175A06C2e3167a"
+              },
+              {
+                "key": "abiParams.account",
+                "value": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+              }
+            ]
+          }
+        ],
         "blockId": 5,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp"
       }
@@ -112,7 +157,8 @@ export const TRIGGERS = {
           "market": "address",
           "receiver": "address",
           "netPtToAccount": "int256",
-          "netSyToAccount": "int256"
+          "netSyToAccount": "int256",
+          "transactionHash": "string"
         },
         "parameters": [
           {
@@ -155,7 +201,8 @@ export const TRIGGERS = {
           "receiver": "address",
           "netLpToRemove": "uint256",
           "netPtOut": "uint256",
-          "netSyOut": "uint256"
+          "netSyOut": "uint256",
+          "transactionHash": "string"
         },
         "parameters": [
           {
@@ -202,7 +249,8 @@ export const TRIGGERS = {
           "PT": "erc20",
           "scalarRoot": "int256",
           "initialAnchor": "int256",
-          "lnFeeRateRoot": "uint256"
+          "lnFeeRateRoot": "uint256",
+          "transactionHash": "string"
         },
         "parameters": [
           {
@@ -241,7 +289,8 @@ export const TRIGGERS = {
         "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
         "output": {
           "timestamp": "uint256",
-          "lastLnImpliedRate": "int256"
+          "lastLnImpliedRate": "int256",
+          "transactionHash": "string"
         },
         "parameters": [
           {
@@ -287,9 +336,16 @@ export const TRIGGERS = {
         "output": {
           "loanId": "uint256",
           "recaller": "address",
-          "end": "uint256"
+          "end": "uint256",
+          "transactionHash": "string"
         },
         "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the EVM blockchain",
+            "mandatory": true
+          },
           {
             "key": "abiParams.loanId",
             "type": "uint256",
@@ -306,6 +362,46 @@ export const TRIGGERS = {
             "description": "End time"
           },
         ] as Parameter[],
+        "examples": [
+          {
+            "name": "Any loan recalled",
+            "description": "Gets triggered when a loan is recalled on Mode",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              }
+            ]
+          },
+          {
+            "name": "A specific loan recalled",
+            "description": "Gets triggered when loan #123 is recalled",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "abiParams.loanId",
+                "value": 123
+              }
+            ]
+          },
+          {
+            "name": "Recalled by specific address",
+            "description": "Gets triggered when vitalik.eth recalls a loan",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "abiParams.recaller",
+                "value": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+              }
+            ]
+          }
+        ],
         "blockId": 8,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/astaria.png"
       }
@@ -330,13 +426,14 @@ export const TRIGGERS = {
           "inputToken": "erc20",
           "amountOut": "uint256",
           "outputToken": "erc20",
-          "exchangeRate": "float"
+          "exchangeRate": "float",
+          "transactionHash": "string"
         },
         "parameters": [
           {
             "key": "chainId",
             "type": "chainId",
-            "description": "Chain ID of the ETH blockchain",
+            "description": "Chain ID of the EVM blockchain",
             "mandatory": true
           },
           {
@@ -365,7 +462,7 @@ export const TRIGGERS = {
             "description": "Output token address"
           },
         ] as Parameter[],
-        "templates": [
+        "examples": [
           {
             "name": "Any Odos swap",
             "description": "Gets triggered when someone does a swap on Mode using Odos",
@@ -417,7 +514,8 @@ export const TRIGGERS = {
         "output": {
           "id": "uint256",
           "owner": "address",
-          "expires": "uint256"
+          "expires": "uint256",
+          "transactionHash": "string"
         },
         "parameters": [
           {
@@ -436,6 +534,7 @@ export const TRIGGERS = {
             "description": "Expiration time"
           },
         ] as Parameter[],
+        "examples": [],
         "blockId": 3,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/modens.png"
       }
@@ -467,6 +566,36 @@ export const TRIGGERS = {
             "mandatory": true
           },
         ] as Parameter[],
+        "examples": [
+          {
+            "name": "Market in extreme fear",
+            "description": "Gets triggered when the index is below 20",
+            "parameters": [
+              {
+                "key": "condition",
+                "value": "lte"
+              },
+              {
+                "key": "comparisonValue",
+                "value": 20
+              }
+            ]
+          },
+          {
+            "name": "Market in greed",
+            "description": "Gets triggered when the index is above 65",
+            "parameters": [
+              {
+                "key": "condition",
+                "value": "gte"
+              },
+              {
+                "key": "comparisonValue",
+                "value": 65
+              }
+            ]
+          }
+        ],
         "blockId": 11,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/modens.png"
       }
@@ -521,6 +650,86 @@ export const TRIGGERS = {
             "mandatory": true
           },
         ] as Parameter[],
+        "examples": [
+          {
+            "name": "ETH > 2850$",
+            "description": "Gets triggered when ETH rises above 2850$ on Mode",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "comparisonValue",
+                "value": 2850
+              },
+              {
+                "key": "currency",
+                "value": "USD"
+              },
+              {
+                "key": "condition",
+                "value": "gt"
+              },
+              {
+                "key": "contractAddress",
+                "value": "0x0000000000000000000000000000000000000000"
+              }
+            ]
+          },
+          {
+            "name": "ETH < 2100$",
+            "description": "Gets triggered when ETH falls below 2100$ on Mode",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "comparisonValue",
+                "value": 2100
+              },
+              {
+                "key": "currency",
+                "value": "USD"
+              },
+              {
+                "key": "condition",
+                "value": "lt"
+              },
+              {
+                "key": "contractAddress",
+                "value": "0x0000000000000000000000000000000000000000"
+              }
+            ]
+          },
+          {
+            "name": "MODE < 0.01$",
+            "description": "Gets triggered when MODE falls below 0.01$ on Mode Network",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "comparisonValue",
+                "value": 0.01
+              },
+              {
+                "key": "currency",
+                "value": "USD"
+              },
+              {
+                "key": "condition",
+                "value": "lt"
+              },
+              {
+                "key": "contractAddress",
+                "value": "0xDfc7C877a950e49D2610114102175A06C2e3167a"
+              }
+            ]
+          }
+        ],
         "blockId": 10,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/trend-up.png"
       }
