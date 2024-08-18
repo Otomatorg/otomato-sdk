@@ -23,28 +23,33 @@ export const TRIGGERS = {
             "key": "chainId",
             "type": "chainId",
             "description": "Chain ID of the EVM blockchain",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "abiParams.from",
             "type": "address",
-            "description": "Address that transfers the funds"
+            "description": "Address that transfers the funds",
+            "category": 1
           },
           {
             "key": "abiParams.value",
             "type": "uint256",
-            "description": "Amount of crypto to transfer"
+            "description": "Amount of crypto to transfer",
+            "category": 1
           },
           {
             "key": "abiParams.to",
             "type": "address",
-            "description": "Address that receives the funds"
+            "description": "Address that receives the funds",
+            "category": 1
           },
           {
             "key": "contractAddress",
             "type": "erc20",
             "description": "The contract address of the ERC20",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
         ] as Parameter[],
         "examples": [
@@ -80,31 +85,36 @@ export const TRIGGERS = {
             "key": "chainId",
             "type": "chainId",
             "description": "Chain ID of the EVM blockchain",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "abiParams.account",
             "type": "address",
             "description": "Amount of crypto to transfer",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "contractAddress",
             "type": "address",
             "description": "The contract address of the ERC20",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "condition",
             "type": "logic_operator",
             "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ...",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "comparisonValue",
             "type": "any",
             "description": "The value to compare to",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
         ] as Parameter[],
         "examples": [
@@ -118,7 +128,7 @@ export const TRIGGERS = {
               },
               {
                 "key": "comparisonValue",
-                "value": 10000
+                "value": {}
               },
               {
                 "key": "condition",
@@ -164,29 +174,35 @@ export const TRIGGERS = {
           {
             "key": "abiParams.caller",
             "type": "address",
-            "description": "Caller address"
+            "description": "Caller address",
+            "category": 1
           },
           {
             "key": "abiParams.market",
             "type": "address",
-            "description": "Market address"
+            "description": "Market address",
+            "category": 1
           },
           {
             "key": "abiParams.receiver",
             "type": "address",
-            "description": "Receiver address"
+            "description": "Receiver address",
+            "category": 1
           },
           {
             "key": "abiParams.netPtToAccount",
             "type": "int256",
-            "description": "Net PT to account"
+            "description": "Net PT to account",
+            "category": 1
           },
           {
             "key": "abiParams.netSyToAccount",
             "type": "int256",
-            "description": "Net SY to account"
+            "description": "Net SY to account",
+            "category": 1
           },
         ] as Parameter[],
+        "examples": [],
         "blockId": 2,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
       },
@@ -208,34 +224,41 @@ export const TRIGGERS = {
           {
             "key": "abiParams.caller",
             "type": "address",
-            "description": "Caller address"
+            "description": "Caller address",
+            "category": 1
           },
           {
             "key": "abiParams.market",
             "type": "address",
-            "description": "Market address"
+            "description": "Market address",
+            "category": 1
           },
           {
             "key": "abiParams.receiver",
             "type": "address",
-            "description": "Receiver address"
+            "description": "Receiver address",
+            "category": 1
           },
           {
             "key": "abiParams.netLpToRemove",
             "type": "uint256",
-            "description": "Net LP to remove"
+            "description": "Net LP to remove",
+            "category": 1
           },
           {
             "key": "abiParams.netPtOut",
             "type": "uint256",
-            "description": "Net PT out"
+            "description": "Net PT out",
+            "category": 1
           },
           {
             "key": "abiParams.netSyOut",
             "type": "uint256",
-            "description": "Net SY out"
+            "description": "Net SY out",
+            "category": 1
           },
         ] as Parameter[],
+        "examples": [],
         "blockId": 6,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
       },
@@ -256,29 +279,35 @@ export const TRIGGERS = {
           {
             "key": "abiParams.market",
             "type": "address",
-            "description": "Market address"
+            "description": "Market address",
+            "category": 1
           },
           {
             "key": "abiParams.PT",
             "type": "address",
-            "description": "PT address"
+            "description": "PT address",
+            "category": 1
           },
           {
             "key": "abiParams.scalarRoot",
             "type": "int256",
-            "description": "Scalar root"
+            "description": "Scalar root",
+            "category": 1
           },
           {
             "key": "abiParams.initialAnchor",
             "type": "int256",
-            "description": "Initial anchor"
+            "description": "Initial anchor",
+            "category": 1
           },
           {
             "key": "abiParams.lnFeeRateRoot",
             "type": "uint256",
-            "description": "LN fee rate root"
+            "description": "LN fee rate root",
+            "category": 1
           },
         ] as Parameter[],
+        "examples": [],
         "blockId": 7,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
       },
@@ -296,12 +325,14 @@ export const TRIGGERS = {
           {
             "key": "abiParams.timestamp",
             "type": "uint256",
-            "description": "Timestamp"
+            "description": "Timestamp",
+            "category": 1
           },
           {
             "key": "abiParams.lastLnImpliedRate",
             "type": "int256",
-            "description": "Last LN implied rate"
+            "description": "Last LN implied rate",
+            "category": 1
           },
           {
             "key": "contractAddress",
@@ -313,9 +344,11 @@ export const TRIGGERS = {
               "0x34cf9BF641bd5f34197060A3f3478a1f97f78f0a",
               "0xb950A73Ea0842B0Cd06D0e369aE974799BB346f1",
               "0xbF14932e1A7962C77D0b31be80075936bE1A43D4"
-            ]
+            ],
+            "category": 0
           },
         ] as Parameter[],
+        "examples": [],
         "blockId": 9,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
       }
@@ -344,22 +377,26 @@ export const TRIGGERS = {
             "key": "chainId",
             "type": "chainId",
             "description": "Chain ID of the EVM blockchain",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "abiParams.loanId",
             "type": "uint256",
-            "description": "Loan ID"
+            "description": "Loan ID",
+            "category": 0
           },
           {
             "key": "abiParams.recaller",
             "type": "address",
-            "description": "Recaller address"
+            "description": "Recaller address",
+            "category": 1
           },
           {
             "key": "abiParams.end",
             "type": "uint256",
-            "description": "End time"
+            "description": "End time",
+            "category": 1
           },
         ] as Parameter[],
         "examples": [
@@ -434,32 +471,38 @@ export const TRIGGERS = {
             "key": "chainId",
             "type": "chainId",
             "description": "Chain ID of the EVM blockchain",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "abiParams.sender",
             "type": "address",
-            "description": "Sender address"
+            "description": "Sender address",
+            "category": 0
           },
           {
             "key": "abiParams.inputAmount",
             "type": "uint256",
-            "description": "Input amount"
+            "description": "Input amount",
+            "category": 0
           },
           {
             "key": "abiParams.inputToken",
             "type": "address",
-            "description": "Input token address"
+            "description": "Input token address",
+            "category": 0
           },
           {
             "key": "abiParams.amountOut",
             "type": "uint256",
-            "description": "Output amount"
+            "description": "Output amount",
+            "category": 0
           },
           {
             "key": "abiParams.outputToken",
             "type": "address",
-            "description": "Output token address"
+            "description": "Output token address",
+            "category": 0
           },
         ] as Parameter[],
         "examples": [
@@ -483,13 +526,7 @@ export const TRIGGERS = {
               },
               {
                 "key": "abiParams.inputToken",
-                "value": {
-                  "contractAddress": "0x4200000000000000000000000000000000000006",
-                  "symbol": "WETH",
-                  "name": "Wrapped Ether",
-                  "decimals": 18,
-                  "image": "https://static.debank.com/image/mtr_token/logo_url/0x79a61d3a28f8c8537a3df63092927cfa1150fb3c/61844453e63cf81301f845d7864236f6.png"
-                }
+                "value": "0x4200000000000000000000000000000000000006"
               }
             ]
           }
@@ -521,17 +558,20 @@ export const TRIGGERS = {
           {
             "key": "abiParams.id",
             "type": "uint256",
-            "description": "ID of the name registered"
+            "description": "ID of the name registered",
+            "category": 1
           },
           {
             "key": "abiParams.owner",
             "type": "address",
-            "description": "Owner address"
+            "description": "Owner address",
+            "category": 1
           },
           {
             "key": "abiParams.expires",
             "type": "uint256",
-            "description": "Expiration time"
+            "description": "Expiration time",
+            "category": 1
           },
         ] as Parameter[],
         "examples": [],
@@ -557,13 +597,15 @@ export const TRIGGERS = {
             "key": "condition",
             "type": "logic_operator",
             "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ...",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "comparisonValue",
             "type": "integer",
             "description": "The value to compare to",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
         ] as Parameter[],
         "examples": [
@@ -620,13 +662,15 @@ export const TRIGGERS = {
             "key": "chainId",
             "type": "chainId",
             "description": "Chain ID of the blockchain to monitor",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "comparisonValue",
             "type": "float",
             "description": "The price to compare against",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "currency",
@@ -635,19 +679,23 @@ export const TRIGGERS = {
             "enum": [
               "USD"
             ],
-            "mandatory": true
+            "value": "USD",
+            "mandatory": true,
+            "category": 1
           },
           {
             "key": "condition",
             "type": "logic_operator",
             "description": "The logic operator used for the comparison (e.g., >, <, >=, <=, ==, !=)",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "contractAddress",
             "type": "erc20",
             "description": "The asset that you want to track",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
         ] as Parameter[],
         "examples": [
@@ -755,13 +803,15 @@ export const ACTIONS = {
             "type": "url",
             "description": "The webhook URL for the Slack channel (e.g https://hooks.slack.com/services/T087SUVQ0DA/B07DEEGF9PK/FKkRaqagLR)",
             "mandatory": true,
-            "private": true
+            "private": true,
+            "category": 0
           },
           {
             "key": "message",
             "type": "paragraph",
             "description": "The text content to send",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
         ] as Parameter[],
         "template": {
@@ -770,6 +820,7 @@ export const ACTIONS = {
             "text": "{{message}}"
           }
         },
+        "examples": [],
         "blockId": 100002,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/slack.png"
       }
@@ -790,13 +841,15 @@ export const ACTIONS = {
             "type": "url",
             "description": "The webhook URL for the Discord channel",
             "mandatory": true,
-            "private": true
+            "private": true,
+            "category": 0
           },
           {
             "key": "message",
             "type": "paragraph",
             "description": "The text content to send",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
         ] as Parameter[],
         "template": {
@@ -805,6 +858,7 @@ export const ACTIONS = {
             "content": "{{message}}"
           }
         },
+        "examples": [],
         "blockId": 100003,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png"
       }
@@ -831,14 +885,16 @@ export const ACTIONS = {
             "key": "message",
             "type": "paragraph",
             "description": "The text content to send",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "chat_id",
             "type": "string",
             "description": "Channel id",
             "mandatory": true,
-            "private": true
+            "private": true,
+            "category": 0
           },
         ] as Parameter[],
         "template": {
@@ -848,6 +904,7 @@ export const ACTIONS = {
             "text": "{{message}}"
           }
         },
+        "examples": [],
         "blockId": 100001,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg"
       }
@@ -873,27 +930,55 @@ export const ACTIONS = {
             "key": "chainId",
             "type": "chainId",
             "description": "Chain ID of the network",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "abiParams.value",
             "type": "uint256",
             "description": "Amount of crypto to transfer",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "abiParams.to",
             "type": "address",
             "description": "Address to transfer crypto to",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "contractAddress",
             "type": "erc20",
             "description": "The contract address of the ERC20",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
         ] as Parameter[],
+        "examples": [
+          {
+            "name": "Transfer USDC",
+            "description": "Transfer 100 USDC to vitalik.eth on Mode",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "abiParams.value",
+                "value": {}
+              },
+              {
+                "key": "abiParams.to",
+                "value": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+              },
+              {
+                "key": "contractAddress",
+                "value": "0xd988097fb8612cc24eeC14542bC03424c656005f"
+              }
+            ]
+          }
+        ],
         "permissions": {
           "approvedTargets": [
             "{{parameters.contractAddress}}"
@@ -927,13 +1012,15 @@ export const ACTIONS = {
             "key": "chainId",
             "type": "chainId",
             "description": "Chain ID of the network",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "abiParams.mintAmount",
             "type": "uint256",
             "description": "Amount of crypto to deposit",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "contractAddress",
@@ -945,9 +1032,30 @@ export const ACTIONS = {
               "0xd988097fb8612cc24eeC14542bC03424c656005f",
               "0x4200000000000000000000000000000000000006",
               "0x2416092f143378750bb29b79eD961ab195CcEea5"
-            ]
+            ],
+            "category": 0
           },
         ] as Parameter[],
+        "examples": [
+          {
+            "name": "Deposit 100 USDT",
+            "description": "Lend 100 USDT on Ionic on Mode",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "abiParams.mintAmount",
+                "value": {}
+              },
+              {
+                "key": "contractAddress",
+                "value": "0xf0F161fDA2712DB8b566946122a5af183995e2eD"
+              }
+            ]
+          }
+        ],
         "requiredApprovals": [
           {
             "address": "{{parameters.contractAddress}}",
@@ -1005,34 +1113,67 @@ export const ACTIONS = {
             "key": "chainId",
             "type": "chainId",
             "description": "Chain ID of the network",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "tokenIn",
             "type": "erc20",
             "description": "Token to sell",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "tokenOut",
             "type": "erc20",
             "description": "Token to buy",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "amount",
             "type": "uint256",
             "description": "Amount to sell",
-            "mandatory": true
+            "mandatory": true,
+            "category": 0
           },
           {
             "key": "slippage",
             "type": "percentage",
             "description": "The maximum allowable difference between the expected price and the actual price at the time of execution, expressed as a percentage. This protects the transaction from significant price fluctuations.",
             "value": 0.3,
-            "mandatory": true
+            "mandatory": true,
+            "category": 1
           },
         ] as Parameter[],
+        "examples": [
+          {
+            "name": "Swap USDC to WETH",
+            "description": "Swap 100 USDC to WETH on Mode Network using Odos",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "tokenIn",
+                "value": "0xd988097fb8612cc24eeC14542bC03424c656005f"
+              },
+              {
+                "key": "tokenOut",
+                "value": "0x4200000000000000000000000000000000000006"
+              },
+              {
+                "key": "amount",
+                "value": {}
+              },
+              {
+                "key": "slippage",
+                "value": 0.3
+              }
+            ]
+          }
+        ],
         "permissions": {
           "approvedTargets": [
             "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874",

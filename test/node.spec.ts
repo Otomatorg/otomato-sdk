@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import { Action, Node, Parameter } from '../src/index'; // Adjust the import path according to your project structure
 
 const DEFAULT_PARAMETERS: Parameter[] = [
-  { key: 'chainId', type: 'integer', description: 'Chain ID', value: null },
-  { key: 'contractAddress', type: 'address', description: 'Contract Address', value: null }
+  { key: 'chainId', type: 'integer', description: 'Chain ID', value: null, category: 0 },
+  { key: 'contractAddress', type: 'address', description: 'Contract Address', value: null, category: 0 }
 ];
 
 const DEFAULT_OUTPUTS = {
