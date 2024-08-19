@@ -36,7 +36,11 @@ export const TRIGGERS = {
             "key": "abiParams.value",
             "type": "uint256",
             "description": "Amount of crypto to transfer",
-            "category": 1
+            "category": 1,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.contractAddress}}",
+              "chain": "{{parameters.chainId}}"
+            }
           },
           {
             "key": "abiParams.to",
@@ -76,7 +80,7 @@ export const TRIGGERS = {
         "description": "Fetches the balance of an ERC20 and checks it against the specified condition.",
         "type": 1,
         "method": "function balanceOf(address account) view returns (uint256)",
-        "handler": "output => { const params=JSON.parse(output);const balance = BigInt(params)/1000000n; return {balance: Number(balance)}; }",
+        "handler": "output => { const params=JSON.parse(output);const balance = BigInt(params)/1000000n; return {balance: Number(balance), comparisonValue: Number(balance)}; }",
         "output": {
           "balance": "integer"
         },
@@ -114,7 +118,11 @@ export const TRIGGERS = {
             "type": "any",
             "description": "The value to compare to",
             "mandatory": true,
-            "category": 0
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.contractAddress}}",
+              "chain": "{{parameters.chainId}}"
+            }
           },
         ] as Parameter[],
         "examples": [
@@ -365,7 +373,7 @@ export const TRIGGERS = {
         "name": "Lend Recalled",
         "description": "Lend recalled in Astaria",
         "type": 0,
-        "contractAddress": "0x34cf9BF641bd5f34197060A3f3478a1f97f78f0a",
+        "contractAddress": "0x0000000002546f9C641E000DD4b22875236BC147",
         "output": {
           "loanId": "uint256",
           "recaller": "address",
@@ -588,7 +596,7 @@ export const TRIGGERS = {
         "description": "Fetches the Fear and Greed Index from the specified API and processes the result.",
         "type": 3,
         "url": "https://api.alternative.me/fng/",
-        "handler": "async (res) => { return {value: res.data?.[0]?.value} }",
+        "handler": "async (res) => { return {value: res.data?.[0]?.value, comparisonValue: res.data?.[0]?.value} }",
         "output": {
           "value": "integer"
         },
@@ -938,7 +946,11 @@ export const ACTIONS = {
             "type": "uint256",
             "description": "Amount of crypto to transfer",
             "mandatory": true,
-            "category": 0
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.contractAddress}}",
+              "chain": "{{parameters.chainId}}"
+            }
           },
           {
             "key": "abiParams.to",
@@ -1020,7 +1032,11 @@ export const ACTIONS = {
             "type": "uint256",
             "description": "Amount of crypto to deposit",
             "mandatory": true,
-            "category": 0
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.contractAddress}}",
+              "chain": "{{parameters.chainId}}"
+            }
           },
           {
             "key": "contractAddress",
@@ -1135,7 +1151,11 @@ export const ACTIONS = {
             "type": "uint256",
             "description": "Amount to sell",
             "mandatory": true,
-            "category": 0
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.contractAddress}}",
+              "chain": "{{parameters.chainId}}"
+            }
           },
           {
             "key": "slippage",
