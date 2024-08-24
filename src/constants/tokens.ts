@@ -92,6 +92,36 @@ export const TOKENS: Tokens = {
       image: 'https://static.debank.com/image/mode_token/logo_url/0x2416092f143378750bb29b79ed961ab195cceea5/a66d77b85dfd99539744bc62966e1fac.png'
     },
     {
+      contractAddress: "0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A",
+      symbol: "weETH.mode",
+      name: "Etherfi Restaked ETH",
+      decimals: 18,
+      image: 'https://static.debank.com/image/eth_token/logo_url/0xcd5fe23c85820f7b72d0926fc9b05b43e359b7ee/6c02f6b3bcd264d433c3676100ad8da6.png'
+    },
+    {
+      contractAddress: "0x80137510979822322193FC997d400D5A6C747bf7",
+      symbol: "STONE",
+      name: "Stakestone ETH",
+      decimals: 18,
+      image: 'https://static.debank.com/image/b2_token/logo_url/0x7537c1f80c9e157ed7afd93a494be3e1f04f1462/670162c2c0d81b3d1790e60c78e136e1.png'
+    },
+    {
+      contractAddress: "0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd",
+      symbol: "wrsETH",
+      name: "Kelp Restaked ETH",
+      decimals: 18,
+      image: 'https://static.debank.com/image/blast_token/logo_url/0xe7903b1f75c534dd8159b313d92cdcfbc62cb3cd/570bd8c5a7c151124d71d35ccbfaaefb.png'
+    },
+    {
+      contractAddress: "0x59889b7021243dB5B1e065385F918316cD90D46c",
+      symbol: "M-BTC",
+      name: "Merlin BTC",
+      decimals: 18,
+      image: 'https://static.debank.com/image/merlin_token/logo_url/0xb880fd278198bd590252621d4cd071b1842e9bcd/ef8e2efb7606de9fb88463282c0cbef0.png'
+    },
+
+    // ironclad
+    {
       contractAddress: '0x9c29a8eC901DBec4fFf165cD57D4f9E03D4838f7',
       symbol: 'ironETH',
       name: 'Ironclad ETH',
@@ -162,7 +192,7 @@ export const TOKENS: Tokens = {
       name: "ionic M-BTC",
       decimals: 18,
       image: null
-    }
+    },
   ]
 };
 
