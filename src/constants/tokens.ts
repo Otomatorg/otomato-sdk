@@ -78,25 +78,11 @@ export const TOKENS: Tokens = {
       image: 'https://static.debank.com/image/chain/logo_url/mode/466e6e12f4fd827f8f497cceb0601a5e.png'
     },
     {
-      contractAddress: '0x71ef7EDa2Be775E5A7aa8afD02C45F059833e9d2',
-      symbol: 'ionWETH',
-      name: 'Ionic Wrapped Ether',
-      decimals: 18,
-      image: null,
-    },
-    {
       contractAddress: '0x4200000000000000000000000000000000000006',
       symbol: 'WETH',
       name: 'Wrapped Ether',
       decimals: 18,
       image: 'https://static.debank.com/image/mtr_token/logo_url/0x79a61d3a28f8c8537a3df63092927cfa1150fb3c/61844453e63cf81301f845d7864236f6.png'
-    },
-    {
-      contractAddress: '0x59e710215d45F584f44c0FEe83DA6d43D762D857',
-      symbol: 'ionezETH',
-      name: 'Ionic Renzo Restaked ETH',
-      decimals: 18,
-      image: null
     },
     {
       contractAddress: '0x2416092f143378750bb29b79eD961ab195CcEea5',
@@ -112,6 +98,71 @@ export const TOKENS: Tokens = {
       decimals: 18,
       image: null
     },
+
+    // ionic
+    {
+      contractAddress: "0x94812F2eEa03A49869f95e1b5868C6f3206ee3D3",
+      symbol: "ion-USDT",
+      name: "ionic USDT",
+      decimals: 6,
+      image: null
+    },
+    {
+      contractAddress: "0x2BE717340023C9e14C1Bb12cb3ecBcfd3c3fB038",
+      symbol: "ion-USDC",
+      name: "ionic USDC",
+      decimals: 6,
+      image: null
+    },
+    {
+      contractAddress: "0x59e710215d45F584f44c0FEe83DA6d43D762D857",
+      symbol: "ion-ezETH",
+      name: "ionic ezETH",
+      decimals: 18,
+      image: null
+    },
+    {
+      contractAddress: "0x71ef7EDa2Be775E5A7aa8afD02C45F059833e9d2",
+      symbol: "ion-WETH",
+      name: "ionic WETH",
+      decimals: 18,
+      image: null
+    },
+    {
+      contractAddress: "0xd70254C3baD29504789714A7c69d60Ec1127375C",
+      symbol: "ion-WBTC",
+      name: "ionic WBTC",
+      decimals: 8,
+      image: null
+    },
+    {
+      contractAddress: "0x959FA710CCBb22c7Ce1e59Da82A247e686629310",
+      symbol: "ion-STONE",
+      name: "ionic STONE",
+      decimals: 18,
+      image: null
+    },
+    {
+      contractAddress: "0x49950319aBE7CE5c3A6C90698381b45989C99b46",
+      symbol: "ion-wrsETH",
+      name: "ionic wrsETH",
+      decimals: 18,
+      image: null
+    },
+    {
+      contractAddress: "0xA0D844742B4abbbc43d8931a6Edb00C56325aA18",
+      symbol: "ion-weETH.mode",
+      name: "ionic weETH.mode",
+      decimals: 18,
+      image: null
+    },
+    {
+      contractAddress: "0x19F245782b1258cf3e11Eda25784A378cC18c108",
+      symbol: "ion-M-BTC",
+      name: "ionic M-BTC",
+      decimals: 18,
+      image: null
+    }
   ]
 };
 
