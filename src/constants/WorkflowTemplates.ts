@@ -40,3 +40,19 @@ const createETHFearAndGreedBuy = () => {
     return new Workflow('Buy ETH when the market sentiment is extremely fearful', [trigger, telegramAction], [edge]);
 }
 
+export const WORKFLOW_TEMPLATES = [
+    {
+        'name': 'MODE transfer notification',
+        'description': 'Receive notifications when a top $MODE holder (0x74B8....C6B4) transfers $MODE',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer-monitoring.png',
+        createWorkflow: createModeTransferNotificationWorkflow
+    },
+    {
+        'name': 'Buy ETH when the market sentiment is extremely fearful',
+        'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 30',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear-and-greed-eth-buy.png',
+        createWorkflow: createETHFearAndGreedBuy
+    },
+];
