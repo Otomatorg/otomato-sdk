@@ -12,6 +12,7 @@ export const TRIGGERS = {
         "name": "Transfer token",
         "description": "This block gets triggered when someone transfers the ERC20 configured in the params",
         "type": 0,
+        "after": "async (params) => { return params }",
         "output": {
           "value": "uint256",
           "from": "address",
@@ -80,7 +81,7 @@ export const TRIGGERS = {
         "description": "Fetches the balance of an ERC20 and checks it against the specified condition.",
         "type": 1,
         "method": "function balanceOf(address account) view returns (uint256)",
-        "handler": "output => { const params=JSON.parse(output);const balance = BigInt(params)/1000000n; return {balance: Number(balance), comparisonValue: Number(balance)}; }",
+        "after": "(output) => { const params=JSON.parse(output);const balance = BigInt(params)/1000000n; return {balance: Number(balance), comparisonValue: Number(balance)}; }",
         "output": {
           "balance": "integer"
         },
@@ -136,7 +137,7 @@ export const TRIGGERS = {
               },
               {
                 "key": "comparisonValue",
-                "value": {}
+                "value": "10000000000000000000000n"
               },
               {
                 "key": "condition",
@@ -170,6 +171,7 @@ export const TRIGGERS = {
         "description": "Swap in Splice Finance",
         "type": 0,
         "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
+        "after": "async (params) => { return params }",
         "output": {
           "caller": "address",
           "market": "address",
@@ -219,6 +221,7 @@ export const TRIGGERS = {
         "description": "Liquidity removed in Splice Finance",
         "type": 0,
         "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
+        "after": "async (params) => { return params }",
         "output": {
           "caller": "address",
           "market": "address",
@@ -275,6 +278,7 @@ export const TRIGGERS = {
         "description": "Market creation in Splice Finance",
         "type": 0,
         "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
+        "after": "async (params) => { return params }",
         "output": {
           "market": "address",
           "PT": "erc20",
@@ -324,6 +328,7 @@ export const TRIGGERS = {
         "description": "Interest rate update in Splice Finance",
         "type": 0,
         "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
+        "after": "async (params) => { return params }",
         "output": {
           "timestamp": "uint256",
           "lastLnImpliedRate": "int256",
@@ -556,6 +561,7 @@ export const TRIGGERS = {
         "description": "Name registered in Mode Name Service",
         "type": 0,
         "contractAddress": "0x2aD86eeEC513AC16804bb05310214C3Fd496835B",
+        "after": "async (params) => { return params }",
         "output": {
           "id": "uint256",
           "owner": "address",
@@ -596,7 +602,7 @@ export const TRIGGERS = {
         "description": "Fetches the Fear and Greed Index from the specified API and processes the result.",
         "type": 3,
         "url": "https://api.alternative.me/fng/",
-        "handler": "async (res) => { return {value: res.data?.[0]?.value, comparisonValue: res.data?.[0]?.value} }",
+        "after": "async (res) => { return {value: res.data?.[0]?.value, comparisonValue: res.data?.[0]?.value} }",
         "output": {
           "value": "integer"
         },
@@ -794,6 +800,74 @@ export const TRIGGERS = {
 };
 
 export const ACTIONS = {
+  "CORE": {
+    "DELAY": {
+      "description": "Set of functions to delay the executions of the following blocks.",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png",
+      "WAIT_FOR": {
+        "name": "Delay",
+        "type": 2,
+        "description": "Wait before executing the following blocks",
+        "output": {
+          "message": "string"
+        },
+        "parameters": [
+          {
+            "key": "time",
+            "type": "string",
+            "description": "The time to wait (in milliseconds)",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "Wait 1 hour",
+            "description": "Wait for an hour before executing the next block",
+            "parameters": [
+              {
+                "key": "time",
+                "value": "3600000"
+              }
+            ]
+          }
+        ],
+        "blockId": 100007,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png"
+      },
+      "WAIT_UNTIL": {
+        "name": "Delay",
+        "type": 2,
+        "description": "Wait before executing the following blocks",
+        "output": {
+          "message": "string"
+        },
+        "parameters": [
+          {
+            "key": "until",
+            "type": "string",
+            "description": "The date to wait for (UTC timestamp in milliseconds)",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "Wait until a specific date",
+            "description": "Wait until 00:00 (UTC) Friday 23rd of August 2024",
+            "parameters": [
+              {
+                "key": "until",
+                "value": "1724371200000"
+              }
+            ]
+          }
+        ],
+        "blockId": 100008,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png"
+      }
+    }
+  },
   "NOTIFICATIONS": {
     "SLACK": {
       "description": "Slack is a messaging app for businesses that connects people to the information they need.",
@@ -802,6 +876,7 @@ export const ACTIONS = {
         "name": "Send message",
         "type": 0,
         "description": "Notifies you by sending a Slack message to the channel of your choice",
+        "after": "(data) => { return {message: '{{parameters.message}}'}}",
         "output": {
           "message": "string"
         },
@@ -978,7 +1053,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.value",
-                "value": {}
+                "value": "100000000n"
               },
               {
                 "key": "abiParams.to",
@@ -1018,7 +1093,7 @@ export const ACTIONS = {
         "name": "Lend asset",
         "description": "Deposit token in any Ionic lending pool",
         "type": 1,
-        "method": "function mint(uint256 mintAmount) public returns (uint256)",
+        "method": "function mint(uint256 amount) public returns (uint256)",
         "parameters": [
           {
             "key": "chainId",
@@ -1028,28 +1103,22 @@ export const ACTIONS = {
             "category": 0
           },
           {
-            "key": "abiParams.mintAmount",
+            "key": "tokenToDeposit",
+            "type": "erc20",
+            "description": "The token to deposit",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.amount",
             "type": "uint256",
             "description": "Amount of crypto to deposit",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
-              "contractAddress": "{{parameters.contractAddress}}",
+              "contractAddress": "{{parameters.tokenToDeposit}}",
               "chain": "{{parameters.chainId}}"
             }
-          },
-          {
-            "key": "contractAddress",
-            "type": "erc20",
-            "description": "The token to deposit",
-            "mandatory": true,
-            "enum": [
-              "0xf0F161fDA2712DB8b566946122a5af183995e2eD",
-              "0xd988097fb8612cc24eeC14542bC03424c656005f",
-              "0x4200000000000000000000000000000000000006",
-              "0x2416092f143378750bb29b79eD961ab195CcEea5"
-            ],
-            "category": 0
           },
         ] as Parameter[],
         "examples": [
@@ -1062,11 +1131,11 @@ export const ACTIONS = {
                 "value": 34443
               },
               {
-                "key": "abiParams.mintAmount",
-                "value": {}
+                "key": "abiParams.amount",
+                "value": "100000000n"
               },
               {
-                "key": "contractAddress",
+                "key": "tokenToDeposit",
                 "value": "0xf0F161fDA2712DB8b566946122a5af183995e2eD"
               }
             ]
@@ -1074,9 +1143,9 @@ export const ACTIONS = {
         ],
         "requiredApprovals": [
           {
-            "address": "{{parameters.contractAddress}}",
-            "amount": "{{parameters.mintAmount}}",
-            "to": "{{before.ionicTokenContractAddress}}"
+            "address": "{{parameters.tokenToDeposit}}",
+            "amount": "{{parameters.abiParams.amount}}",
+            "to": "{{before.contractAddress}}"
           }
         ],
         "output": {
@@ -1084,16 +1153,233 @@ export const ACTIONS = {
         },
         "permissions": {
           "approvedTargets": [
-            "{{before.ionicTokenContractAddress}}"
+            "{{parameters.tokenToDeposit}}",
+            "{{before.contractAddress}}"
           ],
           "label": [
-            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.contractAddress}})}}"
+            "Deposit {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToDeposit}})}} on IONIC"
           ],
           "labelNotAuthorized": [
-            "Transfer {{otherTokenSymbol({{parameters.chainId}}, {{parameters.contractAddress}})}}"
+            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToDeposit}})}}"
           ]
         },
         "blockId": 100006,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
+      },
+      "WITHDRAW": {
+        "name": "Withdraw asset",
+        "description": "Withdraw token deposited in any lending pool",
+        "type": 1,
+        "method": "function redeemUnderlying(uint256 amount) public returns (uint256)",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "tokenToWithdraw",
+            "type": "erc20",
+            "description": "The token to withdraw",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.amount",
+            "type": "uint256",
+            "description": "Amount of crypto to withdraw",
+            "mandatory": true,
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.tokenToWithdraw}}",
+              "chain": "{{parameters.chainId}}"
+            }
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "Withdraw 100 USDT",
+            "description": "Withdraw 100 USDT on Ionic on Mode",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "abiParams.amount",
+                "value": "100000000n"
+              },
+              {
+                "key": "tokenToWithdraw",
+                "value": "0xf0F161fDA2712DB8b566946122a5af183995e2eD"
+              }
+            ]
+          }
+        ],
+        "requiredApprovals": [],
+        "output": {
+          "transactionHash": "string"
+        },
+        "permissions": {
+          "approvedTargets": [
+            "{{before.contractAddress}}"
+          ],
+          "label": [
+            "Withdraw {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToWithdraw}})}} from IONIC"
+          ],
+          "labelNotAuthorized": [
+            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToWithdraw}})}}"
+          ]
+        },
+        "blockId": 100007,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
+      },
+      "BORROW": {
+        "name": "Borrow asset",
+        "description": "Borrow any token against your collateral",
+        "type": 1,
+        "method": "function borrow(uint256 amount) external returns (uint256)",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "tokenToBorrow",
+            "type": "erc20",
+            "description": "The token to borrow",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.amount",
+            "type": "uint256",
+            "description": "Amount of crypto to borrow",
+            "mandatory": true,
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.tokenToBorrow}}",
+              "chain": "{{parameters.chainId}}"
+            }
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "Borrow 100 USDT",
+            "description": "Borrow 100 USDT on Ionic on Mode",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "abiParams.amount",
+                "value": "100000000n"
+              },
+              {
+                "key": "tokenToBorrow",
+                "value": "0xf0F161fDA2712DB8b566946122a5af183995e2eD"
+              }
+            ]
+          }
+        ],
+        "requiredApprovals": [],
+        "output": {
+          "transactionHash": "string"
+        },
+        "permissions": {
+          "approvedTargets": [
+            "{{before.contractAddress}}"
+          ],
+          "label": [
+            "Borrow {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToBorrow}})}} on IONIC"
+          ],
+          "labelNotAuthorized": [
+            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToBorrow}})}}"
+          ]
+        },
+        "blockId": 100008,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
+      },
+      "REPAY": {
+        "name": "Repay asset",
+        "description": "Repay a token that you borrowed",
+        "type": 1,
+        "method": "function repayBorrow(uint256 amount) external returns (uint256)",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "tokenToRepay",
+            "type": "erc20",
+            "description": "The token to repay",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.amount",
+            "type": "uint256",
+            "description": "Amount of crypto to repay",
+            "mandatory": true,
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.tokenToRepay}}",
+              "chain": "{{parameters.chainId}}"
+            }
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "Repay 100 USDT",
+            "description": "Repay 100 USDT on Ionic on Mode",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "abiParams.amount",
+                "value": "100000000n"
+              },
+              {
+                "key": "tokenToRepay",
+                "value": "0xf0F161fDA2712DB8b566946122a5af183995e2eD"
+              }
+            ]
+          }
+        ],
+        "requiredApprovals": [
+          {
+            "address": "{{parameters.tokenToRepay}}",
+            "amount": "{{parameters.abiParams.amount}}",
+            "to": "{{before.contractAddress}}"
+          }
+        ],
+        "output": {
+          "transactionHash": "string"
+        },
+        "permissions": {
+          "approvedTargets": [
+            "{{before.contractAddress}}"
+          ],
+          "label": [
+            "Repay {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToRepay}})}} on IONIC"
+          ],
+          "labelNotAuthorized": [
+            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToRepay}})}}"
+          ]
+        },
+        "blockId": 100009,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
       }
     }
@@ -1185,7 +1471,7 @@ export const ACTIONS = {
               },
               {
                 "key": "amount",
-                "value": {}
+                "value": "100000000000000000000n"
               },
               {
                 "key": "slippage",
