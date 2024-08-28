@@ -805,7 +805,7 @@ export const ACTIONS = {
       "description": "Set of functions to delay the executions of the following blocks.",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png",
       "WAIT_FOR": {
-        "name": "Delay",
+        "name": "Wait for",
         "type": 2,
         "description": "Wait before executing the following blocks",
         "output": {
@@ -836,7 +836,7 @@ export const ACTIONS = {
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png"
       },
       "WAIT_UNTIL": {
-        "name": "Delay",
+        "name": "Wait until",
         "type": 2,
         "description": "Wait before executing the following blocks",
         "output": {
@@ -876,7 +876,6 @@ export const ACTIONS = {
         "name": "Send message",
         "type": 0,
         "description": "Notifies you by sending a Slack message to the channel of your choice",
-        "after": "(data) => { return {message: '{{parameters.message}}'}}",
         "output": {
           "message": "string"
         },
@@ -1004,7 +1003,7 @@ export const ACTIONS = {
         "name": "Transfer token",
         "description": "Transfers an ERC20 token",
         "type": 1,
-        "method": "function transfer(address from, address to, uint256 value)",
+        "method": "function transfer(address to, uint256 value)",
         "output": {
           "transactionHash": "string"
         },
