@@ -12,7 +12,6 @@ export const TRIGGERS = {
         "name": "Transfer token",
         "description": "This block gets triggered when someone transfers the ERC20 configured in the params",
         "type": 0,
-        "after": "async (params) => { return params }",
         "output": {
           "value": "uint256",
           "from": "address",
@@ -81,7 +80,6 @@ export const TRIGGERS = {
         "description": "Fetches the balance of an ERC20 and checks it against the specified condition.",
         "type": 1,
         "method": "function balanceOf(address account) view returns (uint256)",
-        "after": "(output) => { const params=JSON.parse(output);const balance = BigInt(params)/1000000n; return {balance: Number(balance), comparisonValue: Number(balance)}; }",
         "output": {
           "balance": "integer"
         },
@@ -160,6 +158,113 @@ export const TRIGGERS = {
     }
   },
   "YIELD": {
+    "ETHENA": {
+      "description": "Fetches the Fear and Greed Index",
+      "tags": {},
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethena.svg",
+      "SUSDE_YIELD": {
+        "name": "sUSDE yield",
+        "description": "Fetches Ethena's sUSDE yield",
+        "type": 3,
+        "url": "https://app.ethena.fi/api/yields/protocol-and-staking-yield",
+        "output": {
+          "yield": "float"
+        },
+        "parameters": [
+          {
+            "key": "condition",
+            "type": "logic_operator",
+            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ...",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "comparisonValue",
+            "type": "float",
+            "description": "The value to compare to",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "Yield decreasing below 8%",
+            "description": "Gets triggered when the yield is below 8%",
+            "parameters": [
+              {
+                "key": "condition",
+                "value": "lte"
+              },
+              {
+                "key": "comparisonValue",
+                "value": 8
+              }
+            ]
+          },
+          {
+            "name": "Yield increasing above 20%",
+            "description": "Gets triggered when the yield is above 20%",
+            "parameters": [
+              {
+                "key": "condition",
+                "value": "gte"
+              },
+              {
+                "key": "comparisonValue",
+                "value": 20
+              }
+            ]
+          }
+        ],
+        "blockId": 12,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethena.svg"
+      },
+      "TVL": {
+        "name": "USDE supply",
+        "description": "Fetches Ethena's USDE supply",
+        "type": 1,
+        "method": "function totalSupply() public view virtual override returns (uint256)",
+        "output": {
+          "supply": "integer"
+        },
+        "contractAddress": "0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+        "chainId": 1,
+        "parameters": [
+          {
+            "key": "condition",
+            "type": "logic_operator",
+            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ...",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "comparisonValue",
+            "type": "integer",
+            "description": "The value to compare to",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "Supply above 3B$",
+            "description": "Gets triggered when the USDE supply is above 3B$",
+            "parameters": [
+              {
+                "key": "comparisonValue",
+                "value": 3000000000
+              },
+              {
+                "key": "condition",
+                "value": "gt"
+              }
+            ]
+          }
+        ],
+        "blockId": 13,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethena.svg"
+      }
+    },
     "SPLICE_FI": {
       "description": "Split any yield-bearing asset into separate yield and principal components",
       "chains": [
@@ -171,7 +276,6 @@ export const TRIGGERS = {
         "description": "Swap in Splice Finance",
         "type": 0,
         "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
-        "after": "async (params) => { return params }",
         "output": {
           "caller": "address",
           "market": "address",
@@ -221,7 +325,6 @@ export const TRIGGERS = {
         "description": "Liquidity removed in Splice Finance",
         "type": 0,
         "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
-        "after": "async (params) => { return params }",
         "output": {
           "caller": "address",
           "market": "address",
@@ -278,7 +381,6 @@ export const TRIGGERS = {
         "description": "Market creation in Splice Finance",
         "type": 0,
         "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
-        "after": "async (params) => { return params }",
         "output": {
           "market": "address",
           "PT": "erc20",
@@ -328,7 +430,6 @@ export const TRIGGERS = {
         "description": "Interest rate update in Splice Finance",
         "type": 0,
         "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
-        "after": "async (params) => { return params }",
         "output": {
           "timestamp": "uint256",
           "lastLnImpliedRate": "int256",
@@ -561,7 +662,6 @@ export const TRIGGERS = {
         "description": "Name registered in Mode Name Service",
         "type": 0,
         "contractAddress": "0x2aD86eeEC513AC16804bb05310214C3Fd496835B",
-        "after": "async (params) => { return params }",
         "output": {
           "id": "uint256",
           "owner": "address",
@@ -602,7 +702,6 @@ export const TRIGGERS = {
         "description": "Fetches the Fear and Greed Index from the specified API and processes the result.",
         "type": 3,
         "url": "https://api.alternative.me/fng/",
-        "after": "async (res) => { return {value: res.data?.[0]?.value, comparisonValue: res.data?.[0]?.value} }",
         "output": {
           "value": "integer"
         },

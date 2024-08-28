@@ -1,4 +1,4 @@
-import { Workflow, Trigger, Action, Edge, TRIGGERS, ACTIONS, CHAINS, getTokenFromSymbol } from '../index.js';
+import { Workflow, Trigger, Action, Edge, TRIGGERS, ACTIONS, CHAINS, getTokenFromSymbol, convertToTokenUnitsFromSymbol } from '../index.js';
 
 export const WORKFLOW_TEMPLATES_TAGS = {
     NFTS: 'NFTs',
@@ -40,6 +40,46 @@ const createETHFearAndGreedBuy = () => {
     return new Workflow('Buy ETH when the market sentiment is extremely fearful', [trigger, telegramAction], [edge]);
 }
 
+const createSUsdeYieldBuy = async () => {
+    const trigger = new Trigger(TRIGGERS.YIELD.ETHENA.SUSDE_YIELD);
+
+    trigger.setCondition('gt');
+    trigger.setComparisonValue(20);
+    trigger.setPosition(400, 120);
+
+    const odosAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    const chain = CHAINS.ETHEREUM
+    odosAction.setChainId(chain)
+    odosAction.setParams("tokenIn", getTokenFromSymbol(chain, 'USDC').contractAddress);
+    odosAction.setParams("tokenOut", getTokenFromSymbol(chain, 'sUSDE').contractAddress);
+    odosAction.setParams("amount", await convertToTokenUnitsFromSymbol(100, chain, 'USDC'));
+    odosAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: odosAction });
+
+    return new Workflow('Buy sUSDE when the yield is above 20%', [trigger, odosAction], [edge]);
+}
+
+const createSusdeYieldShortEna = async () => {
+    const trigger = new Trigger(TRIGGERS.YIELD.ETHENA.SUSDE_YIELD);
+
+    trigger.setCondition('lt');
+    trigger.setComparisonValue(0);
+    trigger.setPosition(400, 120);
+
+    const odosAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    const chain = CHAINS.ETHEREUM
+    odosAction.setChainId(chain)
+    odosAction.setParams("tokenIn", getTokenFromSymbol(chain, 'USDC').contractAddress);
+    odosAction.setParams("tokenOut", getTokenFromSymbol(chain, 'sUSDE').contractAddress);
+    odosAction.setParams("amount", await convertToTokenUnitsFromSymbol(100, chain, 'USDC'));
+    odosAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: odosAction });
+
+    return new Workflow('Short ENA when sUSDE yield is negative', [trigger, odosAction], [edge]);
+}
+
 export const WORKFLOW_TEMPLATES = [
     {
         'name': 'MODE transfer notification',
@@ -54,5 +94,19 @@ export const WORKFLOW_TEMPLATES = [
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear-and-greed-eth-buy.png',
         createWorkflow: createETHFearAndGreedBuy
+    },
+    {
+        'name': 'Buy sUSDE when the yield is above 20%',
+        'description': 'Buy sUSDE when the yield is above 20%',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear-and-greed-eth-buy.png',
+        createWorkflow: createSUsdeYieldBuy
+    },
+    {
+        'name': 'Short ENA when sUSDE yield is negative',
+        'description': 'Short ENA when sUSDE yield is negative',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear-and-greed-eth-buy.png',
+        createWorkflow: createSusdeYieldShortEna
     },
 ];
