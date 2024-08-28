@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_CONFIG = {
-  BASE_URL: 'https://staging-api.otomato.xyz/api',
+  BASE_URL: 'https://api.otomato.xyz/api',
   HEADERS: {
     'Content-Type': 'application/json',
   }
@@ -17,6 +17,10 @@ class ApiServices {
 
   setAuth(auth: string) {
     this.auth = auth;
+  }
+
+  setUrl(baseUrl: string) {
+    axiosInstance.defaults.baseURL = baseUrl;
   }
 
   async post(url: string, data: any) {
