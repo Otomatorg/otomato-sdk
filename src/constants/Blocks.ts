@@ -159,8 +159,7 @@ export const TRIGGERS = {
   },
   "YIELD": {
     "ETHENA": {
-      "description": "Fetches the Fear and Greed Index",
-      "tags": {},
+      "description": "Ethena is a synthetic dollar protocol built on Ethereum that provides a crypto-native solution for money not reliant on traditional banking system infrastructure",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethena.svg",
       "SUSDE_YIELD": {
         "name": "sUSDE yield",
@@ -895,6 +894,69 @@ export const TRIGGERS = {
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/trend-up.png"
       }
     }
+  },
+  "ETFS": {
+    "IBIT": {
+      "description": "IBIT is Blackrock's Bitcoin ETF",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/blackrock.jpeg",
+      "AUM": {
+        "name": "Assets under management",
+        "description": "Fetches IBIT net assets (USD)",
+        "type": 3,
+        "url": "https://www.alphavantage.co/query?function=ETF_PROFILE&symbol=IBIT&apikey=V343UMWZF0715R3A",
+        "output": {
+          "yield": "float"
+        },
+        "parameters": [
+          {
+            "key": "condition",
+            "type": "logic_operator",
+            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ...",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "comparisonValue",
+            "type": "integer",
+            "description": "The value to compare to",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "AUM above 30B$",
+            "description": "Gets triggered when the assets under management are above 30B$",
+            "parameters": [
+              {
+                "key": "condition",
+                "value": "gte"
+              },
+              {
+                "key": "comparisonValue",
+                "value": 30000000000
+              }
+            ]
+          },
+          {
+            "name": "AUM below 15B$",
+            "description": "Gets triggered when the assets under management are below 15B$",
+            "parameters": [
+              {
+                "key": "condition",
+                "value": "lt"
+              },
+              {
+                "key": "comparisonValue",
+                "value": 15000000000
+              }
+            ]
+          }
+        ],
+        "blockId": 14,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/blackrock.jpeg"
+      }
+    }
   }
 };
 
@@ -931,7 +993,7 @@ export const ACTIONS = {
             ]
           }
         ],
-        "blockId": 100007,
+        "blockId": 100010,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png"
       },
       "WAIT_UNTIL": {
@@ -962,7 +1024,7 @@ export const ACTIONS = {
             ]
           }
         ],
-        "blockId": 100008,
+        "blockId": 100011,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png"
       }
     }
@@ -1537,7 +1599,7 @@ export const ACTIONS = {
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
-              "contractAddress": "{{parameters.contractAddress}}",
+              "contractAddress": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874",
               "chain": "{{parameters.chainId}}"
             }
           },
@@ -1569,7 +1631,7 @@ export const ACTIONS = {
               },
               {
                 "key": "amount",
-                "value": "100000000000000000000n"
+                "value": "100000000n"
               },
               {
                 "key": "slippage",
