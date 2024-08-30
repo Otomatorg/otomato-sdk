@@ -92,21 +92,21 @@ export const WORKFLOW_TEMPLATES = [
         'name': 'Buy ETH when the market sentiment is extremely fearful',
         'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 30',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear-and-greed-eth-buy.png',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear_and_greed.jpg',
         createWorkflow: createETHFearAndGreedBuy
     },
     {
         'name': 'Buy sUSDE when the yield is above 20%',
         'description': 'Buy sUSDE when the yield is above 20%',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear-and-greed-eth-buy.png',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/buySusde.jpg',
         createWorkflow: createSUsdeYieldBuy
     },
     {
         'name': 'Short ENA when sUSDE yield is negative',
         'description': 'Short ENA when sUSDE yield is negative',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear-and-greed-eth-buy.png',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
         createWorkflow: createSusdeYieldShortEna
     },
 ];
