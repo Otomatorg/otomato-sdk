@@ -964,7 +964,7 @@ export const ACTIONS = {
   "CORE": {
     "DELAY": {
       "description": "Set of functions to delay the executions of the following blocks.",
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/delay.png",
       "WAIT_FOR": {
         "name": "Wait for",
         "type": 2,
@@ -994,7 +994,7 @@ export const ACTIONS = {
           }
         ],
         "blockId": 100010,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/delay.png"
       },
       "WAIT_UNTIL": {
         "name": "Wait until",
@@ -1025,7 +1025,7 @@ export const ACTIONS = {
           }
         ],
         "blockId": 100011,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/delay.png"
       }
     }
   },
@@ -1267,6 +1267,7 @@ export const ACTIONS = {
             "type": "erc20",
             "description": "The token to deposit",
             "mandatory": true,
+            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
             "category": 0
           },
           {
@@ -1304,7 +1305,7 @@ export const ACTIONS = {
         "requiredApprovals": [
           {
             "address": "{{parameters.tokenToDeposit}}",
-            "amount": "{{parameters.abiParams.amount}}",
+            "amount": "{{parameters.abi.parameters.amount}}",
             "to": "{{before.contractAddress}}"
           }
         ],
@@ -1344,6 +1345,7 @@ export const ACTIONS = {
             "type": "erc20",
             "description": "The token to withdraw",
             "mandatory": true,
+            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
             "category": 0
           },
           {
@@ -1414,6 +1416,7 @@ export const ACTIONS = {
             "type": "erc20",
             "description": "The token to borrow",
             "mandatory": true,
+            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
             "category": 0
           },
           {
@@ -1484,6 +1487,7 @@ export const ACTIONS = {
             "type": "erc20",
             "description": "The token to repay",
             "mandatory": true,
+            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
             "category": 0
           },
           {
@@ -1521,7 +1525,7 @@ export const ACTIONS = {
         "requiredApprovals": [
           {
             "address": "{{parameters.tokenToRepay}}",
-            "amount": "{{parameters.abiParams.amount}}",
+            "amount": "{{parameters.abi.parameters.amount}}",
             "to": "{{before.contractAddress}}"
           }
         ],
@@ -1559,7 +1563,7 @@ export const ACTIONS = {
         "requiredApprovals": [
           {
             "address": "{{parameters.tokenIn}}",
-            "amount": "{{parameters.value}}",
+            "amount": "{{parameters.amount}}",
             "to": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874"
           }
         ],
