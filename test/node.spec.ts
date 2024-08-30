@@ -3,7 +3,8 @@ import { Action, Node, Parameter } from '../src/index'; // Adjust the import pat
 
 const DEFAULT_PARAMETERS: Parameter[] = [
   { key: 'chainId', type: 'integer', description: 'Chain ID', value: null, category: 0 },
-  { key: 'contractAddress', type: 'address', description: 'Contract Address', value: null, category: 0 }
+  { key: 'contractAddress', type: 'address', description: 'Contract Address', value: null, category: 0 },
+  { key: 'abiParams.from', type: 'address', description: 'From', value: null, category: 0 }
 ];
 
 const DEFAULT_OUTPUTS = {
@@ -110,6 +111,11 @@ describe('Node Class', () => {
       ref: node.getRef(),
       type: 'action',
       parameters: {
+        abi: {
+          parameters: {
+            from: null
+          }
+        },
         chainId: 1,
         contractAddress: "0x0000000000000000000000000000000000000000"
       },
@@ -138,6 +144,11 @@ describe('Node Class', () => {
       state: 'inactive',
       ref: node.getRef(),
       parameters: {
+        abi: {
+          parameters: {
+            from: null
+          }
+        },
         chainId: 1,
         contractAddress: "0x0000000000000000000000000000000000000000"
       },
@@ -204,6 +215,9 @@ describe('Node Variable Name Generation', () => {
 
     const paramVarNameContractAddress = node.getParameterVariableName('contractAddress');
     expect(paramVarNameContractAddress).to.equal(`{{nodeMap.${node.getRef()}.parameters.contractAddress}}`);
+
+    const paramVarNameFrom = node.getParameterVariableName('from');
+    expect(paramVarNameFrom).to.equal(`{{nodeMap.${node.getRef()}.parameters.abi.parameters.from}}`);
   });
 
 });

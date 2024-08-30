@@ -146,7 +146,15 @@ export abstract class Node {
   }
 
   getParameterVariableName(parameterKey: string): string {
-    return `{{nodeMap.${this.getRef()}.parameters.${parameterKey}}}`;
+    const parameters = this.getParameters();
+  
+    if (parameters.abi && parameters.abi.parameters && parameters.abi.parameters.hasOwnProperty(parameterKey)) {
+      // If the key is inside abi.parameters, format accordingly
+      return `{{nodeMap.${this.getRef()}.parameters.abi.parameters.${parameterKey}}}`;
+    } else {
+      // If the key is not inside abi.parameters, use the default format
+      return `{{nodeMap.${this.getRef()}.parameters.${parameterKey}}}`;
+    }
   }
 
   toJSON(): { [key: string]: any } {
