@@ -1,5 +1,5 @@
 import { Parameter } from './Parameter.js';
-import { validateType } from '../utils/typeValidator.js';
+import { validateType, isANumber } from '../utils/typeValidator.js';
 import { ACTIONS, TRIGGERS } from '../constants/Blocks.js';
 import { apiServices } from '../services/ApiService.js';
 
@@ -104,6 +104,11 @@ export abstract class Node {
   protected setParameter(key: string, value: any): void {
     if (key in this.parameters) {
       const param = this.parameters[key];
+      try {
+        // if the user pass '100000n' for a number, we transform it to Bigints
+        if (isANumber(param.type) && value?.endsWith('n'))
+          value = BigInt(value.substring(0, value.length - 1));
+      } catch (e) { }
       if (validateType(param.type, value)) {
         this.parameters[key].value = value;
       } else {
@@ -147,7 +152,7 @@ export abstract class Node {
 
   getParameterVariableName(parameterKey: string): string {
     const parameters = this.getParameters();
-  
+
     if (parameters.abi && parameters.abi.parameters && parameters.abi.parameters.hasOwnProperty(parameterKey)) {
       // If the key is inside abi.parameters, format accordingly
       return `{{nodeMap.${this.getRef()}.parameters.abi.parameters.${parameterKey}}}`;

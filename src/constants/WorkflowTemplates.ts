@@ -47,8 +47,8 @@ const createSUsdeYieldBuy = async () => {
     trigger.setComparisonValue(20);
     trigger.setPosition(400, 120);
 
-    const odosAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-    const chain = CHAINS.ETHEREUM
+    const odosAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
+    const chain = CHAINS.ETHEREUM;
     odosAction.setChainId(chain)
     odosAction.setParams("tokenIn", getTokenFromSymbol(chain, 'USDC').contractAddress);
     odosAction.setParams("tokenOut", getTokenFromSymbol(chain, 'sUSDE').contractAddress);
@@ -67,8 +67,8 @@ const createSusdeYieldShortEna = async () => {
     trigger.setComparisonValue(0);
     trigger.setPosition(400, 120);
 
-    const odosAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-    const chain = CHAINS.ETHEREUM
+    const odosAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
+    const chain = CHAINS.ETHEREUM;
     odosAction.setChainId(chain)
     odosAction.setParams("tokenIn", getTokenFromSymbol(chain, 'USDC').contractAddress);
     odosAction.setParams("tokenOut", getTokenFromSymbol(chain, 'sUSDE').contractAddress);

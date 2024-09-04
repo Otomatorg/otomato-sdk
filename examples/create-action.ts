@@ -4,7 +4,7 @@ const createAction = () => {
   // Create an ERC20 transfer action
   const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
   transferAction.setChainId(CHAINS.ETHEREUM);
-  transferAction.setParams("value", 1000);
+  transferAction.setParams("value", "1000n");
   transferAction.setParams("to", "0x888888888889758f76e7103c6cbf23abbf58f946");
   transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 

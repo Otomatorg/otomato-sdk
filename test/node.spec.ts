@@ -4,7 +4,7 @@ import { Action, Node, Parameter } from '../src/index'; // Adjust the import pat
 const DEFAULT_PARAMETERS: Parameter[] = [
   { key: 'chainId', type: 'integer', description: 'Chain ID', value: null, category: 0 },
   { key: 'contractAddress', type: 'address', description: 'Contract Address', value: null, category: 0 },
-  { key: 'abiParams.from', type: 'address', description: 'From', value: null, category: 0 }
+  { key: 'abiParams.from', type: 'address', description: 'From', value: null, category: 0 },
 ];
 
 const DEFAULT_OUTPUTS = {
@@ -218,6 +218,69 @@ describe('Node Variable Name Generation', () => {
 
     const paramVarNameFrom = node.getParameterVariableName('from');
     expect(paramVarNameFrom).to.equal(`{{nodeMap.${node.getRef()}.parameters.abi.parameters.from}}`);
+  });
+
+});
+
+describe('Node setParameter Method', () => {
+
+  it('should accept number', () => {
+    const node = new Action({
+      blockId: 100001,
+      name: 'Test Node for BigInt',
+      description: 'A node for testing BigInt conversion',
+      parameters: [...DEFAULT_PARAMETERS, { key: 'amount', type: 'uint256', description: 'Amount', value: null, category: 0 }],
+      output: DEFAULT_OUTPUTS,
+      image: 'a',
+    });
+
+    node.setParams('amount', 100000);
+    const params = node.getParameters();
+    console.log(params)
+    expect(params.amount).to.equal(100000);
+  });
+
+  it('should convert valid "BigInt" string to BigInt type', () => {
+    const node = new Action({
+      blockId: 100001,
+      name: 'Test Node for BigInt',
+      description: 'A node for testing BigInt conversion',
+      parameters: [...DEFAULT_PARAMETERS, { key: 'amount', type: 'uint256', description: 'Amount', value: null, category: 0 }],
+      output: DEFAULT_OUTPUTS,
+      image: 'a',
+    });
+
+    node.setParams('amount', '100000n');
+    const params = node.getParameters();
+    expect(params.amount).to.equal(BigInt('100000'));
+  });
+
+  it('should not throw error on invalid "BigInt" string and should not set the parameter', () => {
+    const node = new Action({
+      blockId: 100001,
+      name: 'Test Node for Invalid BigInt',
+      description: 'A node for testing invalid BigInt string handling',
+      parameters: [...DEFAULT_PARAMETERS, { key: 'amount', type: 'uint256', description: 'Amount', value: null, category: 0 }],
+      output: DEFAULT_OUTPUTS,
+      image: 'a',
+    });
+
+    expect(() => node.setParams('amount', 'invalidn')).to.throw('Invalid type for parameter amount. Expected uint256.');
+    const params = node.getParameters();
+    expect(params.amount).to.be.null;
+  });
+
+  it('should throw an error for non-number string when a number is expected', () => {
+    const node = new Action({
+      blockId: 100001,
+      name: 'Test Node for Non-Number String',
+      description: 'A node for testing error handling on non-number string',
+      parameters: [...DEFAULT_PARAMETERS, { key: 'amount', type: 'uint256', description: 'Amount', value: null, category: 0 }],
+      output: DEFAULT_OUTPUTS,
+      image: 'a',
+    });
+
+    expect(() => node.setParams('amount', 'not_a_number')).to.throw('Invalid type for parameter amount. Expected uint256.');
   });
 
 });
