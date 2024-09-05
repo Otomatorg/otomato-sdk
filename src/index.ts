@@ -13,6 +13,7 @@ export * from './models/Trigger.js';
 export * from './models/Node.js';
 export * from './models/Edge.js';
 export * from './models/SessionKeyPermission.js';
+export * from './models/Authorization.js';
 
 // Exporting services
 export * from './services/ApiService.js';
