@@ -55,9 +55,14 @@ const createSUsdeYieldBuy = async () => {
     odosAction.setParams("amount", await convertToTokenUnitsFromSymbol(100, chain, 'USDC'));
     odosAction.setPosition(400, 240);
 
-    const edge = new Edge({ source: trigger, target: odosAction });
+    const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    telegramAction.setParams("message", "The sUSDE is now negative. You're losing money by holding it.");
+    telegramAction.setPosition(400, 360);
 
-    return new Workflow('Buy sUSDE when the yield is above 20%', [trigger, odosAction], [edge]);
+    const edge = new Edge({ source: trigger, target: odosAction });
+    const edge2 = new Edge({ source: odosAction, target: telegramAction });
+
+    return new Workflow('Buy sUSDE when the yield is above 20%', [trigger, odosAction, telegramAction], [edge, edge2]);
 }
 
 const createSusdeYieldNotification = async () => {
