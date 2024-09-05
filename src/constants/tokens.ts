@@ -50,25 +50,11 @@ export const TOKENS: Tokens = {
       image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png"
     },
     {
-      contractAddress: "0xd988097fb8612cc24eeC14542bC03424c656005f",
-      name: "USDC",
-      symbol: "USDC",
-      decimals: 6,
-      image: "https://static.debank.com/image/coin/logo_url/usdc/e87790bfe0b3f2ea855dc29069b38818.png"
-    },
-    {
       contractAddress: '0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF',
       symbol: 'WBTC',
       name: 'Wrapped BTC',
       decimals: 8,
       image: "https://static.debank.com/image/eth_token/logo_url/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/d3c52e7c7449afa8bd4fad1c93f50d93.png",
-    },
-    {
-      contractAddress: '0xf0F161fDA2712DB8b566946122a5af183995e2eD',
-      symbol: 'USDT',
-      name: 'USDT',
-      decimals: 6,
-      image: "https://static.debank.com/image/coin/logo_url/usdt/23af7472292cb41dc39b3f1146ead0fe.png"
     },
     {
       contractAddress: '0xDfc7C877a950e49D2610114102175A06C2e3167a',
@@ -118,6 +104,36 @@ export const TOKENS: Tokens = {
       name: "Merlin BTC",
       decimals: 18,
       image: 'https://static.debank.com/image/merlin_token/logo_url/0xb880fd278198bd590252621d4cd071b1842e9bcd/ef8e2efb7606de9fb88463282c0cbef0.png'
+    },
+
+    // stables
+    {
+      contractAddress: "0xd988097fb8612cc24eeC14542bC03424c656005f",
+      name: "USDC",
+      symbol: "USDC",
+      decimals: 6,
+      image: "https://static.debank.com/image/coin/logo_url/usdc/e87790bfe0b3f2ea855dc29069b38818.png"
+    },
+    {
+      contractAddress: '0xf0F161fDA2712DB8b566946122a5af183995e2eD',
+      symbol: 'USDT',
+      name: 'USDT',
+      decimals: 6,
+      image: "https://static.debank.com/image/coin/logo_url/usdt/23af7472292cb41dc39b3f1146ead0fe.png"
+    },
+    {
+      contractAddress: '0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34',
+      symbol: 'USDe',
+      name: 'USDe',
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x4c9edd5852cd905f086c759e8383e09bff1e68b3/734064e545eabfc501b9d0e752644b7d.png"
+    },
+    {
+      contractAddress: '0x211Cc4DD073734dA055fbF44a2b4667d5E5fE5d2',
+      symbol: 'sUSDe',
+      name: 'sUSDe',
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x9d39a5de30e57443bff2a8307a4256c8797a3497/966083165927dd3c1e6b67ff4bd17060.png"
     },
 
     // ironclad

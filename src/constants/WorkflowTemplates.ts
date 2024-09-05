@@ -32,7 +32,7 @@ const createETHFearAndGreedBuy = () => {
     trigger.setPosition(400, 120);
 
     const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-    telegramAction.setParams("message", "The market sentiment is extremely fearful. Consider buying ETH.");
+    telegramAction.setParams("message", "The market sentiment is extremely fearful. Consider buying ETH (NFA).");
     telegramAction.setPosition(400, 240);
 
     const edge = new Edge({ source: trigger, target: telegramAction });
@@ -60,24 +60,20 @@ const createSUsdeYieldBuy = async () => {
     return new Workflow('Buy sUSDE when the yield is above 20%', [trigger, odosAction], [edge]);
 }
 
-const createSusdeYieldShortEna = async () => {
+const createSusdeYieldNotification = async () => {
     const trigger = new Trigger(TRIGGERS.YIELD.ETHENA.SUSDE_YIELD);
 
     trigger.setCondition('lt');
     trigger.setComparisonValue(0);
     trigger.setPosition(400, 120);
 
-    const odosAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
-    const chain = CHAINS.ETHEREUM;
-    odosAction.setChainId(chain)
-    odosAction.setParams("tokenIn", getTokenFromSymbol(chain, 'USDC').contractAddress);
-    odosAction.setParams("tokenOut", getTokenFromSymbol(chain, 'sUSDE').contractAddress);
-    odosAction.setParams("amount", await convertToTokenUnitsFromSymbol(100, chain, 'USDC'));
-    odosAction.setPosition(400, 240);
+    const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    telegramAction.setParams("message", "The sUSDE is now negative. You're losing money by holding it.");
+    telegramAction.setPosition(400, 240);
 
-    const edge = new Edge({ source: trigger, target: odosAction });
+    const edge = new Edge({ source: trigger, target: telegramAction });
 
-    return new Workflow('Short ENA when sUSDE yield is negative', [trigger, odosAction], [edge]);
+    return new Workflow('sUSDE yield notification', [trigger, telegramAction], [edge]);
 }
 
 export const WORKFLOW_TEMPLATES = [
@@ -103,10 +99,10 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createSUsdeYieldBuy
     },
     {
-        'name': 'Short ENA when sUSDE yield is negative',
-        'description': 'Short ENA when sUSDE yield is negative',
+        'name': 'sUSDE yield notification',
+        'description': 'Notify me when the sUSDe yield becomes negative',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
-        createWorkflow: createSusdeYieldShortEna
+        createWorkflow: createSusdeYieldNotification
     },
 ];
