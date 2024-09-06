@@ -27,6 +27,18 @@ export async function convertTokenUnitsFromSymbol(amount: bigint, chainId: numbe
     return Number(adjustedAmount);
 }
 
+export async function convertTokenUnitsFromAddress(amount: bigint, chainId: number, contractAddress: string): Promise<number> {
+    const token = await getToken(chainId, contractAddress);
+    const decimals = token.decimals;
+
+    // Divide by 10^decimals to get the original amount
+    const divisor = BigInt(10) ** BigInt(decimals);
+    const adjustedAmount = amount / divisor;
+
+    // Convert the result to a number
+    return Number(adjustedAmount);
+}
+
 /**
  * Compares two Ethereum addresses after normalizing them to lowercase.
  * @param address1 - The first Ethereum address to compare.

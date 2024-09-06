@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { convertToTokenUnits, getTokenFromSymbol, CHAINS, convertTokenUnitsFromSymbol } from '../src/index.js';
+import { convertToTokenUnits, getTokenFromSymbol, CHAINS, convertTokenUnitsFromSymbol, convertTokenUnitsFromAddress } from '../src/index.js';
 
 describe('convertToTokenUnits', () => {
   it('should return 10^6 for 1 USDC', async () => {
@@ -25,4 +25,11 @@ describe('convertFromTokenUnits', () => {
     const result = await convertTokenUnitsFromSymbol(BigInt(10 ** 18), CHAINS.MODE, 'MODE');
     expect(result).to.equal(1);
   });
+
+  it('should return 1 for 10^18 MODE', async () => {
+    const result = await convertTokenUnitsFromAddress(BigInt(10 ** 18), CHAINS.MODE, '0xDfc7C877a950e49D2610114102175A06C2e3167a');
+    expect(result).to.equal(1);
+  });
+
+
 });

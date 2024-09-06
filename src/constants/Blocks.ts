@@ -94,7 +94,7 @@ export const TRIGGERS = {
           {
             "key": "abiParams.account",
             "type": "address",
-            "description": "Amount of crypto to transfer",
+            "description": "The wallet address to check for the token balance",
             "mandatory": true,
             "category": 0
           },
@@ -464,6 +464,79 @@ export const TRIGGERS = {
         "examples": [],
         "blockId": 9,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
+      }
+    },
+    "IONIC": {
+      "description": "#1 money market for Yield Bearing Assets on the OP Superchain",
+      "chains": [
+        34443
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg",
+      "DEPOSIT": {
+        "name": "Lending rate",
+        "description": "Get the lending rate of any asset on Ionic",
+        "type": 1,
+        "method": "function supplyRatePerBlock() external view returns (uint256)",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "token",
+            "type": "erc20",
+            "description": "The token you want to fetch the yield",
+            "mandatory": true,
+            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
+            "category": 0
+          },
+          {
+            "key": "condition",
+            "type": "logic_operator",
+            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ...",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "comparisonValue",
+            "type": "float",
+            "description": "The value to compare to",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "USDT Yield is above 5%",
+            "description": "Gets triggered when USDT yield rises above 5% on Ionic",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "token",
+                "value": "0xf0F161fDA2712DB8b566946122a5af183995e2eD"
+              },
+              {
+                "key": "condition",
+                "value": "gte"
+              },
+              {
+                "key": "comparisonValue",
+                "value": 5
+              }
+            ]
+          }
+        ],
+        "output": {
+          "lendingRate": "float"
+        },
+        "blockId": 15,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
       }
     }
   },
