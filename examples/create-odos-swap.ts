@@ -24,7 +24,7 @@ const main = async () => {
     odosAction.setParams("tokenIn", getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress);
     odosAction.setParams("tokenOut", getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
     odosAction.setParams("amount", 100);
-    odosAction.setParams("slippage", 0.3);
+    odosAction.setParams("slippage", 1);
     odosAction.setPosition(400, 240);
 
     /*const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
