@@ -472,7 +472,7 @@ export const TRIGGERS = {
         34443
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg",
-      "DEPOSIT": {
+      "LENDING_RATE": {
         "name": "Lending rate",
         "description": "Get the lending rate of any asset on Ionic",
         "type": 1,
@@ -1030,6 +1030,24 @@ export const TRIGGERS = {
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/blackrock.jpeg"
       }
     }
+  },
+  "NFTS": {
+    "BLUR": {
+      "description": "The NFT marketplace for pro traders",
+      "chains": [
+        1
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/blur.jpg"
+    }
+  },
+  "PRE_MARKET": {
+    "WHALES_MARKET": {
+      "description": "Trade Airdrop allocations and points",
+      "chains": [
+        1
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/whalesmarket.png"
+    }
   }
 };
 
@@ -1098,6 +1116,126 @@ export const ACTIONS = {
           }
         ],
         "blockId": 100011,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/delay.png"
+      }
+    },
+    "SWAP": {
+      "description": "Swap two assets using the best market rates accross multiple pools",
+      "chains": [
+        34443
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/delay.png",
+      "SWAP": {
+        "name": "Swap",
+        "description": "Swap two assets using the best market rates accross multiple pools",
+        "type": 1,
+        "contractAddress": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874",
+        "requiredApprovals": [
+          {
+            "address": "{{parameters.tokenIn}}",
+            "amount": "{{parameters.amount}}",
+            "to": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874"
+          }
+        ],
+        "checks": [
+          {
+            "type": 0,
+            "chainId": "{{parameters.chainId}}",
+            "contractAddress": "{{parameters.tokenIn}}",
+            "amount": "{{parameters.amount}}"
+          }
+        ],
+        "output": {
+          "amountIn": "uint256",
+          "tokenIn": "erc20",
+          "amountOut": "uint256",
+          "tokenOut": "erc20",
+          "transactionHash": "string"
+        },
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "tokenIn",
+            "type": "erc20",
+            "description": "Token to sell",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "tokenOut",
+            "type": "erc20",
+            "description": "Token to buy",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "amount",
+            "type": "uint256",
+            "description": "Amount to sell",
+            "mandatory": true,
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874",
+              "chain": "{{parameters.chainId}}"
+            }
+          },
+          {
+            "key": "slippage",
+            "type": "percentage",
+            "description": "The maximum allowable difference between the expected price and the actual price at the time of execution, expressed as a percentage. This protects the transaction from significant price fluctuations.",
+            "value": 0.3,
+            "mandatory": true,
+            "category": 1
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "Swap USDC to WETH",
+            "description": "Swap 100 USDC to WETH on Mode Network using Odos",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "tokenIn",
+                "value": "0xd988097fb8612cc24eeC14542bC03424c656005f"
+              },
+              {
+                "key": "tokenOut",
+                "value": "0x4200000000000000000000000000000000000006"
+              },
+              {
+                "key": "amount",
+                "value": "100000000n"
+              },
+              {
+                "key": "slippage",
+                "value": 0.3
+              }
+            ]
+          }
+        ],
+        "permissions": {
+          "approvedTargets": [
+            "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874",
+            "{{parameters.tokenIn}}"
+          ],
+          "label": [
+            "Swap {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenIn}})}} to {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenOut}})}}"
+          ],
+          "labelNotAuthorized": [
+            "Transfer ETH"
+          ]
+        },
+        "duplicate": true,
+        "blockId": 100005,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/delay.png"
       }
     }
@@ -1191,13 +1329,6 @@ export const ACTIONS = {
         },
         "parameters": [
           {
-            "key": "webhook",
-            "type": "url",
-            "description": "The webhook URL for the Telegram bot",
-            "mandatory": true,
-            "private": true
-          },
-          {
             "key": "message",
             "type": "paragraph",
             "description": "The text content to send",
@@ -1230,7 +1361,7 @@ export const ACTIONS = {
     "ERC20": {
       "description": "The most used standard for tokens on ethereum compatible blockchains",
       "chains": [
-        0
+        34443
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp",
       "TRANSFER": {
@@ -1275,6 +1406,14 @@ export const ACTIONS = {
             "category": 0
           },
         ] as Parameter[],
+        "checks": [
+          {
+            "type": 0,
+            "chainId": "{{parameters.chainId}}",
+            "contractAddress": "{{parameters.contractAddress}}",
+            "amount": "{{parameters.abi.parameters.amount}}"
+          }
+        ],
         "examples": [
           {
             "name": "Transfer USDC",
@@ -1375,6 +1514,14 @@ export const ACTIONS = {
             ]
           }
         ],
+        "checks": [
+          {
+            "type": 0,
+            "chainId": "{{parameters.chainId}}",
+            "contractAddress": "{{parameters.tokenToDeposit}}",
+            "amount": "{{parameters.abi.parameters.amount}}"
+          }
+        ],
         "requiredApprovals": [
           {
             "address": "{{parameters.tokenToDeposit}}",
@@ -1397,6 +1544,23 @@ export const ACTIONS = {
             "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToDeposit}})}}"
           ]
         },
+        "batchWith": [
+          {
+            "id": 100012,
+            "type": 1,
+            "conditions": [],
+            "parameters": {
+              "chainId": "{{parameters.chainId}}",
+              "abi": {
+                "parameters": {
+                  "tokens": [
+                    "{{parameters.tokenToDeposit}}"
+                  ]
+                }
+              }
+            }
+          }
+        ],
         "blockId": 100006,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
       },
@@ -1575,6 +1739,14 @@ export const ACTIONS = {
             }
           },
         ] as Parameter[],
+        "checks": [
+          {
+            "type": 0,
+            "chainId": "{{parameters.chainId}}",
+            "contractAddress": "{{parameters.tokenToRepay}}",
+            "amount": "{{parameters.abi.parameters.amount}}"
+          }
+        ],
         "examples": [
           {
             "name": "Repay 100 USDT",
@@ -1618,7 +1790,59 @@ export const ACTIONS = {
         },
         "blockId": 100009,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
+      },
+      "ENABLE_COLLATERAL": {
+        "showInUI": false,
+        "name": "Enable collaterals",
+        "description": "Enable collateral to be able to borrow against it.",
+        "type": 1,
+        "method": "function enterMarkets(address[] tokens) returns (uint256[])",
+        "contractAddress": "0xFB3323E24743Caf4ADD0fDCCFB268565c0685556",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.tokens",
+            "type": "uint256",
+            "description": "List of collaterals",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "examples": [],
+        "permissions": {
+          "approvedTargets": [
+            "0xFB3323E24743Caf4ADD0fDCCFB268565c0685556"
+          ],
+          "label": [
+            "Borrow against {{tokenSymbol({{parameters.chainId}}, {{parameters.abiParams.tokens[0]}})}} on IONIC"
+          ],
+          "labelNotAuthorized": [
+            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.abiParams.tokens[0]}})}}"
+          ]
+        },
+        "blockId": 100012,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
       }
+    },
+    "ETHER_FI": {
+      "description": "Liquid restaking on Ethereum",
+      "chains": [
+        34443
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/etherfi.jpg"
+    },
+    "RENZO": {
+      "description": "Liquid restaking on Ethereum",
+      "chains": [
+        34443
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/renzo.jpg"
     }
   },
   "SWAP": {
@@ -1638,6 +1862,14 @@ export const ACTIONS = {
             "address": "{{parameters.tokenIn}}",
             "amount": "{{parameters.amount}}",
             "to": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874"
+          }
+        ],
+        "checks": [
+          {
+            "type": 0,
+            "chainId": "{{parameters.chainId}}",
+            "contractAddress": "{{parameters.tokenIn}}",
+            "amount": "{{parameters.amount}}"
           }
         ],
         "output": {
@@ -1732,6 +1964,15 @@ export const ACTIONS = {
         "blockId": 100005,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.jpg"
       }
+    }
+  },
+  "NFTS": {
+    "BLUR": {
+      "description": "The NFT marketplace for pro traders",
+      "chains": [
+        1
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/blur.jpg"
     }
   }
 };
