@@ -125,7 +125,7 @@ describe('Workflow Class', () => {
     expect(updatedEdge).to.deep.equal(newEdge);
   });
 
-  it('should get session key permissions from a workflow', () => {
+  it('should get session key permissions from a workflow', async () => {
     const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
     transferTrigger.setChainId(CHAINS.ETHEREUM);
     transferTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
@@ -156,7 +156,7 @@ describe('Workflow Class', () => {
 
     const workflow = new Workflow("Test Workflow", [transferTrigger, transferAction1, transferAction2, slackAction], [edge1, edge2, edge3]);
 
-    const permissions = workflow.getSessionKeyPermissions();
+    const permissions = await workflow.getSessionKeyPermissions();
 
     expect(permissions.approvedTargets).to.deep.equal([
       getTokenFromSymbol(CHAINS.ETHEREUM, 'USDT').contractAddress,

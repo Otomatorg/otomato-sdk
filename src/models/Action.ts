@@ -10,13 +10,16 @@ export class Action extends Node {
     super({ ...action, class: 'action', parentInfo: findActionByBlockId(action.blockId).parentInfo });
   }
 
-  getSessionKeyPermissions() {
+  async getSessionKeyPermissions() {
     const parentBlock = findActionByBlockId(this.blockId).block;
     if (!parentBlock.permissions)
       return null;
     const permissions = SessionKeyPermission.fromJSON(parentBlock.permissions);
     permissions.fillParameters(this.getParameters());
     permissions.fillMethod();
+    if (parentBlock.before) {
+      await permissions.fillBeforeVariables(parentBlock.before, this.getParameters());
+    }
     return permissions;
   }
 

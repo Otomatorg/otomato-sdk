@@ -20,6 +20,7 @@ export class SessionKeyPermission {
     this.labelNotAuthorized = labelNotAuthorized;
   }
 
+  // Existing method to replace placeholders with actual values
   fill(key: string, value: any): void {
     const replacePlaceholder = (target: string) => {
       const placeholder = new RegExp(`{{${key}}}`, 'g');
@@ -31,15 +32,51 @@ export class SessionKeyPermission {
     this.labelNotAuthorized = this.labelNotAuthorized.map(replacePlaceholder);
   }
 
+/**
+ * Fill placeholders using variables returned by the 'before' string execution.
+ * @param beforeCode - A string representing the 'before' logic to execute.
+ */
+async fillBeforeVariables(beforeCode: string, parameters: { [key: string]: any }): Promise<void> {
+  try {
+    // Prepare the environment with parameters
+    const env = { parameters };
+
+    // Replace the import statement in the beforeCode string if needed
+    const beforeCodeUpdated = beforeCode.replace("import('otomato-sdk')", "import('../index.js')");
+
+    // Wrap the beforeCode in an async function and immediately invoke it
+    const asyncBeforeFn = new Function('env', `
+      return (async function() {
+        return await (${beforeCodeUpdated})(env);
+      })();
+    `);
+
+    // Execute the async function and await the result
+    const beforeResult = await asyncBeforeFn(env);
+
+    // Replace placeholders like {{before.variableName}} with the corresponding values
+    if (beforeResult && typeof beforeResult === 'object') {
+      Object.keys(beforeResult).forEach(key => {
+        this.fill(`before.${key}`, beforeResult[key]);
+      });
+    } else {
+      console.error("Before function did not return an object:", beforeResult);
+    }
+  } catch (error) {
+    console.error('Error executing before code:', error);
+  }
+}
+
+  // The rest of your existing code
   fillParameters(params: { [key: string]: any }): void {
-    // 1. replace non abi params
+    // 1. replace non-ABI params
     for (let key in params) {
       if (key !== 'abi') {
         this.fill(`parameters.${key}`, params[key]);
       }
     }
 
-    // 2. replace abi params
+    // 2. replace ABI params
     const abiParams = params.abi?.parameters;
     for (let key in abiParams) {
       this.fill(`parameters.abiParams.${key}`, abiParams[key]);
@@ -116,13 +153,11 @@ export class SessionKeyPermission {
     // Remove labels from labelNotAuthorized if they are present in label
     this.labelNotAuthorized = this.labelNotAuthorized.filter(lbl => !this.label.includes(lbl));
   }
-
-
 }
 
+// Helper function to get a different token
 const getDifferentToken = (chain: number, contractAddress: string) => {
   const tokenSymbol = getToken(chain, contractAddress)?.symbol;
-  if (!tokenSymbol || tokenSymbol !== 'WETH')
-    return 'WETH';
+  if (!tokenSymbol || tokenSymbol !== 'WETH') return 'WETH';
   return 'USDT';
-}
+};

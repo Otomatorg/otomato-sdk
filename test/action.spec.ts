@@ -141,20 +141,20 @@ describe('Action Class', () => {
     expect(action.toJSON()).to.deep.equal(json);
   });
 
-  it('should get session key permissions correctly for ERC20 transfer action', () => {
+  it('should get session key permissions correctly for ERC20 transfer action', async () => {
     const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
     transferAction.setChainId(CHAINS.ETHEREUM);
     transferAction.setParams("value", 1000);
     transferAction.setParams("to", DEFAULT_ADDRESS);
     transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
-    const permissions = transferAction.getSessionKeyPermissions();
+    const permissions = await transferAction.getSessionKeyPermissions();
     expect(permissions).to.be.an.instanceOf(SessionKeyPermission);
     expect(permissions?.approvedTargets).to.deep.equal([getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress]);
   });
 
   
-  it('should get session key permissions correctly for any variable parameter', () => {
+  it('should get session key permissions correctly for any variable parameter', async () => {
     const transferAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
     transferAction.setChainId(CHAINS.ETHEREUM);
     transferAction.setParams("tokenIn", getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
@@ -162,7 +162,7 @@ describe('Action Class', () => {
     transferAction.setParams("amount", 1);
     transferAction.setParams("slippage", 0.1);
 
-    const permissions = transferAction.getSessionKeyPermissions();
+    const permissions = await transferAction.getSessionKeyPermissions();
     expect(permissions).to.be.an.instanceOf(SessionKeyPermission);
     expect(permissions?.approvedTargets).to.deep.equal([
       '0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874', 

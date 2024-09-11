@@ -207,13 +207,13 @@ export class Workflow {
     }
   }
 
-  getSessionKeyPermissions(): SessionKeyPermission {
+  async getSessionKeyPermissions(): Promise<SessionKeyPermission> {
     const permissions = new SessionKeyPermission();
 
     for (const node of this.nodes) {
       try {
         if (node.class === 'action' && 'getSessionKeyPermissions' in node) {
-          const nodePermissions = (node as Action).getSessionKeyPermissions();
+          const nodePermissions = await (node as Action).getSessionKeyPermissions();
           if (nodePermissions) {
             permissions.merge(nodePermissions);
           }
