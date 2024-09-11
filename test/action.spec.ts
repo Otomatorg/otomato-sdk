@@ -176,12 +176,12 @@ describe('Action Class', () => {
     ]);
   });
 
-  it('should return null session key permissions for Slack action', () => {
+  it('should return null session key permissions for Slack action', async () => {
     const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
     slackAction.setParams("webhook", "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX");
     slackAction.setParams("message", "This is a test message!");
 
-    const permissions = slackAction.getSessionKeyPermissions();
+    const permissions = await slackAction.getSessionKeyPermissions();
     expect(permissions).to.be.null;
   });
 });
