@@ -12,15 +12,83 @@ export class Action extends Node {
 
   async getSessionKeyPermissions() {
     const parentBlock = findActionByBlockId(this.blockId).block;
-    if (!parentBlock.permissions)
-      return null;
+    if (!parentBlock.permissions) return null;
+
     const permissions = SessionKeyPermission.fromJSON(parentBlock.permissions);
     permissions.fillParameters(this.getParameters());
     permissions.fillMethod();
+
+    // Handle 'before' code for the main action
     if (parentBlock.before) {
       await permissions.fillBeforeVariables(parentBlock.before, this.getParameters());
     }
+
+    // Handle batchWith: for any batched actions, merge their permissions
+    if (parentBlock.batchWith && parentBlock.batchWith.length > 0) {
+      for (const batch of parentBlock.batchWith) {
+        const batchedAction = findActionByBlockId(batch.id).block;
+
+        if (batchedAction.permissions) {
+          const batchedActionInstance = new Action(batchedAction);
+
+          // Replace placeholders in parameters
+          const resolvedBatchParams = batch.parameters;
+          Object.keys(resolvedBatchParams).forEach(key => {
+            // If it's an ABI parameter, handle it separately
+            if (key === 'abi' && resolvedBatchParams.abi?.parameters) {
+              Object.keys(resolvedBatchParams.abi.parameters).forEach(abiKey => {
+                console.log(`Replacing the ${resolvedBatchParams.abi.parameters[abiKey]} param`)
+                const abiValue = this.replaceVariables(resolvedBatchParams.abi.parameters[abiKey]);
+                console.log(`The new value for ${abiKey} is ${abiValue}`)
+                batchedActionInstance.setParams(`${abiKey}`, abiValue);
+              });
+            } else {
+              let value = this.replaceVariables(resolvedBatchParams[key]);
+              batchedActionInstance.setParams(key, value);
+            }
+          });
+
+          // Get batched permissions
+          const batchedPermissions = await batchedActionInstance.getSessionKeyPermissions();
+
+          if (!batchedPermissions)
+            continue;
+
+          batchedPermissions.fillParameters(batch.parameters);  // Pass batched action parameters
+          batchedPermissions.fillMethod();
+
+          // Handle 'before' code for the batched action
+          if (batchedAction.before) {
+            await batchedPermissions.fillBeforeVariables(batchedAction.before, batch.parameters);
+          }
+
+          // Merge the batched action's permissions with the main action's permissions
+          permissions.merge(batchedPermissions);
+        }
+      }
+    }
+
     return permissions;
+  }
+
+  /**
+   * Replace any placeholders like {{parameters.tokenToDeposit}} with actual values
+   * from the parameters of the current action. Supports both strings and arrays.
+   */
+  replaceVariables(value: any): any {
+    if (typeof value === 'string') {
+      return value.replace(/\{\{parameters\.(.*?)\}\}/g, (_, key) => {
+        console.log(`Looking for ${key} parameter`);
+        return this.getParameter(key) || '';
+      });
+    }
+
+    if (Array.isArray(value)) {
+      return value.map(item => this.replaceVariables(item));  // Recursively handle each array element
+    }
+
+    // Return the value unchanged if it's neither a string nor an array
+    return value;
   }
 
   static async fromJSON(json: { [key: string]: any }): Promise<Action> {

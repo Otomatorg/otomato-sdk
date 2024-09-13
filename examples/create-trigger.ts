@@ -3,7 +3,7 @@ import { TRIGGERS, getToken, CHAINS, Trigger, getTokenFromSymbol, convertToToken
 
 const main = async () => {
 
-    const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
+    const transferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
 
     const contractAddr = getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress;
     console.log(contractAddr);

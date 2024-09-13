@@ -2,12 +2,12 @@ import { Parameter } from '../models/Parameter.js';
 
 export const TRIGGERS = {
   "TOKENS": {
-    "ERC20": {
-      "description": "The most used standard for tokens on ethereum compatible blockchains",
+    "TRANSFER": {
+      "description": "Monitors token transfers",
       "chains": [
         0
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/tokenTransfer.png",
       "TRANSFER": {
         "name": "Transfer token",
         "description": "This block gets triggered when someone transfers the ERC20 configured in the params",
@@ -73,8 +73,15 @@ export const TRIGGERS = {
           }
         ],
         "blockId": 1,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp"
-      },
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/tokenTransfer.png"
+      }
+    },
+    "BALANCE": {
+      "description": "Monitors token balance of selected addresses",
+      "chains": [
+        0
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/tokenBalance.png",
       "BALANCE": {
         "name": "ERC20 balance check",
         "description": "Fetches the balance of an ERC20 and checks it against the specified condition.",
@@ -100,7 +107,7 @@ export const TRIGGERS = {
           },
           {
             "key": "contractAddress",
-            "type": "address",
+            "type": "erc20",
             "description": "The contract address of the ERC20",
             "mandatory": true,
             "category": 0
@@ -153,7 +160,7 @@ export const TRIGGERS = {
           }
         ],
         "blockId": 5,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/tokenBalance.png"
       }
     }
   },
@@ -465,7 +472,9 @@ export const TRIGGERS = {
         "blockId": 9,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
       }
-    },
+    }
+  },
+  "LENDING": {
     "IONIC": {
       "description": "#1 money market for Yield Bearing Assets on the OP Superchain",
       "chains": [
@@ -532,15 +541,14 @@ export const TRIGGERS = {
             ]
           }
         ],
+        "before": "\n    async (env) => {\n        const otomatoSdk = await import('otomato-sdk');\n \n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const getIonicTokenFromToken = (chain, tokenAddress) => {\n    const CHAINS = otomatoSdk.CHAINS;\n    if (chain == CHAINS.MODE) {\n        switch (tokenAddress.toLowerCase()) {\n            case otomatoSdk.getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress.toLowerCase():\n                return '0x94812F2eEa03A49869f95e1b5868C6f3206ee3D3';\n            case otomatoSdk.getTokenFromSymbol(CHAINS.MODE, 'USDC').contractAddress.toLowerCase():\n                return '0x2BE717340023C9e14C1Bb12cb3ecBcfd3c3fB038';\n            case otomatoSdk.getTokenFromSymbol(CHAINS.MODE, 'ezETH').contractAddress.toLowerCase():\n                return '0x59e710215d45F584f44c0FEe83DA6d43D762D857';\n            case otomatoSdk.getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress.toLowerCase():\n                return '0x71ef7EDa2Be775E5A7aa8afD02C45F059833e9d2';\n            case otomatoSdk.getTokenFromSymbol(CHAINS.MODE, 'WBTC').contractAddress.toLowerCase():\n                return '0xd70254C3baD29504789714A7c69d60Ec1127375C';\n            case otomatoSdk.getTokenFromSymbol(CHAINS.MODE, 'STONE').contractAddress.toLowerCase():\n                return '0x959FA710CCBb22c7Ce1e59Da82A247e686629310';\n            case otomatoSdk.getTokenFromSymbol(CHAINS.MODE, 'wrsETH').contractAddress.toLowerCase():\n                return '0x49950319aBE7CE5c3A6C90698381b45989C99b46';\n            case otomatoSdk.getTokenFromSymbol(CHAINS.MODE, 'weETH.mode').contractAddress.toLowerCase():\n                return '0xA0D844742B4abbbc43d8931a6Edb00C56325aA18';\n            case otomatoSdk.getTokenFromSymbol(CHAINS.MODE, 'M-BTC').contractAddress.toLowerCase():\n                return '0x19F245782b1258cf3e11Eda25784A378cC18c108';\n\n            default: throw new Error('This asset is not available on Ionic');\n        }\n    }\n}\n        \n        let ionicTokenContractAddress = getIonicTokenFromToken(\n            env.parameters.chainId,\n            env.parameters.token.toLowerCase()\n        );\n        return {\n            contractAddress: ionicTokenContractAddress\n        };\n    }",
         "output": {
           "lendingRate": "float"
         },
         "blockId": 15,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
       }
-    }
-  },
-  "LENDING": {
+    },
     "ASTARIA": {
       "description": "Astaria is an oracle-less, intent-based, fixed-rate lending protocol supporting unlimited loan durations for any asset",
       "chains": [
@@ -1124,8 +1132,8 @@ export const ACTIONS = {
       "chains": [
         34443
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/delay.png",
       "SWAP": {
+        "id": 100005,
         "name": "Swap",
         "description": "Swap two assets using the best market rates accross multiple pools",
         "type": 1,
@@ -1192,8 +1200,8 @@ export const ACTIONS = {
             "value": 0.3,
             "mandatory": true,
             "category": 1
-          },
-        ] as Parameter[],
+          }
+        ],
         "examples": [
           {
             "name": "Swap USDC to WETH",
@@ -1234,10 +1242,9 @@ export const ACTIONS = {
             "Transfer ETH"
           ]
         },
-        "duplicate": true,
-        "blockId": 100005,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/delay.png"
-      }
+        "duplicate": true
+      },
+      "blockId": 100013
     }
   },
   "NOTIFICATIONS": {
@@ -1358,12 +1365,12 @@ export const ACTIONS = {
     }
   },
   "TOKENS": {
-    "ERC20": {
-      "description": "The most used standard for tokens on ethereum compatible blockchains",
+    "TRANSFER": {
+      "description": "Transfer token",
       "chains": [
         34443
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/tokenTransfer.png",
       "TRANSFER": {
         "name": "Transfer token",
         "description": "Transfers an ERC20 token",
@@ -1411,7 +1418,7 @@ export const ACTIONS = {
             "type": 0,
             "chainId": "{{parameters.chainId}}",
             "contractAddress": "{{parameters.contractAddress}}",
-            "amount": "{{parameters.abi.parameters.amount}}"
+            "amount": "{{parameters.abi.parameters.value}}"
           }
         ],
         "examples": [
@@ -1450,7 +1457,7 @@ export const ACTIONS = {
           ]
         },
         "blockId": 100004,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethereum.webp"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/tokenTransfer.png"
       }
     }
   },
@@ -1812,7 +1819,7 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.tokens",
-            "type": "uint256",
+            "type": "addresses_array",
             "description": "List of collaterals",
             "mandatory": true,
             "category": 0
@@ -1824,10 +1831,10 @@ export const ACTIONS = {
             "0xFB3323E24743Caf4ADD0fDCCFB268565c0685556"
           ],
           "label": [
-            "Borrow against {{tokenSymbol({{parameters.chainId}}, {{parameters.abiParams.tokens[0]}})}} on IONIC"
+            "Enable borrowing against {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.tokens[0]}})}} on IONIC"
           ],
           "labelNotAuthorized": [
-            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.abiParams.tokens[0]}})}}"
+            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.tokens[0]}})}}"
           ]
         },
         "blockId": 100012,

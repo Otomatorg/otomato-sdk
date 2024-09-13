@@ -2,7 +2,7 @@ import { ACTIONS, getTokenFromSymbol, CHAINS, Action, isAddress } from '../src/i
 
 const createAction = () => {
   // Create an ERC20 transfer action
-  const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
+  const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
   transferAction.setChainId(CHAINS.ETHEREUM);
   transferAction.setParams("value", "1000n");
   transferAction.setParams("to", "0x888888888889758f76e7103c6cbf23abbf58f946");

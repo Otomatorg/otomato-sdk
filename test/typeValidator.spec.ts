@@ -32,6 +32,22 @@ describe('Type Validator Utility Functions', () => {
             expect(validateType('address', 'invalid_address')).to.be.false;
         });
 
+
+        it('should validate addresses_array values', () => {
+            const validAddresses = [
+                '0x0000000000000000000000000000000000000000',
+                '0x1111111111111111111111111111111111111111'
+            ];
+            const invalidAddresses = [
+                '0x0000000000000000000000000000000000000000',
+                'invalid_address'
+            ];
+
+            expect(validateType('addresses_array', validAddresses)).to.be.true;
+            expect(validateType('addresses_array', invalidAddresses)).to.be.false;
+            expect(validateType('addresses_array', 'not_an_array')).to.be.false;
+        });
+
         it('should validate float values', () => {
             expect(validateType('float', 10.5)).to.be.true;
             expect(validateType('fixed', 10.5)).to.be.true;

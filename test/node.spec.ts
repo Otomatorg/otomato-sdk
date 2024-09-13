@@ -283,4 +283,22 @@ describe('Node setParameter Method', () => {
     expect(() => node.setParams('amount', 'not_a_number')).to.throw('Invalid type for parameter amount. Expected uint256.');
   });
 
+  it('should accept chainId as a string and convert it to a number', () => {
+    const node = new Action({
+      blockId: 100001,
+      name: 'Test Node for String chainId',
+      description: 'A node for testing string-to-number conversion for chainId',
+      parameters: [...DEFAULT_PARAMETERS],
+      output: DEFAULT_OUTPUTS,
+      image: 'a',
+    });
+
+    // Set the chainId as a string
+    node.setParams('chainId', '1');
+
+    const params = node.getParameters();
+    // Ensure that the chainId is correctly set as a number
+    expect(params.chainId).to.equal(1);
+  });
+
 });

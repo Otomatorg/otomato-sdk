@@ -1,9 +1,9 @@
 import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices, convertToTokenUnits, TOKENS } from '../src/index.js';
 
 const main = async () => {
-    const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
+    const transferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
     const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-    const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
+    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
     const ionicAction = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
 
     ionicAction.setChainId(CHAINS.MODE);

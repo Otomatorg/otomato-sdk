@@ -16,7 +16,7 @@ const main = async () => {
     slackAction.setParams("message", "Notification from the SDK - testing the state");
     slackAction.setPosition(0, -10);
 
-    /*const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
+    /*const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
     transferAction.setChainId(CHAINS.ETHEREUM);
     transferAction.setParams("value", 1000);
     transferAction.setParams("to", "0x888888888889758f76e7103c6cbf23abbf58f946");

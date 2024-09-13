@@ -6,7 +6,7 @@ const DEFAULT_ADDRESS = "0x0000000000000000000000000000000000000000";
 describe('Action Class', () => {
 
   it('should create a transfer action without parameters', () => {
-    const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
+    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
     const params = transferAction.getParameters();
 
     expect(params.chainId).to.be.null;
@@ -16,7 +16,7 @@ describe('Action Class', () => {
   });
 
   it('should create a transfer action and set parameters correctly', () => {
-    const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
+    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
     transferAction.setChainId(CHAINS.ETHEREUM);
     transferAction.setParams("value", 1000);
     transferAction.setParams("to", DEFAULT_ADDRESS);
@@ -30,7 +30,7 @@ describe('Action Class', () => {
   });
 
   it('should be able to export an action as json', () => {
-    const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
+    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
     transferAction.setChainId(CHAINS.ETHEREUM);
     transferAction.setParams("value", 1000);
     transferAction.setParams("to", DEFAULT_ADDRESS);
@@ -38,7 +38,7 @@ describe('Action Class', () => {
 
     const json = transferAction.toJSON();
     expect(json).to.deep.equal({
-      blockId: ACTIONS.TOKENS.ERC20.TRANSFER.blockId,
+      blockId: ACTIONS.TOKENS.TRANSFER.TRANSFER.blockId,
       ref: transferAction.getRef(),
       type: 'action',
       id: null,
@@ -67,12 +67,12 @@ describe('Action Class', () => {
   });
 
   it('should throw an error for invalid parameter type', () => {
-    const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
+    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
     expect(() => transferAction.setParams("value", "invalid")).to.throw('Invalid type for parameter abiParams.value. Expected uint256.');
   });
 
   it('should throw an error for invalid address', () => {
-    const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
+    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
     expect(() => transferAction.setParams("to", "invalid_address")).to.throw('Invalid type for parameter abiParams.to. Expected address.');
   });
 
@@ -137,12 +137,12 @@ describe('Action Class', () => {
     expect(action.getParameters().contractAddress).to.equal("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48");
     expect(action.getParameters().abi.parameters.to).to.equal("0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
     expect(action.getParameters().abi.parameters.value).to.equal(1000);
-    expect(action.getParentInfo()?.name).to.equal("ERC20");
+    expect(action.getParentInfo()?.name).to.equal("TRANSFER");
     expect(action.toJSON()).to.deep.equal(json);
   });
 
   it('should get session key permissions correctly for ERC20 transfer action', async () => {
-    const transferAction = new Action(ACTIONS.TOKENS.ERC20.TRANSFER);
+    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
     transferAction.setChainId(CHAINS.ETHEREUM);
     transferAction.setParams("value", 1000);
     transferAction.setParams("to", DEFAULT_ADDRESS);

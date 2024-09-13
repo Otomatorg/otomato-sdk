@@ -6,7 +6,7 @@ const DEFAULT_ADDRESS = "0x0000000000000000000000000000000000000000";
 describe('Trigger Class', () => {
 
   it('should create a transfer trigger without parameters', () => {
-    const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
+    const transferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
     const params = transferTrigger.getParameters();
 
     expect(params.chainId).to.be.null;
@@ -16,7 +16,7 @@ describe('Trigger Class', () => {
   });
 
   it('should create a transfer trigger and set parameters correctly', () => {
-    const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
+    const transferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
     transferTrigger.setChainId(CHAINS.ETHEREUM);
     transferTrigger.setParams("value", 1000);
     transferTrigger.setParams("to", DEFAULT_ADDRESS);
@@ -30,7 +30,7 @@ describe('Trigger Class', () => {
   });
 
   it('should be able to export a trigger as json', () => {
-    const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
+    const transferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
     transferTrigger.setChainId(CHAINS.ETHEREUM);
     transferTrigger.setParams("value", 1000);
     transferTrigger.setParams("to", DEFAULT_ADDRESS);
@@ -39,7 +39,7 @@ describe('Trigger Class', () => {
     const json = transferTrigger.toJSON();
 
     expect(json).to.deep.equal({
-      blockId: TRIGGERS.TOKENS.ERC20.TRANSFER.blockId,
+      blockId: TRIGGERS.TOKENS.TRANSFER.TRANSFER.blockId,
       ref: transferTrigger.getRef(),
       id: null,
       type: 'trigger',
@@ -59,7 +59,7 @@ describe('Trigger Class', () => {
   });
 
   it('should create a balance trigger with polling parameters correctly', () => {
-    const balanceTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.BALANCE);
+    const balanceTrigger = new Trigger(TRIGGERS.TOKENS.BALANCE.BALANCE);
     balanceTrigger.setChainId(CHAINS.ETHEREUM);
     balanceTrigger.setParams("account", DEFAULT_ADDRESS);
     balanceTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
@@ -75,19 +75,19 @@ describe('Trigger Class', () => {
   });
 
   it('should not be able to set conditions, comparison value for subscription based triggers', () => {
-    const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
+    const transferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
 
     expect(() => transferTrigger.setCondition(">")).to.throw('Condition setting is not applicable for subscription based triggers.');
     expect(() => transferTrigger.setComparisonValue(45000)).to.throw('Comparison value setting is not applicable for subscription based triggers.');
   });
 
   it('should throw an error for invalid parameter type', () => {
-    const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
+    const transferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
     expect(() => transferTrigger.setParams("value", "invalid")).to.throw('Invalid type for parameter abiParams.value. Expected uint256.');
   });
 
   it('should throw an error for invalid address', () => {
-    const transferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
+    const transferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
     expect(() => transferTrigger.setParams("to", "invalid_address")).to.throw('Invalid type for parameter abiParams.to. Expected address.');
   });
 
@@ -146,6 +146,7 @@ describe('Trigger Class', () => {
     };
 
     const trigger = await Trigger.fromJSON(json);
+    console.log(trigger.toJSON());
 
     expect(trigger.id).to.be.null;
     expect(trigger.getRef()).to.equal("n-1");
@@ -155,7 +156,7 @@ describe('Trigger Class', () => {
     expect(trigger.getParameters().abi.parameters.value).to.equal(BigInt(1000000));
     expect(trigger.getParameters().abi.parameters.to).to.equal("0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
     expect(trigger.getParameters().contractAddress).to.equal("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48");
-    expect(trigger.getParentInfo()?.name).to.equal("ERC20");
+    expect(trigger.getParentInfo()?.name).to.equal("TRANSFER");
     expect(trigger.toJSON()).to.deep.equal(json);
   });
 

@@ -1,5 +1,5 @@
 import { Parameter } from './Parameter.js';
-import { validateType, isANumber } from '../utils/typeValidator.js';
+import { validateType, typeIsNumber } from '../utils/typeValidator.js';
 import { ACTIONS, TRIGGERS } from '../constants/Blocks.js';
 import { apiServices } from '../services/ApiService.js';
 
@@ -105,10 +105,24 @@ export abstract class Node {
     if (key in this.parameters) {
       const param = this.parameters[key];
       try {
-        // if the user pass '100000n' for a number, we transform it to Bigints
-        if (isANumber(param.type) && value?.endsWith('n'))
+        // BigInt conversion
+        if (typeIsNumber(param.type) && typeof value === 'string' && value.endsWith('n')) {
           value = BigInt(value.substring(0, value.length - 1));
-      } catch (e) { }
+        }
+  
+        // String to integer conversion
+        if (typeIsNumber(param.type) && typeof value === 'string') {
+          const parsedValue = parseInt(value, 10);
+          if (!isNaN(parsedValue)) {
+            value = parsedValue;
+          }
+        }
+  
+      } catch (e) {
+        console.error(`Error processing parameter ${key}:`, e);
+      }
+  
+      // Validate the value type
       if (validateType(param.type, value)) {
         this.parameters[key].value = value;
       } else {

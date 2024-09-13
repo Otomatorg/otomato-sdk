@@ -1,17 +1,5 @@
 import { ethers } from 'ethers';
 
-export function isANumber(type: string): boolean {
-    switch (type) {
-        case 'integer':
-            return true;
-        case 'int8': case 'int16': case 'int32': case 'int64': case 'int128': case 'int256':
-            return true;
-        case 'uint8': case 'uint16': case 'uint32': case 'uint64': case 'uint128': case 'uint256':
-            return true;
-        default: return false;
-    }
-}
-
 export function validateType(expectedType: string, value: any): boolean {
     switch (expectedType) {
         case 'bool':
@@ -44,6 +32,9 @@ export function validateType(expectedType: string, value: any): boolean {
         case 'logic_operator':
             const validOperators = new Set(['gte', 'gt', 'lte', 'lt', 'eq', 'neq']);
             return typeof value === 'string' && validOperators.has(value);
+        case 'addresses_array':
+            // Ensure value is an array, and each element is a valid address
+            return Array.isArray(value) && value.every(isAddress);
         case 'any':
             return true;
         default:

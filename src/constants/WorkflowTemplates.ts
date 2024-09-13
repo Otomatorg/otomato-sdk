@@ -8,7 +8,7 @@ export const WORKFLOW_TEMPLATES_TAGS = {
 };
 
 const createModeTransferNotificationWorkflow = () => {
-    const modeTransferTrigger = new Trigger(TRIGGERS.TOKENS.ERC20.TRANSFER);
+    const modeTransferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
 
     modeTransferTrigger.setChainId(CHAINS.MODE);
     modeTransferTrigger.setContractAddress(getTokenFromSymbol(CHAINS.MODE, 'MODE').contractAddress);

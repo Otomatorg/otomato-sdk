@@ -20,66 +20,86 @@ export class SessionKeyPermission {
     this.labelNotAuthorized = labelNotAuthorized;
   }
 
-  // Existing method to replace placeholders with actual values
   fill(key: string, value: any): void {
-    const replacePlaceholder = (target: string) => {
-      const placeholder = new RegExp(`{{${key}}}`, 'g');
-      return target.replace(placeholder, value);
-    };
+    // Escape special regex characters in the key
+    const escapedKey = key.replace(/[.*+?^${}()|[\]\\[\]]/g, '\\$&');
+    const placeholder = new RegExp(`{{${escapedKey}}}`, 'g');
 
+    // Function to replace placeholders in a target string
+    const replacePlaceholder = (target: string) => target.replace(placeholder, value);
+
+    // Apply the placeholder replacement logic
     this.approvedTargets = this.approvedTargets.map(replacePlaceholder);
     this.label = this.label.map(replacePlaceholder);
     this.labelNotAuthorized = this.labelNotAuthorized.map(replacePlaceholder);
   }
 
-/**
- * Fill placeholders using variables returned by the 'before' string execution.
- * @param beforeCode - A string representing the 'before' logic to execute.
- */
-async fillBeforeVariables(beforeCode: string, parameters: { [key: string]: any }): Promise<void> {
-  try {
-    // Prepare the environment with parameters
-    const env = { parameters };
 
-    // Replace the import statement in the beforeCode string if needed
-    const beforeCodeUpdated = beforeCode.replace("import('otomato-sdk')", "import('../index.js')");
+  /**
+   * Fill placeholders using variables returned by the 'before' string execution.
+   * @param beforeCode - A string representing the 'before' logic to execute.
+   */
+  async fillBeforeVariables(beforeCode: string, parameters: { [key: string]: any }): Promise<void> {
+    try {
+      // Prepare the environment with parameters
+      const env = { parameters };
 
-    // Wrap the beforeCode in an async function and immediately invoke it
-    const asyncBeforeFn = new Function('env', `
+      // Replace the import statement in the beforeCode string if needed
+      const beforeCodeUpdated = beforeCode.replace("import('otomato-sdk')", "import('../index.js')");
+
+      // Wrap the beforeCode in an async function and immediately invoke it
+      const asyncBeforeFn = new Function('env', `
       return (async function() {
         return await (${beforeCodeUpdated})(env);
       })();
     `);
 
-    // Execute the async function and await the result
-    const beforeResult = await asyncBeforeFn(env);
+      // Execute the async function and await the result
+      const beforeResult = await asyncBeforeFn(env);
 
-    // Replace placeholders like {{before.variableName}} with the corresponding values
-    if (beforeResult && typeof beforeResult === 'object') {
-      Object.keys(beforeResult).forEach(key => {
-        this.fill(`before.${key}`, beforeResult[key]);
-      });
-    } else {
-      console.error("Before function did not return an object:", beforeResult);
+      // Replace placeholders like {{before.variableName}} with the corresponding values
+      if (beforeResult && typeof beforeResult === 'object') {
+        Object.keys(beforeResult).forEach(key => {
+          this.fill(`before.${key}`, beforeResult[key]);
+        });
+      } else {
+        console.error("Before function did not return an object:", beforeResult);
+      }
+    } catch (error) {
+      console.error('Error executing before code:', error);
     }
-  } catch (error) {
-    console.error('Error executing before code:', error);
   }
-}
 
   // The rest of your existing code
   fillParameters(params: { [key: string]: any }): void {
-    // 1. replace non-ABI params
+    // Helper to handle the replacement in case of arrays
+    const fillArray = (key: string, array: any[]) => {
+      array.forEach((item, index) => {
+        if (typeof item === 'string') {
+          this.fill(`${key}[${index}]`, item);
+        }
+      });
+    };
+
+    // 1. Replace non-ABI params
     for (let key in params) {
       if (key !== 'abi') {
-        this.fill(`parameters.${key}`, params[key]);
+        if (Array.isArray(params[key])) {
+          fillArray(`parameters.${key}`, params[key]);
+        } else {
+          this.fill(`parameters.${key}`, params[key]);
+        }
       }
     }
 
-    // 2. replace ABI params
+    // 2. Replace ABI params
     const abiParams = params.abi?.parameters;
     for (let key in abiParams) {
-      this.fill(`parameters.abiParams.${key}`, abiParams[key]);
+      if (Array.isArray(abiParams[key])) {
+        fillArray(`parameters.abi.parameters.${key}`, abiParams[key]);
+      } else {
+        this.fill(`parameters.abi.parameters.${key}`, abiParams[key]);
+      }
     }
   }
 
