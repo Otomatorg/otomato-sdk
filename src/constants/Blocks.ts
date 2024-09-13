@@ -81,7 +81,7 @@ export const TRIGGERS = {
       "chains": [
         0
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/tokenBalance.png",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/balanceCheck.png",
       "BALANCE": {
         "name": "ERC20 balance check",
         "description": "Fetches the balance of an ERC20 and checks it against the specified condition.",
@@ -160,7 +160,7 @@ export const TRIGGERS = {
           }
         ],
         "blockId": 5,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/tokenBalance.png"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/balanceCheck.png"
       }
     }
   },
