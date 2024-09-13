@@ -1831,7 +1831,7 @@ export const ACTIONS = {
             "0xFB3323E24743Caf4ADD0fDCCFB268565c0685556"
           ],
           "label": [
-            "Enable borrowing against {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.tokens[0]}})}} on IONIC"
+            "Enable {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.tokens[0]}})}} as collateral on IONIC"
           ],
           "labelNotAuthorized": [
             "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.tokens[0]}})}}"

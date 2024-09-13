@@ -37,9 +37,7 @@ export class Action extends Node {
             // If it's an ABI parameter, handle it separately
             if (key === 'abi' && resolvedBatchParams.abi?.parameters) {
               Object.keys(resolvedBatchParams.abi.parameters).forEach(abiKey => {
-                console.log(`Replacing the ${resolvedBatchParams.abi.parameters[abiKey]} param`)
                 const abiValue = this.replaceVariables(resolvedBatchParams.abi.parameters[abiKey]);
-                console.log(`The new value for ${abiKey} is ${abiValue}`)
                 batchedActionInstance.setParams(`${abiKey}`, abiValue);
               });
             } else {
