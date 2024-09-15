@@ -1,6 +1,10 @@
 import { ethers } from 'ethers';
 
 export function validateType(expectedType: string, value: any): boolean {
+    if (typeof value === 'string' && isVariable(value)) {
+        return true; // Allow all variable strings
+    }
+    
     switch (expectedType) {
         case 'bool':
         case 'boolean':
@@ -40,6 +44,10 @@ export function validateType(expectedType: string, value: any): boolean {
         default:
             return false;
     }
+}
+
+function isVariable(value: string): boolean {
+    return /\{\{nodeMap\.[^.}]+\.(?:output|parameters(?:\.abi\.parameters)?)\.[^.}]+\}\}/.test(value);
 }
 
 export function typeIsNumber(type: string): boolean {

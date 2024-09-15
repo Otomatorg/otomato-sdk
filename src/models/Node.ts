@@ -119,7 +119,7 @@ export abstract class Node {
         }
   
       } catch (e) {
-        console.error(`Error processing parameter ${key}:`, e);
+        // console.error(`Error processing parameter ${key}:`, e);
       }
   
       // Validate the value type

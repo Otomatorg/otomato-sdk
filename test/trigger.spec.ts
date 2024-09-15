@@ -146,7 +146,6 @@ describe('Trigger Class', () => {
     };
 
     const trigger = await Trigger.fromJSON(json);
-    console.log(trigger.toJSON());
 
     expect(trigger.id).to.be.null;
     expect(trigger.getRef()).to.equal("n-1");

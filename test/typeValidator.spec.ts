@@ -96,4 +96,44 @@ describe('Type Validator Utility Functions', () => {
             expect(validateType('percentage', '50')).to.be.false;
         });
     });
+
+    describe('validateType with variables', () => {
+        it('should accept variable strings for any type', () => {
+            const types = ['bool', 'integer', 'uint256', 'address', 'float', 'url', 'phone_number', 'paragraph', 'logic_operator', 'addresses_array', 'percentage'];
+            const variables = [
+                '{{nodeMap.someNode.output.someValue}}',
+                '{{nodeMap.anotherNode.parameters.someParam}}',
+                '{{nodeMap.node123.output.result}}'
+            ];
+
+            types.forEach(type => {
+                variables.forEach(variable => {
+                    expect(validateType(type, variable)).to.be.true;
+                });
+            });
+        });
+
+        it('should reject invalid variable strings', () => {
+            const invalidVariables = [
+                '{{nodeMap.someNode.invalid.someValue}}',
+                '{{invalidFormat}}',
+                'nodeMap.node.output.value',
+                '{{nodeMap.node.output.value',
+                'just a regular string'
+            ];
+
+            invalidVariables.forEach(invalidVar => {
+                expect(validateType('uint256', invalidVar)).to.be.false;
+            });
+        });
+
+        it('should still validate non-variable values correctly', () => {
+            expect(validateType('bool', true)).to.be.true;
+            expect(validateType('bool', 'true')).to.be.false;
+            expect(validateType('uint256', 1000)).to.be.true;
+            expect(validateType('uint256', -1)).to.be.false;
+            expect(validateType('address', '0x0000000000000000000000000000000000000000')).to.be.true;
+            expect(validateType('address', 'invalid_address')).to.be.false;
+        });
+    });
 });

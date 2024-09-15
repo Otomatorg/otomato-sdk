@@ -157,6 +157,32 @@ export const TRIGGERS = {
                 "value": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
               }
             ]
+          },
+          {
+            "name": "Binance balance check",
+            "description": "Gets triggered when the Binance hot wallet balance falls below 7B USDT",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 1
+              },
+              {
+                "key": "comparisonValue",
+                "value": "7000000000000000000000000000n"
+              },
+              {
+                "key": "condition",
+                "value": "lt"
+              },
+              {
+                "key": "contractAddress",
+                "value": "0xdac17f958d2ee523a2206206994597c13d831ec7"
+              },
+              {
+                "key": "abiParams.account",
+                "value": "0xF977814e90dA44bFA03b6295A0616a897441aceC"
+              }
+            ]
           }
         ],
         "blockId": 5,
@@ -1197,7 +1223,7 @@ export const ACTIONS = {
             "key": "slippage",
             "type": "percentage",
             "description": "The maximum allowable difference between the expected price and the actual price at the time of execution, expressed as a percentage. This protects the transaction from significant price fluctuations.",
-            "value": 0.3,
+            "value": 1,
             "mandatory": true,
             "category": 1
           }
@@ -1225,7 +1251,7 @@ export const ACTIONS = {
               },
               {
                 "key": "slippage",
-                "value": 0.3
+                "value": 1
               }
             ]
           }
@@ -1927,7 +1953,7 @@ export const ACTIONS = {
             "key": "slippage",
             "type": "percentage",
             "description": "The maximum allowable difference between the expected price and the actual price at the time of execution, expressed as a percentage. This protects the transaction from significant price fluctuations.",
-            "value": 0.3,
+            "value": 1,
             "mandatory": true,
             "category": 1
           },
@@ -1955,7 +1981,7 @@ export const ACTIONS = {
               },
               {
                 "key": "slippage",
-                "value": 0.3
+                "value": 1
               }
             ]
           }

@@ -236,7 +236,6 @@ describe('Node setParameter Method', () => {
 
     node.setParams('amount', 100000);
     const params = node.getParameters();
-    console.log(params)
     expect(params.amount).to.equal(100000);
   });
 

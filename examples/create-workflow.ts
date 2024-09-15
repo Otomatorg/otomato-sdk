@@ -1,35 +1,48 @@
-import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices, convertToTokenUnits } from '../src/index.js';
+import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices, convertToTokenUnits, convertToTokenUnitsFromSymbol } from '../src/index.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const main = async () => {
-    apiServices.setAuth("eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIweDdjRUI4ZDgxNDdBYWE5ZEI4MUFjQkRGRTVjMzA1MERGQ2ZGMTg1MzciLCJzdWIiOiIweDg3RkU4YjRmMkZlODM3MGY2Y0M5YTk2MzQ0MmYwN0IwMmY0OTA5QTciLCJhdWQiOiJvdG9tYXRvLXRlc3QubmV0bGlmeS5hcHAiLCJleHAiOjE3MjMzODMxOTksIm5iZiI6MTcyMDc4OTM5OSwiaWF0IjoxNzIwNzkxMTk5LCJqdGkiOiIweDY4ZDkxOWEyMGZiYjIyNDUwZDZmOTFjMzM2ZTBmYjBjMmYyYTc3MmU3Zjg4NWU1ZjRmNzg1NTM2ZGIyYTY5YTAiLCJjdHgiOnt9fQ.MHgyOTM1NTM3MWYwOWM1YzllNWE3YjI4MjVkZTNjMDljZTkwMTQ3OTQwZmU1ZWRlMjM5YTk0MmFjYTQ5YTcwZWI0MGJlNmJiZDk2MDA4ZTIxMzJmNGM3ZTVlZGIzZDZiZjYyMDE4Mzc1MzUwMTRmNTc0ODM0ZDk4YWU3NDQwNDQzOTFi");
+    if (!process.env.API_URL)
+        return;
+
+    apiServices.setUrl(process.env.API_URL);
+    apiServices.setAuth("eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIweDdjRUI4ZDgxNDdBYWE5ZEI4MUFjQkRGRTVjMzA1MERGQ2ZGMTg1MzciLCJzdWIiOiIweDc1N0EwMDRiRTc2NmY3NDVmZDRDRDc1OTY2Q0Y2QzhCYjg0RkQ3YzEiLCJhdWQiOiJvdG9tYXRvLXRlc3QubmV0bGlmeS5hcHAiLCJleHAiOjE3Mjc0NjY4MzcsIm5iZiI6MTcyNDg3MzAzNCwiaWF0IjoxNzI0ODc0ODM3LCJqdGkiOiIweGZiYzIzYTM1MmQxZWNhZWRmODc3NmI3ZDc5ZGFiNDg1N2E1MTM1MGUzNDZiNzlmNTEyZGE5MzYwYjcyYTVkYzciLCJjdHgiOnt9fQ.MHhjYTlmMDM2YjZkMDQzMDdjYWQ0OTg1ZDQxODgwMTU4NWExZTZkM2JhZmNkNTZmOWViYTJhYjI4ZWVhMTBjYTk0MDUxZDkwMTgxNjE4YzA1ZDA3NzQwZTg3OWE4M2M1Zjk2MmU2MWFlMzJhY2JiNTk5MDljNGIxMDIwMTY4ZWZiOTFj");
 
     const trigger = new Trigger(TRIGGERS.PRICE_ACTION.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY);
     trigger.setChainId(CHAINS.MODE);
     trigger.setComparisonValue(3000);
-    trigger.setCondition('gte');
+    trigger.setCondition('lte');
     trigger.setParams('currency', 'USD');
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
     trigger.setPosition(0, 0);
 
-    const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-    slackAction.setParams("webhook", "https://hooks.slack.com/services/REPLACE_WITH_YOUR_DATA");
-    slackAction.setParams("message", "Notification from the SDK - testing the state");
-    slackAction.setPosition(0, -10);
+    const odosAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
+    odosAction.setChainId(CHAINS.MODE);
+    odosAction.setParams("tokenIn", getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
+    odosAction.setParams("tokenOut", getTokenFromSymbol(CHAINS.MODE, 'USDC').contractAddress);
+    odosAction.setParams("amount", await convertToTokenUnitsFromSymbol(0.0028, CHAINS.MODE, 'WETH'));
+    odosAction.setPosition(400, 360);
 
-    /*const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
-    transferAction.setChainId(CHAINS.ETHEREUM);
-    transferAction.setParams("value", 1000);
-    transferAction.setParams("to", "0x888888888889758f76e7103c6cbf23abbf58f946");
-    transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);*/
-  
-    const workflow = new Workflow("test from SDK", [trigger, slackAction]);
+    const ionicDeposit = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
+    ionicDeposit.setChainId(CHAINS.MODE);
+    ionicDeposit.setParams('tokenToDeposit', getTokenFromSymbol(CHAINS.MODE, 'USDC').contractAddress);
+    ionicDeposit.setParams('amount', odosAction.getOutputVariableName('amountOut'));
+    ionicDeposit.setPosition(400, 480);
+
+    const workflow = new Workflow("swap & deposit", [trigger, ionicDeposit, odosAction]);
 
     const edge = new Edge({
         source: trigger,
-        target: slackAction,
+        target: odosAction,
+    });
+    const edge2 = new Edge({
+        source: odosAction,
+        target: ionicDeposit,
     });
 
     workflow.addEdge(edge);
+    workflow.addEdge(edge2);
 
     console.log(JSON.stringify(workflow.toJSON()))
 
