@@ -33,7 +33,7 @@ const createETHFearAndGreedBuy = async () => {
     trigger.setPosition(400, 120);
 
     const odosAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
-    const chain = CHAINS.ETHEREUM;
+    const chain = CHAINS.MODE;
     odosAction.setChainId(chain);
     odosAction.setParams("tokenIn", getTokenFromSymbol(chain, 'USDC').contractAddress);
     odosAction.setParams("tokenOut", getTokenFromSymbol(chain, 'sUSDE').contractAddress);
