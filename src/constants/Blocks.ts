@@ -7,7 +7,7 @@ export const TRIGGERS = {
       "chains": [
         0
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/tokenTransfer.png",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/Transfer.svg",
       "TRANSFER": {
         "name": "Transfer token",
         "description": "This block gets triggered when someone transfers the ERC20 configured in the params",
@@ -73,7 +73,7 @@ export const TRIGGERS = {
           }
         ],
         "blockId": 1,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/tokenTransfer.png"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/Transfer.svg"
       }
     },
     "BALANCE": {
@@ -81,7 +81,7 @@ export const TRIGGERS = {
       "chains": [
         0
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/balanceCheck.png",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/BalanceCheck.svg",
       "BALANCE": {
         "name": "ERC20 balance check",
         "description": "Fetches the balance of an ERC20 and checks it against the specified condition.",
@@ -186,7 +186,7 @@ export const TRIGGERS = {
           }
         ],
         "blockId": 5,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/balanceCheck.png"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/BalanceCheck.svg"
       }
     }
   },
