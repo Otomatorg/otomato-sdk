@@ -671,7 +671,7 @@ export const TRIGGERS = {
         34443,
         1
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.jpg",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.png",
       "SWAP": {
         "name": "Odos Swap",
         "description": "Swap on Odos",
@@ -752,7 +752,7 @@ export const TRIGGERS = {
           }
         ],
         "blockId": 4,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.jpg"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.png"
       }
     }
   },
@@ -1160,6 +1160,7 @@ export const ACTIONS = {
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/swap.png",
       "SWAP": {
+        "id": 100005,
         "name": "Swap",
         "description": "Swap two assets using the best market rates accross multiple pools",
         "type": 1,
@@ -1226,8 +1227,8 @@ export const ACTIONS = {
             "value": 1,
             "mandatory": true,
             "category": 1
-          },
-        ] as Parameter[],
+          }
+        ],
         "examples": [
           {
             "name": "Swap USDC to WETH",
@@ -1888,7 +1889,7 @@ export const ACTIONS = {
       "chains": [
         34443
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.jpg",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.png",
       "SWAP": {
         "name": "Odos swap",
         "description": "Swap on Odos to get the best market rates accross multiple pools",
@@ -1999,7 +2000,7 @@ export const ACTIONS = {
           ]
         },
         "blockId": 100005,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.jpg"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.png"
       }
     }
   },
