@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { SessionKeyPermission } from '../src/models/SessionKeyPermission'; // Adjust the import path according to your project structure
+import { ACTIONS, TRIGGERS, Trigger, Action, Workflow, Edge, CHAINS, getTokenFromSymbol } from '../src/index.js'; // Adjust paths as needed
 
 describe('SessionKeyPermission Class', () => {
 
@@ -101,5 +102,40 @@ describe('SessionKeyPermission Class', () => {
     expect(permission1.approvedTargets).to.deep.equal(['target1', 'target2']);
     expect(permission1.label).to.deep.equal(['Label1', 'Label2']);
     expect(permission1.labelNotAuthorized).to.deep.equal(['NotAuthorizedLabel1', 'NotAuthorizedLabel2']);
+  });
+});
+
+describe('Workflow Session Key Permissions', () => {
+  it('should correctly generate session key permissions for a workflow', async () => {
+    // Create triggers and actions
+    const transferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const ionicAction = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
+
+    // Set chain and params for the actions
+    ionicAction.setChainId(CHAINS.MODE);
+    ionicAction.setParams('tokenToDeposit', getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress);
+
+    transferAction.setChainId(CHAINS.ETHEREUM);
+    transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDT').contractAddress);
+
+    // Create edges between triggers and actions
+    const edge1 = new Edge({ source: transferTrigger, target: slackAction });
+    const edge2 = new Edge({ source: slackAction, target: transferAction });
+    const edge3 = new Edge({ source: transferAction, target: ionicAction });
+
+    // Construct the workflow
+    const workflow = new Workflow("", [transferAction, transferTrigger, slackAction, ionicAction], [edge1, edge2, edge3]);
+
+    // Get session key permissions from the workflow
+    const sessionKeyPermissions = await workflow.getSessionKeyPermissions();
+    // Perform the assertion to check if session key permissions match
+    expect(sessionKeyPermissions.approvedTargets).to.deep.equal([
+      '0xdac17f958d2ee523a2206206994597c13d831ec7',
+      '0xf0F161fDA2712DB8b566946122a5af183995e2eD',
+      '0x94812F2eEa03A49869f95e1b5868C6f3206ee3D3',
+      '0xFB3323E24743Caf4ADD0fDCCFB268565c0685556'
+    ]);
   });
 });

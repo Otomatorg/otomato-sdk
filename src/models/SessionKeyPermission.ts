@@ -1,4 +1,5 @@
-import { getToken } from "../constants/tokens.js";
+import { CHAINS } from "../constants/chains.js";
+import { getToken, getTokenFromSymbol } from "../constants/tokens.js";
 import { Parameter } from "./Parameter.js";
 
 export class SessionKeyPermission {
@@ -39,36 +40,56 @@ export class SessionKeyPermission {
    * Fill placeholders using variables returned by the 'before' string execution.
    * @param beforeCode - A string representing the 'before' logic to execute.
    */
-  async fillBeforeVariables(beforeCode: string, parameters: { [key: string]: any }): Promise<void> {
+  async fillBeforeVariables(
+    beforeCode: string,
+    parameters: { [key: string]: any }
+  ): Promise<void> {
+    console.log("filling before variable");
     try {
-      // Prepare the environment with parameters
-      const env = { parameters };
-
-      // Replace the import statement in the beforeCode string if needed
-      const beforeCodeUpdated = beforeCode.replace("import('otomato-sdk')", "import('../index.js')");
-
+      // Prepare the otomatoSdk object with required functions
+      const otomatoSdk = {
+        getToken,
+        getTokenFromSymbol,
+        CHAINS
+        // Include any other functions you need from otomato-sdk
+      };
+  
+      // Prepare the environment with parameters and otomatoSdk
+      const env = { parameters, otomatoSdk };
+  
+      // Replace the dynamic import in beforeCode
+      const beforeCodeUpdated = beforeCode.replace(
+        /const\s+otomatoSdk\s*=\s*await\s*import\(['"]otomato-sdk['"]\);/,
+        'const otomatoSdk = env.otomatoSdk;'
+      );
+  
       // Wrap the beforeCode in an async function and immediately invoke it
-      const asyncBeforeFn = new Function('env', `
-      return (async function() {
-        return await (${beforeCodeUpdated})(env);
-      })();
-    `);
-
+      const asyncBeforeFn = new Function(
+        'env',
+        `
+        return (async function() {
+          return await (${beforeCodeUpdated})(env);
+        })();
+      `
+      );
+  
       // Execute the async function and await the result
       const beforeResult = await asyncBeforeFn(env);
-
+  
       // Replace placeholders like {{before.variableName}} with the corresponding values
       if (beforeResult && typeof beforeResult === 'object') {
-        Object.keys(beforeResult).forEach(key => {
+        Object.keys(beforeResult).forEach((key) => {
           this.fill(`before.${key}`, beforeResult[key]);
         });
       } else {
         console.error("Before function did not return an object:", beforeResult);
       }
     } catch (error) {
-      console.error('Error executing before code:', error);
+      console.error("Error executing before code:", error);
     }
   }
+  
+  
 
   // The rest of your existing code
   fillParameters(params: { [key: string]: any }): void {

@@ -49,7 +49,7 @@ const createETHFearAndGreedCapitalEfficientBuy = async () => {
     const trigger = new Trigger(TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX);
 
     trigger.setCondition('lt');
-    trigger.setComparisonValue(30);
+    trigger.setComparisonValue(45);
     trigger.setPosition(400, 120);
 
     const chain = CHAINS.MODE;

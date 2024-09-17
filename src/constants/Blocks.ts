@@ -1158,9 +1158,8 @@ export const ACTIONS = {
       "chains": [
         34443
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/swap.png",
       "SWAP": {
-        "id": 100005,
+        "id": 100013,
         "name": "Swap",
         "description": "Swap two assets using the best market rates accross multiple pools",
         "type": 1,
@@ -1268,10 +1267,9 @@ export const ACTIONS = {
           "labelNotAuthorized": [
             "Transfer ETH"
           ]
-        },
-        "blockId": 100013,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/swap.png"
-      }
+        }
+      },
+      "blockId": 100013
     }
   },
   "NOTIFICATIONS": {
@@ -1397,7 +1395,7 @@ export const ACTIONS = {
       "chains": [
         34443
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/tokenTransfer.png",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/Transfer.svg",
       "TRANSFER": {
         "name": "Transfer token",
         "description": "Transfers an ERC20 token",
@@ -1484,7 +1482,7 @@ export const ACTIONS = {
           ]
         },
         "blockId": 100004,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/tokenTransfer.png"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/Transfer.svg"
       }
     }
   },
