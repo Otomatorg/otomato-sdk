@@ -1215,7 +1215,7 @@ export const ACTIONS = {
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
-              "contractAddress": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874",
+              "contractAddress": "{{parameters.tokenIn}}",
               "chain": "{{parameters.chainId}}"
             }
           },
@@ -1944,7 +1944,7 @@ export const ACTIONS = {
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
-              "contractAddress": "0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874",
+              "contractAddress": "{{parameters.tokenIn}}",
               "chain": "{{parameters.chainId}}"
             }
           },
