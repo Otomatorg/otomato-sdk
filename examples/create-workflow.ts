@@ -19,16 +19,16 @@ const main = async () => {
 
     const odosAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
     odosAction.setChainId(CHAINS.MODE);
+    odosAction.setParams("amount", await convertToTokenUnitsFromSymbol(1, CHAINS.MODE, 'USDT'));
     odosAction.setParams("tokenIn", getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress);
     odosAction.setParams("tokenOut", getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
-    odosAction.setParams("amount", await convertToTokenUnitsFromSymbol(0.05, CHAINS.MODE, 'USDT'));
-    odosAction.setPosition(400, 360);
+    odosAction.setPosition(400, 120);
 
     const ionicDeposit = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
     ionicDeposit.setChainId(CHAINS.MODE);
     ionicDeposit.setParams('tokenToDeposit', getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
     ionicDeposit.setParams('amount', odosAction.getOutputVariableName('amountOut'));
-    ionicDeposit.setPosition(400, 480);
+    ionicDeposit.setPosition(400, 240);
 
     const workflow = new Workflow("swap & deposit", [trigger, ionicDeposit, odosAction]);
 
@@ -60,16 +60,9 @@ const main = async () => {
 
     if (!runResult.success) {
         throw new Error("An error occurred when running the workflow")
+    } else {
+        console.log('workflow is running');
     }
-
-    console.log(`Workflow ${workflow.id} is running`);
-    console.log(workflow.getState());
-
-    /*workflow.setName("ABC");
-
-    const patchResult = await workflow.update();
-    console.log(patchResult);
-    console.log(workflow.getState());*/
 }
 
 main();

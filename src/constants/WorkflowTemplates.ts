@@ -5,7 +5,8 @@ export const WORKFLOW_TEMPLATES_TAGS = {
     SOCIALS: 'Socials',
     TRADING: 'Trading',
     ON_CHAIN_MONITORING: 'On-chain monitoring',
-    YIELD: 'Yield'
+    YIELD: 'Yield',
+    NOTIFICATIONS: 'notifications'
 };
 
 const createModeTransferNotificationWorkflow = () => {
@@ -127,7 +128,7 @@ export const WORKFLOW_TEMPLATES = [
     {
         'name': 'MODE transfer notification',
         'description': 'Receive notifications when a top $MODE holder (0x74B8....C6B4) transfers $MODE',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING],
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer-monitoring.png',
         createWorkflow: createModeTransferNotificationWorkflow
     },
@@ -155,7 +156,7 @@ export const WORKFLOW_TEMPLATES = [
     {
         'name': 'sUSDE yield notification',
         'description': 'Notify me when the sUSDe yield becomes negative',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING],
+        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
         createWorkflow: createSusdeYieldNotification
     },
