@@ -1155,10 +1155,10 @@ export const ACTIONS = {
     },
     "SWAP": {
       "description": "Swap two assets using the best market rates accross multiple pools",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/swap.png",
       "chains": [
         34443
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/swap.png",
       "SWAP": {
         "name": "Swap",
         "description": "Swap two assets using the best market rates accross multiple pools",
