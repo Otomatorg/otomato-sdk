@@ -40,36 +40,4 @@ export class Authorization {
       return { isValid: false, error: error.message || 'Unknown error' };
     }
   }
-
-  /**
-   * Grant authorization to the contracts.
-   * 
-   * @param chainId - The chain ID of the blockchain network.
-   * @param sessionKeyAddress - The session key address to authorize.
-   * @param contractAddresses - The list of contract addresses to authorize.
-   * @returns A promise resolving to the authorization result.
-   */
-  static async grantContracts(
-    chainId: string,
-    sessionKeyAddress: string,
-    contractAddresses: string[]
-  ): Promise<{ success: boolean; message?: string; error?: string }> {
-    const payload = {
-      chainId,
-      sessionKeyAddress,
-      contractAddresses
-    };
-
-    try {
-      const response = await apiServices.post('/auth/contracts', payload);
-
-      if (response.status === 201) {
-        return { success: true };
-      } else {
-        return { success: false, error: response.data?.message || 'Unknown error' };
-      }
-    } catch (error: any) {
-      return { success: false, error: error.message || 'Unknown error' };
-    }
-  }
 }
