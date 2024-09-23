@@ -130,6 +130,10 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Receive notifications when a top $MODE holder (0x74B8....C6B4) transfers $MODE',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer-monitoring.png',
+        'image': [
+            TRIGGERS.TOKENS.TRANSFER.TRANSFER.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
         createWorkflow: createModeTransferNotificationWorkflow
     },
     {
@@ -137,13 +141,23 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 30',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear_and_greed.jpg',
+        'image': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
+            ACTIONS.SWAP.ODOS.SWAP.image
+        ],
         createWorkflow: createETHFearAndGreedBuy
     },
     {
         'name': 'Buy ETH when the market sentiment is extremely fearful - capital efficient',
-        'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 30. The idle funds are generating yield on Ionic.',
+        'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 45. The idle funds are generating yield on Ionic.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.YIELD],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear_and_greed.jpg',
+        'image': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
+            ACTIONS.LENDING.IONIC.WITHDRAW.image,
+            ACTIONS.SWAP.ODOS.SWAP.image,
+            ACTIONS.LENDING.IONIC.DEPOSIT.image
+        ],
         createWorkflow: createETHFearAndGreedCapitalEfficientBuy
     },
     {
@@ -151,6 +165,11 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Buy sUSDE when the yield is above 20%',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/buySusde.jpg',
+        'image': [
+            TRIGGERS.YIELD.ETHENA.SUSDE_YIELD.image,
+            ACTIONS.SWAP.ODOS.SWAP.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
         createWorkflow: createSUsdeYieldBuy
     },
     {
@@ -158,6 +177,10 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Notify me when the sUSDe yield becomes negative',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
+        'image': [
+            TRIGGERS.YIELD.ETHENA.SUSDE_YIELD.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
         createWorkflow: createSusdeYieldNotification
     },
 ];
