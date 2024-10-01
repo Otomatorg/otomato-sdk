@@ -17,5 +17,6 @@ export * from './models/Authorization.js';
 
 // Exporting services
 export * from './services/ApiService.js';
+export * from './services/RpcServices.js';
 export * from './utils/helpers.js';
 export * from './utils/typeValidator.js';
