@@ -1,4 +1,4 @@
-import rpcServices from "../services/RpcServices";
+import {rpcServices} from "../services/RpcServices.js";
 
 export interface Token {
   contractAddress: string;

@@ -68,5 +68,4 @@ class RPCServices {
 }
 
 // Export RPC services instance
-const rpcServices = new RPCServices();
-export default rpcServices;
+export const rpcServices = new RPCServices();

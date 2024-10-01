@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { ethers } from 'ethers';
-import rpcServices from '../src/services/RpcServices';
+import {rpcServices} from '../src/services/RpcServices';
 import { getToken } from '../src';
 
 // Token contract address for testing (replace with a real token on chain 43334)
