@@ -53,16 +53,16 @@ export class SessionKeyPermission {
         CHAINS
         // Include any other functions you need from otomato-sdk
       };
-  
+
       // Prepare the environment with parameters and otomatoSdk
       const env = { parameters, otomatoSdk };
-  
+
       // Replace the dynamic import in beforeCode
       const beforeCodeUpdated = beforeCode.replace(
         /const\s+otomatoSdk\s*=\s*await\s*import\(['"]otomato-sdk['"]\);/,
         'const otomatoSdk = env.otomatoSdk;'
       );
-  
+
       // Wrap the beforeCode in an async function and immediately invoke it
       const asyncBeforeFn = new Function(
         'env',
@@ -72,10 +72,10 @@ export class SessionKeyPermission {
         })();
       `
       );
-  
+
       // Execute the async function and await the result
       const beforeResult = await asyncBeforeFn(env);
-  
+
       // Replace placeholders like {{before.variableName}} with the corresponding values
       if (beforeResult && typeof beforeResult === 'object') {
         Object.keys(beforeResult).forEach((key) => {
@@ -88,8 +88,8 @@ export class SessionKeyPermission {
       console.error("Error executing before code:", error);
     }
   }
-  
-  
+
+
 
   // The rest of your existing code
   fillParameters(params: { [key: string]: any }): void {
@@ -124,33 +124,49 @@ export class SessionKeyPermission {
     }
   }
 
-  fillMethod(): void {
-    const executeMethod = (target: string) => {
+  async fillMethod(): Promise<void> {
+    const executeMethod = async (target: string): Promise<string> => {
       const methodPattern = /\{\{(\w+)\(([^)]+)\)\}\}/g;
-      return target.replace(methodPattern, (match, methodName, params) => {
+
+      // Find all matches of the pattern in the target string
+      const matches = [...target.matchAll(methodPattern)];
+
+      // Process each match asynchronously
+      for (const match of matches) {
+        const [fullMatch, methodName, params] = match;
         const paramList = params.split(',').map((param: string) => param.trim());
+
+        let replacement: string | undefined;
 
         switch (methodName) {
           case 'tokenSymbol': {
             const [chainId, address] = paramList;
-            const token = getToken(parseInt(chainId, 10), address);
-            return token ? token.symbol : match;
+            const token = await getToken(parseInt(chainId, 10), address);
+            replacement = token ? token.symbol : fullMatch;
+            break;
           }
           case 'otherTokenSymbol': {
             const [chainId, address] = paramList;
-            const symbol = getDifferentToken(parseInt(chainId, 10), address);
-            return symbol;
+            const symbol = await getDifferentToken(parseInt(chainId, 10), address);
+            replacement = symbol;
+            break;
           }
           // Add other methods here as needed
           default:
-            return match;
+            replacement = fullMatch; // If no method matches, leave it unchanged
         }
-      });
+
+        // Replace the matched pattern with the resolved value
+        target = target.replace(fullMatch, replacement || fullMatch);
+      }
+
+      return target;
     };
 
-    this.approvedTargets = this.approvedTargets.map(executeMethod);
-    this.label = this.label.map(executeMethod);
-    this.labelNotAuthorized = this.labelNotAuthorized.map(executeMethod);
+    // Apply executeMethod asynchronously to approvedTargets, label, and labelNotAuthorized
+    this.approvedTargets = await Promise.all(this.approvedTargets.map(executeMethod));
+    this.label = await Promise.all(this.label.map(executeMethod));
+    this.labelNotAuthorized = await Promise.all(this.labelNotAuthorized.map(executeMethod));
   }
 
   toJSON(): { [key: string]: any } {
@@ -197,8 +213,8 @@ export class SessionKeyPermission {
 }
 
 // Helper function to get a different token
-const getDifferentToken = (chain: number, contractAddress: string) => {
-  const tokenSymbol = getToken(chain, contractAddress)?.symbol;
+const getDifferentToken = async (chain: number, contractAddress: string) => {
+  const tokenSymbol = (await getToken(chain, contractAddress))?.symbol;
   if (!tokenSymbol || tokenSymbol !== 'WETH') return 'WETH';
   return 'USDT';
 };

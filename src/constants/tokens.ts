@@ -1,3 +1,5 @@
+import rpcServices from "../services/RpcServices";
+
 export interface Token {
   contractAddress: string;
   name: string;
@@ -261,15 +263,19 @@ export const NFTS: NFTs = {
   ]
 };
 
-export function getToken(chain: number, contractAddress: string): Token {
+export async function getToken(chain: number, contractAddress: string): Promise<Token> {
   if (!(chain in TOKENS)) {
     throw new Error(`Unsupported chain: ${chain}`);
   }
 
-  const token = TOKENS[chain].find(token => token.contractAddress.toLowerCase() === contractAddress.toLowerCase());
+  let token = TOKENS[chain].find(token => token.contractAddress.toLowerCase() === contractAddress.toLowerCase());
 
   if (!token) {
-    throw new Error(`Token with contract address ${contractAddress} not found on chain ${chain}`);
+    try {
+      token = await rpcServices.getTokenDetails(chain, contractAddress);
+    } catch (e) {
+      throw new Error(`Token with contract address ${contractAddress} not found on chain ${chain}`);
+    }
   }
 
   return token;

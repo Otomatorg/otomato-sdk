@@ -16,7 +16,7 @@ export class Action extends Node {
 
     const permissions = SessionKeyPermission.fromJSON(parentBlock.permissions);
     permissions.fillParameters(this.getParameters());
-    permissions.fillMethod();
+    await permissions.fillMethod();
 
     // Handle 'before' code for the main action
     if (parentBlock.before) {
@@ -53,7 +53,7 @@ export class Action extends Node {
             continue;
 
           batchedPermissions.fillParameters(batch.parameters);  // Pass batched action parameters
-          batchedPermissions.fillMethod();
+          await batchedPermissions.fillMethod();
 
           // Handle 'before' code for the batched action
           if (batchedAction.before) {
@@ -76,7 +76,6 @@ export class Action extends Node {
   replaceVariables(value: any): any {
     if (typeof value === 'string') {
       return value.replace(/\{\{parameters\.(.*?)\}\}/g, (_, key) => {
-        console.log(`Looking for ${key} parameter`);
         return this.getParameter(key) || '';
       });
     }
