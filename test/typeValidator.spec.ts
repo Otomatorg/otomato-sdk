@@ -68,6 +68,15 @@ describe('Type Validator Utility Functions', () => {
             // expect(validateType('phone_number', '001234567890')).to.be.false;
         });
 
+        it('should validate email values', () => {
+            expect(validateType('email', 'test@gmail.com')).to.be.true;
+            expect(validateType('email', 'test@gmail')).to.be.false;
+            expect(validateType('email', '@gmail.com')).to.be.false;
+            expect(validateType('email', ' test@gmail.com')).to.be.false;
+            // fixme: it should not accept it
+            // expect(validateType('phone_number', '001234567890')).to.be.false;
+        });
+
         it('should validate paragraph values', () => {
             expect(validateType('paragraph', 'This is a test paragraph.')).to.be.true;
             expect(validateType('paragraph', 12345)).to.be.false;

@@ -4,7 +4,7 @@ export function validateType(expectedType: string, value: any): boolean {
     if (typeof value === 'string' && isVariable(value)) {
         return true; // Allow all variable strings
     }
-    
+
     switch (expectedType) {
         case 'bool':
         case 'boolean':
@@ -30,6 +30,8 @@ export function validateType(expectedType: string, value: any): boolean {
             return typeof value === 'string' && isValidUrl(value);
         case 'phone_number':
             return typeof value === 'string' && isValidPhoneNumber(value);
+        case 'email':
+            return typeof value === 'string' && isValidEmail(value);
         case 'string':
         case 'paragraph':
             return typeof value === 'string';
@@ -93,4 +95,8 @@ export function isValidUrl(value: string): boolean {
 
 export function isValidPhoneNumber(value: string): boolean {
     return /^[\+]?[0-9]{0,3}\W?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(value);
+}
+
+export function isValidEmail(value: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }

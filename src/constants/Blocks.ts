@@ -1012,7 +1012,7 @@ export const TRIGGERS = {
         "type": 3,
         "url": "https://www.alphavantage.co/query?function=ETF_PROFILE&symbol=IBIT&apikey=V343UMWZF0715R3A",
         "output": {
-          "yield": "float"
+          "asset_under_management": "integer"
         },
         "parameters": [
           {
@@ -1274,6 +1274,63 @@ export const ACTIONS = {
     }
   },
   "NOTIFICATIONS": {
+    "EMAIL": {
+      "description": "Sends an email to the specified recipient",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/email.png",
+      "SEND_EMAIL": {
+        "name": "Send email",
+        "type": 0,
+        "description": "Sends an email to the specified recipient",
+        "output": {
+          "message": "string"
+        },
+        "parameters": [
+          {
+            "key": "to",
+            "type": "email",
+            "description": "The recipient's email address",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "subject",
+            "type": "string",
+            "description": "The subject of the email",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "body",
+            "type": "paragraph",
+            "description": "The body content of the email",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "Basic notification",
+            "description": "Notify you that the flow has been triggered",
+            "parameters": [
+              {
+                "key": "to",
+                "value": "your-email@gmail.com"
+              },
+              {
+                "key": "subject",
+                "value": "Workflow triggered"
+              },
+              {
+                "key": "body",
+                "value": "Your workflow has been triggered! Go to https://app.otomato.xyz/execution-history to see its execution details"
+              }
+            ]
+          }
+        ],
+        "blockId": 100014,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/email.png"
+      }
+    },
     "SLACK": {
       "description": "Slack is a messaging app for businesses that connects people to the information they need.",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/slack.png",
@@ -1667,6 +1724,14 @@ export const ACTIONS = {
             "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToWithdraw}})}}"
           ]
         },
+        "checks": [
+          {
+            "type": 0,
+            "chainId": "{{parameters.chainId}}",
+            "contractAddress": "{{before.contractAddress}}",
+            "amount": "{{parameters.abi.parameters.amount}}"
+          }
+        ],
         "blockId": 100007,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
       },
@@ -1739,6 +1804,14 @@ export const ACTIONS = {
             "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToBorrow}})}}"
           ]
         },
+        "checks": [
+          {
+            "type": 0,
+            "chainId": "{{parameters.chainId}}",
+            "contractAddress": "{{before.contractAddress}}",
+            "amount": "{{parameters.abi.parameters.amount}}"
+          }
+        ],
         "blockId": 100008,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
       },
