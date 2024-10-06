@@ -1271,6 +1271,14 @@ export const ACTIONS = {
         "blockId": 100013,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/swap.png"
       }
+    },
+    "CONDITION": {
+      "description": "Checks for a condition before proceeding",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/if.png",
+    },
+    "SPLIT": {
+      "description": "Split a branch in multiple ones",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/if.png",
     }
   },
   "NOTIFICATIONS": {
@@ -1279,7 +1287,7 @@ export const ACTIONS = {
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/email.png",
       "SEND_EMAIL": {
         "name": "Send email",
-        "type": 0,
+        "type": 3,
         "description": "Sends an email to the specified recipient",
         "output": {
           "message": "string"
