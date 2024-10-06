@@ -22,7 +22,6 @@ const createModeTransferNotificationWorkflow = () => {
     notificationAction.setParams("subject", "$MODE transfer alert");
     notificationAction.setPosition(400, 240);
 
-
     const edge = new Edge({ source: modeTransferTrigger, target: notificationAction });
 
     return new Workflow('MODE transfer notification', [modeTransferTrigger, notificationAction], [edge]);
