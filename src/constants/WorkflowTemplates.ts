@@ -1,4 +1,4 @@
-import { Workflow, Trigger, Action, Edge, TRIGGERS, ACTIONS, CHAINS, getTokenFromSymbol, convertToTokenUnitsFromSymbol } from '../index.js';
+import { Workflow, Trigger, Action, Edge, TRIGGERS, ACTIONS, CHAINS, getTokenFromSymbol, convertToTokenUnitsFromSymbol, convertToTokenUnits } from '../index.js';
 
 export const WORKFLOW_TEMPLATES_TAGS = {
     NFTS: 'NFTs',
@@ -127,6 +127,73 @@ const createSusdeYieldNotification = async () => {
     return new Workflow('sUSDE yield notification', [trigger, notificationAction], [edge]);
 }
 
+const ionicDepositIfYieldIsHigh = async () => {
+    const trigger = new Trigger(TRIGGERS.LENDING.IONIC.LENDING_RATE);
+
+    const tokenIn = (await getTokenFromSymbol(CHAINS.MODE, 'USDT')).contractAddress;
+
+    trigger.setCondition('gte');
+    trigger.setComparisonValue(10);
+    trigger.setChainId(CHAINS.MODE);
+    trigger.setParams('token', tokenIn);
+    trigger.setPosition(400, 120);
+
+    const ionicDeposit = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
+    ionicDeposit.setChainId(CHAINS.MODE);
+    ionicDeposit.setParams('tokenToDeposit', tokenIn);
+    ionicDeposit.setParams('amount', await convertToTokenUnits(1, CHAINS.MODE, tokenIn));
+    ionicDeposit.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: ionicDeposit });
+
+    return new Workflow('Deposit USDT on Ionic if yield > 10% APY', [trigger, ionicDeposit], [edge]);
+}
+
+const ionicWithdrawIfYieldIsLow = async () => {
+    const trigger = new Trigger(TRIGGERS.LENDING.IONIC.LENDING_RATE);
+
+    const tokenIn = (await getTokenFromSymbol(CHAINS.MODE, 'USDC')).contractAddress;
+
+    trigger.setCondition('lte');
+    trigger.setComparisonValue(4);
+    trigger.setChainId(CHAINS.MODE);
+    trigger.setParams('token', tokenIn);
+    trigger.setPosition(400, 120);
+
+    const ionicWithdraw = new Action(ACTIONS.LENDING.IONIC.WITHDRAW);
+    ionicWithdraw.setChainId(CHAINS.MODE);
+    ionicWithdraw.setParams('tokenToWithdraw', tokenIn);
+    ionicWithdraw.setParams('amount', await convertToTokenUnits(1, CHAINS.MODE, tokenIn));
+    ionicWithdraw.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: ionicWithdraw });
+
+    return new Workflow('Withdraw USDC from Ionic if yield < 4% APY', [trigger, ionicWithdraw], [edge]);
+}
+
+const copyTradeVitalikOdos = async () => {
+    const trigger = new Trigger(TRIGGERS.DEXES.ODOS.SWAP);
+
+    trigger.setChainId(CHAINS.MODE);
+    trigger.setParams('sender', '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045');
+    trigger.setPosition(400, 120);
+
+    const tokenIn = (await getTokenFromSymbol(CHAINS.MODE, 'USDC')).contractAddress;
+
+    const swap = new Action(ACTIONS.CORE.SWAP.SWAP);
+    swap.setChainId(CHAINS.MODE);
+    swap.setParams('tokenIn', tokenIn);
+    swap.setParams('tokenOut', trigger.getOutputVariableName('outputToken'));
+    swap.setParams('amount', await convertToTokenUnits(1, CHAINS.MODE, tokenIn));
+    swap.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: swap });
+
+    return new Workflow('Copy-trade the trades done on Odos by vitalik.eth', [trigger, swap], [edge]);
+}
+
+
+
 export const WORKFLOW_TEMPLATES = [
     {
         'name': 'MODE transfer notification',
@@ -185,5 +252,38 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
         createWorkflow: createSusdeYieldNotification
+    },
+    {
+        'name': 'Deposit USDT on Ionic if yield > 10% APY',
+        'description': 'Deposit USDT on Ionic if the yield gets above 10%',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.YIELD],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
+        'image': [
+            TRIGGERS.LENDING.IONIC.LENDING_RATE.image,
+            ACTIONS.LENDING.IONIC.DEPOSIT.image,
+        ],
+        createWorkflow: ionicDepositIfYieldIsHigh
+    },
+    {
+        'name': 'Withdraw USDC from Ionic if yield < 4% APY',
+        'description': 'Withdraw USDC from Ionic if the yield gets below 4%',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.YIELD],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
+        'image': [
+            TRIGGERS.LENDING.IONIC.LENDING_RATE.image,
+            ACTIONS.LENDING.IONIC.WITHDRAW.image,
+        ],
+        createWorkflow: ionicWithdrawIfYieldIsLow
+    },
+    {
+        'name': 'Copy-trade the trades done on Odos by vitalik.eth',
+        'description': 'Buy 100$ of each token that vitalik.eth buys using Odos',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.TRADING],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
+        'image': [
+            TRIGGERS.DEXES.ODOS.SWAP.image,
+            ACTIONS.CORE.SWAP.SWAP.image,
+        ],
+        createWorkflow: copyTradeVitalikOdos
     },
 ];
