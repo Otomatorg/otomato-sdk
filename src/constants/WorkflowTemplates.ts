@@ -17,13 +17,15 @@ const createModeTransferNotificationWorkflow = () => {
     modeTransferTrigger.setParams('from', '0x74B847b308BD89Ef15639E6e4a2544E4b8b8C6B4');
     modeTransferTrigger.setPosition(400, 120);
 
-    const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-    telegramAction.setParams("message", "0x74B8....C6B4 transferred $MODE");
-    telegramAction.setPosition(400, 240);
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+    notificationAction.setParams("body", "0x74B8....C6B4 transferred $MODE");
+    notificationAction.setParams("subject", "$MODE transfer alert");
+    notificationAction.setPosition(400, 240);
 
-    const edge = new Edge({ source: modeTransferTrigger, target: telegramAction });
 
-    return new Workflow('MODE transfer notification', [modeTransferTrigger, telegramAction], [edge]);
+    const edge = new Edge({ source: modeTransferTrigger, target: notificationAction });
+
+    return new Workflow('MODE transfer notification', [modeTransferTrigger, notificationAction], [edge]);
 }
 
 const createETHFearAndGreedBuy = async () => {
@@ -98,14 +100,15 @@ const createSUsdeYieldBuy = async () => {
     odosAction.setParams("amount", await convertToTokenUnitsFromSymbol(100, chain, 'USDC'));
     odosAction.setPosition(400, 240);
 
-    const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-    telegramAction.setParams("message", "The sUSDE is now negative. You're losing money by holding it.");
-    telegramAction.setPosition(400, 360);
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+    notificationAction.setParams("body", "The sUSDE is now negative. You're losing money by holding it.");
+    notificationAction.setParams("subject", "sUSDE negative switch");
+    notificationAction.setPosition(400, 360);
 
     const edge = new Edge({ source: trigger, target: odosAction });
-    const edge2 = new Edge({ source: odosAction, target: telegramAction });
+    const edge2 = new Edge({ source: odosAction, target: notificationAction });
 
-    return new Workflow('Buy sUSDE when the yield is above 20%', [trigger, odosAction, telegramAction], [edge, edge2]);
+    return new Workflow('Buy sUSDE when the yield is above 20%', [trigger, odosAction, notificationAction], [edge, edge2]);
 }
 
 const createSusdeYieldNotification = async () => {
@@ -115,13 +118,14 @@ const createSusdeYieldNotification = async () => {
     trigger.setComparisonValue(0);
     trigger.setPosition(400, 120);
 
-    const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-    telegramAction.setParams("message", "The sUSDE is now negative. You're losing money by holding it.");
-    telegramAction.setPosition(400, 240);
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+    notificationAction.setParams("body", "The sUSDE is now negative. You're losing money by holding it.");
+    notificationAction.setParams("subject", "sUSDE negative switch");
+    notificationAction.setPosition(400, 240);
 
-    const edge = new Edge({ source: trigger, target: telegramAction });
+    const edge = new Edge({ source: trigger, target: notificationAction });
 
-    return new Workflow('sUSDE yield notification', [trigger, telegramAction], [edge]);
+    return new Workflow('sUSDE yield notification', [trigger, notificationAction], [edge]);
 }
 
 export const WORKFLOW_TEMPLATES = [
@@ -132,7 +136,7 @@ export const WORKFLOW_TEMPLATES = [
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer-monitoring.png',
         'image': [
             TRIGGERS.TOKENS.TRANSFER.TRANSFER.image,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
         createWorkflow: createModeTransferNotificationWorkflow
     },
@@ -168,7 +172,7 @@ export const WORKFLOW_TEMPLATES = [
         'image': [
             TRIGGERS.YIELD.ETHENA.SUSDE_YIELD.image,
             ACTIONS.SWAP.ODOS.SWAP.image,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
         createWorkflow: createSUsdeYieldBuy
     },
@@ -179,7 +183,7 @@ export const WORKFLOW_TEMPLATES = [
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
         'image': [
             TRIGGERS.YIELD.ETHENA.SUSDE_YIELD.image,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
         createWorkflow: createSusdeYieldNotification
     },
