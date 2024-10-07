@@ -31,6 +31,7 @@ describe('Workflow Class', () => {
       id: null,
       dateCreated: null,
       dateModified: null,
+      executionId: null,
       nodes: [trigger.toJSON(), action1.toJSON(), action2.toJSON()],
       edges: [],
       state: 'inactive'

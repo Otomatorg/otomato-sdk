@@ -14,6 +14,7 @@ export class Workflow {
   state: WorkflowState;
   dateCreated: string | null = null;
   dateModified: string | null = null;
+  executionId: string | null = null;
 
   constructor(name: string = '', nodes: Node[] = [], edges: Edge[] = []) {
     this.name = name;
@@ -63,6 +64,7 @@ export class Workflow {
       state: this.state,
       dateCreated: this.dateCreated,
       dateModified: this.dateModified,
+      executionId: this.executionId,
       nodes: this.nodes.map(node => node.toJSON()),
       edges: this.edges.map(edge => edge.toJSON()),
     };
@@ -147,6 +149,8 @@ export class Workflow {
       this.name = response.name;
       this.state = response.state as WorkflowState;
       this.dateCreated = response.dateCreated;
+      console.log(response.executionId);
+      this.executionId = response.executionId;
       this.dateModified = response.dateModified;
       this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
       this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
