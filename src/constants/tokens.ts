@@ -6,6 +6,7 @@ export interface Token {
   symbol: string;
   decimals: number;
   image: string | null;
+  hideInUI?: boolean | null;
 }
 
 export interface Tokens {
@@ -33,6 +34,7 @@ export const TOKENS: Tokens = {
       name: "ETH",
       symbol: "ETH",
       decimals: 18,
+      hideInUI: true,
       image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png"
     },
     {
@@ -49,6 +51,7 @@ export const TOKENS: Tokens = {
       name: "ETH",
       symbol: "ETH",
       decimals: 18,
+      hideInUI: false,
       image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png"
     },
     {
