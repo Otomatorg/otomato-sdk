@@ -802,7 +802,7 @@ export const TRIGGERS = {
     "FEAR_AND_GREED": {
       "description": "Fetches the Fear and Greed Index",
       "tags": {},
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/modens.png",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/fearAndGreed.png",
       "GET_FEAR_AND_GREED_INDEX": {
         "name": "Fear and Greed Index",
         "description": "Fetches the Fear and Greed Index from the specified API and processes the result.",
@@ -858,7 +858,7 @@ export const TRIGGERS = {
           }
         ],
         "blockId": 11,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/modens.png"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/fearAndGreed.png"
       }
     }
   },
