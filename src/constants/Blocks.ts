@@ -1276,10 +1276,6 @@ export const ACTIONS = {
       "description": "Checks for a condition before proceeding",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/if.png",
     },
-    "SPLIT": {
-      "description": "Split a branch in multiple ones",
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/if.png",
-    }
   },
   "NOTIFICATIONS": {
     "EMAIL": {

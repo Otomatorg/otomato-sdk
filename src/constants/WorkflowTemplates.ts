@@ -221,7 +221,7 @@ export const WORKFLOW_TEMPLATES = [
         'name': 'Buy ETH when the market sentiment is extremely fearful - capital efficient',
         'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 45. The idle funds are generating yield on Ionic.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.YIELD],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear_and_greed.jpg',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fearAndGreed2.png',
         'image': [
             TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
             ACTIONS.LENDING.IONIC.WITHDRAW.image,
@@ -257,7 +257,7 @@ export const WORKFLOW_TEMPLATES = [
         'name': 'Deposit USDT on Ionic if yield > 10% APY',
         'description': 'Deposit USDT on Ionic if the yield gets above 10%',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.YIELD],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/ionic_10.jpg',
         'image': [
             TRIGGERS.LENDING.IONIC.LENDING_RATE.image,
             ACTIONS.LENDING.IONIC.DEPOSIT.image,
@@ -268,7 +268,7 @@ export const WORKFLOW_TEMPLATES = [
         'name': 'Withdraw USDC from Ionic if yield < 4% APY',
         'description': 'Withdraw USDC from Ionic if the yield gets below 4%',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.YIELD],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/yield_4.png',
         'image': [
             TRIGGERS.LENDING.IONIC.LENDING_RATE.image,
             ACTIONS.LENDING.IONIC.WITHDRAW.image,
@@ -279,7 +279,7 @@ export const WORKFLOW_TEMPLATES = [
         'name': 'Copy-trade the trades done on Odos by vitalik.eth',
         'description': 'Buy 100$ of each token that vitalik.eth buys using Odos',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.TRADING],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/copyTrading.png',
         'image': [
             TRIGGERS.DEXES.ODOS.SWAP.image,
             ACTIONS.CORE.SWAP.SWAP.image,
