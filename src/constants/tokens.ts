@@ -51,7 +51,7 @@ export const TOKENS: Tokens = {
       name: "ETH",
       symbol: "ETH",
       decimals: 18,
-      hideInUI: false,
+      hideInUI: true,
       image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png"
     },
     {
