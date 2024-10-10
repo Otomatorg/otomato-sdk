@@ -188,6 +188,144 @@ export const TRIGGERS = {
         "blockId": 5,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/BalanceCheck.svg"
       }
+    },
+    "ON_CHAIN_PRICE_MOVEMENT": {
+      "description": "Triggers based on the movement of on-chain prices against specified currencies",
+      "chains": [
+        0
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/trend-up.png",
+      "PRICE_MOVEMENT_AGAINST_CURRENCY": {
+        "name": "On-Chain Price Movement Against Fiat Currency",
+        "description": "This trigger activates when the on-chain price of an asset moves against a specified currency based on the given condition.",
+        "type": 2,
+        "output": {
+          "price": "float"
+        },
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the blockchain to monitor",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "comparisonValue",
+            "type": "float",
+            "description": "The price to compare against",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "currency",
+            "type": "string",
+            "description": "The currency in which the comparison price is denominated",
+            "enum": [
+              "USD"
+            ],
+            "value": "USD",
+            "mandatory": true,
+            "category": 1
+          },
+          {
+            "key": "condition",
+            "type": "logic_operator",
+            "description": "The logic operator used for the comparison (e.g., >, <, >=, <=, ==, !=)",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "contractAddress",
+            "type": "erc20",
+            "description": "The asset that you want to track",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "ETH > 2850$",
+            "description": "Gets triggered when ETH rises above 2850$ on Mode",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "comparisonValue",
+                "value": 2850
+              },
+              {
+                "key": "currency",
+                "value": "USD"
+              },
+              {
+                "key": "condition",
+                "value": "gt"
+              },
+              {
+                "key": "contractAddress",
+                "value": "0x0000000000000000000000000000000000000000"
+              }
+            ]
+          },
+          {
+            "name": "ETH < 2100$",
+            "description": "Gets triggered when ETH falls below 2100$ on Mode",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "comparisonValue",
+                "value": 2100
+              },
+              {
+                "key": "currency",
+                "value": "USD"
+              },
+              {
+                "key": "condition",
+                "value": "lt"
+              },
+              {
+                "key": "contractAddress",
+                "value": "0x0000000000000000000000000000000000000000"
+              }
+            ]
+          },
+          {
+            "name": "MODE < 0.01$",
+            "description": "Gets triggered when MODE falls below 0.01$ on Mode Network",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "comparisonValue",
+                "value": 0.01
+              },
+              {
+                "key": "currency",
+                "value": "USD"
+              },
+              {
+                "key": "condition",
+                "value": "lt"
+              },
+              {
+                "key": "contractAddress",
+                "value": "0xDfc7C877a950e49D2610114102175A06C2e3167a"
+              }
+            ]
+          }
+        ],
+        "blockId": 10,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/trend-up.png"
+      }
     }
   },
   "YIELD": {
@@ -859,146 +997,6 @@ export const TRIGGERS = {
         ],
         "blockId": 11,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/fearAndGreed.png"
-      }
-    }
-  },
-  "PRICE_ACTION": {
-    "ON_CHAIN_PRICE_MOVEMENT": {
-      "description": "Triggers based on the movement of on-chain prices against specified currencies",
-      "chains": [
-        0
-      ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/trend-up.png",
-      "PRICE_MOVEMENT_AGAINST_CURRENCY": {
-        "name": "On-Chain Price Movement Against Fiat Currency",
-        "description": "This trigger activates when the on-chain price of an asset moves against a specified currency based on the given condition.",
-        "type": 2,
-        "output": {
-          "price": "float"
-        },
-        "parameters": [
-          {
-            "key": "chainId",
-            "type": "chainId",
-            "description": "Chain ID of the blockchain to monitor",
-            "mandatory": true,
-            "category": 0
-          },
-          {
-            "key": "comparisonValue",
-            "type": "float",
-            "description": "The price to compare against",
-            "mandatory": true,
-            "category": 0
-          },
-          {
-            "key": "currency",
-            "type": "string",
-            "description": "The currency in which the comparison price is denominated",
-            "enum": [
-              "USD"
-            ],
-            "value": "USD",
-            "mandatory": true,
-            "category": 1
-          },
-          {
-            "key": "condition",
-            "type": "logic_operator",
-            "description": "The logic operator used for the comparison (e.g., >, <, >=, <=, ==, !=)",
-            "mandatory": true,
-            "category": 0
-          },
-          {
-            "key": "contractAddress",
-            "type": "erc20",
-            "description": "The asset that you want to track",
-            "mandatory": true,
-            "category": 0
-          },
-        ] as Parameter[],
-        "examples": [
-          {
-            "name": "ETH > 2850$",
-            "description": "Gets triggered when ETH rises above 2850$ on Mode",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 34443
-              },
-              {
-                "key": "comparisonValue",
-                "value": 2850
-              },
-              {
-                "key": "currency",
-                "value": "USD"
-              },
-              {
-                "key": "condition",
-                "value": "gt"
-              },
-              {
-                "key": "contractAddress",
-                "value": "0x0000000000000000000000000000000000000000"
-              }
-            ]
-          },
-          {
-            "name": "ETH < 2100$",
-            "description": "Gets triggered when ETH falls below 2100$ on Mode",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 34443
-              },
-              {
-                "key": "comparisonValue",
-                "value": 2100
-              },
-              {
-                "key": "currency",
-                "value": "USD"
-              },
-              {
-                "key": "condition",
-                "value": "lt"
-              },
-              {
-                "key": "contractAddress",
-                "value": "0x0000000000000000000000000000000000000000"
-              }
-            ]
-          },
-          {
-            "name": "MODE < 0.01$",
-            "description": "Gets triggered when MODE falls below 0.01$ on Mode Network",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 34443
-              },
-              {
-                "key": "comparisonValue",
-                "value": 0.01
-              },
-              {
-                "key": "currency",
-                "value": "USD"
-              },
-              {
-                "key": "condition",
-                "value": "lt"
-              },
-              {
-                "key": "contractAddress",
-                "value": "0xDfc7C877a950e49D2610114102175A06C2e3167a"
-              }
-            ]
-          }
-        ],
-        "blockId": 10,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/trend-up.png"
       }
     }
   },
