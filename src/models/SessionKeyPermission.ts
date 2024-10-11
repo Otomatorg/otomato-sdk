@@ -44,7 +44,6 @@ export class SessionKeyPermission {
     beforeCode: string,
     parameters: { [key: string]: any }
   ): Promise<void> {
-    console.log("filling before variable");
     try {
       // Prepare the otomatoSdk object with required functions
       const otomatoSdk = {
