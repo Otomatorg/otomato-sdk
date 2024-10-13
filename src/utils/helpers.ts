@@ -8,14 +8,10 @@ export async function convertToTokenUnits(amount: number, chainId: number, contr
     // Calculate the result as a number first
     const result = amount * Math.pow(10, decimals);
     
-    console.log("result", result)
     // Check if the result is an integer
     if (!Number.isInteger(result)) {
-        console.log("throwing")
         throw new Error(`Conversion resulted in a non-integer value: ${result}. Please provide an amount that results in a whole number of token units.`);
     }
-
-    console.log("is an integer")
     
     // If we've reached here, the result is an integer, so we can safely convert to BigInt
     return BigInt(Math.round(result));
