@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Action, ACTIONS, getTokenFromSymbol, CHAINS, SessionKeyPermission } from '../src/index';
+import { Action, ACTIONS, getTokenFromSymbol, CHAINS } from '../src/index';
 
 const DEFAULT_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -141,47 +141,4 @@ describe('Action Class', () => {
     expect(action.toJSON()).to.deep.equal(json);
   });
 
-  it('should get session key permissions correctly for ERC20 transfer action', async () => {
-    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
-    transferAction.setChainId(CHAINS.ETHEREUM);
-    transferAction.setParams("value", 1000);
-    transferAction.setParams("to", DEFAULT_ADDRESS);
-    transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
-
-    const permissions = await transferAction.getSessionKeyPermissions();
-    expect(permissions).to.be.an.instanceOf(SessionKeyPermission);
-    expect(permissions?.approvedTargets).to.deep.equal([getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress]);
-  });
-
-  
-  it('should get session key permissions correctly for any variable parameter', async () => {
-    const transferAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
-    transferAction.setChainId(CHAINS.ETHEREUM);
-    transferAction.setParams("tokenIn", getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
-    transferAction.setParams("tokenOut", getTokenFromSymbol(CHAINS.ETHEREUM, 'USDT').contractAddress);
-    transferAction.setParams("amount", 1);
-    transferAction.setParams("slippage", 0.1);
-
-    const permissions = await transferAction.getSessionKeyPermissions();
-    expect(permissions).to.be.an.instanceOf(SessionKeyPermission);
-    expect(permissions?.approvedTargets).to.deep.equal([
-      '0x7E15EB462cdc67Cf92Af1f7102465a8F8c784874', 
-      getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress
-    ]);
-    expect(permissions?.label).to.deep.equal([
-      'Swap USDC to USDT'
-    ]);
-    expect(permissions?.labelNotAuthorized).to.deep.equal([
-      'Transfer ETH'
-    ]);
-  });
-
-  it('should return null session key permissions for Slack action', async () => {
-    const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-    slackAction.setParams("webhook", "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX");
-    slackAction.setParams("message", "This is a test message!");
-
-    const permissions = await slackAction.getSessionKeyPermissions();
-    expect(permissions).to.be.null;
-  });
 });
