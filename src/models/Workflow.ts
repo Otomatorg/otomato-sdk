@@ -1,8 +1,8 @@
 import { Node } from './Node.js';
 import { Edge } from './Edge.js';
 import { apiServices } from '../services/ApiService.js';
-import { SessionKeyPermission } from './SessionKeyPermission.js';
 import { Action } from './Action.js';
+import { SessionKeyPermission } from './SessionKeyPermission.js';
 
 export type WorkflowState = 'inactive' | 'active' | 'failed' | 'completed' | 'waiting';
 
@@ -103,6 +103,7 @@ export class Workflow {
         return { success: false, error: response.data?.error || 'Unknown error' };
       }
     } catch (error: any) {
+      console.log(error);
       return { success: false, error: error.message || 'Unknown error' };
     }
   }
@@ -212,21 +213,9 @@ export class Workflow {
   }
 
   async getSessionKeyPermissions(): Promise<SessionKeyPermission> {
-    const permissions = new SessionKeyPermission();
+    if (!this.id)
+        throw new Error('The workflow needs to be published first');
 
-    for (const node of this.nodes) {
-      try {
-        if (node.class === 'action' && 'getSessionKeyPermissions' in node) {
-          const nodePermissions = await (node as Action).getSessionKeyPermissions();
-          if (nodePermissions) {
-            permissions.merge(nodePermissions);
-          }
-        }
-      } catch (error) {
-        console.error(`Error getting session key permissions for node ${node.getRef()}:`, error);
-      }
-    }
-
-    return permissions;
+    return apiServices.getSessionKeyPermissions(this.id);
   }
 }

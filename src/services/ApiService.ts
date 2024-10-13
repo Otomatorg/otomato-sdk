@@ -69,9 +69,31 @@ class ApiServices {
   }
 
   async getWorkflowsOfUser() {
+    if (!this.auth) {
+      throw new Error('Authorization token is required');
+    }
+    
     const headers = this.auth ? { 'Authorization': this.auth } : {};
     const response = await axiosInstance.get('/workflows', { headers });
     return response.data;
+  }
+
+  async getSessionKeyPermissions(workflowId: string) {
+    if (!this.auth) {
+      throw new Error('Authorization token is required');
+    }
+
+    try {
+      const url = `/workflows/${workflowId}/verify-contracts`;
+      const headers = { Authorization: this.auth };
+
+      const response = await axiosInstance.post(url, {}, { headers });
+
+      return response.data; // Return the data from the response
+    } catch (error: any) {
+      console.error('Error verifying contracts:', error.response?.data || error.message);
+      throw new Error(error.response?.data?.message || 'Failed to verify contracts');
+    }
   }
 }
 
