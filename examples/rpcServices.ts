@@ -1,11 +1,13 @@
 import { CHAINS, rpcServices } from '../src/index.js';
 
 const main = async () => {
-    const chainId = CHAINS.ETHEREUM; // Or any other chain, e.g. CHAINS.MODE
-    const tokenContractAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F'; // Replace with your token address
+    const chainId = CHAINS.MODE; // Or any other chain, e.g. CHAINS.MODE
+    const tokenContractAddress = '0x18470019bF0E94611f15852F7e93cf5D65BC34CA'; // Replace with your token address
 
     try {
-        // Fetch token details using the SDK
+        rpcServices.setRPCs({
+            34443: 'https://mainnet.mode.network/', // Chain 43334 (Mode network mainnet RPC)
+        });
         const tokenDetails = await rpcServices.getTokenDetails(chainId, tokenContractAddress);
 
         // Log the token details: contract address, symbol, name, and decimals

@@ -30,8 +30,6 @@ class RPCServices {
   // Function to fetch token details from the blockchain
   async getTokenDetails(chainId: number, contractAddress: string): Promise<Token> {
     const rpcUrl = this.getRPC(chainId); // Get the RPC URL for the chain
-
-    // Create a provider using ethers.js
     const provider = new ethers.JsonRpcProvider(rpcUrl);
 
     // Define the contract ABI for the read-only functions (decimals, name, symbol)
@@ -41,15 +39,35 @@ class RPCServices {
       'function symbol() view returns (string)',
     ];
 
-    // Create a contract instance
     const contract = new ethers.Contract(contractAddress, erc20ABI, provider);
 
-    // Fetch the decimals, name, and symbol in parallel using Promise.all
+    const maxRetries = 3; // Max number of retries
+    const retryDelay = (attempt: number) => Math.pow(2, attempt) * 1000; // Exponential backoff delay (in milliseconds)
+
+    // Define a helper function to retry the RPC call
+    const fetchWithRetry = async <T>(fn: () => Promise<T>, retries: number): Promise<T> => {
+        let attempt = 0;
+        while (attempt <= retries) {
+            try {
+                return await fn();
+            } catch (error: any) {
+                if (attempt === retries) {
+                    throw new Error(`Error fetching token details ${contractAddress} on chain ${chainId}`);
+                }
+                attempt++;
+                console.warn(`Attempt ${attempt} to fetch token details failed. Retrying in ${retryDelay(attempt)}ms...`);
+                await new Promise(resolve => setTimeout(resolve, retryDelay(attempt)));
+            }
+        }
+        throw new Error('Max retries exceeded');
+    };
+
+    // Fetch the decimals, name, and symbol with retries
     try {
       const [decimals, name, symbol] = await Promise.all([
-        contract.decimals(),
-        contract.name(),
-        contract.symbol(),
+        fetchWithRetry(() => contract.decimals(), maxRetries),
+        fetchWithRetry(() => contract.name(), maxRetries),
+        fetchWithRetry(() => contract.symbol(), maxRetries),
       ]);
 
       const token: Token = {
@@ -64,7 +82,7 @@ class RPCServices {
     } catch (error: any) {
       throw new Error(`Error fetching token details: ${error.message}`);
     }
-  }
+}
 }
 
 // Export RPC services instance
