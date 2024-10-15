@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import { Token } from '../constants/tokens';
+import { CHAINS } from '../constants/chains';
 
 class RPCServices {
   private rpcUrls: { [chainId: number]: string } = {}; // Store the RPC URLs
@@ -11,10 +12,10 @@ class RPCServices {
 
   setRPCsFromTMS(env: { [key: string]: string }) {
     if (env.MODE_HTTPS_PROVIDER) {
-      this.rpcUrls[43334] = env.MODE_HTTPS_PROVIDER; // Chain ID 43334 is for Mode network
+      this.rpcUrls[CHAINS.MODE] = env.MODE_HTTPS_PROVIDER; // Chain ID 43334 is for Mode network
     }
     if (env.INFURA_HTTPS_PROVIDER) {
-      this.rpcUrls[1] = env.INFURA_HTTPS_PROVIDER; // Chain ID 1 is for Ethereum mainnet
+      this.rpcUrls[CHAINS.ETHEREUM] = env.INFURA_HTTPS_PROVIDER; // Chain ID 1 is for Ethereum mainnet
     }
   }
 
