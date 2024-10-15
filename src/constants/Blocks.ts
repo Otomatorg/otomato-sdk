@@ -824,6 +824,22 @@ export const TRIGGERS = {
           "exchangeRate": "float",
           "transactionHash": "string"
         },
+        "frontendHelpers": {
+          "output": {
+            "inputAmount": {
+              "erc20Token": {
+                "contractAddress": "{{output.inputToken}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            },
+            "amountOut": {
+              "erc20Token": {
+                "contractAddress": "{{output.outputToken}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "key": "chainId",
@@ -1099,7 +1115,7 @@ export const ACTIONS = {
           {
             "key": "time",
             "type": "string",
-            "description": "The time to wait (in milliseconds)",
+            "description": "The time to wait (in seconds)",
             "mandatory": true,
             "category": 0
           },
@@ -1183,6 +1199,22 @@ export const ACTIONS = {
           "amountOut": "uint256",
           "tokenOut": "erc20",
           "transactionHash": "string"
+        },
+        "frontendHelpers": {
+          "output": {
+            "amountIn": {
+              "erc20Token": {
+                "contractAddress": "{{output.tokenIn}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            },
+            "amountOut": {
+              "erc20Token": {
+                "contractAddress": "{{output.tokenOut}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            }
+          }
         },
         "parameters": [
           {
@@ -1990,6 +2022,22 @@ export const ACTIONS = {
           "amountOut": "uint256",
           "tokenOut": "erc20",
           "transactionHash": "string"
+        },
+        "frontendHelpers": {
+          "output": {
+            "amountIn": {
+              "erc20Token": {
+                "contractAddress": "{{output.tokenIn}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            },
+            "amountOut": {
+              "erc20Token": {
+                "contractAddress": "{{output.tokenOut}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            }
+          }
         },
         "parameters": [
           {
