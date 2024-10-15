@@ -7,6 +7,7 @@
   "type": "module",
   "prepublishOnly": "npm run build; npm run test",
   "scripts": {
+    "prebuild": "node update-sdk-version.js",
     "build": "npx tsc",
     "test": "mocha --config .mocharc.json"
   },

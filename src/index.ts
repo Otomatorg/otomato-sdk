@@ -1,6 +1,7 @@
 // Exporting constants
 export * from './constants/Blocks.js';
 export * from './constants/chains.js';
+export * from './constants/version.js';
 export * from './constants/tokens.js';
 export * from './constants/WorkflowTemplates.js';
 
