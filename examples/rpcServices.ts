@@ -8,6 +8,9 @@ const main = async () => {
         rpcServices.setRPCs({
             34443: 'https://mainnet.mode.network/', // Chain 43334 (Mode network mainnet RPC)
         });
+        /*rpcServices.setRPCsFromTMS({
+            MODE_HTTPS_PROVIDER: 'https://mainnet.mode.network/', // Chain 43334 (Mode network mainnet RPC)
+        });*/
         const tokenDetails = await rpcServices.getTokenDetails(chainId, tokenContractAddress);
 
         // Log the token details: contract address, symbol, name, and decimals
