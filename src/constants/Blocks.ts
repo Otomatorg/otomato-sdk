@@ -336,7 +336,6 @@ export const TRIGGERS = {
         "name": "sUSDE yield",
         "description": "Fetches Ethena's sUSDE yield",
         "type": 3,
-        "url": "https://app.ethena.fi/api/yields/protocol-and-staking-yield",
         "output": {
           "yield": "float"
         },
@@ -960,7 +959,6 @@ export const TRIGGERS = {
         "name": "Fear and Greed Index",
         "description": "Fetches the Fear and Greed Index from the specified API and processes the result.",
         "type": 3,
-        "url": "https://api.alternative.me/fng/",
         "output": {
           "value": "integer"
         },
@@ -1023,7 +1021,6 @@ export const TRIGGERS = {
         "name": "Assets under management",
         "description": "Fetches IBIT net assets (USD)",
         "type": 3,
-        "url": "https://www.alphavantage.co/query?function=ETF_PROFILE&symbol=IBIT&apikey=V343UMWZF0715R3A",
         "output": {
           "asset_under_management": "integer"
         },
@@ -1094,6 +1091,82 @@ export const TRIGGERS = {
         1
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/whalesmarket.png"
+    }
+  },
+  "TECHNICAL": {
+    "GAS": {
+      "description": "Monitors Ethereum gas prices",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/gas.svg",
+      "GAS_API": {
+        "name": "Ethereum Gas Price Monitor",
+        "description": "Monitors Ethereum gas prices and triggers when the gas price meets the defined condition.",
+        "type": 3,
+        "output": {
+          "gasPrice": "float"
+        },
+        "parameters": [
+          {
+            "key": "condition",
+            "type": "logic_operator",
+            "description": "The logical operator to compare the gas price, such as <, >, <=, >=, ==, etc.",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "comparisonValue",
+            "type": "float",
+            "description": "The gas price value to compare against (in Gwei).",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "Gas Price Below 6 Gwei",
+            "description": "Triggers when the gas price is below 6 Gwei.",
+            "parameters": [
+              {
+                "key": "condition",
+                "value": "lte"
+              },
+              {
+                "key": "comparisonValue",
+                "value": "6"
+              }
+            ]
+          },
+          {
+            "name": "Gas Price Below 12 Gwei",
+            "description": "Triggers when the gas price is below 12 Gwei.",
+            "parameters": [
+              {
+                "key": "condition",
+                "value": "lte"
+              },
+              {
+                "key": "comparisonValue",
+                "value": "12"
+              }
+            ]
+          },
+          {
+            "name": "Gas Price Above 40 Gwei",
+            "description": "Triggers when the gas price exceeds 40 Gwei.",
+            "parameters": [
+              {
+                "key": "condition",
+                "value": "gte"
+              },
+              {
+                "key": "comparisonValue",
+                "value": "40"
+              }
+            ]
+          }
+        ],
+        "blockId": 16,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/gas.svg"
+      }
     }
   }
 };
