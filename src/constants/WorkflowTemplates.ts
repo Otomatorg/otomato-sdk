@@ -192,7 +192,22 @@ const copyTradeVitalikOdos = async () => {
     return new Workflow('Copy-trade the trades done on Odos by vitalik.eth', [trigger, swap], [edge]);
 }
 
+const gasMonitoring = async () => {
+    const trigger = new Trigger(TRIGGERS.TECHNICAL.GAS.GAS_API);
 
+    trigger.setComparisonValue(6);
+    trigger.setCondition('lt');
+    trigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+    notificationAction.setParams("body", "Ethereum gas prices have dropped below 6 gwei. Consider making transactions now.");
+    notificationAction.setParams("subject", "Ethereum Gas Price Alert: Below 6 Gwei");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    return new Workflow('Get notified when the gas price on Ethereum drops below 6 gwei', [trigger, notificationAction], [edge]);
+}
 
 export const WORKFLOW_TEMPLATES = [
     {
@@ -286,4 +301,15 @@ export const WORKFLOW_TEMPLATES = [
         ],
         createWorkflow: copyTradeVitalikOdos
     },
+    {
+        'name': 'Get Notified When Ethereum Gas is Below 6 Gwei',
+        'description': 'Receive an email alert when Ethereum gas prices fall below 6 gwei.',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/gasMonitoring.jpg',
+        'image': [
+            TRIGGERS.TECHNICAL.GAS.GAS_API,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        ],
+        createWorkflow: gasMonitoring
+    }
 ];
