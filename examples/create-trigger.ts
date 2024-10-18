@@ -14,6 +14,27 @@ const main = async () => {
     transferTrigger.setContractAddress(contractAddr);
 
     console.log(JSON.stringify(transferTrigger.toJSON()));
+
+    transferTrigger.setParams("to", "");
+
+    console.log(JSON.stringify(transferTrigger.toJSON()));
 }
 
-main();
+const main2 = async () => {
+
+    const transferTrigger = new Trigger(TRIGGERS.DEXES.ODOS.SWAP);
+
+    const contractAddr = getTokenFromSymbol(CHAINS.MODE, 'USDC').contractAddress;
+    console.log(contractAddr);
+
+    transferTrigger.setChainId(CHAINS.ETHEREUM);
+    transferTrigger.setParams("sender", "0x888888888889758f76e7103c6cbf23abbf58f946");
+
+    console.log(JSON.stringify(transferTrigger.toJSON()));
+
+    transferTrigger.setParams("sender", "");
+
+    console.log(JSON.stringify(transferTrigger.toJSON()));
+}
+
+main2();
