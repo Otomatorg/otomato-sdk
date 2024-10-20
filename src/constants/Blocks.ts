@@ -709,6 +709,72 @@ export const TRIGGERS = {
         },
         "blockId": 15,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
+      },
+      "BORROWING_RATES": {
+        "name": "Borrowing rate",
+        "description": "Get the borrowing rate of any asset on Ionic",
+        "type": 1,
+        "method": "function borrowRatePerBlock() external view returns (uint256)",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "token",
+            "type": "erc20",
+            "description": "The token you want to fetch the borrow rate for",
+            "mandatory": true,
+            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
+            "category": 0
+          },
+          {
+            "key": "condition",
+            "type": "logic_operator",
+            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ...",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "comparisonValue",
+            "type": "float",
+            "description": "The value to compare to",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "USDT Borrowing Rate is below 3%",
+            "description": "Gets triggered when the USDT borrowing rate falls below 3% on Ionic",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "token",
+                "value": "0xf0F161fDA2712DB8b566946122a5af183995e2eD"
+              },
+              {
+                "key": "condition",
+                "value": "lte"
+              },
+              {
+                "key": "comparisonValue",
+                "value": 3
+              }
+            ]
+          }
+        ],
+        "output": {
+          "borrowingRate": "float"
+        },
+        "blockId": 17,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
       }
     },
     "ASTARIA": {
@@ -850,13 +916,13 @@ export const TRIGGERS = {
             "key": "abiParams.sender",
             "type": "address",
             "description": "Sender address",
-            "category": 0
+            "category": 1
           },
           {
             "key": "abiParams.inputAmount",
             "type": "uint256",
             "description": "Input amount",
-            "category": 0
+            "category": 1
           },
           {
             "key": "abiParams.inputToken",
@@ -868,7 +934,7 @@ export const TRIGGERS = {
             "key": "abiParams.amountOut",
             "type": "uint256",
             "description": "Output amount",
-            "category": 0
+            "category": 1
           },
           {
             "key": "abiParams.outputToken",
@@ -1577,15 +1643,11 @@ export const ACTIONS = {
             "category": 0
           },
           {
-            "key": "abiParams.value",
-            "type": "uint256",
-            "description": "Amount of crypto to transfer",
+            "key": "contractAddress",
+            "type": "erc20",
+            "description": "The contract address of the ERC20",
             "mandatory": true,
-            "category": 0,
-            "erc20FormattedAmount": {
-              "contractAddress": "{{parameters.contractAddress}}",
-              "chain": "{{parameters.chainId}}"
-            }
+            "category": 0
           },
           {
             "key": "abiParams.to",
@@ -1595,11 +1657,15 @@ export const ACTIONS = {
             "category": 0
           },
           {
-            "key": "contractAddress",
-            "type": "erc20",
-            "description": "The contract address of the ERC20",
+            "key": "abiParams.value",
+            "type": "uint256",
+            "description": "Amount of crypto to transfer",
             "mandatory": true,
-            "category": 0
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.contractAddress}}",
+              "chain": "{{parameters.chainId}}"
+            }
           },
         ] as Parameter[],
         "checks": [

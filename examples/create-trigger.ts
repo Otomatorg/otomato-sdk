@@ -31,10 +31,6 @@ const main2 = async () => {
     transferTrigger.setParams("sender", "0x888888888889758f76e7103c6cbf23abbf58f946");
 
     console.log(JSON.stringify(transferTrigger.toJSON()));
-
-    transferTrigger.setParams("sender", "");
-
-    console.log(JSON.stringify(transferTrigger.toJSON()));
 }
 
 main2();
