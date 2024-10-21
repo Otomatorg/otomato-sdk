@@ -11,9 +11,9 @@ const createAction = () => {
   console.log(JSON.stringify(transferAction.toJSON()));
 
   // Create an SMS notification action
-  const smsAction = new Action(ACTIONS.NOTIFICATIONS.DISCORD.SEND_MESSAGE);
-  smsAction.setParams("webhook", "https://url");
-  smsAction.setParams("message", "This is a test message");
+  const smsAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
+  //smsAction.setParams("webhook", "https://url");
+  //smsAction.setParams("message", "This is a test message");
 
   console.log(smsAction.toJSON());
 

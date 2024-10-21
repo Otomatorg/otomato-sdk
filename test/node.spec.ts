@@ -119,6 +119,7 @@ describe('Node Class', () => {
         chainId: 1,
         contractAddress: "0x0000000000000000000000000000000000000000"
       },
+      frontendHelpers: {}
     });
   });
 
@@ -152,7 +153,8 @@ describe('Node Class', () => {
         chainId: 1,
         contractAddress: "0x0000000000000000000000000000000000000000"
       },
-      position: { x: 1, y: 2 }
+      position: { x: 1, y: 2 },
+      frontendHelpers: {},
     });
   });
 

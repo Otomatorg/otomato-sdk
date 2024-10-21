@@ -5,8 +5,13 @@ import { ethers } from 'ethers';
 import { typeIsNumber } from '../utils/typeValidator.js';
 
 export class Action extends Node {
-  constructor(action: { blockId: number; name: string; description: string; parameters: Parameter[], output?: { [key: string]: string }, image: string, ref?: string, position?: Position, parentInfo?: ParentInfo, state?: NodeState }) {
-    super({ ...action, class: 'action', parentInfo: findActionByBlockId(action.blockId).parentInfo });
+  constructor(action: { blockId: number; name: string; description: string; parameters: Parameter[], output?: { [key: string]: string }, image: string, ref?: string, position?: Position, parentInfo?: ParentInfo, state?: NodeState, frontendHelpers?: Record<string, any> }) {
+    super({
+      ...action,
+      class: 'action',
+      parentInfo: findActionByBlockId(action.blockId).parentInfo,
+      frontendHelpers: action.frontendHelpers || {}
+    });
   }
 
   static async fromJSON(json: { [key: string]: any }): Promise<Action> {
@@ -17,7 +22,8 @@ export class Action extends Node {
       ref: json.ref,
       position: json.position,
       parentInfo: enriched.parentInfo,
-      state: json.state
+      state: json.state,
+      frontendHelpers: json.frontendHelpers || {}
     });
 
     for (const [key, value] of Object.entries(json.parameters)) {
@@ -56,7 +62,7 @@ export class Action extends Node {
 
     action.setId(json.id);
     return action;
-  }
+}
 }
 
 export const findActionByBlockId = (blockId: number): { parentInfo: ParentInfo; block: any } => {

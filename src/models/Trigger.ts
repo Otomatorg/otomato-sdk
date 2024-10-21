@@ -7,8 +7,13 @@ import { typeIsNumber } from '../utils/typeValidator.js';
 export class Trigger extends Node {
   type: number;
 
-  constructor(trigger: { blockId: number; name: string; description: string; type: number; parameters: Parameter[], output?: { [key: string]: string }, image: string, ref?: string, position?: Position, parentInfo?: ParentInfo, state?: NodeState }) {
-    super({ ...trigger, class: 'trigger', parentInfo: findTriggerByBlockId(trigger.blockId).parentInfo });
+  constructor(trigger: { blockId: number; name: string; description: string; type: number; parameters: Parameter[], output?: { [key: string]: string }, image: string, ref?: string, position?: Position, parentInfo?: ParentInfo, state?: NodeState, frontendHelpers?: Record<string, any> }) {
+    super({ 
+      ...trigger, 
+      class: 'trigger', 
+      parentInfo: findTriggerByBlockId(trigger.blockId).parentInfo, 
+      frontendHelpers: trigger.frontendHelpers || {} // Pass frontendHelpers
+    });
     this.type = trigger.type;
   }
 
@@ -38,7 +43,8 @@ export class Trigger extends Node {
       ref: json.ref,
       position: json.position,
       parentInfo: enriched.parentInfo,
-      state: json.state
+      state: json.state,
+      frontendHelpers: json.frontendHelpers || {}
     });
 
     for (const [key, value] of Object.entries(json.parameters)) {
@@ -74,19 +80,17 @@ export class Trigger extends Node {
             } else {
               trigger.setParams(abiKey, abiParameters[abiKey]);
             }
-
           }
           break;
         default:
           trigger.setParams(key, value);
           break;
       }
-
     }
 
     trigger.setId(json.id);
     return trigger;
-  }
+}
 }
 
 // Assuming findTriggerByBlockId function is defined as mentioned

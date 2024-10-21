@@ -4,7 +4,8 @@ import { Workflow, Trigger, Action, Edge, apiServices, CHAINS, getTokenFromSymbo
 
 dotenvConfig(); // Load environment variables from .env file
 
-describe('E2E Workflow Test', () => {
+describe('E2E Workflow Test', async function () {
+  this.timeout(10000);
   
   before(async () => {
     // Set API URL and Authorization Token from environment variables

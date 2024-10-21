@@ -150,7 +150,6 @@ export class Workflow {
       this.name = response.name;
       this.state = response.state as WorkflowState;
       this.dateCreated = response.dateCreated;
-      console.log(response.executionId);
       this.executionId = response.executionId;
       this.dateModified = response.dateModified;
       this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));

@@ -12,8 +12,9 @@ rpcServices.setRPCs({
 });
 
 describe('RPCServices', () => {
-    describe('getTokenDetails', () => {
-        it('should fetch token details (decimals, name, symbol) from the blockchain', async () => {
+    describe('getTokenDetails', async function() {
+    this.timeout(10000);
+    it('should fetch token details (decimals, name, symbol) from the blockchain', async () => {
             // Call the getTokenDetails function
             const token = await rpcServices.getTokenDetails(34443, tokenContractAddress);
 

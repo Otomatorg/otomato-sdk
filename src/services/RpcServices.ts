@@ -11,7 +11,6 @@ class RPCServices {
   }
 
   setRPCsFromTMS(env: { [key: string]: string }) {
-    console.log(CHAINS);
     if (env.MODE_HTTPS_PROVIDER) {
       this.rpcUrls[CHAINS.MODE] = env.MODE_HTTPS_PROVIDER;
     }

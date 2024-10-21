@@ -52,7 +52,8 @@ describe('Action Class', () => {
           }
         },
         contractAddress: getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress
-      }
+      },
+      frontendHelpers: {},
     });
   });
 
@@ -95,7 +96,8 @@ describe('Action Class', () => {
       "parameters": {
         "message": "ETH is at 3550 :pepe_joy:",
         "webhook": "https://hooks.slack.com/services/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"
-      }
+      },
+      "frontendHelpers": {}
     };
 
     const action = await Action.fromJSON(json);
@@ -125,7 +127,8 @@ describe('Action Class', () => {
         },
         "chainId": 1,
         "contractAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-      }
+      },
+      "frontendHelpers": {}
     };
 
     const action = await Action.fromJSON(json);

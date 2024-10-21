@@ -33,8 +33,9 @@ export abstract class Node {
   image: string;
   parentInfo?: ParentInfo;
   state: NodeState;
+  frontendHelpers: Record<string, any>; // New field for frontendHelpers
 
-  constructor(node: { blockId: number; name: string; description: string; parameters: Parameter[], output?: { [key: string]: string }, ref?: string, position?: Position, class: string; image: string; parentInfo?: ParentInfo, state?: NodeState }) {
+  constructor(node: { blockId: number; name: string; description: string; parameters: Parameter[], output?: { [key: string]: string }, ref?: string, position?: Position, class: string; image: string; parentInfo?: ParentInfo, state?: NodeState, frontendHelpers?: Record<string, any> }) {
     this.id = null;
     this.blockId = node.blockId;
     this.name = node.name;
@@ -46,6 +47,7 @@ export abstract class Node {
     this.class = node.class;
     this.parentInfo = node.parentInfo;
     this.state = node.state || 'inactive';
+    this.frontendHelpers = node.frontendHelpers || {};
 
     if (node.ref) {
       this.ref = node.ref;
@@ -201,7 +203,8 @@ export abstract class Node {
       state: this.state,
       parameters: {
         ...this.getParameters(),
-      }
+      },
+      frontendHelpers: this.frontendHelpers
     };
     if (this.position) {
       json.position = this.position;

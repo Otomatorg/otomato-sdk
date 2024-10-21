@@ -54,7 +54,8 @@ describe('Trigger Class', () => {
           }
         },
         contractAddress: getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress
-      }
+      },
+      frontendHelpers: {}
     });
   });
 
@@ -108,7 +109,8 @@ describe('Trigger Class', () => {
         "condition": "gte",
         "comparisonValue": 3550,
         "contractAddress": "0x4200000000000000000000000000000000000006"
-      }
+      },
+      frontendHelpers: {}
     };
 
     const trigger = await Trigger.fromJSON(json);
@@ -142,7 +144,8 @@ describe('Trigger Class', () => {
           }
         },
         "contractAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-      }
+      },
+      frontendHelpers: {}
     };
 
     const trigger = await Trigger.fromJSON(json);
