@@ -44,7 +44,6 @@ export class Trigger extends Node {
       position: json.position,
       parentInfo: enriched.parentInfo,
       state: json.state,
-      frontendHelpers: json.frontendHelpers || {}
     });
 
     for (const [key, value] of Object.entries(json.parameters)) {
