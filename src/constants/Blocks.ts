@@ -1602,41 +1602,6 @@ export const ACTIONS = {
     "TELEGRAM": {
       "description": "Telegram is a cloud-based mobile and desktop messaging app with a focus on security and speed.",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg",
-      "SEND_MESSAGE": {
-        "name": "Send message",
-        "type": 0,
-        "description": "Notifies you by sending a Telegram message to the chat of your choice",
-        "output": {
-          "message": "string"
-        },
-        "parameters": [
-          {
-            "key": "message",
-            "type": "paragraph",
-            "description": "The text content to send",
-            "mandatory": true,
-            "category": 0
-          },
-          {
-            "key": "chat_id",
-            "type": "string",
-            "description": "Channel id",
-            "mandatory": true,
-            "private": true,
-            "category": 0
-          },
-        ] as Parameter[],
-        "template": {
-          "url": "{{webhook}}",
-          "body": {
-            "chat_id": "{{chat_id}}",
-            "text": "{{message}}"
-          }
-        },
-        "examples": [],
-        "blockId": 100001,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg"
-      }
     }
   },
   "TOKENS": {
