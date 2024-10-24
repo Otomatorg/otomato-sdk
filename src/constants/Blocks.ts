@@ -56,6 +56,16 @@ export const TRIGGERS = {
             "category": 0
           },
         ] as Parameter[],
+        "frontendHelpers": {
+          "output": {
+            "value": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            }
+          }
+        },
         "examples": [
           {
             "name": "Mode transfer",
@@ -89,6 +99,16 @@ export const TRIGGERS = {
         "method": "function balanceOf(address account) view returns (uint256)",
         "output": {
           "balance": "integer"
+        },
+        "frontendHelpers": {
+          "output": {
+            "balance": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            }
+          }
         },
         "parameters": [
           {
