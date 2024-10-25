@@ -56,7 +56,7 @@ class RPCServices {
                     throw new Error(`Error fetching token details ${contractAddress} on chain ${chainId}`);
                 }
                 attempt++;
-                console.warn(`Attempt ${attempt} to fetch token details failed. Retrying in ${retryDelay(attempt)}ms...`);
+                // console.warn(`Attempt ${attempt} to fetch token details failed. Retrying in ${retryDelay(attempt)}ms...`);
                 await new Promise(resolve => setTimeout(resolve, retryDelay(attempt)));
             }
         }

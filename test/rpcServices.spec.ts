@@ -13,7 +13,7 @@ rpcServices.setRPCs({
 
 describe('RPCServices', () => {
     describe('getTokenDetails', async function() {
-    this.timeout(10000);
+    this.timeout(20000);
     it('should fetch token details (decimals, name, symbol) from the blockchain', async () => {
             // Call the getTokenDetails function
             const token = await rpcServices.getTokenDetails(34443, tokenContractAddress);
@@ -49,7 +49,8 @@ describe('RPCServices', () => {
 });
 
 describe('RPCServices - integrations', () => {
-    describe('getToken', () => {
+    describe('getToken', async function() {
+        this.timeout(20000);
         it('should fetch token details (decimals, name, symbol) from the blockchain', async () => {
             // Call the getTokenDetails function
             const token = await getToken(34443, tokenContractAddress);
