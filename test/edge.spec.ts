@@ -31,8 +31,6 @@ describe('Edge Class', () => {
       id: 'edge-id-123',
       source: action1.getRef(),
       target: action2.getRef(),
-      label: null,
-      value: null
     });
   });
 

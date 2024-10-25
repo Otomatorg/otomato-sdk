@@ -15,6 +15,13 @@ export class Edge {
         label?: string;
         value?: number;
     }) {
+        if (!edge.source || !(edge.source instanceof Node)) {
+            throw new Error('Edge must have a valid source node.');
+        }
+        if (!edge.target || !(edge.target instanceof Node)) {
+            throw new Error('Edge must have a valid target node.');
+        }
+
         this.id = edge.id ?? null;
         this.source = edge.source;
         this.target = edge.target;
@@ -23,13 +30,20 @@ export class Edge {
     }
 
     toJSON(): { [key: string]: any } {
-        return {
+        const result: { [key: string]: any } = {
             id: this.id,
             source: this.source.getRef(),
             target: this.target.getRef(),
-            label: this.label,
-            value: this.value,
         };
+
+        if (this.label != null) {
+            result.label = this.label;
+        }
+        if (this.value != null) {
+            result.value = this.value;
+        }
+
+        return result;
     }
 
     static fromJSON(json: { [key: string]: any }, nodes: Node[]): Edge {
