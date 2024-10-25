@@ -1443,6 +1443,30 @@ export const ACTIONS = {
     "CONDITION": {
       "description": "Checks for a condition before proceeding",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/if.png",
+      "IF": {
+        "name": "Condition",
+        "type": 5,
+        "description": "Checks for a condition before proceeding",
+        "parameters": [
+          {
+            "key": "logic",
+            "type": "and_or",
+            "description": "",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "groups",
+            "type": "condition_groups",
+            "description": "",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "examples": [],
+        "blockId": 100016,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/if.png"
+      }
     },
   },
   "NOTIFICATIONS": {

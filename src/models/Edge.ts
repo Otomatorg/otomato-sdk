@@ -6,14 +6,14 @@ export class Edge {
     source: Node;
     target: Node;
     label?: string;
-    value?: number;
+    value?: any;
 
     constructor(edge: {
         id?: string | null;
         source: Node;
         target: Node;
         label?: string;
-        value?: number;
+        value?: any;
     }) {
         if (!edge.source || !(edge.source instanceof Node)) {
             throw new Error('Edge must have a valid source node.');

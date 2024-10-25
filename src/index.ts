@@ -4,11 +4,13 @@ export * from './constants/chains.js';
 export * from './constants/version.js';
 export * from './constants/tokens.js';
 export * from './constants/WorkflowTemplates.js';
+export * from './constants/logicOperators.js';
 
 // Exporting models
 export * from './models/Action.js';
 export * from './models/Workflow.js';
-export * from './models/Condition.js';
+export * from './models/conditions/ConditionCheck.js';
+export * from './models/conditions/ConditionGroup.js';
 export * from './models/Parameter.js';
 export * from './models/Trigger.js';
 export * from './models/Node.js';
