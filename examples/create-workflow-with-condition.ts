@@ -19,12 +19,11 @@ async function workflow1() {
     trigger.setPosition(0, 0);
 
     const conditionGroup1 = new ConditionGroup(LOGIC_OPERATORS.OR);
-    conditionGroup1.addConditionCheck(10, 'gte', 5);
-    conditionGroup1.addConditionCheck(trigger.getOutputVariableName('price'), 'gte', 18);
+    conditionGroup1.addConditionCheck(trigger.getOutputVariableName('price'), 'lte', 18);
 
     const conditionGroup2 = new ConditionGroup(LOGIC_OPERATORS.AND);
     conditionGroup2.addConditionCheck(20, 'lt', 25);
-    conditionGroup2.addConditionCheck(trigger.getOutputVariableName('price'), 'gte', 18);
+    conditionGroup2.addConditionCheck(trigger.getOutputVariableName('price'), 'lte', 18);
 
     // Create the condition action
     const condition = new Action(ACTIONS.CORE.CONDITION.IF);
@@ -35,7 +34,11 @@ async function workflow1() {
     slackAction.setParams("webhook", process.env.SLACK_WEBHOOK);
     slackAction.setParams("message", "The if went through!");
 
-    const workflow = new Workflow("test if", [trigger, condition, slackAction]);
+    const slackAction2 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+    slackAction2.setParams("webhook", process.env.SLACK_WEBHOOK);
+    slackAction2.setParams("message", "The if didn't went through!");
+
+    const workflow = new Workflow("test if", [trigger, condition, slackAction, slackAction2]);
 
     const edge = new Edge({
         source: trigger,
@@ -45,11 +48,18 @@ async function workflow1() {
         source: condition,
         target: slackAction,
         label: "true",
-        value: true,
+        value: "true",
+    });
+    const edge3 = new Edge({
+        source: condition,
+        target: slackAction2,
+        label: "false",
+        value: "false",
     });
 
     workflow.addEdge(edge);
     workflow.addEdge(edge2);
+    workflow.addEdge(edge3);
 
     console.log(JSON.stringify(workflow.toJSON()))
 
@@ -109,7 +119,7 @@ async function if_price_below_3000() {
         source: condition,
         target: slackAction,
         label: "true",
-        value: true,
+        value: "true",
     });
 
     workflow.addEdge(edge);
@@ -177,13 +187,13 @@ async function if_price_below_3000_else() {
         source: condition,
         target: slackAction,
         label: "true",
-        value: true,
+        value: "true",
     });
     const edge3 = new Edge({
         source: condition,
         target: slackAction2,
         label: "false",
-        value: false,
+        value: "false",
     });
 
     workflow.addEdge(edge);
@@ -211,4 +221,6 @@ async function if_price_below_3000_else() {
     }
 }
 
-if_price_below_3000();
+// if_price_below_3000();
+//workflow1();
+if_price_below_3000_else()
