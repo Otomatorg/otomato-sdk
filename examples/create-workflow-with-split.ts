@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 // Load environment variables from the .env file
 dotenv.config();
 
-async function main() {
+async function basicSplit() {
     if (!process.env.API_URL || !process.env.AUTH_TOKEN)
         return;
 
@@ -21,25 +21,32 @@ async function main() {
 
     const split = new Action(ACTIONS.CORE.SPLIT.SPLIT);
 
-    const workflow = new Workflow("swap & deposit", [trigger, split, slack1, slack2]);
+    const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+    slackAction.setParams("webhook", process.env.SLACK_WEBHOOK);
+    slackAction.setParams("message", "1!");
+
+    const slackAction2 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+    slackAction2.setParams("webhook", process.env.SLACK_WEBHOOK);
+    slackAction2.setParams("message", "2!");
+
+    const workflow = new Workflow("swap & deposit", [trigger, split, slackAction, slackAction2]);
 
     const edge = new Edge({
         source: trigger,
-        target: odosAction,
+        target: split,
     });
     const edge2 = new Edge({
-        source: odosAction,
-        target: ionicDeposit,
+        source: split,
+        target: slackAction,
     });
     const edge3 = new Edge({
-        source: odosAction,
-        target: ionicDeposit,
+        source: split,
+        target: slackAction2,
     });
 
-    workflow.addEdge(edge);
-    workflow.addEdge(edge2);
+    workflow.addEdges([edge, edge2, edge3]);
 
-    console.log(JSON.stringify(workflow.toJSON()))
+    console.log(JSON.stringify(workflow.toJSON()));
 
     const creationResult = await workflow.create();
     console.log(workflow.getState());
@@ -60,4 +67,4 @@ async function main() {
     }
 }
 
-main();
+basicSplit();
