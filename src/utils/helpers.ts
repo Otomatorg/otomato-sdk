@@ -25,6 +25,11 @@ export async function convertToTokenUnitsFromSymbol(amount: number, chainId: num
     return adjustedAmount;
 }
 
+export async function convertToTokenUnitsFromDecimals(amount: number, decimals: number): Promise<ethers.BigNumberish> {
+    const adjustedAmount = ethers.parseUnits(amount.toString(), decimals);
+    return adjustedAmount;
+}
+
 export async function convertTokenUnitsFromSymbol(amount: bigint, chainId: number, symbol: string): Promise<number> {
     const token = await getTokenFromSymbol(chainId, symbol);
     const decimals = token.decimals;
@@ -37,6 +42,11 @@ export async function convertTokenUnitsFromAddress(amount: bigint, chainId: numb
     const token = await getToken(chainId, contractAddress);
     const decimals = token.decimals;
 
+    // Convert to float using division
+    return Number(amount) / Math.pow(10, decimals);
+}
+
+export async function convertTokenUnitsFromDecimals(amount: bigint, decimals: number): Promise<number> {
     // Convert to float using division
     return Number(amount) / Math.pow(10, decimals);
 }
