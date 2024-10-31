@@ -166,3 +166,13 @@ export function isValidPhoneNumber(value: string): boolean {
 export function isValidEmail(value: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
+
+
+/**
+ * Checks if a string is numeric (represents a valid number).
+ * @param value - The string to check.
+ * @returns boolean - True if the string represents a number, false otherwise.
+ */
+export function isNumericString(value: string): boolean {
+    return !isNaN(Number(value)) && value.trim() !== '';
+}

@@ -17,20 +17,20 @@ async function main() {
     trigger.setCondition('lte');
     trigger.setParams('currency', 'USD');
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
-    trigger.setPosition(0, 0);
+    trigger.setPosition(400, 120);
 
     const odosAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
     odosAction.setChainId(CHAINS.MODE);
     odosAction.setParams("amount", await convertToTokenUnitsFromSymbol(1, CHAINS.MODE, 'USDT'));
     odosAction.setParams("tokenIn", getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress);
     odosAction.setParams("tokenOut", getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
-    odosAction.setPosition(400, 120);
+    odosAction.setPosition(400, 240);
 
     const ionicDeposit = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
     ionicDeposit.setChainId(CHAINS.MODE);
-    ionicDeposit.setParams('tokenToDeposit', getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
+    //ionicDeposit.setParams('tokenToDeposit', getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
     ionicDeposit.setParams('amount', odosAction.getOutputVariableName('amountOut'));
-    ionicDeposit.setPosition(400, 240);
+    ionicDeposit.setPosition(400, 360);
 
     const workflow = new Workflow("swap & deposit", [trigger, ionicDeposit, odosAction]);
 

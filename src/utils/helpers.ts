@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import { getToken, getTokenFromSymbol } from '../constants/tokens.js';
+import { isAddress, isNumericString } from './typeValidator.js';
 
 export async function convertToTokenUnits(amount: number, chainId: number, contractAddress: string): Promise<ethers.BigNumberish> {
     const token = await getToken(chainId, contractAddress);
@@ -53,4 +54,25 @@ export function compareAddresses(address1: string, address2: string): boolean {
 
     // Compare the normalized addresses
     return normalizedAddress1 === normalizedAddress2;
+}
+
+/**
+ * Generates a formula string for dynamically computing the ERC20 amount in the workflow,
+ * based on the amount, chain ID, and contract address.
+ * If the contract address is valid, it will be wrapped in double quotes.
+ * If the amount is a numeric string, it will also be wrapped in double quotes.
+ * @param amount - The amount of the ERC20 token to compute.
+ * @param chainId - The ID of the blockchain network.
+ * @param contractAddress - The contract address of the ERC20 token.
+ * @returns string - A formatted string to be used as a variable in the workflow.
+ */
+export function getComputeERC20Variable(amount: string, chainId: any, contractAddress: string): string {
+    // Check if the contract address is a valid Ethereum address and wrap in quotes if it is
+    const formattedContractAddress = isAddress(contractAddress) ? `"${contractAddress}"` : contractAddress;
+
+    // Check if the amount is a numeric string and wrap it in quotes if it is
+    const formattedAmount = isNumericString(amount) ? `${amount}` : amount;
+
+    // Construct the computeERC20Amount formula
+    return `{{computeERC20Amount(${formattedAmount}, ${chainId}, ${formattedContractAddress})}}`;
 }
