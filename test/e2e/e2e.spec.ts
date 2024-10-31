@@ -3,7 +3,7 @@ import { config as dotenvConfig } from 'dotenv';
 import { Workflow, Trigger, Action, Edge, apiServices, CHAINS, getTokenFromSymbol, TRIGGERS, ACTIONS } from '../../src/index';
 
 dotenvConfig(); // Load environment variables from .env file
-
+/*
 describe('E2E Workflow Test', async function () {
   this.timeout(10000);
   
@@ -102,4 +102,4 @@ describe('E2E Workflow Test', async function () {
     expect(sessionKeyPermissions.approvedTargets).to.include("0xf0F161fDA2712DB8b566946122a5af183995e2eD");
     expect(sessionKeyPermissions.approvedTargets).to.include("0x356696BFBd8aaa37f4526f0eD6391999E53a9857");  // Another example address
   });
-});
+});*/

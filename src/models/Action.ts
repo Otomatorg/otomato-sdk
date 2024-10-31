@@ -61,7 +61,7 @@ export class Action extends Node {
 
     action.setId(json.id);
     return action;
-}
+  }
 }
 
 export const findActionByBlockId = (blockId: number): { parentInfo: ParentInfo; block: any } => {

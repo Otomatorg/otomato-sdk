@@ -41,11 +41,77 @@ export function validateType(expectedType: string, value: any): boolean {
         case 'addresses_array':
             // Ensure value is an array, and each element is a valid address
             return Array.isArray(value) && value.every(isAddress);
+        case 'condition_groups':
+            return Array.isArray(value) && value.every(isValidConditionGroup);
+        case 'and_or':
+            const validLogicOperators = new Set(['and', 'or']);
+            return typeof value === 'string' && validLogicOperators.has(value.toLowerCase());
         case 'any':
             return true;
         default:
             return false;
     }
+}
+
+function isValidConditionGroup(value: any): boolean {
+    if (typeof value !== 'object' || value === null) {
+        return false;
+    }
+
+    const { logic, checks } = value;
+
+    validateType('and_or', logic)
+
+    // Validate checks array
+    if (!Array.isArray(checks) || checks.length === 0) {
+        return false;
+    }
+
+    // Validate each condition check
+    for (const check of checks) {
+        if (!isValidConditionCheck(check)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function isValidConditionCheck(value: any): boolean {
+    if (typeof value !== 'object' || value === null) {
+        return false;
+    }
+
+    const { value1, condition, value2 } = value;
+
+    // Validate condition operator
+    const validConditionOperators = new Set(['gte', 'gt', 'lte', 'lt', 'eq', 'neq']);
+    if (typeof condition !== 'string' || !validConditionOperators.has(condition.toLowerCase())) {
+        return false;
+    }
+
+    // Validate value1 and value2 (they can be numbers, strings, or variables)
+    if (!isValidValue(value1) || !isValidValue(value2)) {
+        return false;
+    }
+
+    return true;
+}
+
+function isValidValue(value: any): boolean {
+    if (typeof value === 'number' || typeof value === 'bigint') {
+        return true;
+    }
+
+    if (typeof value === 'string') {
+        if (isVariable(value)) {
+            return true; // It's a variable placeholder
+        }
+        // Optionally, add further validation for strings if needed
+        return true;
+    }
+
+    return false;
 }
 
 function isVariable(value: string): boolean {
@@ -99,4 +165,14 @@ export function isValidPhoneNumber(value: string): boolean {
 
 export function isValidEmail(value: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+
+/**
+ * Checks if a string is numeric (represents a valid number).
+ * @param value - The string to check.
+ * @returns boolean - True if the string represents a number, false otherwise.
+ */
+export function isNumericString(value: string): boolean {
+    return !isNaN(Number(value)) && value.trim() !== '';
 }
