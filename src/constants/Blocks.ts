@@ -1463,45 +1463,7 @@ export const ACTIONS = {
     "CONDITION": {
       "description": "Checks for a condition before proceeding",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/if.png",
-      "IF": {
-        "name": "Condition",
-        "type": 5,
-        "description": "Checks for a condition before proceeding",
-        "parameters": [
-          {
-            "key": "logic",
-            "type": "and_or",
-            "description": "",
-            "mandatory": true,
-            "category": 0
-          },
-          {
-            "key": "groups",
-            "type": "condition_groups",
-            "description": "",
-            "mandatory": true,
-            "category": 0
-          },
-        ] as Parameter[],
-        "examples": [],
-        "blockId": 100016,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/if.png"
-      }
     },
-    "SPLIT": {
-      "description": "Split a branch in multiple ones",
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/if.png",
-      "SPLIT": {
-        "name": "Split",
-        "type": 4,
-        "description": "Split a branch in multiples ones",
-        "parameters": [
-        ] as Parameter[],
-        "examples": [],
-        "blockId": 100015,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/if.png"
-      }
-    }
   },
   "NOTIFICATIONS": {
     "EMAIL": {
@@ -1639,7 +1601,7 @@ export const ACTIONS = {
     },
     "TELEGRAM": {
       "description": "Telegram is a cloud-based mobile and desktop messaging app with a focus on security and speed.",
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg"
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg",
     }
   },
   "TOKENS": {

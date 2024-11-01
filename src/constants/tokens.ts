@@ -7,6 +7,8 @@ export interface Token {
   decimals: number;
   image: string | null;
   hideInUI?: boolean | null;
+  nativeCurrency?: boolean | null;
+  equivalentERC20?: string | null;
 }
 
 export interface Tokens {
@@ -34,7 +36,8 @@ export const TOKENS: Tokens = {
       name: "ETH",
       symbol: "ETH",
       decimals: 18,
-      hideInUI: true,
+      nativeCurrency: true,
+      equivalentERC20: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
       image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png"
     },
     {
@@ -51,7 +54,8 @@ export const TOKENS: Tokens = {
       name: "ETH",
       symbol: "ETH",
       decimals: 18,
-      hideInUI: true,
+      nativeCurrency: true,
+      equivalentERC20: "0x4200000000000000000000000000000000000006",
       image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png"
     },
     {
