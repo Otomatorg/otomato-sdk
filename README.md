@@ -1,65 +1,198 @@
 
 # Otomato SDK
 
-The Otomato SDK provides a set of tools to create and manage automations, triggers, and actions in your applications. It is designed to work in both frontend and backend environments using TypeScript.
+The Otomato SDK empowers users to automate any crypto related behavior. With its suite of intuitive automation tools, Otomato allows users to seamlessly respond to market dynamics.
+
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+  - [Authentication](#authentication)
+  - [Creating a Workflow](#creating-a-workflow)
+  - [Running a Workflow](#running-a-workflow)
+- [Core Concepts](#core-concepts)
+  - [Workflow](#workflow)
+  - [Node](#node)
+  - [Trigger](#trigger)
+  - [Action](#action)
+  - [Edge](#edge)
+- [Examples](#examples)
+  - [Swap and Deposit Workflow](#swap-and-deposit-workflow)
+  - [ETH Price Monitoring with Split Conditions](#eth-price-monitoring-with-split-conditions)
+- [API Reference](#api-reference)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+- **Automate Web3 Actions**: Create automated workflows to interact with smart contracts, perform token swaps, send notifications, and more.
+- **Smart Account Integration**: Utilize Smart Accounts (ERC-4337) for secure and efficient automation.
+- **Building Block System**: Combine triggers and actions to build complex strategies without writing low-level code.
+- **Session Key Permissions**: Maintain control over your assets with explicit action authorizations.
+- **Extensible Architecture**: Easily add new triggers, actions, and services.
 
 ## Installation
-
-To install the Otomato SDK, run:
 
 ```bash
 npm install otomato-sdk
 ```
 
-## Usage
+## Getting Started
 
-### Create an Automation
+### Authentication
 
-### Create a Trigger
+Before interacting with the Otomato SDK, you need to authenticate your account.
 
-#### Example
+```js
+import { apiServices, CHAINS } from 'otomato-sdk';
 
-Here's how to create a trigger using the Otomato SDK:
+async function authenticate() {
+  const address = 'YOUR_WALLET_ADDRESS';
+  const chainId = CHAINS.ETHEREUM;
+  const accessCode = 'YOUR_ACCESS_CODE';
 
-```typescript
-import { Trigger, TRIGGERS, CHAINS, getTokenFromSymbol } from 'otomato-sdk';
+  const loginPayload = await apiServices.generateLoginPayload(address, chainId, accessCode);
+  const signature = 'SIGNATURE_OF_LOGIN_PAYLOAD';
+  const { token } = await apiServices.getToken(loginPayload, signature);
 
-const transferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
-transferTrigger.setChainId(CHAINS.ETHEREUM);
-transferTrigger.setParams("value", 1000);
-transferTrigger.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-transferTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
-
-console.log(transferTrigger.toJSON());
+  apiServices.setAuth(token);
+}
 ```
 
-## Contributing
+### Creating a workflow
 
-We welcome contributions to the Otomato SDK. Please make sure you have Node.js v20 installed.
+A Workflow is a collection of Nodes (Triggers and Actions) connected by Edges.
 
-### Development Setup
+```js
+import { Workflow, Trigger, Action, Edge, TRIGGERS, ACTIONS, CHAINS } from 'otomato-sdk';
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/otomatorg/otomato-sdk.git
-    cd otomato-sdk
-    ```
+// Initialize Trigger and Action nodes
+const priceTrigger = new Trigger(TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY);
+priceTrigger.setChainId(CHAINS.MODE);
+priceTrigger.setComparisonValue(3000);
+priceTrigger.setCondition('lte');
+priceTrigger.setParams('currency', 'USD');
+priceTrigger.setContractAddress('TOKEN_CONTRACT_ADDRESS');
+priceTrigger.setPosition(0, 0);
 
-2. Install dependencies:
-    ```bash
-    npm install
-    ```
+const swapAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
+swapAction.setChainId(CHAINS.MODE);
+swapAction.setParams('amount', 'AMOUNT_IN_WEI');
+swapAction.setParams('tokenIn', 'TOKEN_IN_CONTRACT_ADDRESS');
+swapAction.setParams('tokenOut', 'TOKEN_OUT_CONTRACT_ADDRESS');
+swapAction.setPosition(0, 100);
 
-3. Build the project:
-    ```bash
-    npm run build
-    ```
+// Create Edges to connect Nodes
+const edge = new Edge({ source: priceTrigger, target: swapAction });
 
-4. Run an example:
-    ```bash
-    node dist/examples/create-trigger.js
-    ```
+// Create Workflow
+const workflow = new Workflow('Swap on Price Trigger', [priceTrigger, swapAction], [edge]);
+```
 
-## License
+### Running a Workflow
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```js
+// Publish the Workflow
+const creationResult = await workflow.create();
+
+if (creationResult.success) {
+  // Run the Workflow
+  const runResult = await workflow.run();
+  if (runResult.success) {
+    console.log('Workflow is running');
+  } else {
+    console.error('Error running workflow:', runResult.error);
+  }
+} else {
+  console.error('Error creating workflow:', creationResult.error);
+}
+```
+
+## Core Concepts
+
+### Workflow
+
+A Workflow is a container for nodes (triggers and actions) and the edges that connect them.
+
+**Properties**:
+  - id: Unique identifier.
+  - name: Name of the workflow.
+  - nodes: Array of Node instances.
+  - edges: Array of Edge instances.
+  - state: Current state (inactive, active, failed, completed, waiting).
+
+### Node
+
+Node is an abstract class representing either a Trigger or an Action.
+
+**Properties**:
+  - id: Unique identifier.
+  - blockId: Identifier for the block type.
+  - parameters: Key-value pairs for node configuration.
+  - position: Coordinates for UI placement.
+
+### Trigger
+
+A Trigger initiates the workflow based on certain conditions.
+
+**Methods**:
+  - setCondition(value): Sets the logical condition (lt, gt, etc.). This works only for polling-based triggers.
+  - setComparisonValue(value): Sets the value to compare against. This works only for polling-based triggers.
+
+### Action
+
+An Action performs operations like swapping tokens, sending notifications, etc.
+
+**Methods**:
+  - setParams(key, value): Sets parameters specific to the action.
+
+### Edge
+
+An Edge connects two nodes, defining the workflow’s execution path.
+
+**Properties**:
+  - source: Source Node.
+  - target: Target Node.
+  - label: Optional label for the edge.
+  - value: Optional value for conditional edges.
+
+## Examples
+
+### Swap and Deposit Workflow
+
+This example demonstrates how to create a workflow that swaps tokens and then deposits them into a lending platform.
+
+```js
+import { Workflow, Trigger, Action, Edge, TRIGGERS, ACTIONS, CHAINS, getTokenFromSymbol } from 'otomato-sdk';
+
+// Initialize Trigger
+const priceTrigger = new Trigger(TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY);
+priceTrigger.setChainId(CHAINS.MODE);
+priceTrigger.setComparisonValue(3000);
+priceTrigger.setCondition('lte');
+priceTrigger.setParams('currency', 'USD');
+priceTrigger.setContractAddress(getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
+priceTrigger.setPosition(0, 0);
+
+// Initialize Actions
+const swapAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
+swapAction.setChainId(CHAINS.MODE);
+swapAction.setParams('amount', '1000000'); // Amount in token units
+swapAction.setParams('tokenIn', getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress);
+swapAction.setParams('tokenOut', getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
+swapAction.setPosition(0, 100);
+
+const depositAction = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
+depositAction.setChainId(CHAINS.MODE);
+depositAction.setParams('tokenToDeposit', getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
+depositAction.setParams('amount', swapAction.getOutputVariableName('amountOut'));
+depositAction.setPosition(0, 200);
+
+// Create Edges
+const edge1 = new Edge({ source: priceTrigger, target: swapAction });
+const edge2 = new Edge({ source: swapAction, target: depositAction });
+
+// Create Workflow
+const workflow = new Workflow('Swap and Deposit', [priceTrigger, swapAction, depositAction], [edge1, edge2]);
+```
