@@ -1,7 +1,6 @@
-
 # Otomato SDK
 
-The Otomato SDK empowers users to automate any crypto related behavior. With its suite of intuitive automation tools, Otomato allows users to seamlessly respond to market dynamics.
+The Otomato SDK empowers users to automate any crypto related behavior. With its suite of intuitive automation tools, Otomato allows users to seamlessly respond to market dynamics while abstracting all the complexity.
 
 ## Table of Contents
 
@@ -36,7 +35,6 @@ The Otomato SDK empowers users to automate any crypto related behavior. With its
 
 ```bash
 npm install otomato-sdk
-```
 
 ## Getting Started
 
@@ -109,53 +107,54 @@ if (creationResult.success) {
 }
 ```
 
-## Core Concepts
+## Core concepts
 
 ### Workflow
 
 A Workflow is a container for nodes (triggers and actions) and the edges that connect them.
 
 **Properties**:
-  - id: Unique identifier.
-  - name: Name of the workflow.
-  - nodes: Array of Node instances.
-  - edges: Array of Edge instances.
-  - state: Current state (inactive, active, failed, completed, waiting).
+	•	`id`: Unique identifier.
+	•	`name`: Name of the workflow.
+	•	`nodes`: Array of Node instances.
+	•	`edges`: Array of Edge instances.
+	•	`state`: Current state (inactive, active, failed, completed, waiting).
 
-### Node
+### node
 
 Node is an abstract class representing either a Trigger or an Action.
 
 **Properties**:
-  - id: Unique identifier.
-  - blockId: Identifier for the block type.
-  - parameters: Key-value pairs for node configuration.
-  - position: Coordinates for UI placement.
+	•	`id`: Unique identifier.
+	•	`blockId`: Identifier for the block type.
+	•	`parameters`: Key-value pairs for node configuration.
+	•	`position`: Coordinates for UI placement.
 
 ### Trigger
 
 A Trigger initiates the workflow based on certain conditions.
 
 **Methods**:
-  - setCondition(value): Sets the logical condition (lt, gt, etc.). This works only for polling-based triggers.
-  - setComparisonValue(value): Sets the value to compare against. This works only for polling-based triggers.
+	•	`setCondition(value)`: Sets the logical condition (lt, gt, etc.). This works only for polling based triggers.
+	•	`setComparisonValue(value)`: Sets the value to compare against. This works only for polling based triggers.
 
 ### Action
 
 An Action performs operations like swapping tokens, sending notifications, etc.
 
 **Methods**:
-  - setParams(key, value): Sets parameters specific to the action.
+	•	`setParams(key, value)`: Sets parameters specific to the action.
 
-### Edge
+### Edges
 
 An Edge connects two nodes, defining the workflow’s execution path.
 
 **Properties**:
-  - source: Source Node.
-  - target: Target Node.
-  - label: Optional label for the edge.
-  - value: Optional value for conditional edges.
+	•	`source`: Source Node.
+	•	`target`: Target Node.
+	•	`label`: Optional label for the edge.
+	•	`value`: Optional value for conditional edges.
+
 
 ## Examples
 
@@ -196,3 +195,78 @@ const edge2 = new Edge({ source: swapAction, target: depositAction });
 // Create Workflow
 const workflow = new Workflow('Swap and Deposit', [priceTrigger, swapAction, depositAction], [edge1, edge2]);
 ```
+
+### ETH Price Monitoring with Split Conditions
+
+An advanced workflow using conditional branching based on ETH price.
+
+```js
+import { Workflow, Trigger, Action, Edge, TRIGGERS, ACTIONS, CHAINS, LOGIC_OPERATORS, ConditionGroup } from 'otomato-sdk';
+
+// Initialize Trigger
+const ethPriceTrigger = new Trigger(TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY);
+ethPriceTrigger.setChainId(CHAINS.MODE);
+ethPriceTrigger.setComparisonValue(3000);
+ethPriceTrigger.setCondition('lt');
+ethPriceTrigger.setParams('currency', 'USD');
+ethPriceTrigger.setContractAddress('ETH_CONTRACT_ADDRESS');
+ethPriceTrigger.setPosition(0, 0);
+
+// Split Action
+const splitAction = new Action(ACTIONS.CORE.SPLIT.SPLIT);
+
+// Conditional Branches
+const conditionTrue = new Action(ACTIONS.CORE.CONDITION.IF);
+conditionTrue.setParams('logic', LOGIC_OPERATORS.OR);
+const conditionGroup = new ConditionGroup(LOGIC_OPERATORS.AND);
+conditionGroup.addConditionCheck(ethPriceTrigger.getOutputVariableName('price'), 'lt', 3000);
+conditionTrue.setParams('groups', [conditionGroup]);
+
+const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+slackAction.setParams('webhook', 'YOUR_SLACK_WEBHOOK');
+slackAction.setParams('message', 'ETH price is below $3000!');
+
+// Create Edges
+const edge1 = new Edge({ source: ethPriceTrigger, target: splitAction });
+const edge2 = new Edge({ source: splitAction, target: conditionTrue });
+const edge3 = new Edge({ source: conditionTrue, target: slackAction, label: 'true', value: 'true' });
+
+// Create Workflow
+const workflow = new Workflow('ETH Price Monitoring', [ethPriceTrigger, splitAction, conditionTrue, slackAction], [edge1, edge2, edge3]);
+```
+
+## API Reference
+
+### Workflow Class
+
+- **Methods**:
+  - `create()`: Publishes the workflow to the Otomato platform.
+  - `run()`: Executes the workflow.
+  - `update()`: Updates the workflow.
+  - `delete()`: Deletes the workflow.
+  - `load(workflowId)`: Loads a workflow by ID.
+
+### Trigger Class
+
+- **Methods**:
+  - `setCondition(value)`: Sets the trigger condition.
+  - `setComparisonValue(value)`: Sets the comparison value.
+  - `setChainId(value)`: Sets the blockchain network.
+  - `setContractAddress(value)`: Sets the contract address.
+
+### Action Class
+
+- **Methods**:
+  - `setParams(key, value)`: Sets action parameters.
+  - `setChainId(value)`: Sets the blockchain network.
+  - `setContractAddress(value)`: Sets the contract address.
+
+### Edge Class
+
+- **Methods**:
+  - `toJSON()`: Serializes the edge.
+  - `delete()`: Deletes the edge.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
