@@ -55,7 +55,16 @@ describe('Trigger Class', () => {
         },
         contractAddress: getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress
       },
-      frontendHelpers: {}
+      frontendHelpers: {
+        "output": {
+          "value": {
+            "erc20Token": {
+              "chainId": "{{parameters.chainId}}",
+              "contractAddress": "{{parameters.contractAddress}}"
+            }
+          }
+        }
+      }
     });
   });
 
@@ -145,7 +154,16 @@ describe('Trigger Class', () => {
         },
         "contractAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
       },
-      frontendHelpers: {}
+      "frontendHelpers": {
+        "output": {
+          "value": {
+            "erc20Token": {
+              "chainId": "{{parameters.chainId}}",
+              "contractAddress": "{{parameters.contractAddress}}"
+            }
+          }
+        }
+      }
     };
 
     const trigger = await Trigger.fromJSON(json);

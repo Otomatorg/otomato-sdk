@@ -17,7 +17,7 @@ describe('Node Class', () => {
 
   it('should create a node without coordinates', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node',
       description: 'A node for testing',
       parameters: DEFAULT_PARAMETERS,
@@ -30,7 +30,7 @@ describe('Node Class', () => {
 
   it('should create a node with coordinates', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node with Coordinates',
       description: 'A node for testing with coordinates',
       parameters: DEFAULT_PARAMETERS,
@@ -45,7 +45,7 @@ describe('Node Class', () => {
 
   it('should set and get coordinates correctly', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for Coordinates',
       description: 'A node for testing coordinate setting',
       parameters: DEFAULT_PARAMETERS,
@@ -60,7 +60,7 @@ describe('Node Class', () => {
 
   it('should create a node and set parameters correctly', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for Parameters',
       description: 'A node for testing parameter setting',
       parameters: DEFAULT_PARAMETERS,
@@ -78,7 +78,7 @@ describe('Node Class', () => {
 
   it('should get the correct outputs', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for Outputs',
       description: 'A node for testing outputs',
       parameters: DEFAULT_PARAMETERS,
@@ -92,7 +92,7 @@ describe('Node Class', () => {
 
   it('should be able to export a node as json without coordinates', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for JSON',
       description: 'A node for testing JSON export',
       parameters: DEFAULT_PARAMETERS,
@@ -105,7 +105,7 @@ describe('Node Class', () => {
 
     const json = node.toJSON();
     expect(json).to.deep.equal({
-      blockId: 100001,
+      blockId: 100002,
       id: null,
       state: 'inactive',
       ref: node.getRef(),
@@ -125,7 +125,7 @@ describe('Node Class', () => {
 
   it('should be able to export a node as json with coordinates', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for JSON with Coordinates',
       description: 'A node for testing JSON export with coordinates',
       parameters: DEFAULT_PARAMETERS,
@@ -140,7 +140,7 @@ describe('Node Class', () => {
     const json = node.toJSON();
     expect(json).to.deep.equal({
       type: 'action',
-      blockId: 100001,
+      blockId: 100002,
       id: null,
       state: 'inactive',
       ref: node.getRef(),
@@ -160,7 +160,7 @@ describe('Node Class', () => {
 
   it('should throw an error for invalid parameter type', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for Invalid Parameter Type',
       description: 'A node for testing invalid parameter type',
       parameters: DEFAULT_PARAMETERS,
@@ -172,7 +172,7 @@ describe('Node Class', () => {
 
   it('should throw an error for invalid address', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for Invalid Address',
       description: 'A node for testing invalid address',
       parameters: DEFAULT_PARAMETERS,
@@ -187,7 +187,7 @@ describe('Node Variable Name Generation', () => {
 
   it('should return the correct output variable name', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for Output Variable Name',
       description: 'A node for testing output variable name generation',
       parameters: DEFAULT_PARAMETERS,
@@ -204,7 +204,7 @@ describe('Node Variable Name Generation', () => {
 
   it('should return the correct parameter variable name', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for Parameter Variable Name',
       description: 'A node for testing parameter variable name generation',
       parameters: DEFAULT_PARAMETERS,
@@ -228,7 +228,7 @@ describe('Node setParameter Method', () => {
 
   it('should accept number', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for BigInt',
       description: 'A node for testing BigInt conversion',
       parameters: [...DEFAULT_PARAMETERS, { key: 'amount', type: 'uint256', description: 'Amount', value: null, category: 0 }],
@@ -243,7 +243,7 @@ describe('Node setParameter Method', () => {
 
   it('should convert valid "BigInt" string to BigInt type', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for BigInt',
       description: 'A node for testing BigInt conversion',
       parameters: [...DEFAULT_PARAMETERS, { key: 'amount', type: 'uint256', description: 'Amount', value: null, category: 0 }],
@@ -258,7 +258,7 @@ describe('Node setParameter Method', () => {
 
   it('should not throw error on invalid "BigInt" string and should not set the parameter', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for Invalid BigInt',
       description: 'A node for testing invalid BigInt string handling',
       parameters: [...DEFAULT_PARAMETERS, { key: 'amount', type: 'uint256', description: 'Amount', value: null, category: 0 }],
@@ -273,7 +273,7 @@ describe('Node setParameter Method', () => {
 
   it('should throw an error for non-number string when a number is expected', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for Non-Number String',
       description: 'A node for testing error handling on non-number string',
       parameters: [...DEFAULT_PARAMETERS, { key: 'amount', type: 'uint256', description: 'Amount', value: null, category: 0 }],
@@ -286,7 +286,7 @@ describe('Node setParameter Method', () => {
 
   it('should accept chainId as a string and convert it to a number', () => {
     const node = new Action({
-      blockId: 100001,
+      blockId: 100002,
       name: 'Test Node for String chainId',
       description: 'A node for testing string-to-number conversion for chainId',
       parameters: [...DEFAULT_PARAMETERS],

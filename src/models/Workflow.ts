@@ -1,8 +1,9 @@
-import { Node } from './Node.js';
+import { Node, Position } from './Node.js';
 import { Edge } from './Edge.js';
 import { apiServices } from '../services/ApiService.js';
 import { Action } from './Action.js';
 import { SessionKeyPermission } from './SessionKeyPermission.js';
+import { Note } from './Note.js';
 
 export type WorkflowState = 'inactive' | 'active' | 'failed' | 'completed' | 'waiting';
 
@@ -15,6 +16,7 @@ export class Workflow {
   dateCreated: string | null = null;
   dateModified: string | null = null;
   executionId: string | null = null;
+  notes: Note[] = [];
 
   constructor(name: string = '', nodes: Node[] = [], edges: Edge[] = []) {
     this.name = name;
@@ -57,6 +59,37 @@ export class Workflow {
     return this.state;
   }
 
+  // Add a new note to the workflow
+  addNote(note: Note): void {
+    this.notes.push(note);
+  }
+
+  // Update an existing note by ID
+  updateNote(noteId: string, newText: string, newPosition: Position): void {
+    const note = this.notes.find(n => n.id === noteId);
+    if (note) {
+      note.text = newText;
+      note.position = newPosition;
+    } else {
+      throw new Error(`Note with id ${noteId} not found`);
+    }
+  }
+
+  // Delete a note by ID
+  deleteNote(noteId: string): void {
+    const index = this.notes.findIndex(n => n.id === noteId);
+    if (index !== -1) {
+      this.notes.splice(index, 1);
+    } else {
+      throw new Error(`Note with id ${noteId} not found`);
+    }
+  }
+
+  // Retrieve notes as JSON to include them in the toJSON method
+  getNotes(): { id: string | null; text: string; position: Position }[] {
+    return this.notes.map(note => note.toJSON());
+  }
+
   toJSON() {
     return {
       id: this.id,
@@ -67,6 +100,7 @@ export class Workflow {
       executionId: this.executionId,
       nodes: this.nodes.map(node => node.toJSON()),
       edges: this.edges.map(edge => edge.toJSON()),
+      notes: this.getNotes(), // Include notes
     };
   }
 
@@ -89,8 +123,8 @@ export class Workflow {
 
         // Assign IDs to the edges based on the source and target nodes
         response.data.edges.forEach((edgeResponse: any) => {
-          const edge = this.edges.find(e => 
-            e.source.getRef() === edgeResponse.source && 
+          const edge = this.edges.find(e =>
+            e.source.getRef() === edgeResponse.source &&
             e.target.getRef() === edgeResponse.target
           );
           if (edge) {
@@ -125,8 +159,8 @@ export class Workflow {
 
         // Assign IDs to the edges based on the source and target nodes
         response.data.edges.forEach((edgeResponse: any) => {
-          const edge = this.edges.find(e => 
-            e.source.getRef() === edgeResponse.source && 
+          const edge = this.edges.find(e =>
+            e.source.getRef() === edgeResponse.source &&
             e.target.getRef() === edgeResponse.target
           );
           if (edge) {
@@ -213,7 +247,7 @@ export class Workflow {
 
   async getSessionKeyPermissions(): Promise<SessionKeyPermission> {
     if (!this.id)
-        throw new Error('The workflow needs to be published first');
+      throw new Error('The workflow needs to be published first');
 
     return apiServices.getSessionKeyPermissions(this.id);
   }

@@ -3,6 +3,7 @@ import { Workflow } from '../src/models/Workflow.js';
 import { Trigger } from '../src/models/Trigger.js';
 import { Action } from '../src/models/Action.js';
 import { TRIGGERS, ACTIONS, getTokenFromSymbol, CHAINS, Edge } from '../src/index.js';
+import { Note } from '../src/models/Note.js';
 
 describe('Workflow Class', () => {
   it('should create a workflow with a trigger and actions', () => {
@@ -34,8 +35,51 @@ describe('Workflow Class', () => {
       executionId: null,
       nodes: [trigger.toJSON(), action1.toJSON(), action2.toJSON()],
       edges: [],
+      notes: [], // Ensure notes are empty initially
       state: 'inactive'
     });
+  });
+
+  it('should add a note to the workflow', () => {
+    const workflow = new Workflow("Workflow with Notes");
+    const note = new Note("This is a test note", { x: 10, y: 20 });
+    workflow.addNote(note);
+
+    expect(workflow.notes).to.deep.include(note);
+  });
+
+  it('should update a note in the workflow', () => {
+    const workflow = new Workflow("Workflow with Notes");
+    const note = new Note("Original note text", { x: 10, y: 20 });
+    workflow.addNote(note);
+    const noteId = note.id;
+
+    workflow.updateNote(noteId, "Updated note text", { x: 30, y: 40 });
+
+    const updatedNote = workflow.notes.find(n => n.id === noteId);
+    expect(updatedNote).to.exist;
+    expect(updatedNote?.text).to.equal("Updated note text");
+    expect(updatedNote?.position).to.deep.equal({ x: 30, y: 40 });
+  });
+
+  it('should delete a note from the workflow', () => {
+    const workflow = new Workflow("Workflow with Notes");
+    const note = new Note("This is a test note to delete", { x: 10, y: 20 });
+    workflow.addNote(note);
+    const noteId = note.id;
+
+    workflow.deleteNote(noteId);
+
+    expect(workflow.notes.find(n => n.id === noteId)).to.be.undefined;
+  });
+
+  it('should include notes in the workflow JSON output', () => {
+    const workflow = new Workflow("Workflow with Notes");
+    const note = new Note("This is a test note", { x: 10, y: 20 });
+    workflow.addNote(note);
+
+    const json = workflow.toJSON();
+    expect(json.notes).to.deep.equal([note.toJSON()]);
   });
 
   it('should set the name of the workflow', () => {
