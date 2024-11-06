@@ -1490,7 +1490,7 @@ export const ACTIONS = {
     },
     "SPLIT": {
       "description": "Split a branch in multiple ones",
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/if.png",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/split.png",
       "SPLIT": {
         "name": "Split",
         "type": 4,
@@ -1499,7 +1499,7 @@ export const ACTIONS = {
         ] as Parameter[],
         "examples": [],
         "blockId": 100015,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/if.png"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/split.png"
       }
     }
   },
@@ -1632,7 +1632,9 @@ export const ACTIONS = {
             "content": "{{message}}"
           }
         },
-        "examples": [],
+        "examples": [
+          {}
+        ],
         "blockId": 100003,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png"
       }
@@ -2144,6 +2146,153 @@ export const ACTIONS = {
         34443
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/renzo.jpg"
+    },
+    "AAVE": {
+      "description": "Decentralized lending protocol",
+      "chains": [
+        8453,
+        534352
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.jpg",
+      "SUPPLY": {
+        "name": "Supply Asset to Aave",
+        "description": "Supply an asset to AAVE",
+        "type": 1,
+        "method": "function supply(address asset, uint256 amount, address onBehalfOf, uint16 referralCode)",
+        "contractAddress": "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "asset",
+            "type": "erc20",
+            "description": "The token to supply",
+            "mandatory": true,
+            "enum": "\n        (env) => {\n            if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n\n            return availableLendingTokens[env.parameters.chainId];\n    }",
+            "category": 0
+          },
+          {
+            "key": "amount",
+            "type": "uint256",
+            "description": "The amount of the asset to supply",
+            "mandatory": true,
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.asset}}",
+              "chain": "{{parameters.chainId}}"
+            }
+          },
+          {
+            "key": "onBehalfOf",
+            "type": "address",
+            "description": "The address to receive aTokens",
+            "mandatory": true,
+            "hideInUI": true,
+            "category": 1,
+            "value": "{{user.smartAccountAddress}}"
+          },
+          {
+            "key": "referralCode",
+            "type": "uint16",
+            "description": "Referral code (use 0, as inactive)",
+            "mandatory": true,
+            "hideInUI": true,
+            "category": 1,
+            "value": 0
+          },
+        ] as Parameter[],
+        "requiredApprovals": [
+          {
+            "address": "{{parameters.asset}}",
+            "amount": "{{parameters.amount}}",
+            "to": "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5"
+          }
+        ],
+        "output": {
+          "transactionHash": "string"
+        },
+        "permissions": {
+          "approvedTargets": [
+            "{{parameters.asset}}",
+            "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5"
+          ],
+          "label": [
+            "Supply {{tokenSymbol({{parameters.chainId}}, {{parameters.asset}})}} on Aave"
+          ],
+          "labelNotAuthorized": [
+            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.asset}})}}"
+          ]
+        },
+        "blockId": 100020,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.jpg"
+      },
+      "WITHDRAW": {
+        "name": "Withdraw Asset from Aave",
+        "description": "Withdraw a supplied asset from the Aave pool.",
+        "type": 1,
+        "method": "function withdraw(address asset, uint256 amount, address to) returns (uint256)",
+        "contractAddress": "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "asset",
+            "type": "erc20",
+            "description": "The address of the asset to withdraw",
+            "mandatory": true,
+            "enum": "\n        (env) => {\n            if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n\n            return availableLendingTokens[env.parameters.chainId];\n    }",
+            "category": 0
+          },
+          {
+            "key": "amount",
+            "type": "uint256",
+            "description": "The amount of the asset to withdraw. Use type(uint).max for full balance.",
+            "mandatory": true,
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.asset}}",
+              "chain": "{{parameters.chainId}}"
+            },
+            "default": "type(uint256).max"
+          },
+          {
+            "key": "to",
+            "type": "address",
+            "description": "The address to receive the withdrawn asset",
+            "mandatory": true,
+            "category": 0,
+            "hideInUI": true,
+            "default": "{{user.smartAccountAddress}}"
+          },
+        ] as Parameter[],
+        "output": {
+          "transactionHash": "string",
+          "amountWithdrawn": "uint256"
+        },
+        "permissions": {
+          "approvedTargets": [
+            "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5"
+          ],
+          "label": [
+            "Withdraw {{tokenSymbol({{parameters.chainId}}, {{parameters.asset}})}} from Aave"
+          ],
+          "labelNotAuthorized": [
+            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.asset}})}}"
+          ]
+        },
+        "blockId": 100021,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.jpg"
+      }
     }
   },
   "SWAP": {

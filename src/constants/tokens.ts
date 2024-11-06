@@ -1,4 +1,4 @@
-import {rpcServices} from "../services/RpcServices.js";
+import { rpcServices } from "../services/RpcServices.js";
 
 export interface Token {
   contractAddress: string;
@@ -218,6 +218,15 @@ export const TOKENS: Tokens = {
       decimals: 18,
       image: null
     },
+  ],
+  8453: [
+    {
+      contractAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+      name: "USDC",
+      symbol: "USDC",
+      decimals: 6,
+      image: "https://static.debank.com/image/coin/logo_url/usdc/e87790bfe0b3f2ea855dc29069b38818.png"
+    }
   ]
 };
 
