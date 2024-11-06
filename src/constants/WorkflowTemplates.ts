@@ -38,7 +38,7 @@ const createETHFearAndGreedBuy = async () => {
     const chain = CHAINS.MODE;
     odosAction.setChainId(chain);
     odosAction.setParams("tokenIn", getTokenFromSymbol(chain, 'USDC').contractAddress);
-    odosAction.setParams("tokenOut", getTokenFromSymbol(chain, 'sUSDE').contractAddress);
+    odosAction.setParams("tokenOut", getTokenFromSymbol(chain, 'WETH').contractAddress);
     odosAction.setParams("amount", await convertToTokenUnitsFromSymbol(100, chain, 'USDC'));
     odosAction.setPosition(400, 240);
 
@@ -68,7 +68,7 @@ const createETHFearAndGreedCapitalEfficientBuy = async () => {
     odosAction.setChainId(chain);
     odosAction.setParams("tokenIn", getTokenFromSymbol(chain, tokenIn).contractAddress);
     odosAction.setParams("tokenOut", getTokenFromSymbol(chain, tokenOut).contractAddress);
-    odosAction.setParams("amount", /*ionicWithdraw.getParameterVariableName('amount')*/ await convertToTokenUnitsFromSymbol(1, chain, tokenIn));
+    odosAction.setParams("amount", ionicWithdraw.getParameterVariableName('amount'));
     odosAction.setPosition(400, 360);
 
     const ionicDeposit = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
