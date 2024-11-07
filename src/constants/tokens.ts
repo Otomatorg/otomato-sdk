@@ -226,7 +226,45 @@ export const TOKENS: Tokens = {
       symbol: "USDC",
       decimals: 6,
       image: "https://static.debank.com/image/coin/logo_url/usdc/e87790bfe0b3f2ea855dc29069b38818.png"
-    }
+    },
+    {
+      contractAddress: "0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452",
+      name: "Wrapped liquid staked Ether 2.0",
+      symbol: "wstETH",
+      decimals: 18,
+      image: "https://basescan.org/token/images/wsteth3_32.png"
+    },
+    
+    {
+      contractAddress: "0x4200000000000000000000000000000000000006",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+      decimals: 18,
+      image: "https://basescan.org/token/images/weth_28.png"
+    },
+    {
+      contractAddress: "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
+      name: "USDe",
+      symbol: "USDe",
+      decimals: 18,
+      image: "https://basescan.org/token/images/ethenausde_32.png"
+    },
+    {
+      contractAddress: "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf",
+      name: "Coinbase Wrapped BTC",
+      symbol: "cbBTC",
+      decimals: 8,
+      image: "https://basescan.org/token/images/cbbtc_32.png"
+    },
+    {
+      contractAddress: "0x940181a94a35a4569e4529a3cdfb74e38fd98631",
+      name: "Aerodrome",
+      symbol: "AERO",
+      decimals: 18,
+      image: "https://basescan.org/token/images/aerodrome_32.png"
+    },
+
+
   ]
 };
 
