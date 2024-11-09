@@ -1,6 +1,28 @@
 import { Parameter } from '../models/Parameter.js';
 
 export const TRIGGERS = {
+  "CORE": {
+    "EVERY_PERIOD": {
+      "description": "Triggers the workflow every period (e.g every hour)",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/every_hour_trigger.png",
+      "EVERY_PERIOD": {
+        "name": "Every period",
+        "type": 4,
+        "description": "Triggers the workflow every period (e.g every hour)",
+        "parameters": [
+          {
+            "key": "period",
+            "type": "integer",
+            "description": "The period to wait between each run (in ms)",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "blockId": 18,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/every_hour_trigger.png"
+      }
+    }
+  },
   "TOKENS": {
     "TRANSFER": {
       "description": "Monitors token transfers",
@@ -95,6 +117,7 @@ export const TRIGGERS = {
       "BALANCE": {
         "name": "ERC20 balance check",
         "description": "Fetches the balance of an ERC20 and checks it against the specified condition.",
+        "prototype": "erc20Balance",
         "type": 1,
         "method": "function balanceOf(address account) view returns (uint256)",
         "output": {
@@ -217,6 +240,7 @@ export const TRIGGERS = {
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/trend-up.png",
       "PRICE_MOVEMENT_AGAINST_CURRENCY": {
         "name": "On-Chain Price Movement Against Fiat Currency",
+        "prototype": "priceMovementAgainstCurrency",
         "description": "This trigger activates when the on-chain price of an asset moves against a specified currency based on the given condition.",
         "type": 2,
         "output": {
@@ -356,6 +380,7 @@ export const TRIGGERS = {
         "name": "sUSDE yield",
         "description": "Fetches Ethena's sUSDE yield",
         "type": 3,
+        "prototype": "sUSDEYield",
         "output": {
           "yield": "float"
         },
@@ -412,6 +437,7 @@ export const TRIGGERS = {
         "name": "USDE supply",
         "description": "Fetches Ethena's USDE supply",
         "type": 1,
+        "prototype": "usdeSupply",
         "method": "function totalSupply() public view virtual override returns (uint256)",
         "output": {
           "supply": "integer"
@@ -667,6 +693,7 @@ export const TRIGGERS = {
       "LENDING_RATE": {
         "name": "Lending rate",
         "description": "Get the lending rate of any asset on Ionic",
+        "prototype": "ionicLendingRate",
         "type": 1,
         "method": "function supplyRatePerBlock() external view returns (uint256)",
         "parameters": [
@@ -734,6 +761,7 @@ export const TRIGGERS = {
         "name": "Borrowing rate",
         "description": "Get the borrowing rate of any asset on Ionic",
         "type": 1,
+        "prototype": "ionicBorrowingRate",
         "method": "function borrowRatePerBlock() external view returns (uint256)",
         "parameters": [
           {
@@ -946,7 +974,7 @@ export const TRIGGERS = {
           },
           {
             "key": "abiParams.inputToken",
-            "type": "address",
+            "type": "erc20",
             "description": "Input token address",
             "category": 0
           },
@@ -958,7 +986,7 @@ export const TRIGGERS = {
           },
           {
             "key": "abiParams.outputToken",
-            "type": "address",
+            "type": "erc20",
             "description": "Output token address",
             "category": 0
           },
@@ -1044,6 +1072,7 @@ export const TRIGGERS = {
       "GET_FEAR_AND_GREED_INDEX": {
         "name": "Fear and Greed Index",
         "description": "Fetches the Fear and Greed Index from the specified API and processes the result.",
+        "prototype": "btcFearAndGreed",
         "type": 3,
         "output": {
           "value": "integer"
@@ -1106,6 +1135,7 @@ export const TRIGGERS = {
       "AUM": {
         "name": "Assets under management",
         "description": "Fetches IBIT net assets (USD)",
+        "prototype": "ibitAum",
         "type": 3,
         "output": {
           "asset_under_management": "integer"
@@ -1186,6 +1216,7 @@ export const TRIGGERS = {
       "GAS_API": {
         "name": "Ethereum Gas Price Monitor",
         "description": "Monitors Ethereum gas prices and triggers when the gas price meets the defined condition.",
+        "prototype": "mainnetGasPrice",
         "type": 3,
         "output": {
           "gasPrice": "float"
