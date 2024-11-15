@@ -228,6 +228,13 @@ export const TOKENS: Tokens = {
       image: "https://static.debank.com/image/coin/logo_url/usdc/e87790bfe0b3f2ea855dc29069b38818.png"
     },
     {
+      contractAddress: "0x2416092f143378750bb29b79eD961ab195CcEea5",
+      name: "Renzo Restaked ETH",
+      symbol: "ezETH",
+      decimals: 18,
+      image: "https://assets.coingecko.com/coins/images/34753/small/Ezeth_logo_circle.png?1713496404"
+    },
+    {
       contractAddress: "0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452",
       name: "Wrapped liquid staked Ether 2.0",
       symbol: "wstETH",
@@ -263,8 +270,118 @@ export const TOKENS: Tokens = {
       decimals: 18,
       image: "https://basescan.org/token/images/aerodrome_32.png"
     },
-
-
+    {
+        contractAddress: "0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22",
+        name: "Coinbase Wrapped Staked ETH",
+        symbol: "cbETH",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/27008/small/cbeth.png?1709186989"
+    },
+    {
+        contractAddress: "0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A",
+        name: "Wrapped Ethereum",
+        symbol: "weETH",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/39950/small/WETH.PNG?1724902237"
+    },
+    {
+        contractAddress: "0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4",
+        name: "Electronic Dollar",
+        symbol: "eUSD",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/28445/small/0xa0d69e286b938e21cbf7e51d71f6a4c8918f482f.png?1696527441"
+    },
+    {
+        contractAddress: "0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff",
+        name: "Based ETH",
+        symbol: "bsdETH",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/35774/small/Icon_White_on_Blue.png?1709793654"
+    },
+    {
+        contractAddress: "0xCc7FF230365bD730eE4B352cC2492CEdAC49383e",
+        name: "High Yield USD",
+        symbol: "hyUSD",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/33636/small/hyusdlogo.png?1702536133"
+    },
+    {
+        contractAddress: "0xaB36452DbAC151bE02b16Ca17d8919826072f64a",
+        name: "Reserve Rights",
+        symbol: "RSR",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/8365/small/RSR_Blue_Circle_1000.png?1721777856"
+    },
+    {
+        contractAddress: "0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3",
+        name: "Super OETH",
+        symbol: "superOETH",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/39828/small/Super_OETH.png?1724208268"
+    },
+    {
+        contractAddress: "0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C",
+        name: "Mountain Protocol USD",
+        symbol: "wUSDM",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/31719/small/usdm.png?1696530540"
+    },
+    {
+        contractAddress: "https://assets.coingecko.com/coins/images/26045/small/euro.png?1696525125",
+        name: "Euro Coin",
+        symbol: "EURC",
+        decimals: 6,
+        image: "https://static.debank.com/image/coin/logo_url/eurc.png"
+    },
+    {
+        contractAddress: "0x7002458B1DF59EccB57387bC79fFc7C29E22e6f7",
+        name: "OriginToken",
+        symbol: "OGN",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/3296/small/op.jpg?1696504006"
+    },
+    {
+        contractAddress: "0xb79dd08ea68a908a97220c76d19a6aa9cbde4376",
+        name: "USD+",
+        symbol: "USD+",
+        decimals: 6,
+        image: "https://static.debank.com/image/coin/logo_url/usdplus.png"
+    },
+    {
+        contractAddress: "0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938",
+        name: "USDz",
+        symbol: "USDz",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/38039/small/usdz-image-200x200.png?1716334412"
+    },
+    {
+        contractAddress: "0xd95ca61CE9aAF2143E81Ef5462C0c2325172E028",
+        name: "Wrapped USD+",
+        symbol: "wUSD+",
+        decimals: 6,
+        image: null
+    },
+    {
+        contractAddress: "0xe31eE12bDFDD0573D634124611e85338e2cBF0cF",
+        name: "Stable USDz",
+        symbol: "sUSDz",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/38040/small/susdz-symbol-200x200.png?1716334492"
+    },
+    {
+        contractAddress: "0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55",
+        name: "Solana (Universal)",
+        symbol: "uSOL",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/39987/small/UA-SOL_1.png?1725027946"
+    },
+    {
+        contractAddress: "0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4",
+        name: "Sui (Universal)",
+        symbol: "uSUI",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/50482/small/UA-SUI-PAD.png?1727888681"
+    }
   ]
 };
 
