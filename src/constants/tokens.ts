@@ -405,7 +405,7 @@ export const TOKENS: Tokens = {
     },
     {
         contractAddress: "0xEDfa23602D0EC14714057867A78d01e94176BEA0",
-        name: "rsETHWrapper",
+        name: "Wrapped rsETH",
         symbol: "wrsETH",
         decimals: 18,
         image: "https://assets.coingecko.com/coins/images/37919/small/rseth.png?1715936438"
