@@ -327,7 +327,7 @@ export const TOKENS: Tokens = {
         image: "https://assets.coingecko.com/coins/images/31719/small/usdm.png?1696530540"
     },
     {
-        contractAddress: "https://assets.coingecko.com/coins/images/26045/small/euro.png?1696525125",
+        contractAddress: "0x60a3E35Cc302bFA44Cb288Bc5a4F316Fdb1adb42",
         name: "Euro Coin",
         symbol: "EURC",
         decimals: 6,
@@ -381,6 +381,34 @@ export const TOKENS: Tokens = {
         symbol: "uSUI",
         decimals: 18,
         image: "https://assets.coingecko.com/coins/images/50482/small/UA-SUI-PAD.png?1727888681"
+    },
+    {
+        contractAddress: "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
+        name: "Dai Stablecoin",
+        symbol: "DAI",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/39807/small/dai.png?1724126571"
+    },
+    {
+        contractAddress: "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+        name: "USD Base Coin",
+        symbol: "USDbC",
+        decimals: 6,
+        image: "https://assets.coingecko.com/coins/images/31164/small/baseusdc.jpg?1696529993"
+    },
+    {
+        contractAddress: "0xB6fe221Fe9EeF5aBa221c348bA20A1Bf5e73624c",
+        name: "Rocket Pool ETH",
+        symbol: "rETH",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/20764/small/reth.png?1696520159"
+    },
+    {
+        contractAddress: "0xEDfa23602D0EC14714057867A78d01e94176BEA0",
+        name: "rsETHWrapper",
+        symbol: "wrsETH",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/37919/small/rseth.png?1715936438"
     }
   ]
 };
