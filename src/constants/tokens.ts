@@ -409,6 +409,13 @@ export const TOKENS: Tokens = {
         symbol: "wrsETH",
         decimals: 18,
         image: "https://assets.coingecko.com/coins/images/37919/small/rseth.png?1715936438"
+    },
+    {
+        contractAddress: "0xA88594D404727625A9437C3f886C7643872296AE",
+        name: "WELL",
+        symbol: "WELL",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/26133/small/WELL.png?1696525221"
     }
   ]
 };
