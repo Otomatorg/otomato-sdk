@@ -84,5 +84,5 @@ export function getComputeERC20Variable(amount: string, chainId: any, contractAd
     const formattedAmount = isNumericString(amount) ? `${amount}` : amount;
 
     // Construct the computeERC20Amount formula
-    return `{{computeERC20Amount(${formattedAmount}, ${chainId}, ${formattedContractAddress})}}`;
+    return `{{computeERC20Amount(${formattedAmount}, ${chainId}, '${formattedContractAddress}')}}`;
 }
