@@ -50,7 +50,11 @@ class RPCServices {
         let attempt = 0;
         while (attempt <= retries) {
             try {
-                return await fn();
+                const result = await fn();
+                if (typeof result === 'bigint') {
+                  return +(result.toString()) as T
+                }
+                return result;
             } catch (error: any) {
                 if (attempt === retries) {
                     throw new Error(`Error fetching token details ${contractAddress} on chain ${chainId}`);
