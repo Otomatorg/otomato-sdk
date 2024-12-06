@@ -68,13 +68,23 @@ class ApiServices {
     return response.data;
   }
 
-  async getWorkflowsOfUser() {
+  async getWorkflowsOfUser(offset?: number, limit?: number) {
     if (!this.auth) {
       throw new Error('Authorization token is required');
     }
+  
+    const headers = { 'Authorization': this.auth };
     
-    const headers = this.auth ? { 'Authorization': this.auth } : {};
-    const response = await axiosInstance.get('/workflows', { headers });
+    // Set defaults if offset and limit are not provided
+    const finalOffset = offset ?? 0;
+    const finalLimit = limit ?? 8;
+  
+    const params = new URLSearchParams();
+    params.append('offset', finalOffset.toString());
+    params.append('limit', finalLimit.toString());
+  
+    const url = `/workflows?${params.toString()}`;
+    const response = await axiosInstance.get(url, { headers });
     return response.data;
   }
 
