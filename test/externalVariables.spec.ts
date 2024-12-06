@@ -53,7 +53,7 @@ describe('external variables construction', () => {
             ]
         );
 
-        expect(variable).to.equal('{{external.functions.priceMovementAgainstCurrency(34443,,,USD,0xf0F161fDA2712DB8b566946122a5af183995e2eD)}}');
+        expect(variable).to.equal('{{external.functions.priceMovementAgainstCurrency(34443,,USD,,0xf0F161fDA2712DB8b566946122a5af183995e2eD)}}');
     });
 
 

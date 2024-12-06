@@ -20,7 +20,7 @@ describe('RPCServices', () => {
 
             // Expectations: These should be based on the actual token's attributes
             expect(token).to.have.property('contractAddress', tokenContractAddress);
-            expect(token).to.have.property('decimals', BigInt(18));
+            expect(token).to.have.property('decimals', 18);
             expect(token).to.have.property('symbol', 'SMD');
             expect(token).to.have.property('name', 'Swap Mode');
         });
@@ -57,7 +57,7 @@ describe('RPCServices - integrations', () => {
 
             // Expectations: These should be based on the actual token's attributes
             expect(token).to.have.property('contractAddress', tokenContractAddress);
-            expect(token).to.have.property('decimals', BigInt(18));
+            expect(token).to.have.property('decimals', 18);
             expect(token).to.have.property('symbol', 'SMD');
             expect(token).to.have.property('name', 'Swap Mode');
         });
