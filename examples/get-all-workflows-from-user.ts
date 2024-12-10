@@ -10,9 +10,9 @@ async function main() {
 
     apiServices.setUrl(process.env.API_URL);
     apiServices.setAuth(process.env.AUTH_TOKEN);    
-    const workflows = await apiServices.getWorkflowsOfUser(0, 8);
+    const workflows = await apiServices.getWorkflowsOfUser(0, 8, false);
     console.log(workflows.meta)
-    console.log(workflows.data.map((i: Workflow) => i.name));
+    console.log(workflows.data.map((i: Workflow) => i.id));
     // const workflow = await new Workflow().load(workflows.data[1].id);
     // console.log(workflow);
 }
