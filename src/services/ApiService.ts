@@ -68,14 +68,14 @@ class ApiServices {
     return response.data;
   }
 
-  async getWorkflowsOfUser(offset?: number, limit?: number, isActive?: boolean) {
+  async getWorkflowsOfUser(offset?: number, limit?: number, isActive?: boolean, query?: string) {
     if (!this.auth) {
       throw new Error('Authorization token is required');
     }
   
     const headers = { 'Authorization': this.auth };
   
-    // Set defaults if offset and limit are not provided
+    // Set defaults for offset and limit if not provided
     const finalOffset = offset ?? 0;
     const finalLimit = limit ?? 8;
   
@@ -86,6 +86,11 @@ class ApiServices {
     // Add isActive filter if provided
     if (isActive !== undefined) {
       params.append('isActive', isActive.toString());
+    }
+  
+    // add a query to filter by name
+    if (query) {
+      params.append('q', query);
     }
   
     const url = `/workflows?${params.toString()}`;
