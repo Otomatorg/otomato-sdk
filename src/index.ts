@@ -14,6 +14,7 @@ export * from './models/conditions/ConditionGroup.js';
 export * from './models/Parameter.js';
 export * from './models/Trigger.js';
 export * from './models/Node.js';
+export * from './models/Note.js';
 export * from './models/Edge.js';
 export * from './models/SessionKeyPermission.js';
 export * from './models/Authorization.js';

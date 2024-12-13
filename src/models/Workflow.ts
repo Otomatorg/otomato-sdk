@@ -188,6 +188,7 @@ export class Workflow {
       this.dateModified = response.dateModified;
       this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
       this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
+      this.notes = response.notes.map((noteData: any) => Note.fromJSON(noteData));
       return this;
     } catch (error: any) {
       throw new Error(`Failed to load workflow: ${error.message}`);

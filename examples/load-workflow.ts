@@ -13,7 +13,7 @@ async function main() {
     //const workflows = await apiServices.getWorkflowsOfUser();
     //console.log(workflows);
     // const workflow = await new Workflow().load(workflows[12].id);
-    const workflow = await new Workflow().load("df89b574-2139-4750-ba15-5886aac46ba3");
+    const workflow = await new Workflow().load("d6b61834-6ff1-4f59-b02f-9937cf3c7236");
     console.log(JSON.stringify(workflow));
 }
 
