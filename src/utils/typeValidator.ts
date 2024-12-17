@@ -115,7 +115,7 @@ function isValidValue(value: any): boolean {
 }
 
 function isVariable(value: string): boolean {
-    return /\{\{nodeMap\.[^.}]+\.(?:output|parameters(?:\.abi\.parameters)?)\.[^.}]+\}\}/.test(value);
+    return /\{\{(?:nodeMap\.[^.}]+\.(?:output|parameters(?:\.abi\.parameters)?)|external\.functions\.[^(}]+)\([^)]*\)\}\}/.test(value);
 }
 
 export function typeIsNumber(type: string): boolean {
