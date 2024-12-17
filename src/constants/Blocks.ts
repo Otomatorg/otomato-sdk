@@ -2298,6 +2298,14 @@ export const ACTIONS = {
             ]
           }
         ],
+        "checks": [
+          {
+            "type": 0,
+            "chainId": "{{parameters.chainId}}",
+            "contractAddress": "{{parameters.tokenToDeposit}}",
+            "amount": "{{parameters.abi.parameters.amount}}"
+          }
+        ],
         "requiredApprovals": [
           {
             "address": "{{parameters.tokenToDeposit}}",
