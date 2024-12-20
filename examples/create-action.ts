@@ -23,6 +23,7 @@ const createAction = () => {
   slackAction.setParams("message", "This is a test message");
 
   console.log(slackAction.toJSON());
+  console.log(slackAction.parentInfo?.name);
 };
 
 createAction();

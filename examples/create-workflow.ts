@@ -28,7 +28,7 @@ async function main() {
 
     const ionicDeposit = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
     ionicDeposit.setChainId(CHAINS.MODE);
-    //ionicDeposit.setParams('tokenToDeposit', getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
+    ionicDeposit.setParams('tokenToDeposit', getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
     ionicDeposit.setParams('amount', odosAction.getOutputVariableName('amountOut'));
     ionicDeposit.setPosition(400, 360);
 
