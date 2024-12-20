@@ -349,6 +349,8 @@ async function createWorkflow() {
     const withdrawBalanceCheckBlocks = [];
     for (const protocolInner of protocols) {
 
+      if (protocolInner == protocol) continue;
+
       // Deposit the all the amount to protocol
       const innerProtocolDeposit = await getBlockFromProtocolName(protocol, BlockType.DEPOSIT);
       actions.push(innerProtocolDeposit)
