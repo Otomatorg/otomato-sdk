@@ -711,7 +711,6 @@ export const TRIGGERS = {
             "description": "The token you want to fetch the yield",
             "mandatory": true,
             "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4\",\n    \"0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff\",\n    \"0xCc7FF230365bD730eE4B352cC2492CEdAC49383e\",\n    \"0xaB36452DbAC151bE02b16Ca17d8919826072f64a\",\n    \"0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3\",\n    \"0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C\",\n    \"0x7002458B1DF59EccB57387bC79fFc7C29E22e6f7\",\n    \"0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938\",\n    \"0xd95ca61CE9aAF2143E81Ef5462C0c2325172E028\",\n    \"0xe31eE12bDFDD0573D634124611e85338e2cBF0cF\",\n    \"0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55\",\n    \"0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4\"\n  ],\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
-            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4\",\n    \"0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff\",\n    \"0xCc7FF230365bD730eE4B352cC2492CEdAC49383e\",\n    \"0xaB36452DbAC151bE02b16Ca17d8919826072f64a\",\n    \"0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3\",\n    \"0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C\",\n    \"0x7002458B1DF59EccB57387bC79fFc7C29E22e6f7\",\n    \"0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938\",\n    \"0xd95ca61CE9aAF2143E81Ef5462C0c2325172E028\",\n    \"0xe31eE12bDFDD0573D634124611e85338e2cBF0cF\",\n    \"0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55\",\n    \"0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4\"\n  ],\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
             "category": 0
           },
           {
@@ -778,7 +777,6 @@ export const TRIGGERS = {
             "type": "erc20",
             "description": "The token you want to fetch the borrow rate for",
             "mandatory": true,
-            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4\",\n    \"0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff\",\n    \"0xCc7FF230365bD730eE4B352cC2492CEdAC49383e\",\n    \"0xaB36452DbAC151bE02b16Ca17d8919826072f64a\",\n    \"0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3\",\n    \"0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C\",\n    \"0x7002458B1DF59EccB57387bC79fFc7C29E22e6f7\",\n    \"0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938\",\n    \"0xd95ca61CE9aAF2143E81Ef5462C0c2325172E028\",\n    \"0xe31eE12bDFDD0573D634124611e85338e2cBF0cF\",\n    \"0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55\",\n    \"0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4\"\n  ],\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
             "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4\",\n    \"0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff\",\n    \"0xCc7FF230365bD730eE4B352cC2492CEdAC49383e\",\n    \"0xaB36452DbAC151bE02b16Ca17d8919826072f64a\",\n    \"0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3\",\n    \"0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C\",\n    \"0x7002458B1DF59EccB57387bC79fFc7C29E22e6f7\",\n    \"0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938\",\n    \"0xd95ca61CE9aAF2143E81Ef5462C0c2325172E028\",\n    \"0xe31eE12bDFDD0573D634124611e85338e2cBF0cF\",\n    \"0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55\",\n    \"0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4\"\n  ],\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
             "category": 0
           },
@@ -922,7 +920,6 @@ export const TRIGGERS = {
         8453
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.png",
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.png",
       "LENDING_RATE": {
         "name": "Lending rate",
         "description": "Get the lending rate of any asset on Aave",
@@ -988,7 +985,6 @@ export const TRIGGERS = {
           }
         ],
         "blockId": 19,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.png"
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.png"
       },
       "BORROWING_RATES": {
@@ -1057,7 +1053,6 @@ export const TRIGGERS = {
         ],
         "blockId": 20,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.png"
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.png"
       }
     },
     "MOONWELL": {
@@ -1067,10 +1062,8 @@ export const TRIGGERS = {
         8453
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png",
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png",
       "LENDING_RATE": {
         "name": "Lending rate",
-        "description": "Get the lending rate of an asset on Moonwell",
         "description": "Get the lending rate of an asset on Moonwell",
         "prototype": "moonwellLendingRate",
         "type": 1,
@@ -1084,7 +1077,6 @@ export const TRIGGERS = {
             "category": 0
           },
           {
-            "key": "asset",
             "key": "asset",
             "type": "erc20",
             "description": "The token you want to fetch the yield",
@@ -1139,39 +1131,7 @@ export const TRIGGERS = {
             ]
           }
         ],
-          "lendingRate": "float",
-          "incentives": "[]",
-          "underlyingPrice": "uint256",
-          "totalSupply": "uint256",
-          "supplyRate": "uint256",
-          "exchangeRate": "uint256"
-        },
-        "examples": [
-          {
-            "name": "USDC Lending Rate is above 5%",
-            "description": "USDC Lending Rate is above 5%",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 8453
-              },
-              {
-                "key": "asset",
-                "value": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
-              },
-              {
-                "key": "condition",
-                "value": "gt"
-              },
-              {
-                "key": "comparisonValue",
-                "value": 5
-              }
-            ]
-          }
-        ],
         "blockId": 21,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png"
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png"
       },
       "BORROWING_RATES": {
@@ -1189,7 +1149,6 @@ export const TRIGGERS = {
             "category": 0
           },
           {
-            "key": "asset",
             "key": "asset",
             "type": "erc20",
             "description": "The token you want to fetch the borrow rate for",
@@ -1797,7 +1756,6 @@ export const ACTIONS = {
             "key": "time",
             "type": "string",
             "description": "The time to wait (in milliseconds)",
-            "description": "The time to wait (in milliseconds)",
             "mandatory": true,
             "category": 0
           },
@@ -2291,7 +2249,6 @@ export const ACTIONS = {
             "description": "The token to deposit",
             "mandatory": true,
             "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4\",\n    \"0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff\",\n    \"0xCc7FF230365bD730eE4B352cC2492CEdAC49383e\",\n    \"0xaB36452DbAC151bE02b16Ca17d8919826072f64a\",\n    \"0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3\",\n    \"0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C\",\n    \"0x7002458B1DF59EccB57387bC79fFc7C29E22e6f7\",\n    \"0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938\",\n    \"0xd95ca61CE9aAF2143E81Ef5462C0c2325172E028\",\n    \"0xe31eE12bDFDD0573D634124611e85338e2cBF0cF\",\n    \"0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55\",\n    \"0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4\"\n  ],\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
-            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4\",\n    \"0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff\",\n    \"0xCc7FF230365bD730eE4B352cC2492CEdAC49383e\",\n    \"0xaB36452DbAC151bE02b16Ca17d8919826072f64a\",\n    \"0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3\",\n    \"0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C\",\n    \"0x7002458B1DF59EccB57387bC79fFc7C29E22e6f7\",\n    \"0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938\",\n    \"0xd95ca61CE9aAF2143E81Ef5462C0c2325172E028\",\n    \"0xe31eE12bDFDD0573D634124611e85338e2cBF0cF\",\n    \"0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55\",\n    \"0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4\"\n  ],\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
             "category": 0
           },
           {
@@ -2395,7 +2352,6 @@ export const ACTIONS = {
             "description": "The token to withdraw",
             "mandatory": true,
             "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4\",\n    \"0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff\",\n    \"0xCc7FF230365bD730eE4B352cC2492CEdAC49383e\",\n    \"0xaB36452DbAC151bE02b16Ca17d8919826072f64a\",\n    \"0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3\",\n    \"0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C\",\n    \"0x7002458B1DF59EccB57387bC79fFc7C29E22e6f7\",\n    \"0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938\",\n    \"0xd95ca61CE9aAF2143E81Ef5462C0c2325172E028\",\n    \"0xe31eE12bDFDD0573D634124611e85338e2cBF0cF\",\n    \"0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55\",\n    \"0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4\"\n  ],\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
-            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4\",\n    \"0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff\",\n    \"0xCc7FF230365bD730eE4B352cC2492CEdAC49383e\",\n    \"0xaB36452DbAC151bE02b16Ca17d8919826072f64a\",\n    \"0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3\",\n    \"0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C\",\n    \"0x7002458B1DF59EccB57387bC79fFc7C29E22e6f7\",\n    \"0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938\",\n    \"0xd95ca61CE9aAF2143E81Ef5462C0c2325172E028\",\n    \"0xe31eE12bDFDD0573D634124611e85338e2cBF0cF\",\n    \"0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55\",\n    \"0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4\"\n  ],\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
             "category": 0
           },
           {
@@ -2426,20 +2382,6 @@ export const ACTIONS = {
               {
                 "key": "tokenToWithdraw",
                 "value": "0xf0F161fDA2712DB8b566946122a5af183995e2eD"
-              }
-            ]
-          },
-          {
-            "name": "Withdraw all",
-            "description": "Withdraw all supplied amount of an asset",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 8453
-              },
-              {
-                "key": "abiParams.amount",
-                "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935n"
               }
             ]
           },
@@ -2502,7 +2444,6 @@ export const ACTIONS = {
             "type": "erc20",
             "description": "The token to borrow",
             "mandatory": true,
-            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4\",\n    \"0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff\",\n    \"0xCc7FF230365bD730eE4B352cC2492CEdAC49383e\",\n    \"0xaB36452DbAC151bE02b16Ca17d8919826072f64a\",\n    \"0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3\",\n    \"0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C\",\n    \"0x7002458B1DF59EccB57387bC79fFc7C29E22e6f7\",\n    \"0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938\",\n    \"0xd95ca61CE9aAF2143E81Ef5462C0c2325172E028\",\n    \"0xe31eE12bDFDD0573D634124611e85338e2cBF0cF\",\n    \"0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55\",\n    \"0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4\"\n  ],\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
             "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4\",\n    \"0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff\",\n    \"0xCc7FF230365bD730eE4B352cC2492CEdAC49383e\",\n    \"0xaB36452DbAC151bE02b16Ca17d8919826072f64a\",\n    \"0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3\",\n    \"0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C\",\n    \"0x7002458B1DF59EccB57387bC79fFc7C29E22e6f7\",\n    \"0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938\",\n    \"0xd95ca61CE9aAF2143E81Ef5462C0c2325172E028\",\n    \"0xe31eE12bDFDD0573D634124611e85338e2cBF0cF\",\n    \"0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55\",\n    \"0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4\"\n  ],\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
             "category": 0
           },
@@ -2582,7 +2523,6 @@ export const ACTIONS = {
             "type": "erc20",
             "description": "The token to repay",
             "mandatory": true,
-            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4\",\n    \"0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff\",\n    \"0xCc7FF230365bD730eE4B352cC2492CEdAC49383e\",\n    \"0xaB36452DbAC151bE02b16Ca17d8919826072f64a\",\n    \"0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3\",\n    \"0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C\",\n    \"0x7002458B1DF59EccB57387bC79fFc7C29E22e6f7\",\n    \"0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938\",\n    \"0xd95ca61CE9aAF2143E81Ef5462C0c2325172E028\",\n    \"0xe31eE12bDFDD0573D634124611e85338e2cBF0cF\",\n    \"0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55\",\n    \"0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4\"\n  ],\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
             "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4\",\n    \"0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff\",\n    \"0xCc7FF230365bD730eE4B352cC2492CEdAC49383e\",\n    \"0xaB36452DbAC151bE02b16Ca17d8919826072f64a\",\n    \"0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3\",\n    \"0x59D9356E565Ab3A36dD77763Fc0d87fEaf85508C\",\n    \"0x7002458B1DF59EccB57387bC79fFc7C29E22e6f7\",\n    \"0x04D5ddf5f3a8939889F11E97f8c4BB48317F1938\",\n    \"0xd95ca61CE9aAF2143E81Ef5462C0c2325172E028\",\n    \"0xe31eE12bDFDD0573D634124611e85338e2cBF0cF\",\n    \"0x9B8Df6E244526ab5F6e6400d331DB28C8fdDdb55\",\n    \"0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4\"\n  ],\n  \"34443\": [\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xcDd475325D6F564d27247D1DddBb0DAc6fA0a5CF\",\n    \"0x80137510979822322193FC997d400D5A6C747bf7\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
             "category": 0
           },
@@ -2748,7 +2688,6 @@ export const ACTIONS = {
             "description": "The address to receive aTokens",
             "hideInUI": true,
             "category": 1
-            "category": 1
           },
           {
             "key": "abiParams.referralCode",
@@ -2764,7 +2703,6 @@ export const ACTIONS = {
           {
             "address": "{{parameters.abi.parameters.asset}}",
             "amount": "{{parameters.abi.parameters.amount}}",
-            "to": "{{before.contractAddress}}"
             "to": "{{before.contractAddress}}"
           }
         ],
@@ -2804,40 +2742,11 @@ export const ACTIONS = {
             ]
           }
         ],
-        "examples": [
-          {
-            "name": "Supply USDC",
-            "description": "Supply 100 USDC to Aave on the Base network",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 8453
-              },
-              {
-                "key": "abiParams.asset",
-                "value": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
-              },
-              {
-                "key": "abiParams.amount",
-                "value": "100000000n"
-              },
-              {
-                "key": "abiParams.onBehalfOf",
-                "value": ""
-              },
-              {
-                "key": "abiParams.referralCode",
-                "value": 0
-              }
-            ]
-          }
-        ],
         "output": {
           "transactionHash": "string"
         },
         "permissions": {
           "approvedTargets": [
-            "{{parameters.abi.parameters.asset}}",
             "{{parameters.abi.parameters.asset}}",
             "{{before.contractAddress}}"
           ],
@@ -2890,51 +2799,8 @@ export const ACTIONS = {
             "description": "The address to receive the withdrawn asset",
             "category": 0,
             "hideInUI": true
-            "hideInUI": true
           },
         ] as Parameter[],
-        "examples": [
-          {
-            "name": "Withdraw USDC",
-            "description": "Withdraw 10 USDC from Aave on the Base network",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 8453
-              },
-              {
-                "key": "abiParams.asset",
-                "value": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
-              },
-              {
-                "key": "abiParams.amount",
-                "value": "10000000n"
-              },
-              {
-                "key": "abiParams.to",
-                "value": ""
-              }
-            ]
-          },
-          {
-            "name": "Withdraw all",
-            "description": "Withdraw all supplied amount of an asset",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 8453
-              },
-              {
-                "key": "abiParams.amount",
-                "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935n"
-              },
-              {
-                "key": "abiParams.to",
-                "value": ""
-              }
-            ]
-          }
-        ],
         "examples": [
           {
             "name": "Withdraw USDC",
@@ -2984,7 +2850,6 @@ export const ACTIONS = {
         "permissions": {
           "approvedTargets": [
             "{{parameters.abi.parameters.asset}}",
-            "{{parameters.abi.parameters.asset}}",
             "{{before.contractAddress}}"
           ],
           "label": [
@@ -3002,14 +2867,6 @@ export const ACTIONS = {
             "amount": "{{parameters.abi.parameters.amount}}"
           }
         ],
-        "checks": [
-          {
-            "type": 0,
-            "chainId": "{{parameters.chainId}}",
-            "contractAddress": "{{before.aaveToken}}",
-            "amount": "{{parameters.abi.parameters.amount}}"
-          }
-        ],
         "blockId": 100021,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.png"
       }
@@ -3019,7 +2876,6 @@ export const ACTIONS = {
       "chains": [
         8453
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png",
       "DEPOSIT": {
         "name": "Lend asset",
@@ -3087,7 +2943,6 @@ export const ACTIONS = {
         "batchWith": [
           {
             "id": 100026,
-            "id": 100026,
             "type": 1,
             "conditions": [],
             "parameters": {
@@ -3122,28 +2977,7 @@ export const ACTIONS = {
             ]
           }
         ],
-        "examples": [
-          {
-            "name": "Deposit 100 USDC",
-            "description": "Lend 100 USDC on Moonwell on Base",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 8453
-              },
-              {
-                "key": "abiParams.amount",
-                "value": "100000000n"
-              },
-              {
-                "key": "tokenToDeposit",
-                "value": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
-              }
-            ]
-          }
-        ],
         "blockId": 100022,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png"
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png"
       },
       "WITHDRAW": {
@@ -3213,40 +3047,6 @@ export const ACTIONS = {
             ]
           }
         ],
-        "examples": [
-          {
-            "name": "Withdraw 100 USDC",
-            "description": "Withdraw 100 USDC on Moonwell on Base",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 8453
-              },
-              {
-                "key": "abiParams.amount",
-                "value": "100000000n"
-              },
-              {
-                "key": "tokenToWithdraw",
-                "value": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
-              }
-            ]
-          },
-          {
-            "name": "Withdraw all",
-            "description": "Withdraw all supplied amount of an asset",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 8453
-              },
-              {
-                "key": "abiParams.amount",
-                "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935n"
-              }
-            ]
-          }
-        ],
         "requiredApprovals": [],
         "output": {
           "transactionHash": "string"
@@ -3271,7 +3071,6 @@ export const ACTIONS = {
           }
         ],
         "blockId": 100023,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png"
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png"
       },
       "BORROW": {
@@ -3327,26 +3126,6 @@ export const ACTIONS = {
             ]
           }
         ],
-        "examples": [
-          {
-            "name": "Borrow 100 USDC",
-            "description": "Borrow 100 USDC on Moonwell on Base",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 8453
-              },
-              {
-                "key": "abiParams.amount",
-                "value": "100000000n"
-              },
-              {
-                "key": "tokenToBorrow",
-                "value": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
-              }
-            ]
-          }
-        ],
         "requiredApprovals": [],
         "output": {
           "transactionHash": "string"
@@ -3363,7 +3142,6 @@ export const ACTIONS = {
           ]
         },
         "blockId": 100024,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png"
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png"
       },
       "REPAY": {
@@ -3427,26 +3205,6 @@ export const ACTIONS = {
             ]
           }
         ],
-        "examples": [
-          {
-            "name": "Repay 100 USDC",
-            "description": "Repay 100 USDC on Moonwell on Base",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 8453
-              },
-              {
-                "key": "abiParams.amount",
-                "value": "100000000n"
-              },
-              {
-                "key": "tokenToRepay",
-                "value": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
-              }
-            ]
-          }
-        ],
         "requiredApprovals": [
           {
             "address": "{{parameters.tokenToRepay}}",
@@ -3469,7 +3227,6 @@ export const ACTIONS = {
           ]
         },
         "blockId": 100025,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png"
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png"
       },
       "ENABLE_COLLATERAL": {
@@ -3507,194 +3264,6 @@ export const ACTIONS = {
           ]
         },
         "blockId": 100026,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png"
-      }
-    },
-    "COMPOUND": {
-      "description": "Compound is an algorithmic, autonomous interest rate protocol built for developers, to unlock a universe of open financial applications.",
-      "chains": [
-        8453
-      ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/compound.png",
-      "DEPOSIT": {
-        "name": "Lend asset",
-        "description": "Deposit token in any Compound lending pool",
-        "type": 1,
-        "method": "function supply(address asset, uint amount)",
-        "parameters": [
-          {
-            "key": "chainId",
-            "type": "chainId",
-            "description": "Chain ID of the network",
-            "mandatory": true,
-            "category": 0
-          },
-          {
-            "key": "abiParams.asset",
-            "type": "erc20",
-            "description": "The token to deposit",
-            "mandatory": true,
-            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
-            "category": 0
-          },
-          {
-            "key": "abiParams.amount",
-            "type": "uint256",
-            "description": "Amount of crypto to deposit",
-            "mandatory": true,
-            "category": 0,
-            "erc20FormattedAmount": {
-              "contractAddress": "{{parameters.abi.parameters.asset}}",
-              "chain": "{{parameters.chainId}}"
-            }
-          },
-        ] as Parameter[],
-        "examples": [
-          {
-            "name": "Deposit 100 USDC",
-            "description": "Lend 100 USDC on Compound on Base",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 8453
-              },
-              {
-                "key": "abiParams.amount",
-                "value": "100000000n"
-              },
-              {
-                "key": "abiParams.asset",
-                "value": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
-              }
-            ]
-          }
-        ],
-        "checks": [
-          {
-            "type": 0,
-            "chainId": "{{parameters.chainId}}",
-            "contractAddress": "{{parameters.abi.parameters.asset}}",
-            "amount": "{{parameters.abi.parameters.amount}}"
-          }
-        ],
-        "requiredApprovals": [
-          {
-            "address": "{{parameters.abi.parameters.asset}}",
-            "amount": "{{parameters.abi.parameters.amount}}",
-            "to": "{{before.contractAddress}}"
-          }
-        ],
-        "output": {
-          "transactionHash": "string"
-        },
-        "permissions": {
-          "approvedTargets": [
-            "{{parameters.abi.parameters.asset}}",
-            "{{before.contractAddress}}"
-          ],
-          "label": [
-            "Deposit {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.asset}})}} on COMPOUND"
-          ],
-          "labelNotAuthorized": [
-            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.asset}})}}"
-          ]
-        },
-        "blockId": 100027,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/compound.png"
-      },
-      "WITHDRAW": {
-        "name": "Withdraw asset",
-        "description": "Withdraw token deposited in any lending pool",
-        "type": 1,
-        "method": "function withdraw(address asset, uint amount)",
-        "parameters": [
-          {
-            "key": "chainId",
-            "type": "chainId",
-            "description": "Chain ID of the network",
-            "mandatory": true,
-            "category": 0
-          },
-          {
-            "key": "abiParams.asset",
-            "type": "erc20",
-            "description": "The token to withdraw",
-            "mandatory": true,
-            "enum": "\n    (env) => {\n        if (!env.parameters.chainId)\n            throw new Error('You need to provide the chainId first');\n        \n        const availableTokens = {\n  \"8453\": [\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA\"\n  ]\n};\n        const chainId = env.parameters.chainId;\n        return availableTokens[chainId] || [];\n    }",
-            "category": 0
-          },
-          {
-            "key": "abiParams.amount",
-            "type": "uint256",
-            "description": "Amount of crypto to withdraw",
-            "mandatory": true,
-            "category": 0,
-            "erc20FormattedAmount": {
-              "contractAddress": "{{parameters.abi.parameters.asset}}",
-              "chain": "{{parameters.chainId}}"
-            }
-          },
-        ] as Parameter[],
-        "checks": [
-          {
-            "type": 0,
-            "chainId": "{{parameters.chainId}}",
-            "contractAddress": "{{before.contractAddress}}",
-            "amount": "{{parameters.abi.parameters.amount}}"
-          }
-        ],
-        "examples": [
-          {
-            "name": "Withdraw 100 USDC",
-            "description": "Withdraw 100 USDC on Compound on Base",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 8453
-              },
-              {
-                "key": "abiParams.amount",
-                "value": "100000000n"
-              },
-              {
-                "key": "abiParams.asset",
-                "value": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
-              }
-            ]
-          },
-          {
-            "name": "Withdraw all",
-            "description": "Withdraw all supplied amount of an asset",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 8453
-              },
-              {
-                "key": "abiParams.amount",
-                "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935n"
-              }
-            ]
-          }
-        ],
-        "requiredApprovals": [],
-        "output": {
-          "transactionHash": "string"
-        },
-        "permissions": {
-          "approvedTargets": [
-            "{{parameters.abi.parameters.asset}}",
-            "{{before.contractAddress}}"
-          ],
-          "label": [
-            "Withdraw {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.asset}})}} from COMPOUND"
-          ],
-          "labelNotAuthorized": [
-            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.asset}})}}"
-          ]
-        },
-        "blockId": 100028,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/compound.png"
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png"
       }
     },
