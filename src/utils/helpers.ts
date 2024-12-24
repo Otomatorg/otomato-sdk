@@ -93,13 +93,13 @@ export function getComputeERC20Variable(amount: string, chainId: any, contractAd
     return `{{computeERC20Amount(${formattedAmount}, ${chainId}, '${formattedContractAddress}')}}`;
 }
 
-export function getProtocolTokenForBlock(chain: number, triggerBlockId: number, asset: string): string {
+export function getProtocolTokenForBlock(chain: number, blockId: number, asset: string): string {
     const aaveBlockIds = [100021];
     const ionicBlockIds = [100007];
     const moonwellBlockIds = [100023];
     const compoundBlockIds = [100028];
 
-    if (aaveBlockIds.includes(triggerBlockId)) {
+    if (aaveBlockIds.includes(blockId)) {
         if (chain == CHAINS.BASE) {
             switch (asset.toLowerCase()) {
                 case getTokenFromSymbol(CHAINS.BASE, 'WETH').contractAddress.toLowerCase():
@@ -122,7 +122,7 @@ export function getProtocolTokenForBlock(chain: number, triggerBlockId: number, 
         }
     }
 
-    if (ionicBlockIds.includes(triggerBlockId)) {
+    if (ionicBlockIds.includes(blockId)) {
         if (chain == CHAINS.MODE) {
             switch (asset.toLowerCase()) {
                 case getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress.toLowerCase():
@@ -200,7 +200,7 @@ export function getProtocolTokenForBlock(chain: number, triggerBlockId: number, 
         }
     }
 
-    if (moonwellBlockIds.includes(triggerBlockId)) {
+    if (moonwellBlockIds.includes(blockId)) {
         if (chain == CHAINS.BASE) {
             switch (asset.toLowerCase()) {
                 case getTokenFromSymbol(CHAINS.BASE, 'DAI').contractAddress.toLowerCase():
@@ -231,7 +231,7 @@ export function getProtocolTokenForBlock(chain: number, triggerBlockId: number, 
         }
     }
 
-    if (compoundBlockIds.includes(triggerBlockId)) {
+    if (compoundBlockIds.includes(blockId)) {
         if (chain == CHAINS.BASE) {
             switch (asset.toLowerCase()) {
                 case getTokenFromSymbol(CHAINS.BASE, 'USDC').contractAddress.toLowerCase():
