@@ -1,6 +1,6 @@
 // getUserProtocolBalances.ts
 import { ethers } from 'ethers';
-import { rpcServices } from '../../services/RpcServices';
+import { rpcServices } from '../index.js';
 
 // -------------- PROTOCOLS ENUM --------------
 export const PROTOCOLS = {
@@ -50,7 +50,7 @@ const chainTokenProtocolMap: ChainTokenProtocolMap = {
     ],
     // WETH on Base
     '0x4200000000000000000000000000000000000006': [
-      { protocol: PROTOCOLS.AAVE, token: '0xd4a0e0b9149BCee3C920d2E00b5dE09138fd8bb7' },
+      { protocol: PROTOCOLS.AAVE, token: '0xD4a0e0b9149BCee3C920d2E00b5dE09138fd8bb7' },
       { protocol: PROTOCOLS.COMPOUND, token: '0x46e6b214b524310239732D51387075E0e70970bf' },
       { protocol: PROTOCOLS.IONIC, token: '0x49420311B518f3d0c94e897592014de53831cfA3' },
       { protocol: PROTOCOLS.MOONWELL, token: '0x628ff693426583D9a7FB391E54366292F509D457' },

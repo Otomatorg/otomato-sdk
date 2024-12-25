@@ -1,7 +1,6 @@
 // test/getUserProtocolBalances.test.ts
 import { expect } from 'chai';
-import { getUserProtocolBalances } from '../src/index.js';
-import { rpcServices } from '../src/services/RpcServices';
+import { getUserProtocolBalances, rpcServices } from '../src/index.js';
 
 describe('getUserProtocolBalances', function() {
   // Adjust timeouts if calling real networks
