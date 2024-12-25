@@ -59,7 +59,7 @@ const chainTokenProtocolMap: ChainTokenProtocolMap = {
   },
   34443: {
     // USDC on Mode
-    '0xd988097fb8612cc24eeC14542bC03424c656005f': [
+    '0xd988097fb8612cc24eec14542bc03424c656005f': [
       { protocol: PROTOCOLS.IONIC, token: '0x2BE717340023C9e14C1Bb12cb3ecBcfd3c3fB038' },
       { protocol: PROTOCOLS.WALLET, token: '0xd988097fb8612cc24eeC14542bC03424c656005f' },
     ],
@@ -141,11 +141,7 @@ async function getBalanceInUnderlying(
 
       // For IONIC => scale = 18 - decimals + 6
       // For MOONWELL => you used scale=18. Let's handle them with logic or keep it simple
-      let scale = 18 - decimals + 6;
-      // If MOONWELL, you said "scale=18" in your snippet
-      if (protocol === PROTOCOLS.MOONWELL) {
-        scale = 18;
-      }
+      let scale = 18;
 
       // Fix: BigInt(10) instead of 10n
       const TEN = BigInt(10);
