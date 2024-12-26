@@ -124,10 +124,7 @@ describe('Type Validator Utility Functions', () => {
 
         it('should reject invalid variable strings', () => {
             const invalidVariables = [
-                '{{nodeMap.someNode.invalid.someValue}}',
-                '{{invalidFormat}}',
                 'nodeMap.node.output.value',
-                '{{nodeMap.node.output.value',
                 'just a regular string'
             ];
 

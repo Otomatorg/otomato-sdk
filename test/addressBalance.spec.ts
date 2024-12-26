@@ -26,8 +26,6 @@ describe('getUserProtocolBalances', function() {
       contractAddress: baseUSDC,
     });
 
-    console.log(results);
-
     // We expect multiple protocol entries: AAVE, COMPOUND, IONIC, MOONWELL, WALLET
     expect(results).to.be.an('array').with.lengthOf.at.least(1);
 
@@ -51,8 +49,6 @@ describe('getUserProtocolBalances', function() {
       address,
       contractAddress: unknownToken,
     });
-
-    console.log(results);
     
     expect(results).to.have.lengthOf(1);
     expect(results[0].protocol).to.equal('WALLET');

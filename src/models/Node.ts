@@ -104,7 +104,6 @@ export abstract class Node {
   }
 
   protected setParameter(key: string, value: any): void {
-    console.log(`${key} - ${value}`)
     if (key in this.parameters) {
       const param = this.parameters[key];
       try {
@@ -221,7 +220,6 @@ export abstract class Node {
       throw new Error('Cannot delete a node without an ID.');
     }
     try {
-      console.log(this.id);
       const response = await apiServices.delete(`/nodes/${this.id}`);
       if (response.status === 204) {
         return { success: true };
