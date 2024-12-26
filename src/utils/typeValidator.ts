@@ -114,8 +114,15 @@ function isValidValue(value: any): boolean {
     return false;
 }
 
-function isVariable(value: string): boolean {
-    return /\{\{(?:nodeMap\.[^.}]+\.(?:output|parameters(?:\.abi\.parameters)?)|external\.functions\.[^(}]+)\([^)]*\)\}\}/.test(value);
+/**
+ * Checks if the string contains a pattern like {{ ANY_CONTENT }}.
+ * This version is very broad: any characters (including newlines) 
+ * between the double braces will match.
+ */
+export function isVariable(value: string): boolean {
+    // The [\s\S] trick lets us match across multiple lines as well.
+    // The ? makes it non-greedy, so we only match up to the first "}}" we see.
+    return /\{\{[\s\S]*?\}\}/.test(value);
 }
 
 export function typeIsNumber(type: string): boolean {

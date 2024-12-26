@@ -1,5 +1,5 @@
 import { Parameter } from './Parameter.js';
-import { validateType, typeIsNumber } from '../utils/typeValidator.js';
+import { validateType, typeIsNumber, isVariable } from '../utils/typeValidator.js';
 import { ACTIONS, TRIGGERS } from '../constants/Blocks.js';
 import { apiServices } from '../services/ApiService.js';
 
@@ -104,6 +104,7 @@ export abstract class Node {
   }
 
   protected setParameter(key: string, value: any): void {
+    console.log(`${key} - ${value}`)
     if (key in this.parameters) {
       const param = this.parameters[key];
       try {
@@ -111,7 +112,7 @@ export abstract class Node {
         if (typeIsNumber(param.type) && typeof value === 'string' && value.endsWith('n')) {
           value = BigInt(value.substring(0, value.length - 1));
         }
-  
+
         // String to integer conversion
         if (typeIsNumber(param.type) && typeof value === 'string') {
           const parsedValue = parseInt(value, 10);
@@ -119,11 +120,11 @@ export abstract class Node {
             value = parsedValue;
           }
         }
-  
+
       } catch (e) {
         // console.error(`Error processing parameter ${key}:`, e);
       }
-  
+
       // Validate the value type
       if (validateType(param.type, value)) {
         this.parameters[key].value = value;
