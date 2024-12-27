@@ -24,7 +24,7 @@ async function ionic_base_supply() {
   ionicSupply.setChainId(CHAINS.BASE);
   ionicSupply.setParams(
       "abiParams.amount",
-      await convertToTokenUnitsFromSymbol(0.000001, CHAINS.BASE, "USDC")
+      await convertToTokenUnitsFromSymbol(0.00001, CHAINS.BASE, "USDC")
   );
   ionicSupply.setParams(
       "tokenToDeposit",

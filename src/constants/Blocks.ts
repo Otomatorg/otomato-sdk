@@ -1363,6 +1363,148 @@ export const TRIGGERS = {
         "blockId": 24,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/compound.png"
       }
+    },
+    "IRONCLAD": {
+      "description": "DeFi needs safe, liquid lending markets and steady stablecoins that drives value to users. We’ve built that foundation and made it Ironclad.",
+      "chains": [
+        8453,
+        34443
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ironclad.png",
+      "LENDING_RATE": {
+        "name": "Lending rate",
+        "description": "Get the lending rate of any asset on Ironclad",
+        "prototype": "ironcladLendingRate",
+        "type": 1,
+        "method": "function getReserveData(address asset) external view returns ((uint256 data) configuration, uint128 liquidityIndex, uint128 variableBorrowIndex, uint128 currentLiquidityRate, uint128 currentVariableBorrowRate, uint128 currentStableBorrowRate, uint40 lastUpdateTimestamp, address aTokenAddress, address stableDebtTokenAddress, address variableDebtTokenAddress, address interestRateStrategyAddress, uint8 id)",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.asset",
+            "type": "erc20",
+            "description": "The token you want to fetch the lending rate",
+            "mandatory": true,
+            "enum": "\n        (env) => {\n            if (!env.parameters.chainId)\n                throw new Error('You need to provide the chainId first');\n\n            const availableLendingTokens = {\n  \"8453\": [\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA\",\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\"\n  ],\n  \"34443\": [\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xDfc7C877a950e49D2610114102175A06C2e3167a\"\n  ]\n};\n            return availableLendingTokens[env.parameters.chainId] || [];\n    }",
+            "category": 0
+          },
+          {
+            "key": "condition",
+            "type": "logic_operator",
+            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ...",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "comparisonValue",
+            "type": "float",
+            "description": "The value to compare to",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "output": {
+          "lendingRate": "float"
+        },
+        "examples": [
+          {
+            "name": "USDT Lending Rate is above 5%",
+            "description": "USDT Lending Rate is above 5%",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "abiParams.asset",
+                "value": "0xf0F161fDA2712DB8b566946122a5af183995e2eD"
+              },
+              {
+                "key": "condition",
+                "value": "gt"
+              },
+              {
+                "key": "comparisonValue",
+                "value": 5
+              }
+            ]
+          }
+        ],
+        "blockId": 25,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ironclad.png"
+      },
+      "BORROWING_RATES": {
+        "name": "Borrowing rate",
+        "description": "Get the borrowing rate of any asset on Ironclad",
+        "type": 1,
+        "prototype": "ironcladBorrowingRate",
+        "method": "function getReserveData(address asset) external view returns ((uint256 data) configuration, uint128 liquidityIndex, uint128 variableBorrowIndex, uint128 currentLiquidityRate, uint128 currentVariableBorrowRate, uint128 currentStableBorrowRate, uint40 lastUpdateTimestamp, address aTokenAddress, address stableDebtTokenAddress, address variableDebtTokenAddress, address interestRateStrategyAddress, uint8 id)",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.asset",
+            "type": "erc20",
+            "description": "The token you want to fetch the borrow rate for",
+            "mandatory": true,
+            "enum": "\n        (env) => {\n            if (!env.parameters.chainId)\n                throw new Error('You need to provide the chainId first');\n\n            const availableLendingTokens = {\n  \"8453\": [\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA\",\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\"\n  ],\n  \"34443\": [\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xDfc7C877a950e49D2610114102175A06C2e3167a\"\n  ]\n};\n            return availableLendingTokens[env.parameters.chainId] || [];\n    }",
+            "category": 0
+          },
+          {
+            "key": "condition",
+            "type": "logic_operator",
+            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ...",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "comparisonValue",
+            "type": "float",
+            "description": "The value to compare to",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "output": {
+          "borrowingRate": "float"
+        },
+        "examples": [
+          {
+            "name": "USDT Borrowing Rate is above 3%",
+            "description": "USDT Borrowing Rate is above 3%",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "abiParams.asset",
+                "value": "0xf0F161fDA2712DB8b566946122a5af183995e2eD"
+              },
+              {
+                "key": "condition",
+                "value": "gt"
+              },
+              {
+                "key": "comparisonValue",
+                "value": 3
+              }
+            ]
+          }
+        ],
+        "blockId": 26,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ironclad.png"
+      }
     }
   },
   "DEXES": {
@@ -2316,14 +2458,14 @@ export const ACTIONS = {
         "batchWith": [
           {
             "id": 100012,
-            "type": 1,
+            "type": 0,
             "conditions": [],
             "parameters": {
               "chainId": "{{parameters.chainId}}",
               "abi": {
                 "parameters": {
                   "tokens": [
-                    "{{parameters.tokenToDeposit}}"
+                    "{{before.contractAddress}}"
                   ]
                 }
               }
@@ -2361,7 +2503,7 @@ export const ACTIONS = {
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
-              "contractAddress": "{{parameters.tokenToWithdraw}}",
+              "contractAddress": "{{before.contractAddress}}",
               "chain": "{{parameters.chainId}}"
             }
           },
@@ -2596,7 +2738,6 @@ export const ACTIONS = {
         "description": "Enable collateral to be able to borrow against it.",
         "type": 1,
         "method": "function enterMarkets(address[] tokens) returns (uint256[])",
-        "contractAddress": "0xFB3323E24743Caf4ADD0fDCCFB268565c0685556",
         "parameters": [
           {
             "key": "chainId",
@@ -2616,7 +2757,7 @@ export const ACTIONS = {
         "examples": [],
         "permissions": {
           "approvedTargets": [
-            "0xFB3323E24743Caf4ADD0fDCCFB268565c0685556"
+            "{{before.contractAddress}}"
           ],
           "label": [
             "Enable {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.tokens[0]}})}} as collateral on IONIC"
@@ -2693,7 +2834,6 @@ export const ACTIONS = {
             "key": "abiParams.referralCode",
             "type": "uint16",
             "description": "Referral code (use 0, as inactive)",
-            "mandatory": true,
             "hideInUI": true,
             "category": 1,
             "value": 0
@@ -2844,8 +2984,7 @@ export const ACTIONS = {
           }
         ],
         "output": {
-          "transactionHash": "string",
-          "amountWithdrawn": "uint256"
+          "transactionHash": "string"
         },
         "permissions": {
           "approvedTargets": [
@@ -2943,14 +3082,14 @@ export const ACTIONS = {
         "batchWith": [
           {
             "id": 100026,
-            "type": 1,
+            "type": 0,
             "conditions": [],
             "parameters": {
               "chainId": "{{parameters.chainId}}",
               "abi": {
                 "parameters": {
                   "tokens": [
-                    "{{parameters.tokenToDeposit}}"
+                    "{{before.contractAddress}}"
                   ]
                 }
               }
@@ -3452,6 +3591,232 @@ export const ACTIONS = {
         },
         "blockId": 100028,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/compound.png"
+      }
+    },
+    "IRONCLAD": {
+      "description": "DeFi needs safe, liquid lending markets and steady stablecoins that drives value to users. We've built that foundation and made it Ironclad.",
+      "chains": [
+        8453,
+        34443
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ironclad.png",
+      "SUPPLY": {
+        "name": "Supply Asset to Ironclad",
+        "description": "Supply an asset to ironclad",
+        "type": 1,
+        "method": "function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode)",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.asset",
+            "type": "erc20",
+            "description": "The token to supply",
+            "mandatory": true,
+            "enum": "\n        (env) => {\n            if (!env.parameters.chainId)\n                throw new Error('You need to provide the chainId first');\n\n            const availableLendingTokens = {\n  \"8453\": [\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA\",\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\"\n  ],\n  \"34443\": [\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xDfc7C877a950e49D2610114102175A06C2e3167a\"\n  ]\n};\n            return availableLendingTokens[env.parameters.chainId] || [];\n    }",
+            "category": 0
+          },
+          {
+            "key": "abiParams.amount",
+            "type": "uint256",
+            "description": "The amount of the asset to supply",
+            "mandatory": true,
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.abi.parameters.asset}}",
+              "chain": "{{parameters.chainId}}"
+            }
+          },
+          {
+            "key": "abiParams.onBehalfOf",
+            "type": "address",
+            "description": "The address to receive aTokens",
+            "hideInUI": true,
+            "category": 1
+          },
+          {
+            "key": "abiParams.referralCode",
+            "type": "uint16",
+            "description": "Referral code (use 0, as inactive)",
+            "hideInUI": true,
+            "category": 1,
+            "value": 0
+          },
+        ] as Parameter[],
+        "requiredApprovals": [
+          {
+            "address": "{{parameters.abi.parameters.asset}}",
+            "amount": "{{parameters.abi.parameters.amount}}",
+            "to": "{{before.contractAddress}}"
+          }
+        ],
+        "checks": [
+          {
+            "type": 0,
+            "chainId": "{{parameters.chainId}}",
+            "contractAddress": "{{parameters.abi.parameters.asset}}",
+            "amount": "{{parameters.abi.parameters.amount}}"
+          }
+        ],
+        "examples": [
+          {
+            "name": "Supply USDC",
+            "description": "Supply 100 USDC to Ironclad on the Mode network",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "abiParams.asset",
+                "value": "0xd988097fb8612cc24eeC14542bC03424c656005f"
+              },
+              {
+                "key": "abiParams.amount",
+                "value": "100000000n"
+              },
+              {
+                "key": "abiParams.onBehalfOf",
+                "value": ""
+              },
+              {
+                "key": "abiParams.referralCode",
+                "value": 0
+              }
+            ]
+          }
+        ],
+        "output": {
+          "transactionHash": "string"
+        },
+        "permissions": {
+          "approvedTargets": [
+            "{{parameters.abi.parameters.asset}}",
+            "{{before.contractAddress}}"
+          ],
+          "label": [
+            "Supply {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.asset}})}} on Ironclad"
+          ],
+          "labelNotAuthorized": [
+            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.asset}})}}"
+          ]
+        },
+        "blockId": 100029,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ironclad.png"
+      },
+      "WITHDRAW": {
+        "name": "Withdraw Asset from Ironclad",
+        "description": "Withdraw a supplied asset from the Ironclad pool.",
+        "type": 1,
+        "method": "function withdraw(address asset, uint256 amount, address to) returns (uint256)",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.asset",
+            "type": "erc20",
+            "description": "The address of the asset to withdraw",
+            "mandatory": true,
+            "enum": "\n        (env) => {\n            if (!env.parameters.chainId)\n                throw new Error('You need to provide the chainId first');\n\n            const availableLendingTokens = {\n  \"8453\": [\n    \"0x940181a94a35a4569e4529a3cdfb74e38fd98631\",\n    \"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf\",\n    \"0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22\",\n    \"0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA\",\n    \"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913\"\n  ],\n  \"34443\": [\n    \"0xd988097fb8612cc24eeC14542bC03424c656005f\",\n    \"0xf0F161fDA2712DB8b566946122a5af183995e2eD\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0x2416092f143378750bb29b79eD961ab195CcEea5\",\n    \"0x4200000000000000000000000000000000000006\",\n    \"0xe7903B1F75C534Dd8159b313d92cDCfbC62cB3Cd\",\n    \"0x59889b7021243dB5B1e065385F918316cD90D46c\",\n    \"0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A\",\n    \"0xDfc7C877a950e49D2610114102175A06C2e3167a\"\n  ]\n};\n            return availableLendingTokens[env.parameters.chainId] || [];\n    }",
+            "category": 0
+          },
+          {
+            "key": "abiParams.amount",
+            "type": "uint256",
+            "description": "The amount of the asset to withdraw. Use type(uint).max for full balance.",
+            "mandatory": true,
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.abi.parameters.asset}}",
+              "chain": "{{parameters.chainId}}"
+            },
+            "default": "type(uint256).max"
+          },
+          {
+            "key": "abiParams.to",
+            "type": "address",
+            "description": "The address to receive the withdrawn asset",
+            "category": 0,
+            "hideInUI": true
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "Withdraw USDC",
+            "description": "Withdraw 10 USDC from Ironclad on the Mode network",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "abiParams.asset",
+                "value": "0xd988097fb8612cc24eeC14542bC03424c656005f"
+              },
+              {
+                "key": "abiParams.amount",
+                "value": "10000000n"
+              },
+              {
+                "key": "abiParams.to",
+                "value": ""
+              }
+            ]
+          },
+          {
+            "name": "Withdraw all",
+            "description": "Withdraw all supplied amount of an asset",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 8453
+              },
+              {
+                "key": "abiParams.amount",
+                "value": "115792089237316195423570985008687907853269984665640564039457584007913129639935n"
+              },
+              {
+                "key": "abiParams.to",
+                "value": ""
+              }
+            ]
+          }
+        ],
+        "output": {
+          "transactionHash": "string"
+        },
+        "permissions": {
+          "approvedTargets": [
+            "{{parameters.abi.parameters.asset}}",
+            "{{before.contractAddress}}"
+          ],
+          "label": [
+            "Withdraw {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.asset}})}} from Ironclad"
+          ],
+          "labelNotAuthorized": [
+            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.abi.parameters.asset}})}}"
+          ]
+        },
+        "checks": [
+          {
+            "type": 0,
+            "chainId": "{{parameters.chainId}}",
+            "contractAddress": "{{before.ironcladToken}}",
+            "amount": "{{parameters.abi.parameters.amount}}"
+          }
+        ],
+        "blockId": 100030,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ironclad.png"
       }
     }
   },
