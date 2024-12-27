@@ -1,6 +1,6 @@
 {
   "name": "otomato-sdk",
-  "version": "2.0.13",
+  "version": "2.0.14",
   "description": "An SDK for building and managing automations on Otomato",
   "main": "dist/src/index.js",
   "types": "dist/types/src/index.d.ts",
