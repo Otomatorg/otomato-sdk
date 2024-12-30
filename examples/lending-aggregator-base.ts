@@ -4,8 +4,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const withdrawAmount = '115792089237316195423570985008687907853269984665640564039457584007913129639935n';
-const smartWallet = '0x8e379aD0090f45a53A08007536cE2fa0a3F9F93d';
-
 
 enum ProtocolName {
   AAVE = 'AAVE',
@@ -51,10 +49,6 @@ function createAaveWithdrawAll() {
   aaveWithdrawAll.setParams(
     "abiParams.amount", 
     withdrawAmount
-  );
-  aaveWithdrawAll.setParams(
-    "abiParams.to", 
-    smartWallet
   );
 
   return aaveWithdrawAll;
@@ -118,7 +112,6 @@ async function createAaveDeposit() {
   aaveDeposit.setChainId(CHAINS.BASE);
   aaveDeposit.setParams("abiParams.asset", getTokenFromSymbol(CHAINS.BASE, "USDC").contractAddress);
   aaveDeposit.setParams("abiParams.amount", USDCBalance);
-  aaveDeposit.setParams("abiParams.onBehalfOf", smartWallet);
   aaveDeposit.setParams("abiParams.referralCode", 0);
 
   return aaveDeposit;
@@ -263,13 +256,14 @@ function createUSDCBalanceCheckingConditionBlock() {
 }
 
 // ---------- If none of check balance condition satisfied ----------
-function createNoneOfBalanceCheckingSatisfiedConditionBlock() {
+function createNoneOfBalanceCheckingSatisfiedConditionBlock(currentProtocol: ProtocolName) {
   const conditionBranch = new Action(ACTIONS.CORE.CONDITION.IF);
   conditionBranch.setParams('logic', LOGIC_OPERATORS.OR);
 
   const conditionGroup = new ConditionGroup(LOGIC_OPERATORS.AND);
 
   for (const protocol of protocols) {
+    if (currentProtocol == protocol) continue;
     conditionGroup.addConditionCheck(balanceToWithdrawFunction[protocol], 'lt', "1");
   }
   conditionBranch.setParams('groups', [conditionGroup]);
@@ -315,7 +309,7 @@ async function createWorkflow() {
   for (const protocol of protocols) {
 
     // Check case where user doesn't have any available asset to withdraw, go straight to deposit action if TRUE
-    const noneBalanceSatisfiedIfBlock = createNoneOfBalanceCheckingSatisfiedConditionBlock();
+    const noneBalanceSatisfiedIfBlock = createNoneOfBalanceCheckingSatisfiedConditionBlock(protocol);
     actions.push(noneBalanceSatisfiedIfBlock);
 
     // Compare between protocol
@@ -335,21 +329,27 @@ async function createWorkflow() {
     actions.push(ifCondition);
     actions.push(split);
 
+    // Check if account have balance before deposit
+    const checkWalletUSDCBalanceForDefault = createUSDCBalanceCheckingConditionBlock();
+    actions.push(checkWalletUSDCBalanceForDefault)
+
     // For case users don't have deposited amount on any protocols
     const depositDefault = await getBlockFromProtocolName(protocol, BlockType.DEPOSIT);
     actions.push(depositDefault)
 
     edges.push(new Edge({
       source: noneBalanceSatisfiedIfBlock,
-      target: depositDefault,
+      target: checkWalletUSDCBalanceForDefault,
       label: "true",
       value: "true",
     }));
 
-    // edges.push(new Edge({
-    //   source: depositDefault,
-    //   target: delayAction
-    // }));
+    edges.push(new Edge({
+      source: checkWalletUSDCBalanceForDefault,
+      target: depositDefault,
+      label: "true",
+      value: "true",
+    }));
 
     edges.push(new Edge({
       source: noneBalanceSatisfiedIfBlock,
@@ -361,8 +361,6 @@ async function createWorkflow() {
     const withdrawBalanceCheckBlocks = [];
     for (const protocolInner of protocols) {
 
-      if (protocolInner == protocol) continue;
-
       // Check if account have balance before deposit
       const checkWalletUSDCBalance = createUSDCBalanceCheckingConditionBlock();
       actions.push(checkWalletUSDCBalance)
@@ -370,6 +368,23 @@ async function createWorkflow() {
       // Deposit the all the amount to protocol
       const innerProtocolDeposit = await getBlockFromProtocolName(protocol, BlockType.DEPOSIT);
       actions.push(innerProtocolDeposit)
+
+      if (protocolInner == protocol) {
+
+        edges.push(new Edge({
+          source: split,
+          target: checkWalletUSDCBalance,
+        }));
+
+        edges.push(new Edge({
+          source: checkWalletUSDCBalance,
+          target: innerProtocolDeposit,
+          label: "true",
+          value: "true",
+        }));
+        
+        continue;
+      }
 
       // Block to check if user has balance
       const checkWithdrawBalanceCondition = createBalanceCheckingConditionBlock(protocolInner);
