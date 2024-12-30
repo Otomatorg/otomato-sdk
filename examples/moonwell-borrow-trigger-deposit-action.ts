@@ -16,7 +16,7 @@ async function moonwell_borrow_trigger_and_deposit_action() {
   moonWellBorrowingTrigger.setChainId(CHAINS.BASE);
   moonWellBorrowingTrigger.setCondition("gt");
   moonWellBorrowingTrigger.setComparisonValue(1);
-  moonWellBorrowingTrigger.setParams("borrowingRateToken", getTokenFromSymbol(CHAINS.BASE, "USDC").contractAddress);
+  moonWellBorrowingTrigger.setParams("asset", getTokenFromSymbol(CHAINS.BASE, "USDC").contractAddress);
 
   // -------- Deposit MOONWELL --------
   const moonwellSupply = new Action(ACTIONS.LENDING.MOONWELL.DEPOSIT);

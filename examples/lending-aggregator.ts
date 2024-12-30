@@ -19,7 +19,7 @@ enum BlockType {
   DEPOSIT = 'DEPOSIT',
 }
 
-const protocols = [ProtocolName.IONIC, ProtocolName.AAVE, ProtocolName.COMPOUND, ProtocolName.MOONWELL]; //, ProtocolName.MOONWELL, ProtocolName.AAVE, ProtocolName.COMPOUND
+const protocols = [ProtocolName.IONIC, ProtocolName.COMPOUND, ProtocolName.MOONWELL, ProtocolName.AAVE];
 
 const USDCBalance = '{{external.functions.erc20Balance(8453,0x8e379aD0090f45a53A08007536cE2fa0a3F9F93d,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,,)}}';
 
@@ -250,6 +250,18 @@ function createBalanceCheckingConditionBlock(protocol: ProtocolName) {
   return conditionBranch;
 }
 
+// ---------- If check USDC balance condition ----------
+function createUSDCBalanceCheckingConditionBlock() {
+  const conditionBranch = new Action(ACTIONS.CORE.CONDITION.IF);
+  conditionBranch.setParams('logic', LOGIC_OPERATORS.OR);
+
+  const conditionGroup = new ConditionGroup(LOGIC_OPERATORS.AND);
+
+  conditionGroup.addConditionCheck(USDCBalance, 'gt', "0");
+  conditionBranch.setParams('groups', [conditionGroup]);
+  return conditionBranch;
+}
+
 // ---------- If none of check balance condition satisfied ----------
 function createNoneOfBalanceCheckingSatisfiedConditionBlock() {
   const conditionBranch = new Action(ACTIONS.CORE.CONDITION.IF);
@@ -258,7 +270,7 @@ function createNoneOfBalanceCheckingSatisfiedConditionBlock() {
   const conditionGroup = new ConditionGroup(LOGIC_OPERATORS.AND);
 
   for (const protocol of protocols) {
-    conditionGroup.addConditionCheck(balanceToWithdrawFunction[protocol], 'lte', "0");
+    conditionGroup.addConditionCheck(balanceToWithdrawFunction[protocol], 'lt', "1");
   }
   conditionBranch.setParams('groups', [conditionGroup]);
 
@@ -296,9 +308,9 @@ async function createWorkflow() {
   let triggerEdgeExisted = false;
 
   // Placeholder action to ensure all deposit action are executed
-  const delayAction = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
-  delayAction.setParams("time", "1"); // Wait 1 milisecond
-  actions.push(delayAction);
+  // const delayAction = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+  // delayAction.setParams("time", "1"); // Wait 1 milisecond
+  // actions.push(delayAction);
 
   for (const protocol of protocols) {
 
@@ -334,10 +346,10 @@ async function createWorkflow() {
       value: "true",
     }));
 
-    edges.push(new Edge({
-      source: depositDefault,
-      target: delayAction
-    }));
+    // edges.push(new Edge({
+    //   source: depositDefault,
+    //   target: delayAction
+    // }));
 
     edges.push(new Edge({
       source: noneBalanceSatisfiedIfBlock,
@@ -350,6 +362,10 @@ async function createWorkflow() {
     for (const protocolInner of protocols) {
 
       if (protocolInner == protocol) continue;
+
+      // Check if account have balance before deposit
+      const checkWalletUSDCBalance = createUSDCBalanceCheckingConditionBlock();
+      actions.push(checkWalletUSDCBalance)
 
       // Deposit the all the amount to protocol
       const innerProtocolDeposit = await getBlockFromProtocolName(protocol, BlockType.DEPOSIT);
@@ -380,13 +396,21 @@ async function createWorkflow() {
       // Withdraw all - Deposit edge
       edges.push(new Edge({
         source: block,
-        target: innerProtocolDeposit,
+        target: checkWalletUSDCBalance,
       }));
 
+      // Withdraw all - Deposit edge
       edges.push(new Edge({
-        source: innerProtocolDeposit,
-        target: delayAction
+        source: checkWalletUSDCBalance,
+        target: innerProtocolDeposit,
+        label: "true",
+        value: "true",
       }));
+
+      // edges.push(new Edge({
+      //   source: innerProtocolDeposit,
+      //   target: delayAction
+      // }));
     }
 
     // If the current protocol is the first, create an edge from the trigger
@@ -418,7 +442,7 @@ async function createWorkflow() {
     previousProtocolIf = ifCondition;
   }
 
-  return new Workflow("Something something compare between protocols", actions, edges);
+  return new Workflow("Lending aggregator", actions, edges);
 }
 
 async function lending_aggregator() {

@@ -16,7 +16,7 @@ async function moonwell_supply_trigger_and_withdraw_action() {
   moonWellLendingTrigger.setChainId(CHAINS.BASE);
   moonWellLendingTrigger.setCondition("gt");
   moonWellLendingTrigger.setComparisonValue(1);
-  moonWellLendingTrigger.setParams("lendingRateToken", getTokenFromSymbol(CHAINS.BASE, "wstETH").contractAddress);
+  moonWellLendingTrigger.setParams("asset", getTokenFromSymbol(CHAINS.BASE, "wstETH").contractAddress);
 
   // -------- Withdraw MOONWELL --------
   const moonwellWithdraw = new Action(ACTIONS.LENDING.MOONWELL.WITHDRAW);
