@@ -19,7 +19,7 @@ import {
    *************************************/
   const SLACK_WEBHOOK = process.env.SLACK_WEBHOOK;
   
-  const SMART_ACCOUNT_ADDRESS = '0x9ebF4899c05039a52407D919A63630Ccd3F399ae';
+  const SMART_ACCOUNT_ADDRESS = '{{smartAccountAddress}}';
   const USDC_ADDRESS = '0xd988097fb8612cc24eeC14542bC03424c656005f';
   
   // For Ironclad
@@ -493,8 +493,8 @@ import {
     const creationResult = await workflow.create();
     // console.log("Creation result:", creationResult);
   
-    const runResult = await workflow.run();
-    console.log("Run result:", runResult);
+    //const runResult = await workflow.run();
+    //console.log("Run result:", runResult);
   }
   
   // Optional immediate call to test

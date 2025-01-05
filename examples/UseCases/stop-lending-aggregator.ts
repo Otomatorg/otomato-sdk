@@ -5,10 +5,8 @@
 import {
   ACTIONS,
   Action,
-  Trigger,
   Workflow,
   Edge,
-  TRIGGERS,
   apiServices,
   LOGIC_OPERATORS,
   ConditionGroup,
@@ -33,7 +31,8 @@ const IRONCLAD_USDC_ADDRESS = '0xe7334Ad0e325139329E747cF2Fc24538dD564987';
 const IONIC_USDC_BALANCE = `{{external.functions.erc20Balance(34443,${SMART_ACCOUNT_ADDRESS},${IONIC_USDC_ADDRESS},,)}}`;
 const IRONCLAD_USDC_BALANCE = `{{external.functions.erc20Balance(34443,${SMART_ACCOUNT_ADDRESS},${IRONCLAD_USDC_ADDRESS},,)}}`;
 
-const UINT256_MAX = '115792089237316195423570985008687907853269984665640564039457584007913129639935n';
+const UINT256_MAX =
+  '115792089237316195423570985008687907853269984665640564039457584007913129639935n';
 
 /*************************************
  * 2. Slack Message Utility
@@ -49,17 +48,6 @@ function createSlackMessage(message: string): Action {
  * 3. Logic/Action Functions
  *************************************/
 
-/** 
- * Fear & Greed Trigger: triggers when index is above 0
- */
-function createFearAndGreedTrigger(): Trigger {
-  const trigger = new Trigger(TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX);
-  trigger.setCondition('gt');
-  trigger.setComparisonValue(0);
-  // Optionally set chain or position
-  return trigger;
-}
-
 /**
  * Condition: Check if user has USDC on Ionic
  */
@@ -68,7 +56,7 @@ function createCheckIonicUSDCCondition(): Action {
   condition.setParams('logic', LOGIC_OPERATORS.OR);
 
   const group = new ConditionGroup(LOGIC_OPERATORS.AND);
-  group.addConditionCheck(IONIC_USDC_BALANCE, 'gt', '0');
+  group.addConditionCheck(IONIC_USDC_BALANCE, 'gt', '10000');
 
   condition.setParams('groups', [group]);
   return condition;
@@ -83,10 +71,7 @@ function createIonicWithdrawAll(): Action {
 
   // Typically, you'd withdraw "max".
   withdraw.setParams('tokenToWithdraw', USDC_ADDRESS);
-  withdraw.setParams(
-    'abiParams.amount',
-    UINT256_MAX
-  );
+  withdraw.setParams('abiParams.amount', UINT256_MAX);
 
   return withdraw;
 }
@@ -99,7 +84,7 @@ function createCheckIroncladUSDCCondition(): Action {
   condition.setParams('logic', LOGIC_OPERATORS.OR);
 
   const group = new ConditionGroup(LOGIC_OPERATORS.AND);
-  group.addConditionCheck(IRONCLAD_USDC_BALANCE, 'gt', '0');
+  group.addConditionCheck(IRONCLAD_USDC_BALANCE, 'gt', '10000');
 
   condition.setParams('groups', [group]);
   return condition;
@@ -111,12 +96,8 @@ function createCheckIroncladUSDCCondition(): Action {
 function createIroncladWithdrawAll(): Action {
   const withdraw = new Action(ACTIONS.LENDING.IRONCLAD.WITHDRAW);
   withdraw.setChainId(CHAINS.MODE);
-  // Typically, you'd withdraw "max" by specifying a large number (2^256-1).
   withdraw.setParams('abiParams.asset', USDC_ADDRESS);
-  withdraw.setParams(
-    'abiParams.amount',
-    UINT256_MAX
-  );
+  withdraw.setParams('abiParams.amount', UINT256_MAX);
   return withdraw;
 }
 
@@ -134,20 +115,10 @@ export async function stopLendingAggregator() {
   const edges: Edge[] = [];
 
   /********************************
-   * Step 1: Fear & Greed Trigger
+   * Step 1: Initial Slack Message
    ********************************/
-  const fngTriggerMsg = createSlackMessage('Stop Lending Aggregator - Starting Fear & Greed Trigger...');
-  actions.push(fngTriggerMsg);
-
-  const fngTrigger = createFearAndGreedTrigger();
-  actions.push(fngTrigger);
-
-  edges.push(
-    new Edge({
-      source: fngTriggerMsg,
-      target: fngTrigger,
-    })
-  );
+  const startMsg = createSlackMessage('Stop Lending Aggregator - Starting...');
+  actions.push(startMsg);
 
   /********************************
    * Step 2: Split
@@ -160,7 +131,7 @@ export async function stopLendingAggregator() {
 
   edges.push(
     new Edge({
-      source: fngTrigger,
+      source: startMsg,
       target: splitMsg,
     }),
     new Edge({
@@ -185,7 +156,6 @@ export async function stopLendingAggregator() {
   actions.push(ionicWithdrawAll);
 
   edges.push(
-    // SPLIT => Ionic Check Condition
     new Edge({
       source: splitAction,
       target: ionicPathMsg,
@@ -223,7 +193,6 @@ export async function stopLendingAggregator() {
   actions.push(ironcladWithdrawAll);
 
   edges.push(
-    // SPLIT => Ironclad Check Condition
     new Edge({
       source: splitAction,
       target: ironcladPathMsg,
