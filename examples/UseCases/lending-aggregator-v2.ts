@@ -37,7 +37,6 @@ import {
   // Balances
   const IRONCLAD_USDC_BALANCE = `{{external.functions.erc20Balance(34443,${SMART_ACCOUNT_ADDRESS},${IRONCLAD_USDC_ADDRESS},,)}}`;
   const WALLET_USDC_BALANCE = `{{external.functions.erc20Balance(34443,${SMART_ACCOUNT_ADDRESS},${USDC_ADDRESS},,)}}`;
-  // === NEW for Ironclad yield better ===
   const IONIC_USDC_BALANCE = `{{external.functions.erc20Balance(34443,${SMART_ACCOUNT_ADDRESS},${IONIC_USDC_ADDRESS},,)}}`;
 
   const UINT256_MAX = '115792089237316195423570985008687907853269984665640564039457584007913129639935n';
