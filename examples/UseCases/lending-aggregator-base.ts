@@ -1,6 +1,6 @@
 import { ACTIONS, Action, TRIGGERS, Trigger, CHAINS, getTokenFromSymbol, apiServices, convertToTokenUnitsFromSymbol, LOGIC_OPERATORS, ConditionGroup, Workflow, Edge } from '../../src/index.js';
 import dotenv from 'dotenv';
-// individual deposit
+
 dotenv.config();
 
 const withdrawAmount = '115792089237316195423570985008687907853269984665640564039457584007913129639935n';
