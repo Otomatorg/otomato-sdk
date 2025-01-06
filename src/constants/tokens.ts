@@ -315,7 +315,7 @@ export const TOKENS: Tokens = {
     {
         contractAddress: "0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3",
         name: "Super OETH",
-        symbol: "superOETH",
+        symbol: "superOETHb",
         decimals: 18,
         image: "https://assets.coingecko.com/coins/images/39828/small/Super_OETH.png?1724208268"
     },

@@ -478,18 +478,13 @@ async function createWorkflow() {
   let previousProtocolIf;
   let triggerEdgeExisted = false;
 
-  // Placeholder action to ensure all deposit action are executed
-  const delayAction = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
-  delayAction.setParams("time", "1"); // Wait 1 milisecond
-  actions.push(delayAction);
-
   for (const protocol of protocols) {
 
     // Check case where user doesn't have any available asset to withdraw, go straight to deposit action if TRUE
     const noneBalanceSatisfiedIfBlock = createNoneOfBalanceCheckingSatisfiedConditionBlock(protocol);
     actions.push(noneBalanceSatisfiedIfBlock);
 
-    // Compare between protocol
+    // Compare between protocols
     const ifCondition = createConditionBlock(protocol);
 
     // Split to withdraw all actions
@@ -529,11 +524,6 @@ async function createWorkflow() {
     }));
 
     edges.push(new Edge({
-      source: depositDefault,
-      target: delayAction
-    }));
-
-    edges.push(new Edge({
       source: noneBalanceSatisfiedIfBlock,
       target: split,
       label: "false",
@@ -564,11 +554,6 @@ async function createWorkflow() {
           target: innerProtocolDeposit,
           label: "true",
           value: "true",
-        }));
-
-        edges.push(new Edge({
-          source: innerProtocolDeposit,
-          target: delayAction,
         }));
 
         continue;
@@ -608,11 +593,6 @@ async function createWorkflow() {
         target: innerProtocolDeposit,
         label: "true",
         value: "true",
-      }));
-
-      edges.push(new Edge({
-        source: innerProtocolDeposit,
-        target: delayAction
       }));
     }
 
