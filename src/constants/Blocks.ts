@@ -2757,6 +2757,7 @@ export const ACTIONS = {
           }
         ],
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{before.contractAddress}}",
             "{{parameters.tokenIn}}"
@@ -3038,6 +3039,7 @@ export const ACTIONS = {
           }
         ],
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{parameters.contractAddress}}"
           ],
@@ -3133,6 +3135,7 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{parameters.tokenToDeposit}}",
             "{{before.contractAddress}}"
@@ -3236,6 +3239,7 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{before.contractAddress}}"
           ],
@@ -3315,6 +3319,7 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{before.contractAddress}}"
           ],
@@ -3325,14 +3330,6 @@ export const ACTIONS = {
             "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToBorrow}})}}"
           ]
         },
-        "checks": [
-          {
-            "type": 0,
-            "chainId": "{{parameters.chainId}}",
-            "contractAddress": "{{before.contractAddress}}",
-            "amount": "{{parameters.abi.parameters.amount}}"
-          }
-        ],
         "blockId": 100008,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
       },
@@ -3408,6 +3405,7 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{before.contractAddress}}"
           ],
@@ -3445,6 +3443,7 @@ export const ACTIONS = {
         ] as Parameter[],
         "examples": [],
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{before.contractAddress}}"
           ],
@@ -3575,6 +3574,7 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{parameters.abi.parameters.asset}}",
             "{{before.contractAddress}}"
@@ -3676,6 +3676,7 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{parameters.abi.parameters.asset}}",
             "{{before.contractAddress}}"
@@ -3757,6 +3758,7 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{parameters.tokenToDeposit}}",
             "{{before.contractAddress}}"
@@ -3880,6 +3882,7 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{before.contractAddress}}"
           ],
@@ -3959,6 +3962,7 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{before.contractAddress}}"
           ],
@@ -4044,8 +4048,10 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
-            "{{before.contractAddress}}"
+            "{{before.contractAddress}}",
+            "{{parameters.tokenToRepay}}"
           ],
           "label": [
             "Repay {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToRepay}})}} on MOONWELL"
@@ -4081,6 +4087,7 @@ export const ACTIONS = {
         ] as Parameter[],
         "examples": [],
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{before.contractAddress}}"
           ],
@@ -4173,6 +4180,7 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{parameters.abi.parameters.asset}}",
             "{{before.contractAddress}}"
@@ -4267,6 +4275,7 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{parameters.abi.parameters.asset}}",
             "{{before.contractAddress}}"
@@ -4384,6 +4393,7 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{parameters.abi.parameters.asset}}",
             "{{before.contractAddress}}"
@@ -4485,6 +4495,7 @@ export const ACTIONS = {
           "transactionHash": "string"
         },
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{parameters.abi.parameters.asset}}",
             "{{before.contractAddress}}"
@@ -4630,6 +4641,7 @@ export const ACTIONS = {
           }
         ],
         "permissions": {
+          "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
             "{{before.contractAddress}}",
             "{{parameters.tokenIn}}"
