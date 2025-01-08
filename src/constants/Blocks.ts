@@ -17,7 +17,33 @@ export const TRIGGERS = {
             "mandatory": true,
             "category": 0
           },
+          {
+            "key": "timeout",
+            "type": "integer",
+            "description": "The maximum amount of time to wait before stopping the trigger (in ms)",
+            "mandatory": true,
+            "category": 1,
+            "hideInUI": true,
+            "value": 63072000000
+          },
+          {
+            "key": "limit",
+            "type": "integer",
+            "description": "The maximum number of times this trigger should execute before stopping.",
+            "mandatory": true,
+            "category": 0
+          },
         ] as Parameter[],
+        "examples": [
+          {
+            "name": "Run it every day for 2 weeks",
+            "description": "Set the period to 1 day and the limit to 14 to execute daily for 2 weeks.",
+            "parameters": {
+              "period": 86400000,
+              "limit": 14
+            }
+          }
+        ],
         "blockId": 18,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/every_hour_trigger.png"
       }
@@ -230,6 +256,104 @@ export const TRIGGERS = {
         ],
         "blockId": 5,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/BalanceCheck.svg"
+      }
+    },
+    "APPROVAL": {
+      "description": "Monitors token approvals",
+      "chains": [
+        0
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/Approval.svg",
+      "APPROVAL": {
+        "name": "Token Approval",
+        "description": "Triggers when someone approves this token.",
+        "type": 0,
+        "output": {
+          "owner": "address",
+          "spender": "address",
+          "value": "uint256",
+          "transactionHash": "string"
+        },
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "The network where the token is deployed (e.g., Ethereum or Base).",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "contractAddress",
+            "type": "erc20",
+            "description": "The token you want to monitor for approvals.",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.owner",
+            "type": "address",
+            "description": "Filter by the wallet that approved the token",
+            "category": 1
+          },
+          {
+            "key": "abiParams.spender",
+            "type": "address",
+            "description": "Filter by the wallet that was approved to spend the token",
+            "category": 1
+          },
+          {
+            "key": "abiParams.value",
+            "type": "uint256",
+            "description": "Filter by the amount of tokens approved",
+            "category": 1
+          },
+        ] as Parameter[],
+        "frontendHelpers": {
+          "output": {
+            "value": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "name": "Track all MODE approvals",
+            "description": "Get notified whenever someone approves the use of this token.",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "contractAddress",
+                "value": "0xDfc7C877a950e49D2610114102175A06C2e3167a"
+              }
+            ]
+          },
+          {
+            "name": "Track USDC approvals for a specific app",
+            "description": "Get notified when someone approves Uniswap to use their tokens.",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 8453
+              },
+              {
+                "key": "contractAddress",
+                "value": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
+              },
+              {
+                "key": "abiParams.spender",
+                "value": "0xeC8B0F7Ffe3ae75d7FfAb09429e3675bb63503e4"
+              }
+            ]
+          }
+        ],
+        "blockId": 27,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/Approval.svg"
       }
     },
     "ON_CHAIN_PRICE_MOVEMENT": {
@@ -1612,6 +1736,571 @@ export const TRIGGERS = {
         ],
         "blockId": 4,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/odos.png"
+      }
+    },
+    "UNISWAP": {
+      "description": "Monitors events on Uniswap pools",
+      "chains": [
+        8453,
+        0
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/uniswap.jpg",
+      "V3_SWAP": {
+        "name": "Track swaps on Uniswap V3",
+        "description": "Triggers every time there is a swap on a Uniswap V3 pool.",
+        "type": 0,
+        "output": {
+          "sender": "address",
+          "recipient": "address",
+          "amount0": "int256",
+          "amount1": "int256",
+          "sqrtPriceX96": "uint160",
+          "liquidity": "uint128",
+          "tick": "int24",
+          "transactionHash": "string"
+        },
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "The network to monitor swaps on (e.g., Base, Ethereum).",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "contractAddress",
+            "type": "address",
+            "description": "The address of the Uniswap V3 pool to monitor.",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.amount0",
+            "type": "int256",
+            "description": "Filter by the amount of token0 swapped (exact amount).",
+            "category": 1
+          },
+          {
+            "key": "abiParams.amount1",
+            "type": "int256",
+            "description": "Filter by the amount of token1 swapped (exact amount).",
+            "category": 1
+          },
+          {
+            "key": "abiParams.sender",
+            "type": "address",
+            "description": "Filter by the address initiating the swap.",
+            "category": 1
+          },
+          {
+            "key": "abiParams.recipient",
+            "type": "address",
+            "description": "Filter by the address receiving the swapped tokens.",
+            "category": 1
+          },
+        ] as Parameter[],
+        "frontendHelpers": {
+          "output": {
+            "amount0": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            },
+            "amount1": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "name": "Monitor all swaps",
+            "description": "Triggers whenever a swap occurs on a specific Uniswap V3 pool (ETH/FAI 1%).",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 8453
+              },
+              {
+                "key": "contractAddress",
+                "value": "0x68B27E9066d3aAdC6078E17C8611b37868F96A1D"
+              }
+            ]
+          }
+        ],
+        "blockId": 28,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/uniswap.jpg"
+      },
+      "V2_SWAP": {
+        "name": "Track swaps on Uniswap V2",
+        "description": "Triggers every time there is a swap on a Uniswap V2 pool.",
+        "type": 0,
+        "output": {
+          "sender": "address",
+          "amount0In": "uint256",
+          "amount1In": "uint256",
+          "amount0Out": "uint256",
+          "amount1Out": "uint256",
+          "to": "address",
+          "transactionHash": "string"
+        },
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "The network to monitor swaps on (e.g., Base, Ethereum).",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "contractAddress",
+            "type": "address",
+            "description": "The address of the Uniswap V2 pool to monitor.",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.amount0In",
+            "type": "uint256",
+            "description": "Filter by the amount of token0 input (exact amount).",
+            "category": 1
+          },
+          {
+            "key": "abiParams.amount1In",
+            "type": "uint256",
+            "description": "Filter by the amount of token1 input (exact amount).",
+            "category": 1
+          },
+          {
+            "key": "abiParams.amount0Out",
+            "type": "uint256",
+            "description": "Filter by the amount of token0 output (exact amount).",
+            "category": 1
+          },
+          {
+            "key": "abiParams.amount1Out",
+            "type": "uint256",
+            "description": "Filter by the amount of token1 output (exact amount).",
+            "category": 1
+          },
+          {
+            "key": "abiParams.sender",
+            "type": "address",
+            "description": "Filter by the address initiating the swap.",
+            "category": 1
+          },
+          {
+            "key": "abiParams.to",
+            "type": "address",
+            "description": "Filter by the address receiving the swapped tokens.",
+            "category": 1
+          },
+        ] as Parameter[],
+        "frontendHelpers": {
+          "output": {
+            "amount0In": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            },
+            "amount1In": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "name": "Monitor all swaps",
+            "description": "Triggers whenever a swap occurs on a specific Uniswap V2 pool (ETH/USDC 0.3%)",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 8453
+              },
+              {
+                "key": "contractAddress",
+                "value": "0x88A43bbDF9D098eEC7bCEda4e2494615dfD9bB9C"
+              }
+            ]
+          }
+        ],
+        "blockId": 33,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/uniswap.jpg"
+      }
+    },
+    "AERODROME": {
+      "description": "Monitors swaps on Aerodrome pools",
+      "chains": [
+        8453
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aerodrome.jpg",
+      "SWAP_IN_CONCENTRATED_POOL": {
+        "name": "Swap in Concentrated Pool",
+        "description": "Triggers every time there is a swap in an Aerodrome concentrated liquidity pool.",
+        "type": 0,
+        "output": {
+          "sender": "address",
+          "recipient": "address",
+          "amount0": "int256",
+          "amount1": "int256",
+          "sqrtPriceX96": "uint160",
+          "liquidity": "uint128",
+          "tick": "int24",
+          "transactionHash": "string"
+        },
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "The network to monitor swaps on (Base).",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "contractAddress",
+            "type": "address",
+            "description": "The address of the liquidity pool.",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.amount0",
+            "type": "int256",
+            "description": "Filter by the amount of token0 swapped (exact amount)",
+            "category": 1
+          },
+          {
+            "key": "abiParams.amount1",
+            "type": "int256",
+            "description": "Filter by the amount of token1 swapped (exact amount)",
+            "category": 1
+          },
+          {
+            "key": "abiParams.sender",
+            "type": "address",
+            "description": "Filter by the address initiating the swap.",
+            "category": 1
+          },
+          {
+            "key": "abiParams.recipient",
+            "type": "address",
+            "description": "Filter by the address receiving the swapped tokens.",
+            "category": 1
+          },
+        ] as Parameter[],
+        "frontendHelpers": {
+          "output": {
+            "amount0": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            },
+            "amount1": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "name": "Monitor all swaps in concentrated pool",
+            "description": "Triggers whenever a swap occurs in an Aerodrome concentrated liquidity pool (WETH/USDC 0.04%)",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 8453
+              },
+              {
+                "key": "contractAddress",
+                "value": "0xb2cc224c1c9feE385f8ad6a55b4d94E92359DC59"
+              }
+            ]
+          }
+        ],
+        "blockId": 29,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aerodrome.jpg"
+      },
+      "SWAP_IN_BASIC_POOL": {
+        "name": "Swap in Basic Pool",
+        "description": "Triggers every time there is a swap in an Aerodrome basic liquidity pool.",
+        "type": 0,
+        "output": {
+          "sender": "address",
+          "to": "address",
+          "amount0In": "uint256",
+          "amount1In": "uint256",
+          "amount0Out": "uint256",
+          "amount1Out": "uint256",
+          "transactionHash": "string"
+        },
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "The network to monitor swaps on (Base).",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "contractAddress",
+            "type": "address",
+            "description": "The address of the liquidity pool.",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.amount0In",
+            "type": "uint256",
+            "description": "Filter by the amount of token0 input (exact amount)",
+            "category": 1
+          },
+          {
+            "key": "abiParams.amount1In",
+            "type": "uint256",
+            "description": "Filter by the amount of token1 input (exact amount)",
+            "category": 1
+          },
+          {
+            "key": "abiParams.amount0Out",
+            "type": "uint256",
+            "description": "Filter by the amount of token0 output (exact amount)",
+            "category": 1
+          },
+          {
+            "key": "abiParams.amount1Out",
+            "type": "uint256",
+            "description": "Filter by the amount of token1 output (exact amount)",
+            "category": 1
+          },
+        ] as Parameter[],
+        "frontendHelpers": {
+          "output": {
+            "amount0In": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            },
+            "amount1In": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "name": "Monitor all swaps in basic pool",
+            "description": "Triggers whenever a swap occurs in an Aerodrome basic liquidity pool (USDC/AERO 0.3%)",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 8453
+              },
+              {
+                "key": "contractAddress",
+                "value": "0x6cDcb1C4A4D1C3C6d054b27AC5B77e89eAFb971d"
+              }
+            ]
+          }
+        ],
+        "blockId": 30,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aerodrome.jpg"
+      }
+    },
+    "VELODROME": {
+      "description": "Monitors swaps on Velodrome pools",
+      "chains": [
+        8453
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/velodrome.jpg",
+      "SWAP_IN_CONCENTRATED_POOL": {
+        "name": "Swap in Concentrated Pool",
+        "description": "Triggers every time there is a swap in a Velodrome concentrated liquidity pool.",
+        "type": 0,
+        "output": {
+          "sender": "address",
+          "recipient": "address",
+          "amount0": "int256",
+          "amount1": "int256",
+          "sqrtPriceX96": "uint160",
+          "liquidity": "uint128",
+          "tick": "int24",
+          "transactionHash": "string"
+        },
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "The network to monitor swaps on (Base).",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "contractAddress",
+            "type": "address",
+            "description": "The address of the liquidity pool.",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.amount0",
+            "type": "int256",
+            "description": "Filter by the amount of token0 swapped (exact amount).",
+            "category": 1
+          },
+          {
+            "key": "abiParams.amount1",
+            "type": "int256",
+            "description": "Filter by the amount of token1 swapped (exact amount).",
+            "category": 1
+          },
+          {
+            "key": "abiParams.sender",
+            "type": "address",
+            "description": "Filter by the address initiating the swap.",
+            "category": 1
+          },
+          {
+            "key": "abiParams.recipient",
+            "type": "address",
+            "description": "Filter by the address receiving the swapped tokens.",
+            "category": 1
+          },
+        ] as Parameter[],
+        "frontendHelpers": {
+          "output": {
+            "amount0": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            },
+            "amount1": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "name": "Monitor all swaps in concentrated pool",
+            "description": "Triggers whenever a swap occurs in a Velodrome concentrated liquidity pool (WETH/MODE 0.3%).",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 8453
+              },
+              {
+                "key": "contractAddress",
+                "value": "0x1E41CDE26b30646bb3DBBea48A63708b00470c1c"
+              }
+            ]
+          }
+        ],
+        "blockId": 31,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/velodrome.jpg"
+      },
+      "SWAP_IN_BASIC_POOL": {
+        "name": "Swap in Basic Pool",
+        "description": "Triggers every time there is a swap in a Velodrome basic liquidity pool.",
+        "type": 0,
+        "output": {
+          "sender": "address",
+          "to": "address",
+          "amount0In": "uint256",
+          "amount1In": "uint256",
+          "amount0Out": "uint256",
+          "amount1Out": "uint256",
+          "transactionHash": "string"
+        },
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "The network to monitor swaps on (Base).",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "contractAddress",
+            "type": "address",
+            "description": "The address of the liquidity pool.",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.amount0In",
+            "type": "uint256",
+            "description": "Filter by the amount of token0 input (exact amount).",
+            "category": 1
+          },
+          {
+            "key": "abiParams.amount1In",
+            "type": "uint256",
+            "description": "Filter by the amount of token1 input (exact amount).",
+            "category": 1
+          },
+          {
+            "key": "abiParams.amount0Out",
+            "type": "uint256",
+            "description": "Filter by the amount of token0 output (exact amount).",
+            "category": 1
+          },
+          {
+            "key": "abiParams.amount1Out",
+            "type": "uint256",
+            "description": "Filter by the amount of token1 output (exact amount).",
+            "category": 1
+          },
+        ] as Parameter[],
+        "frontendHelpers": {
+          "output": {
+            "amount0In": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            },
+            "amount1In": {
+              "erc20Token": {
+                "contractAddress": "{{parameters.contractAddress}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "name": "Monitor all swaps in basic pool",
+            "description": "Triggers whenever a swap occurs in a Velodrome basic liquidity pool (WETH/MODE 0.3%).",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 8453
+              },
+              {
+                "key": "contractAddress",
+                "value": "0x0fba984c97539B3fb49ACDA6973288D0EFA903DB"
+              }
+            ]
+          }
+        ],
+        "blockId": 32,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/velodrome.jpg"
       }
     }
   },
