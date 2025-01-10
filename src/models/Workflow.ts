@@ -4,6 +4,7 @@ import { apiServices } from '../services/ApiService.js';
 import { Action } from './Action.js';
 import { SessionKeyPermission } from './SessionKeyPermission.js';
 import { Note } from './Note.js';
+import { positionWorkflowNodes } from '../utils/WorkflowNodePositioner.js';
 
 export type WorkflowState = 'inactive' | 'active' | 'failed' | 'completed' | 'waiting';
 
@@ -23,6 +24,7 @@ export class Workflow {
     this.nodes = nodes;
     this.edges = edges;
     this.state = 'inactive';
+    positionWorkflowNodes(this);
   }
 
   setName(name: string): void {
@@ -31,14 +33,17 @@ export class Workflow {
 
   addNode(node: Node): void {
     this.nodes.push(node);
+    positionWorkflowNodes(this);
   }
 
   addNodes(nodes: Node[]): void {
     this.nodes.push(...nodes);
+    positionWorkflowNodes(this);
   }
 
   addEdge(edge: Edge): void {
     this.edges.push(edge);
+    positionWorkflowNodes(this);
   }
 
   updateEdge(edgeId: string, newEdge: Edge): void {
@@ -49,10 +54,12 @@ export class Workflow {
     } else {
       throw new Error(`Edge with id ${edgeId} not found`);
     }
+    positionWorkflowNodes(this);
   }
 
   addEdges(edges: Edge[]): void {
     this.edges.push(...edges);
+    positionWorkflowNodes(this);
   }
 
   getState(): WorkflowState {
@@ -100,7 +107,7 @@ export class Workflow {
       executionId: this.executionId,
       nodes: this.nodes.map(node => node.toJSON()),
       edges: this.edges.map(edge => edge.toJSON()),
-      notes: this.getNotes(), // Include notes
+      notes: this.getNotes(),
     };
   }
 
@@ -189,6 +196,7 @@ export class Workflow {
       this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
       this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
       this.notes = response.notes.map((noteData: any) => Note.fromJSON(noteData));
+      positionWorkflowNodes(this);
       return this;
     } catch (error: any) {
       throw new Error(`Failed to load workflow: ${error.message}`);
