@@ -41,6 +41,104 @@ export class Workflow {
     positionWorkflowNodes(this);
   }
 
+  deleteNode(nodeToDelete: Node): void {
+    // Remove the node from the nodes array
+    const nodeIndex = this.nodes.findIndex(node => node === nodeToDelete);
+    if (nodeIndex === -1) {
+      throw new Error(`Node not found in the workflow.`);
+    }
+    this.nodes.splice(nodeIndex, 1);
+
+    // Collect incoming and outgoing edges
+    const incomingEdges = this.edges.filter(edge => edge.target === nodeToDelete);
+    const outgoingEdges = this.edges.filter(edge => edge.source === nodeToDelete);
+
+    // Create new edges to replace the deleted node's connections
+    const newEdges: Edge[] = [];
+    incomingEdges.forEach(inEdge => {
+      outgoingEdges.forEach(outEdge => {
+        newEdges.push(new Edge({ source: inEdge.source, target: outEdge.target }));
+      });
+    });
+
+    // Update the edges array: remove edges involving the deleted node and add the new ones
+    this.edges = this.edges.filter(edge => edge.source !== nodeToDelete && edge.target !== nodeToDelete);
+    this.edges.push(...newEdges);
+
+    // Recalculate positions
+    positionWorkflowNodes(this);
+  }
+
+  insertNode(nodeToInsert: Node, nodeBefore: Node, nodeAfter?: Node): void {
+    // Ensure nodeBefore exists in the workflow
+    if (!this.nodes.includes(nodeBefore)) {
+      throw new Error('The nodeBefore must exist in the workflow.');
+    }
+  
+    // If nodeAfter is not provided, insert the new node as a child of nodeBefore
+    if (!nodeAfter) {
+      // Add the new node to the workflow
+      this.addNode(nodeToInsert);
+  
+      // Add a new edge between nodeBefore and nodeToInsert
+      const newEdge = new Edge({ source: nodeBefore, target: nodeToInsert });
+      this.addEdge(newEdge);
+  
+      // Recalculate positions
+      positionWorkflowNodes(this);
+      return;
+    }
+  
+    // If nodeAfter is provided, ensure both nodes exist in the workflow
+    if (!this.nodes.includes(nodeAfter)) {
+      throw new Error('The nodeAfter must exist in the workflow.');
+    }
+  
+    // Check if an edge exists between nodeBefore and nodeAfter
+    const edgeBetween = this.edges.find(edge => edge.source === nodeBefore && edge.target === nodeAfter);
+    if (!edgeBetween) {
+      throw new Error('No edge exists between nodeBefore and nodeAfter.');
+    }
+  
+    // Add the new node to the workflow
+    this.addNode(nodeToInsert);
+  
+    // Remove the existing edge between nodeBefore and nodeAfter
+    this.edges = this.edges.filter(edge => edge !== edgeBetween);
+  
+    // Add new edges
+    const newEdge1 = new Edge({ source: nodeBefore, target: nodeToInsert });
+    const newEdge2 = new Edge({ source: nodeToInsert, target: nodeAfter });
+    this.addEdges([newEdge1, newEdge2]);
+  
+    // Recalculate positions
+    positionWorkflowNodes(this);
+  }
+
+  swapNode(oldNode: Node, newNode: Node): void {
+    // Find the index of the node to replace
+    const nodeIndex = this.nodes.findIndex(node => node === oldNode);
+    if (nodeIndex === -1) {
+      throw new Error(`Node to swap not found in the workflow.`);
+    }
+
+    // Replace the old node with the new node in the nodes array
+    this.nodes[nodeIndex] = newNode;
+
+    // Update edges to point to the new node
+    this.edges.forEach(edge => {
+      if (edge.source === oldNode) {
+        edge.source = newNode;
+      }
+      if (edge.target === oldNode) {
+        edge.target = newNode;
+      }
+    });
+
+    // Recalculate positions
+    positionWorkflowNodes(this);
+  }
+
   addEdge(edge: Edge): void {
     this.edges.push(edge);
     positionWorkflowNodes(this);

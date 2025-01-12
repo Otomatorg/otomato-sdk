@@ -170,3 +170,182 @@ describe('Workflow Class', () => {
     expect(updatedEdge).to.deep.equal(newEdge);
   });
 });
+
+describe('Workflow Class - Node Modifications', () => {
+  it('should delete a node from the workflow and update edges', () => {
+    const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+    const edge1 = new Edge({ source: node1, target: node2 });
+    const edge2 = new Edge({ source: node2, target: node3 });
+
+    const workflow = new Workflow("Workflow with Nodes", [node1, node2, node3], [edge1, edge2]);
+
+    workflow.deleteNode(node2);
+
+    // Verify node2 is deleted
+    expect(workflow.nodes).to.deep.equal([node1, node3]);
+
+    // Verify edges involving node2 are removed
+    expect(workflow.edges.length).to.equal(1);
+    expect(workflow.edges[0].source).to.deep.equal(node1);
+    expect(workflow.edges[0].target).to.deep.equal(node3);
+  });
+
+  it('should throw an error when trying to delete a node not in the workflow', () => {
+    const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const workflow = new Workflow("Workflow with Nodes", [node1], []);
+
+    expect(() => workflow.deleteNode(node2)).to.throw('Node not found in the workflow.');
+  });
+
+  it('should swap a node with another and update edges', () => {
+    const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+    const edge1 = new Edge({ source: node1, target: node2 });
+    const edge2 = new Edge({ source: node2, target: node3 });
+
+    const workflow = new Workflow("Workflow with Nodes", [node1, node2, node3], [edge1, edge2]);
+
+    const newNode = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    workflow.swapNode(node2, newNode);
+
+    // Verify node2 is replaced with newNode
+    expect(workflow.nodes).to.deep.equal([node1, newNode, node3]);
+
+    // Verify edges are updated to reference newNode
+    expect(workflow.edges).to.deep.equal([
+      { ...edge1, target: newNode },
+      { ...edge2, source: newNode },
+    ]);
+  });
+
+  it('should throw an error when trying to swap a node not in the workflow', () => {
+    const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const newNode = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+    const workflow = new Workflow("Workflow with Nodes", [node1], []);
+
+    expect(() => workflow.swapNode(node2, newNode)).to.throw('Node to swap not found in the workflow.');
+  });
+
+  it('should handle swapping a node with a connected node', () => {
+    const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+    const edge1 = new Edge({ source: node1, target: node2 });
+    const edge2 = new Edge({ source: node2, target: node3 });
+
+    const workflow = new Workflow("Workflow with Connected Nodes", [node1, node2, node3], [edge1, edge2]);
+
+    const newNode = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    workflow.swapNode(node2, newNode);
+
+    // Verify newNode is connected correctly
+    expect(workflow.edges).to.deep.equal([
+      { ...edge1, target: newNode },
+      { ...edge2, source: newNode },
+    ]);
+
+    // Verify workflow structure
+    expect(workflow.nodes).to.deep.equal([node1, newNode, node3]);
+  });
+
+  // Insert Node Tests
+  it('should insert a node between two existing nodes and update edges', () => {
+    const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+    const edge = new Edge({ source: node1, target: node3 });
+    const workflow = new Workflow("Workflow with Insert Node", [node1, node3], [edge]);
+
+    const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+    workflow.insertNode(node2, node1, node3);
+
+    // Verify nodes are updated
+    expect(workflow.nodes).to.have.members([node1, node2, node3]);
+    expect(workflow.nodes.length).to.equal(3);
+
+    // Verify edges are updated
+    const updatedEdges = workflow.edges.map(edge => ({
+      source: edge.source,
+      target: edge.target
+    }));
+
+    expect(updatedEdges).to.deep.equal([
+      { source: node1, target: node2 },
+      { source: node2, target: node3 }
+    ]);
+  });
+
+  // Test: Insert node as a child of nodeBefore
+  it('should insert a node as a child of nodeBefore when nodeAfter is not provided', () => {
+    const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+    const workflow = new Workflow("Workflow with Insert Node", [node1], []);
+
+    const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+    workflow.insertNode(node2, node1);
+
+    // Verify nodes are updated
+    expect(workflow.nodes).to.have.members([node1, node2]);
+    expect(workflow.nodes.length).to.equal(2);
+
+    // Verify edges are updated
+    const updatedEdges = workflow.edges.map(edge => ({
+      source: edge.source,
+      target: edge.target
+    }));
+
+    expect(updatedEdges).to.deep.equal([
+      { source: node1, target: node2 }
+    ]);
+  });
+
+  // Test: Error when no edge exists between nodeBefore and nodeAfter
+  it('should throw an error when inserting a node without an existing edge between nodeBefore and nodeAfter', () => {
+    const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+    const workflow = new Workflow("Workflow without Edge", [node1, node3], []);
+
+    const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+    expect(() => workflow.insertNode(node2, node1, node3)).to.throw(
+      'No edge exists between nodeBefore and nodeAfter.'
+    );
+  });
+
+  // Test: Error when nodeBefore or nodeAfter is not in the workflow
+  it('should throw an error when inserting a node with nodeBefore or nodeAfter not in the workflow', () => {
+    const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+    const edge = new Edge({ source: node1, target: node3 });
+    const workflow = new Workflow("Workflow with Nodes", [node1], [edge]);
+
+    expect(() => workflow.insertNode(node2, node1, node3)).to.throw(
+      'The nodeAfter must exist in the workflow.'
+    );
+  });
+
+  // New Test: Insert a node into an empty workflow
+  it('should throw an error when inserting a node into an empty workflow', () => {
+    const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+    const workflow = new Workflow("Empty Workflow", [], []);
+
+    expect(() => workflow.insertNode(node1, node1)).to.throw(
+      'The nodeBefore must exist in the workflow.'
+    );
+  });
+});
