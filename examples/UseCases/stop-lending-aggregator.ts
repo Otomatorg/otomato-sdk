@@ -227,8 +227,8 @@ export async function stopLendingAggregator() {
   console.log('Creation Result:', creationResult);
 
   // Optionally run it
-  const runResult = await workflow.run();
-  console.log('Run Result:', runResult);
+  //const runResult = await workflow.run();
+  //console.log('Run Result:', runResult);
 }
 
 // For local testing:

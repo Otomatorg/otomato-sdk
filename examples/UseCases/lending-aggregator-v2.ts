@@ -492,6 +492,7 @@ import {
     // Create/run on your platform:
     const creationResult = await workflow.create();
     // console.log("Creation result:", creationResult);
+    console.log("Workflow ID:", workflow.id);
   
     //const runResult = await workflow.run();
     //console.log("Run result:", runResult);
