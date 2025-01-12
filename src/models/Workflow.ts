@@ -4,7 +4,7 @@ import { apiServices } from '../services/ApiService.js';
 import { Action } from './Action.js';
 import { SessionKeyPermission } from './SessionKeyPermission.js';
 import { Note } from './Note.js';
-import { positionWorkflowNodes } from '../utils/WorkflowNodePositioner.js';
+import { positionWorkflowNodesAvoidOverlap } from '../utils/WorkflowNodePositioner.js';
 
 export type WorkflowState = 'inactive' | 'active' | 'failed' | 'completed' | 'waiting';
 
@@ -24,7 +24,7 @@ export class Workflow {
     this.nodes = nodes;
     this.edges = edges;
     this.state = 'inactive';
-    positionWorkflowNodes(this);
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   setName(name: string): void {
@@ -33,12 +33,12 @@ export class Workflow {
 
   addNode(node: Node): void {
     this.nodes.push(node);
-    positionWorkflowNodes(this);
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   addNodes(nodes: Node[]): void {
     this.nodes.push(...nodes);
-    positionWorkflowNodes(this);
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   deleteNode(nodeToDelete: Node): void {
@@ -66,7 +66,7 @@ export class Workflow {
     this.edges.push(...newEdges);
 
     // Recalculate positions
-    positionWorkflowNodes(this);
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   insertNode(nodeToInsert: Node, nodeBefore: Node, nodeAfter?: Node): void {
@@ -85,7 +85,7 @@ export class Workflow {
       this.addEdge(newEdge);
   
       // Recalculate positions
-      positionWorkflowNodes(this);
+      positionWorkflowNodesAvoidOverlap(this);
       return;
     }
   
@@ -112,7 +112,7 @@ export class Workflow {
     this.addEdges([newEdge1, newEdge2]);
   
     // Recalculate positions
-    positionWorkflowNodes(this);
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   swapNode(oldNode: Node, newNode: Node): void {
@@ -136,12 +136,12 @@ export class Workflow {
     });
 
     // Recalculate positions
-    positionWorkflowNodes(this);
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   addEdge(edge: Edge): void {
     this.edges.push(edge);
-    positionWorkflowNodes(this);
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   updateEdge(edgeId: string, newEdge: Edge): void {
@@ -152,12 +152,12 @@ export class Workflow {
     } else {
       throw new Error(`Edge with id ${edgeId} not found`);
     }
-    positionWorkflowNodes(this);
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   addEdges(edges: Edge[]): void {
     this.edges.push(...edges);
-    positionWorkflowNodes(this);
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   getState(): WorkflowState {
@@ -294,7 +294,7 @@ export class Workflow {
       this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
       this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
       this.notes = response.notes.map((noteData: any) => Note.fromJSON(noteData));
-      positionWorkflowNodes(this);
+      positionWorkflowNodesAvoidOverlap(this);
       return this;
     } catch (error: any) {
       throw new Error(`Failed to load workflow: ${error.message}`);

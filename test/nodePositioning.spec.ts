@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { Workflow } from '../src/models/Workflow.js';
 import { Edge } from '../src/models/Edge.js';
 import { Action, ACTIONS } from '../src/index.js';
-import { positionWorkflowNodes, xSpacing, ySpacing, getChildren, identifyLeafNodes, ROOT_X, ROOT_Y, identityStartingNodes } from '../src/utils/WorkflowNodePositioner';
+import { positionWorkflowNodes, positionWorkflowNodesAvoidOverlap, xSpacing, ySpacing, getChildren, identifyLeafNodes, ROOT_X, ROOT_Y, identityStartingNodes, getEdges, getParents } from '../src/utils/WorkflowNodePositioner';
 
 describe('Node Positioning', () => {
     it('should position a single node workflow', () => {
@@ -33,8 +33,8 @@ describe('Node Positioning', () => {
 
         positionWorkflowNodes(workflow);
 
-        expect(child.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
-        expect(parent.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing });
+        expect(parent.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
+        expect(child.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing });
     });
 
     it('should position parent with multiple children correctly', () => {
@@ -44,12 +44,13 @@ describe('Node Positioning', () => {
         const edge1 = new Edge({ source: parent, target: child1 });
         const edge2 = new Edge({ source: parent, target: child2 });
         const workflow = new Workflow("Multiple Children Workflow", [parent, child1, child2], [edge1, edge2]);
-
+    
         positionWorkflowNodes(workflow);
-
-        expect(child1.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
-        expect(child2.position).to.deep.equal({ x: ROOT_X + xSpacing, y: ROOT_Y });
-        expect(parent.position).to.deep.equal({ x: ROOT_X + xSpacing / 2, y: ROOT_Y + ySpacing });
+    
+        // Expectations
+        expect(parent.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y }); // Parent at ROOT_X, ROOT_Y
+        expect(child1.position).to.deep.equal({ x: ROOT_X - xSpacing / 2, y: ROOT_Y + ySpacing }); // First child to the left
+        expect(child2.position).to.deep.equal({ x: ROOT_X + xSpacing / 2, y: ROOT_Y + ySpacing }); // Second child to the right
     });
 
     it('should position complex workflows with multiple levels', () => {
@@ -68,20 +69,200 @@ describe('Node Positioning', () => {
         expect(nodeA.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
         expect(nodeB.position).to.deep.equal({ x: ROOT_X - xSpacing / 2, y: ROOT_Y + ySpacing });
         expect(nodeC.position).to.deep.equal({ x: ROOT_X + xSpacing / 2, y: ROOT_Y + ySpacing });
-        expect(nodeD.position).to.deep.equal({ x: ROOT_X + xSpacing / 2, y: ROOT_Y + ySpacing * 2 });
+        expect(nodeD.position).to.deep.equal({ x: ROOT_X - xSpacing / 2, y: ROOT_Y + ySpacing * 2 });
     });
+});
 
-    it('should skip already positioned nodes', () => {
-        const parent = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
-        const child = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
-        child.setPosition(100, 50); // Already positioned
-        const edge = new Edge({ source: parent, target: child });
-        const workflow = new Workflow("Skip Positioned Node Workflow", [parent, child], [edge]);
+describe('Node Positioning - Workflow Modifications', () => {
+    it('should correctly position nodes when adding a node at the end of the workflow', () => {
+        const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edge = new Edge({ source: node1, target: node2 });
+        const workflow = new Workflow("Adding Node at End", [node1, node2], [edge]);
 
         positionWorkflowNodes(workflow);
 
-        expect(child.position).to.deep.equal({ x: 100, y: 50 }); // Unchanged
-        expect(parent.position).to.deep.equal({ x: 100, y: 50 + ySpacing });
+        // Add a new node at the end
+        const newNode = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const newEdge = new Edge({ source: node2, target: newNode });
+        workflow.addNode(newNode);
+        workflow.addEdge(newEdge);
+
+        expect(node1.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
+        expect(node2.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing });
+        expect(newNode.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing * 2 });
+    });
+
+    it('should correctly position nodes when adding a node in the middle of the workflow', () => {
+        const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const node3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    
+        const edge = new Edge({ source: node1, target: node3 });
+        const workflow = new Workflow("Adding Node in Middle", [node1, node3], [edge]);
+    
+        positionWorkflowNodes(workflow);
+    
+        // Add a new node in the middle using insertNode
+        const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        workflow.insertNode(node2, node1, node3);
+    
+        positionWorkflowNodes(workflow);
+    
+        // Expectations
+        expect(node1.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
+        expect(node2.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing });
+        expect(node3.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing * 2 });
+    
+        // Verify edges by comparing only source and target
+        const simplifiedEdges = workflow.edges.map(edge => ({
+            source: edge.source,
+            target: edge.target,
+        }));
+        expect(simplifiedEdges).to.deep.equal([
+            { source: node1, target: node2 },
+            { source: node2, target: node3 },
+        ]);
+    });
+
+    it('should correctly position nodes when swapping two nodes', () => {
+        const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const node3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edge1 = new Edge({ source: node1, target: node2 });
+        const edge2 = new Edge({ source: node2, target: node3 });
+        const workflow = new Workflow("Swapping Nodes", [node1, node2, node3], [edge1, edge2]);
+
+        positionWorkflowNodes(workflow);
+
+        // Swap node2 and node3
+        const newNode = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        workflow.swapNode(node2, newNode);
+
+        expect(node1.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
+        expect(newNode.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing });
+        expect(node3.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing * 2 });
+    });
+
+    it('should correctly position nodes when deleting a node at the end of the workflow', () => {
+        const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const node3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edge1 = new Edge({ source: node1, target: node2 });
+        const edge2 = new Edge({ source: node2, target: node3 });
+        const workflow = new Workflow("Deleting Node at End", [node1, node2, node3], [edge1, edge2]);
+
+        positionWorkflowNodes(workflow);
+
+        // Delete the last node
+        workflow.deleteNode(node3);
+
+        positionWorkflowNodes(workflow);
+
+        expect(node1.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
+        expect(node2.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing });
+        expect(workflow.nodes.length).to.equal(2);
+        expect(workflow.edges).to.deep.equal([edge1]); // Ensure no additional edges remain
+    });
+
+    it('should correctly position nodes when deleting a node in the middle of the workflow', () => {
+        const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const node3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edge1 = new Edge({ source: node1, target: node2 });
+        const edge2 = new Edge({ source: node2, target: node3 });
+        const workflow = new Workflow("Deleting Node in Middle", [node1, node2, node3], [edge1, edge2]);
+
+        positionWorkflowNodes(workflow);
+
+        // Delete the middle node
+        workflow.deleteNode(node2);
+
+        positionWorkflowNodes(workflow);
+
+        // Expectations
+        expect(node1.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
+        expect(node3.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing });
+
+        // Verify edges by comparing only source and target
+        const simplifiedEdges = workflow.edges.map(edge => ({
+            source: edge.source,
+            target: edge.target,
+        }));
+        expect(simplifiedEdges).to.deep.equal([
+            { source: node1, target: node3 },
+        ]);
+    });
+
+    it('should correctly position nodes when deleting a starting node', () => {
+        const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const edge = new Edge({ source: node1, target: node2 });
+        const workflow = new Workflow("Deleting Starting Node", [node1, node2], [edge]);
+
+        // Delete the starting node
+        workflow.deleteNode(node1);
+
+        // Expectations
+        expect(node2.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
+        expect(workflow.nodes.length).to.equal(1);
+
+        // Verify edges
+        expect(workflow.edges).to.deep.equal([]);
+    });
+});
+
+describe('Node Positioning - Overlapping Protection', () => {
+    it('should correctly position nodes in a nested workflow with two levels of children', () => {
+        // Create the nodes
+        const rootNode = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const child1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const child2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const grandChild1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const grandChild2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const grandChild3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const grandChild4 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    
+        // Create the edges
+        const edge1 = new Edge({ source: rootNode, target: child1 });
+        const edge2 = new Edge({ source: rootNode, target: child2 });
+        const edge3 = new Edge({ source: child1, target: grandChild1 });
+        const edge4 = new Edge({ source: child1, target: grandChild2 });
+        const edge5 = new Edge({ source: child2, target: grandChild3 });
+        const edge6 = new Edge({ source: child2, target: grandChild4 });
+    
+        // Create the workflow
+        const workflow = new Workflow("Nested Workflow", [rootNode, child1, child2, grandChild1, grandChild2, grandChild3, grandChild4], [edge1, edge2, edge3, edge4, edge5, edge6]);
+    
+        // Expectations for rootNode
+        expect(rootNode.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
+    
+        // Expectations for first level children
+        expect(child1.position).to.deep.equal({ x: ROOT_X - xSpacing / 2, y: ROOT_Y + ySpacing });
+        expect(child2.position).to.deep.equal({ x: ROOT_X + xSpacing / 2, y: ROOT_Y + ySpacing });
+    
+        // Expectations for second level children
+        expect(grandChild1.position).to.deep.equal({ x: ROOT_X - xSpacing, y: ROOT_Y + ySpacing * 2 });
+        expect(grandChild2.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing * 2 });
+        expect(grandChild3.position).to.deep.equal({ x: ROOT_X + xSpacing, y: ROOT_Y + ySpacing * 2 });
+        expect(grandChild4.position).to.deep.equal({ x: ROOT_X + xSpacing * 2, y: ROOT_Y + ySpacing * 2 });
+    
+        // Verify edges remain unchanged
+        const simplifiedEdges = workflow.edges.map(edge => ({
+            source: edge.source,
+            target: edge.target,
+        }));
+        expect(simplifiedEdges).to.deep.equal([
+            { source: rootNode, target: child1 },
+            { source: rootNode, target: child2 },
+            { source: child1, target: grandChild1 },
+            { source: child1, target: grandChild2 },
+            { source: child2, target: grandChild3 },
+            { source: child2, target: grandChild4 },
+        ]);
     });
 });
 
@@ -237,5 +418,135 @@ describe('identityStartingNodes', () => {
 
         const startingNodes = identityStartingNodes(workflow);
         expect(startingNodes).to.deep.equal([node1]);
+    });
+});
+
+describe('getEdges', () => {
+    it('should return an empty array if there are no edges', () => {
+        const node = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const edges: Edge[] = [];
+
+        const result = getEdges(node, edges);
+        expect(result).to.deep.equal([]);
+    });
+
+    it('should return all edges where the node is the source', () => {
+        const node = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const target1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const target2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edge1 = new Edge({ source: node, target: target1 });
+        const edge2 = new Edge({ source: node, target: target2 });
+        const edges: Edge[] = [edge1, edge2];
+
+        const result = getEdges(node, edges);
+        expect(result).to.deep.equal([edge1, edge2]);
+    });
+
+    it('should return all edges where the node is the target', () => {
+        const source1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const source2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const node = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edge1 = new Edge({ source: source1, target: node });
+        const edge2 = new Edge({ source: source2, target: node });
+        const edges: Edge[] = [edge1, edge2];
+
+        const result = getEdges(node, edges);
+        expect(result).to.deep.equal([edge1, edge2]);
+    });
+
+    it('should return all edges where the node is either the source or the target', () => {
+        const node = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const otherNode = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edge1 = new Edge({ source: node, target: otherNode });
+        const edge2 = new Edge({ source: otherNode, target: node });
+        const edge3 = new Edge({ source: otherNode, target: otherNode });
+        const edges: Edge[] = [edge1, edge2, edge3];
+
+        const result = getEdges(node, edges);
+        expect(result).to.deep.equal([edge1, edge2]);
+    });
+
+    it('should handle an empty workflow with no nodes or edges', () => {
+        const node = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const edges: Edge[] = [];
+
+        const result = getEdges(node, edges);
+        expect(result).to.deep.equal([]);
+    });
+});
+
+describe('getParents', () => {
+    it('should return an empty array if there are no edges', () => {
+        const node = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const edges: Edge[] = [];
+
+        const result = getParents(node, edges);
+        expect(result).to.deep.equal([]);
+    });
+
+    it('should return an empty array if the node has no parents', () => {
+        const node = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const child = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const edge = new Edge({ source: node, target: child });
+        const edges: Edge[] = [edge];
+
+        const result = getParents(node, edges);
+        expect(result).to.deep.equal([]);
+    });
+
+    it('should return all parent nodes of a given node', () => {
+        const parent1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const parent2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const child = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edge1 = new Edge({ source: parent1, target: child });
+        const edge2 = new Edge({ source: parent2, target: child });
+        const edges: Edge[] = [edge1, edge2];
+
+        const result = getParents(child, edges);
+        expect(result).to.deep.equal([parent1, parent2]);
+    });
+
+    it('should handle cases with no parents in a complex workflow', () => {
+        const root = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const intermediate = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const leaf = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edge1 = new Edge({ source: root, target: intermediate });
+        const edge2 = new Edge({ source: intermediate, target: leaf });
+        const edges: Edge[] = [edge1, edge2];
+
+        const result = getParents(root, edges);
+        expect(result).to.deep.equal([]);
+    });
+
+    it('should handle cases with a single parent', () => {
+        const parent = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const child = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edge = new Edge({ source: parent, target: child });
+        const edges: Edge[] = [edge];
+
+        const result = getParents(child, edges);
+        expect(result).to.deep.equal([parent]);
+    });
+
+    it('should return parents when a node is both a source and target', () => {
+        const parent1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const parent2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const intermediate = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const leaf = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edge1 = new Edge({ source: parent1, target: intermediate });
+        const edge2 = new Edge({ source: parent2, target: intermediate });
+        const edge3 = new Edge({ source: intermediate, target: leaf });
+
+        const edges: Edge[] = [edge1, edge2, edge3];
+
+        const result = getParents(intermediate, edges);
+        expect(result).to.deep.equal([parent1, parent2]);
     });
 });

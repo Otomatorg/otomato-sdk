@@ -97,62 +97,106 @@ import { Edge } from '../models/Edge.js';
     }
 }*/
 
-export const xSpacing = 500;
+export const xSpacing = 400;
 export const ySpacing = 120;
 export const ROOT_X = 400;
 export const ROOT_Y = 120;
 
 export function positionWorkflowNodes(workflow: Workflow): void {
     try {
-    // Step 1: Find the starting nodes using identityStartingNodes function
-    const startingNodes = identityStartingNodes(workflow);
+        // Step 1: Find the starting nodes using identityStartingNodes function
+        const startingNodes = identityStartingNodes(workflow);
 
-    // Step 2: Place the starting nodes
-    let xPosition = ROOT_X;
-    startingNodes.forEach((startNode) => {
-        if (!startNode.position) {
+        // Step 2: Place the starting nodes
+        let xPosition = ROOT_X;
+        startingNodes.forEach((startNode) => {
             startNode.setPosition(xPosition, ROOT_Y);
             xPosition += xSpacing;
-        }
-    });
+        });
 
-    // Step 3: Place all other nodes relative to their parents
-    workflow.nodes.forEach((node) => positionNode(node, workflow.edges, xSpacing, ySpacing));
-    } catch (e) {console.error(e)}
+        // Step 3: Place all other nodes relative to their parents
+        const nodesToPosition = workflow.nodes.filter((node) => !startingNodes.includes(node));
+        nodesToPosition.forEach((node) => positionNode(node, workflow.edges, xSpacing, ySpacing, workflow));
+    } catch (e) { console.error(e) }
 }
 
-export function positionNode(node: Node, edges: Edge[], xSpacing: number, ySpacing: number): void {
-    if (node.position) return; // Skip already positioned nodes
-
+export function positionNode(node: Node, edges: Edge[], xSpacing: number, ySpacing: number, workflow: Workflow): void {
     // Get children of the node
-    const children = getChildren(node, edges);
+    const parents = getParents(node, edges);
 
-    // Recursively position children first
-    children.forEach((child) => positionNode(child, edges, xSpacing, ySpacing));
+    // todo: what if we have multiple parents?
+    const children = getChildren(parents[0], edges);
+    const childrenCountOfParent = children.length;
+    const parentX = parents[0]?.position?.x || ROOT_X;
+    const parentY = parents[0]?.position?.y || ROOT_Y;
 
-    // Compute position based on children
-    if (children.length === 1) {
-        // Single child: Align vertically
-        const child = children[0];
-        node.setPosition(child.position!.x, child.position!.y + ySpacing);
-    } else if (children.length > 1) {
-        // Multiple children: Align horizontally in the middle of children
-        const firstChild = children[0];
-        const lastChild = children[children.length - 1];
-        const midX = (firstChild.position!.x + lastChild.position!.x) / 2;
-        node.setPosition(midX, firstChild.position!.y + ySpacing);
+    // Compute position based on parent children count
+    if (childrenCountOfParent === 1) {
+        node.setPosition(parentX, parentY + ySpacing);
+    } else if (childrenCountOfParent == 2) {
+        // am I the first or the second child
+        // if I am the first -> x = parentX - xSpacing/2
+        // if I am the second -> x = parentX + xSpacing/2
+        const index = children.indexOf(node);
+        const offset = index === 0 ? -1 : 1;
+        node.setPosition(parentX + offset * xSpacing / 2, parentY + ySpacing);
     }
 }
 
-/**
- * Checks if a node already has a numeric x & y position.
- */
-function hasPosition(node: Node): boolean {
-    return Boolean(
-        node.position &&
-        typeof node.position.x === 'number' &&
-        typeof node.position.y === 'number'
-    );
+export function positionWorkflowNodesAvoidOverlap(workflow: Workflow): void {
+    const levels: Map<number, Node[]> = new Map();
+
+    // Helper: Add node to its level
+    function addToLevel(node: Node) {
+        const level = Math.round(node.position!.y / ySpacing);
+        if (!levels.has(level)) {
+            levels.set(level, []);
+        }
+        levels.get(level)!.push(node);
+    }
+
+    // Step 1: Position nodes using the existing logic
+    positionWorkflowNodes(workflow);
+
+    // Step 2: Populate levels
+    workflow.nodes.forEach((node) => {
+        if (node.position) {
+            addToLevel(node);
+        }
+    });
+
+    // Step 3: Resolve overlaps for each level
+    levels.forEach((nodes, level) => {
+        // Sort nodes by X position
+        nodes.sort((a, b) => (a.position!.x ?? 0) - (b.position!.x ?? 0));
+
+        // Adjust overlapping nodes
+        for (let i = 1; i < nodes.length; i++) {
+            const prevNode = nodes[i - 1];
+            const currentNode = nodes[i];
+
+            if (currentNode.position!.x - prevNode.position!.x < xSpacing) {
+                const shift = xSpacing - (currentNode.position!.x - prevNode.position!.x);
+                moveNodeAndChildren(currentNode, shift, workflow.edges);
+            }
+        }
+    });
+}
+
+function moveNodeAndChildren(
+    node: Node,
+    shift: number,
+    edges: Edge[],
+): void {
+    // Move the node
+    node.setPosition(node.position!.x + shift, node.position!.y);
+
+    // Propagate to children
+    edges
+        .filter((edge) => edge.source === node)
+        .forEach((edge) => {
+            moveNodeAndChildren(edge.target, shift, edges);
+        });
 }
 
 export function identifyLeafNodes(workflow: Workflow): Node[] {
@@ -174,4 +218,12 @@ export function identityStartingNodes(workflow: Workflow): Node[] {
 
 export function getChildren(node: Node, edges: Edge[]): Node[] {
     return edges.filter(edge => edge.source === node).map(edge => edge.target);
+}
+
+export function getParents(node: Node, edges: Edge[]): Node[] {
+    return edges.filter(edge => edge.target === node).map(edge => edge.source);
+}
+
+export function getEdges(node: Node, edges: Edge[]): Edge[] {
+    return edges.filter(edge => edge.source === node || edge.target === node);
 }
