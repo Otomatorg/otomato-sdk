@@ -73,6 +73,82 @@ describe('Node Positioning', () => {
     });
 });
 
+describe('Node Positioning - Multiple Children', () => {
+    it('should position a node with 3 children correctly', () => {
+        const parent = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const child1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const child2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const child3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edge1 = new Edge({ source: parent, target: child1 });
+        const edge2 = new Edge({ source: parent, target: child2 });
+        const edge3 = new Edge({ source: parent, target: child3 });
+        const workflow = new Workflow("Three Children Workflow", [parent, child1, child2, child3], [edge1, edge2, edge3]);
+
+        expect(parent.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
+        expect(child1.position).to.deep.equal({ x: ROOT_X - xSpacing, y: ROOT_Y + ySpacing });
+        expect(child2.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing });
+        expect(child3.position).to.deep.equal({ x: ROOT_X + xSpacing, y: ROOT_Y + ySpacing });
+    });
+
+    it('should position a node with 4 children correctly', () => {
+        const parent = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const children = Array.from({ length: 4 }, () => new Action(ACTIONS.CORE.DELAY.WAIT_FOR));
+        const edges = children.map(child => new Edge({ source: parent, target: child }));
+        const workflow = new Workflow("Four Children Workflow", [parent, ...children], edges);
+
+        expect(parent.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
+
+        children.forEach((child, index) => {
+            const expectedX = ROOT_X + (index - 1.5) * xSpacing;
+            expect(child.position).to.deep.equal({ x: expectedX, y: ROOT_Y + ySpacing });
+        });
+    });
+
+    it('should position a node with 5 children correctly', () => {
+        const parent = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const children = Array.from({ length: 5 }, () => new Action(ACTIONS.CORE.DELAY.WAIT_FOR));
+        const edges = children.map(child => new Edge({ source: parent, target: child }));
+        const workflow = new Workflow("Five Children Workflow", [parent, ...children], edges);
+
+
+        expect(parent.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
+
+        children.forEach((child, index) => {
+            const expectedX = ROOT_X + (index - 2) * xSpacing;
+            expect(child.position).to.deep.equal({ x: expectedX, y: ROOT_Y + ySpacing });
+        });
+    });
+
+    it('should position a node with 10 children correctly', () => {
+        const parent = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const children = Array.from({ length: 10 }, () => new Action(ACTIONS.CORE.DELAY.WAIT_FOR));
+        const edges = children.map(child => new Edge({ source: parent, target: child }));
+        const workflow = new Workflow("Ten Children Workflow", [parent, ...children], edges);
+
+        expect(parent.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
+
+        children.forEach((child, index) => {
+            const expectedX = ROOT_X + (index - 4.5) * xSpacing;
+            expect(child.position).to.deep.equal({ x: expectedX, y: ROOT_Y + ySpacing });
+        });
+    });
+
+    it('should position a node with 11 children correctly', () => {
+        const parent = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const children = Array.from({ length: 11 }, () => new Action(ACTIONS.CORE.DELAY.WAIT_FOR));
+        const edges = children.map(child => new Edge({ source: parent, target: child }));
+        const workflow = new Workflow("Eleven Children Workflow", [parent, ...children], edges);
+
+        expect(parent.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
+
+        children.forEach((child, index) => {
+            const expectedX = ROOT_X + (index - 5) * xSpacing;
+            expect(child.position).to.deep.equal({ x: expectedX, y: ROOT_Y + ySpacing });
+        });
+    });
+});
+
 describe('Node Positioning - Workflow Modifications', () => {
     it('should correctly position nodes when adding a node at the end of the workflow', () => {
         const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);

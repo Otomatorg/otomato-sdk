@@ -127,19 +127,19 @@ export function positionNode(node: Node, edges: Edge[], xSpacing: number, ySpaci
     // todo: what if we have multiple parents?
     const children = getChildren(parents[0], edges);
     const childrenCountOfParent = children.length;
-    const parentX = parents[0]?.position?.x || ROOT_X;
-    const parentY = parents[0]?.position?.y || ROOT_Y;
+    const parentX = parents.reduce((sum, parent) => sum + (parent.position?.x ?? ROOT_X), 0) / parents.length;
+    const parentY = Math.max(...parents.map(parent => parent.position?.y ?? ROOT_Y));
 
     // Compute position based on parent children count
     if (childrenCountOfParent === 1) {
         node.setPosition(parentX, parentY + ySpacing);
-    } else if (childrenCountOfParent == 2) {
-        // am I the first or the second child
-        // if I am the first -> x = parentX - xSpacing/2
-        // if I am the second -> x = parentX + xSpacing/2
-        const index = children.indexOf(node);
-        const offset = index === 0 ? -1 : 1;
-        node.setPosition(parentX + offset * xSpacing / 2, parentY + ySpacing);
+    } else {
+        const index = children.indexOf(node); // Get the position of this node among its siblings
+        const totalChildren = children.length;
+    
+        // Compute the x position for this node
+        const offset = index - (totalChildren - 1) / 2; // Center the children around the parent
+        node.setPosition(parentX + offset * xSpacing, parentY + ySpacing);
     }
 }
 
