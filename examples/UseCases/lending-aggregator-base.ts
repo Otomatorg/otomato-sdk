@@ -475,9 +475,9 @@ async function lending_aggregator() {
 
   console.log("Workflow ID: " + workflow.id);
 
-  const runResult = await workflow.run();
+  /*const runResult = await workflow.run();
 
-  console.log("lending_aggregator state after: " + workflow.getState());
+  console.log("lending_aggregator state after: " + workflow.getState());*/
 }
 
 lending_aggregator();

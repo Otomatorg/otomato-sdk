@@ -644,11 +644,11 @@ async function lending_aggregator() {
 
   const creationResult = await workflow.create();
 
-  /*console.log("lending_aggregator state before: " + workflow.getState());
+  console.log("lending_aggregator state before: " + workflow.getState());
 
   console.log("Workflow ID: " + workflow.id);
 
-  const runResult = await workflow.run();
+  /*const runResult = await workflow.run();
 
   console.log("lending_aggregator state after: " + workflow.getState());*/
 }

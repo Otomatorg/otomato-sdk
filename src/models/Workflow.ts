@@ -4,6 +4,7 @@ import { apiServices } from '../services/ApiService.js';
 import { Action } from './Action.js';
 import { SessionKeyPermission } from './SessionKeyPermission.js';
 import { Note } from './Note.js';
+import { positionWorkflowNodesAvoidOverlap } from '../utils/WorkflowNodePositioner.js';
 
 export type WorkflowState = 'inactive' | 'active' | 'failed' | 'completed' | 'waiting';
 
@@ -23,6 +24,7 @@ export class Workflow {
     this.nodes = nodes;
     this.edges = edges;
     this.state = 'inactive';
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   setName(name: string): void {
@@ -31,14 +33,115 @@ export class Workflow {
 
   addNode(node: Node): void {
     this.nodes.push(node);
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   addNodes(nodes: Node[]): void {
     this.nodes.push(...nodes);
+    positionWorkflowNodesAvoidOverlap(this);
+  }
+
+  deleteNode(nodeToDelete: Node): void {
+    // Remove the node from the nodes array
+    const nodeIndex = this.nodes.findIndex(node => node === nodeToDelete);
+    if (nodeIndex === -1) {
+      throw new Error(`Node not found in the workflow.`);
+    }
+    this.nodes.splice(nodeIndex, 1);
+
+    // Collect incoming and outgoing edges
+    const incomingEdges = this.edges.filter(edge => edge.target === nodeToDelete);
+    const outgoingEdges = this.edges.filter(edge => edge.source === nodeToDelete);
+
+    // Create new edges to replace the deleted node's connections
+    const newEdges: Edge[] = [];
+    incomingEdges.forEach(inEdge => {
+      outgoingEdges.forEach(outEdge => {
+        newEdges.push(new Edge({ source: inEdge.source, target: outEdge.target }));
+      });
+    });
+
+    // Update the edges array: remove edges involving the deleted node and add the new ones
+    this.edges = this.edges.filter(edge => edge.source !== nodeToDelete && edge.target !== nodeToDelete);
+    this.edges.push(...newEdges);
+
+    // Recalculate positions
+    positionWorkflowNodesAvoidOverlap(this);
+  }
+
+  insertNode(nodeToInsert: Node, nodeBefore: Node, nodeAfter?: Node): void {
+    // Ensure nodeBefore exists in the workflow
+    if (!this.nodes.includes(nodeBefore)) {
+      throw new Error('The nodeBefore must exist in the workflow.');
+    }
+  
+    // If nodeAfter is not provided, insert the new node as a child of nodeBefore
+    if (!nodeAfter) {
+      // Add the new node to the workflow
+      this.addNode(nodeToInsert);
+  
+      // Add a new edge between nodeBefore and nodeToInsert
+      const newEdge = new Edge({ source: nodeBefore, target: nodeToInsert });
+      this.addEdge(newEdge);
+  
+      // Recalculate positions
+      positionWorkflowNodesAvoidOverlap(this);
+      return;
+    }
+  
+    // If nodeAfter is provided, ensure both nodes exist in the workflow
+    if (!this.nodes.includes(nodeAfter)) {
+      throw new Error('The nodeAfter must exist in the workflow.');
+    }
+  
+    // Check if an edge exists between nodeBefore and nodeAfter
+    const edgeBetween = this.edges.find(edge => edge.source === nodeBefore && edge.target === nodeAfter);
+    if (!edgeBetween) {
+      throw new Error('No edge exists between nodeBefore and nodeAfter.');
+    }
+  
+    // Add the new node to the workflow
+    this.addNode(nodeToInsert);
+  
+    // Remove the existing edge between nodeBefore and nodeAfter
+    this.edges = this.edges.filter(edge => edge !== edgeBetween);
+  
+    // Add new edges
+    const newEdge1 = new Edge({ source: nodeBefore, target: nodeToInsert });
+    const newEdge2 = new Edge({ source: nodeToInsert, target: nodeAfter });
+    this.addEdges([newEdge1, newEdge2]);
+  
+    // Recalculate positions
+    positionWorkflowNodesAvoidOverlap(this);
+  }
+
+  swapNode(oldNode: Node, newNode: Node): void {
+    // Find the index of the node to replace
+    const nodeIndex = this.nodes.findIndex(node => node === oldNode);
+    if (nodeIndex === -1) {
+      throw new Error(`Node to swap not found in the workflow.`);
+    }
+
+    // Replace the old node with the new node in the nodes array
+    this.nodes[nodeIndex] = newNode;
+
+    // Update edges to point to the new node
+    this.edges.forEach(edge => {
+      if (edge.source === oldNode) {
+        edge.source = newNode;
+      }
+      if (edge.target === oldNode) {
+        edge.target = newNode;
+      }
+    });
+
+    // Recalculate positions
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   addEdge(edge: Edge): void {
     this.edges.push(edge);
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   updateEdge(edgeId: string, newEdge: Edge): void {
@@ -49,10 +152,12 @@ export class Workflow {
     } else {
       throw new Error(`Edge with id ${edgeId} not found`);
     }
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   addEdges(edges: Edge[]): void {
     this.edges.push(...edges);
+    positionWorkflowNodesAvoidOverlap(this);
   }
 
   getState(): WorkflowState {
@@ -100,7 +205,7 @@ export class Workflow {
       executionId: this.executionId,
       nodes: this.nodes.map(node => node.toJSON()),
       edges: this.edges.map(edge => edge.toJSON()),
-      notes: this.getNotes(), // Include notes
+      notes: this.getNotes(),
     };
   }
 
@@ -189,6 +294,7 @@ export class Workflow {
       this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
       this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
       this.notes = response.notes.map((noteData: any) => Note.fromJSON(noteData));
+      positionWorkflowNodesAvoidOverlap(this);
       return this;
     } catch (error: any) {
       throw new Error(`Failed to load workflow: ${error.message}`);
