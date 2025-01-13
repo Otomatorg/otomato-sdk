@@ -1,6 +1,5 @@
-import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices, convertToTokenUnits, convertToTokenUnitsFromSymbol, LOGIC_OPERATORS, ConditionGroup } from '../../src/index.js';
+import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices, getExternalVariable, convertToTokenUnits, convertToTokenUnitsFromSymbol, LOGIC_OPERATORS, ConditionGroup } from '../../src/index.js';
 import dotenv from 'dotenv';
-import { getExternalVariable } from '../../src/utils/externalVariables.js';
 
 dotenv.config();
 
@@ -63,7 +62,7 @@ async function workflow1() {
     workflow.addEdge(edge2);
     workflow.addEdge(edge3);
 
-    // console.log(JSON.stringify(workflow.toJSON()))
+    console.log(JSON.stringify(workflow.toJSON()))
 
     /*const creationResult = await workflow.create();
     console.log(workflow.getState());
