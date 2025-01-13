@@ -38,10 +38,16 @@ export const TRIGGERS = {
           {
             "name": "Run it every day for 2 weeks",
             "description": "Set the period to 1 day and the limit to 14 to execute daily for 2 weeks.",
-            "parameters": {
-              "period": 86400000,
-              "limit": 14
-            }
+            "parameters": [
+              {
+                "key": "period",
+                "value": 86400000
+              },
+              {
+                "key": "limit",
+                "value": 14
+              }
+            ]
           }
         ],
         "blockId": 18,
