@@ -349,3 +349,162 @@ describe('Workflow Class - Node Modifications', () => {
     );
   });
 });
+
+describe('Empty block management', () => {
+  it('should create a workflow with an empty block', () => {
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setChainId(CHAINS.ETHEREUM);
+    trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    trigger.setPosition(0, 0);
+
+    const action1 = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    action1.setChainId(CHAINS.ETHEREUM);
+    action1.setParams("value", 1000);
+    action1.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    action1.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    action1.setPosition(1, 0);
+
+
+    const workflow = new Workflow("Test Workflow", [trigger, action1], [new Edge({ source: trigger, target: action1 })]);
+    workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), trigger, action1);
+    expect(workflow.nodes).to.have.length(3);
+  });
+
+  it('should export a workflow without its empty nodes', () => {
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setChainId(CHAINS.ETHEREUM);
+    trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    trigger.setPosition(0, 0);
+  
+    const action1 = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    action1.setChainId(CHAINS.ETHEREUM);
+    action1.setParams("value", 1000);
+    action1.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    action1.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    action1.setPosition(1, 0);
+  
+    // Create a workflow with an edge from trigger -> action1
+    const workflow = new Workflow(
+      "Test Workflow",
+      [trigger, action1],
+      [ new Edge({ source: trigger, target: action1 }) ]
+    );
+  
+    // Insert empty blocks (blockId === 0 inside ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK)
+    workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), action1);
+    workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), trigger, action1);
+  
+    // Confirm that, before toJSON, the workflow contains 4 nodes
+    // (trigger, action1, and 2 empties) plus 3 edges
+    expect(workflow.nodes).to.have.length(4);
+    expect(workflow.edges).to.have.length(3);
+  
+    // Convert to JSON; this should invoke your logic that clones + deletes empty nodes
+    const json = workflow.toJSON();
+  
+    // Now the JSON should reflect a workflow with only 2 nodes (the real ones)
+    expect(json.nodes).to.have.length(2);
+    // And only 1 edge (trigger -> action1)
+    expect(json.edges).to.have.length(1);
+  
+    // Optional: You can do deeper checks if you'd like:
+    // e.g., verifying that the final edges reference only the IDs of trigger & action1
+    // expect(json.nodes.map(n => n.blockId)).to.deep.equal([trigger.blockId, action1.blockId]);
+  });
+
+  it('should create a SPLIT from SDK', () => {
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setChainId(CHAINS.ETHEREUM);
+    trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+  
+    const split = new Action(ACTIONS.CORE.SPLIT.SPLIT);
+  
+    // Initial workflow has 2 nodes and 1 edge (trigger -> split)
+    const workflow = new Workflow(
+      "Test Workflow",
+      [trigger, split],
+      [ new Edge({ source: trigger, target: split }) ]
+    );
+  
+    // Insert three empty blocks after split (no nodeAfter => child of `split`)
+    workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), split);
+    workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), split);
+    workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), split);
+  
+    // Now we expect:
+    //   - 5 total nodes: (trigger, split, 3 empties)
+    //   - 4 edges:
+    //       1) trigger -> split
+    //       2) split -> emptyBlock1
+    //       3) split -> emptyBlock2
+    //       4) split -> emptyBlock3
+    expect(workflow.nodes).to.have.lengthOf(5);
+    expect(workflow.edges).to.have.lengthOf(4);
+  
+    // Confirm original edge from trigger -> split still exists
+    const edgeFromTrigger = workflow.edges.find(e => e.source === trigger && e.target === split);
+    expect(edgeFromTrigger).to.exist;
+  
+    // Confirm we have three new edges from `split` to the newly inserted empty blocks
+    const edgesFromSplit = workflow.edges.filter(e => e.source === split);
+    expect(edgesFromSplit).to.have.lengthOf(3);
+  
+    // (Optional) Further checks that each inserted node is indeed an EMPTYBLOCK, etc.
+  });
+  
+  it('should create a IF/ELSE from SDK', () => {
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setChainId(CHAINS.ETHEREUM);
+    trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+  
+    const condition = new Action(ACTIONS.CORE.CONDITION.IF);
+  
+    // Initial workflow has 2 nodes, 1 edge (trigger -> condition)
+    const workflow = new Workflow(
+      "Test Workflow",
+      [trigger, condition],
+      [ new Edge({ source: trigger, target: condition }) ]
+    );
+  
+    // Insert two nodes after condition, each with edge labels "true" and "false"
+    const ifAction = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
+    workflow.insertNode(ifAction, condition, undefined, "true", "true");
+    workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), condition, undefined, "false", "false");
+  
+    // Now we expect:
+    //   - 4 total nodes: (trigger, condition, ifAction, elseAction)
+    //   - 3 edges:
+    //       1) trigger -> condition
+    //       2) condition -> ifAction    (label: "true", value: "true")
+    //       3) condition -> elseAction  (label: "false", value: "false")
+    expect(workflow.nodes).to.have.lengthOf(4);
+    expect(workflow.edges).to.have.lengthOf(3);
+  
+    const edgesFromCondition = workflow.edges.filter(e => e.source === condition);
+    expect(edgesFromCondition).to.have.lengthOf(2);
+  
+    const trueEdge = edgesFromCondition.find(e => e.label === "true");
+    expect(trueEdge).to.exist;
+    expect(trueEdge?.value).to.equal("true");
+  
+    const falseEdge = edgesFromCondition.find(e => e.label === "false");
+    expect(falseEdge).to.exist;
+    expect(falseEdge?.value).to.equal("false");
+  
+    // Now swap the ifAction (an EMPTYBLOCK) with an actual WAIT node
+    const waitNode = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    workflow.swapNode(ifAction, waitNode);
+  
+    // The number of nodes remains 4, but `ifAction` is replaced by `waitNode`
+    expect(workflow.nodes).to.have.lengthOf(4);
+    expect(workflow.nodes).to.include(waitNode);
+    expect(workflow.nodes).to.not.include(ifAction);
+  
+    // Edges remain 3, but the edge labeled "true" now targets the `waitNode`
+    expect(workflow.edges).to.have.lengthOf(3);
+  
+    const updatedTrueEdge = workflow.edges.find(e => e.label === "true");
+    expect(updatedTrueEdge?.target).to.equal(waitNode);
+  });
+
+});

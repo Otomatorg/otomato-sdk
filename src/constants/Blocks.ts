@@ -2578,6 +2578,139 @@ export const TRIGGERS = {
 
 export const ACTIONS = {
   "CORE": {
+    "EMPTYBLOCK": {
+      "image": "",
+      "description": "",
+      "chains": [],
+      "EMPTYBLOCK": {
+        "name": "Odos swap",
+        "description": "Swap on Odos to get the best market rates accross multiple pools",
+        "type": 1,
+        "requiredApprovals": [
+          {
+            "address": "{{parameters.tokenIn}}",
+            "amount": "{{parameters.amount}}",
+            "to": "{{before.contractAddress}}"
+          }
+        ],
+        "checks": [
+          {
+            "type": 0,
+            "chainId": "{{parameters.chainId}}",
+            "contractAddress": "{{parameters.tokenIn}}",
+            "amount": "{{parameters.amount}}"
+          }
+        ],
+        "output": {
+          "amountIn": "uint256",
+          "tokenIn": "erc20",
+          "amountOut": "uint256",
+          "tokenOut": "erc20",
+          "transactionHash": "string"
+        },
+        "frontendHelpers": {
+          "output": {
+            "amountIn": {
+              "erc20Token": {
+                "contractAddress": "{{output.tokenIn}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            },
+            "amountOut": {
+              "erc20Token": {
+                "contractAddress": "{{output.tokenOut}}",
+                "chainId": "{{parameters.chainId}}"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "tokenIn",
+            "type": "erc20",
+            "description": "Token to sell",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "tokenOut",
+            "type": "erc20",
+            "description": "Token to buy",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "amount",
+            "type": "uint256",
+            "description": "Amount to sell",
+            "mandatory": true,
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.tokenIn}}",
+              "chain": "{{parameters.chainId}}"
+            }
+          },
+          {
+            "key": "slippage",
+            "type": "percentage",
+            "description": "The maximum allowable difference between the expected price and the actual price at the time of execution, expressed as a percentage. This protects the transaction from significant price fluctuations.",
+            "value": 1,
+            "mandatory": true,
+            "category": 1
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "Swap USDC to WETH",
+            "description": "Swap 100 USDC to WETH on Mode Network using Odos",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 34443
+              },
+              {
+                "key": "tokenIn",
+                "value": "0xd988097fb8612cc24eeC14542bC03424c656005f"
+              },
+              {
+                "key": "tokenOut",
+                "value": "0x4200000000000000000000000000000000000006"
+              },
+              {
+                "key": "amount",
+                "value": "100000000n"
+              },
+              {
+                "key": "slippage",
+                "value": 1
+              }
+            ]
+          }
+        ],
+        "permissions": {
+          "chainId": "{{parameters.chainId}}",
+          "approvedTargets": [
+            "{{before.contractAddress}}",
+            "{{parameters.tokenIn}}"
+          ],
+          "label": [
+            "Swap {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenIn}})}} to {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenOut}})}}"
+          ],
+          "labelNotAuthorized": [
+            "Transfer ETH"
+          ]
+        },
+        "blockId": 0,
+        "image": ""
+      }
+    },
     "DELAY": {
       "description": "Set of functions to delay the executions of the following blocks.",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/delay.png",
@@ -3413,7 +3546,8 @@ export const ACTIONS = {
         "permissions": {
           "chainId": "{{parameters.chainId}}",
           "approvedTargets": [
-            "{{before.contractAddress}}"
+            "{{before.contractAddress}}",
+            "{{parameters.tokenToRepay}}"
           ],
           "label": [
             "Repay {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenToRepay}})}} on IONIC"
