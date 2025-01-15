@@ -112,3 +112,48 @@ export const findTriggerByBlockId = (blockId: number): { parentInfo: ParentInfo;
   }
   throw new Error(`Trigger with id ${blockId} not found`);
 };
+
+/**
+ * Searches through the TRIGGERS object to find a sub-object 
+ * whose `prototype` property matches `prototypeToMatch`.
+ *
+ * @param prototypeToMatch - The prototype string to find (e.g. "priceMovementAgainstCurrency").
+ * @returns An object of shape { [blockKey]: any } if found, otherwise null.
+ */
+export function findBlockByPrototype(
+  prototypeToMatch: string
+): { [blockKey: string]: any } | null {
+  // Top-level keys are categories like "CORE", "TOKENS", "YIELD", etc.
+  for (const categoryKey in TRIGGERS) {
+    const category = (TRIGGERS as any )[categoryKey];
+
+    // Each category may have multiple blocks: e.g. "EVERY_PERIOD", "TRANSFER", "BALANCE", etc.
+    for (const blockKey in category) {
+      const blockValue = category[blockKey];
+
+      // If blockValue is not an object, skip it (it might be `description`, `image`, etc.)
+      if (typeof blockValue !== 'object' || blockValue === null) {
+        continue;
+      }
+
+      // Inside each block, we often see an object with the same name:
+      // e.g. category["TRANSFER"]["TRANSFER"]
+      // We iterate all keys inside blockValue to find the actual block that has `prototype`.
+      for (const subKey in blockValue) {
+        const subValue = blockValue[subKey];
+
+        if (
+          typeof subValue === 'object' &&
+          subValue !== null &&
+          subValue.prototype === prototypeToMatch
+        ) {
+          // Return the found block in the shape { [subKey]: subValue }
+          return subValue;
+        }
+      }
+    }
+  }
+
+  // If we never find a matching prototype, return null
+  return null;
+}

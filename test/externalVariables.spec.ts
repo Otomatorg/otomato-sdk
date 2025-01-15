@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { TRIGGERS, CHAINS, getTokenFromSymbol } from '../src/index';
-import { getExternalVariable } from '../src/utils/externalVariables';
+import { getExternalVariable, getExternalVariableFromParameters } from '../src/utils/externalVariables';
 
 describe('external variables construction', () => {
 
@@ -57,5 +57,40 @@ describe('external variables construction', () => {
     });
 
 
+
+});
+
+describe('external variables construction from object', () => {
+
+    it('should create lending rate ionic USDT', () => {
+        const variable = getExternalVariableFromParameters(
+            TRIGGERS.LENDING.IONIC.LENDING_RATE.prototype,
+            [{"key": "chainId", "value": 34443}, {"key": "token", "value": "0xf0F161fDA2712DB8b566946122a5af183995e2eD"}],
+        );
+
+        expect(variable).to.equal('{{external.functions.ionicLendingRate(34443,0xf0F161fDA2712DB8b566946122a5af183995e2eD)}}');
+    });
+
+    it('should create sUSDE yield', () => {
+        const variable = getExternalVariableFromParameters(
+            TRIGGERS.YIELD.ETHENA.SUSDE_YIELD.prototype,
+            []
+        );
+
+        expect(variable).to.equal('{{external.functions.sUSDEYield()}}');
+    });
+
+    it('should create price movement against currency', () => {
+        const variable = getExternalVariableFromParameters(
+            TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY.prototype,
+            [
+                {key: 'chainId', value: CHAINS.MODE},
+                {key: 'currency', value: 'USD'}, // currency
+                {key: 'contractAddress', value: getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress},
+            ]
+        );
+
+        expect(variable).to.equal('{{external.functions.priceMovementAgainstCurrency(34443,,USD,,0xf0F161fDA2712DB8b566946122a5af183995e2eD)}}');
+    });
 
 });

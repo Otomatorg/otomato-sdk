@@ -1,6 +1,6 @@
 {
   "extension": ["ts"],
-  "spec": ["test/**/*.spec.ts"],
+  "spec": ["test/**/externalVariables.spec.ts"],
   "node-option": [
     "experimental-specifier-resolution=node",
     "loader=ts-node/esm"

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Trigger, TRIGGERS, getTokenFromSymbol, CHAINS } from '../src/index';
+import { Trigger, TRIGGERS, getTokenFromSymbol, CHAINS, findBlockByPrototype } from '../src/index';
 
 const DEFAULT_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -180,4 +180,20 @@ describe('Trigger Class', () => {
     expect(trigger.toJSON()).to.deep.equal(json);
   });
 
+});
+
+describe('findBlockByPrototype', () => {
+  it('should find the correct block object for a known prototype', () => {
+    const prototypeName = 'priceMovementAgainstCurrency';
+    const foundBlock = findBlockByPrototype(prototypeName);
+
+    expect(foundBlock).to.exist;
+    expect(foundBlock).to.have.property('parameters');
+  });
+
+  it('should return null if the prototype does not exist', () => {
+    const nonExistingPrototype = 'noSuchPrototype';
+    const foundBlock = findBlockByPrototype(nonExistingPrototype);
+    expect(foundBlock).to.be.null;
+  });
 });
