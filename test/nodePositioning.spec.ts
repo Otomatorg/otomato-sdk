@@ -177,13 +177,9 @@ describe('Node Positioning - Workflow Modifications', () => {
         const edge = new Edge({ source: node1, target: node3 });
         const workflow = new Workflow("Adding Node in Middle", [node1, node3], [edge]);
     
-        positionWorkflowNodes(workflow);
-    
         // Add a new node in the middle using insertNode
         const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
         workflow.insertNode(node2, node1, node3);
-    
-        positionWorkflowNodes(workflow);
     
         // Expectations
         expect(node1.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });

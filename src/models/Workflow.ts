@@ -84,64 +84,49 @@ export class Workflow {
  * @param edgeLabel     (Optional) Label for the edge, only allowed if `nodeAfter` is not provided
  * @param edgeValue     (Optional) Value for the edge, only allowed if `nodeAfter` is not provided
  */
-  public insertNode(
-    nodeToInsert: Node,
-    nodeBefore: Node,
-    nodeAfter?: Node,
-    edgeLabel: string | null = null,
-    edgeValue: any | null = null
-  ): void {
-    // 1. Basic checks: nodeBefore must exist
+  insertNode(nodeToInsert: Node, nodeBefore: Node, nodeAfter?: Node): void {
+    // Ensure nodeBefore exists in the workflow
     if (!this.nodes.includes(nodeBefore)) {
       throw new Error('The nodeBefore must exist in the workflow.');
     }
 
-    // 2. If nodeAfter is supplied, it must exist in the workflow
-    if (nodeAfter && !this.nodes.includes(nodeAfter)) {
-      throw new Error('The nodeAfter must exist in the workflow.');
-    }
-
-    // 3. If nodeAfter is provided, edgeLabel/edgeValue must be null
-    if (nodeAfter && (edgeLabel !== null || edgeValue !== null)) {
-      throw new Error(
-        'You cannot provide edgeLabel or edgeValue when inserting a node between nodeBefore and nodeAfter.'
-      );
-    }
-
-    // 4. Add the new node (if not already present)
-    if (!this.nodes.includes(nodeToInsert)) {
-      this.nodes.push(nodeToInsert);
-    }
-
-    // 5. If nodeAfter is not provided, just create one new edge
+    // If nodeAfter is not provided, insert the new node as a child of nodeBefore
     if (!nodeAfter) {
-      // Create a new edge from nodeBefore -> nodeToInsert with optional label/value
-      const newEdge = new Edge({
-        source: nodeBefore,
-        target: nodeToInsert,
-        label: edgeLabel ?? undefined,
-        value: edgeValue ?? undefined
-      });
-      this.edges.push(newEdge);
+      // Add the new node to the workflow
+      this.addNode(nodeToInsert);
+
+      // Add a new edge between nodeBefore and nodeToInsert
+      const newEdge = new Edge({ source: nodeBefore, target: nodeToInsert });
+      this.addEdge(newEdge);
+
+      // Recalculate positions
       positionWorkflowNodesAvoidOverlap(this);
       return;
     }
 
-    // 6. Otherwise, we are inserting between nodeBefore -> nodeAfter.
-    //    Find the edge from nodeBefore -> nodeAfter
-    const existingEdgeIndex = this.edges.findIndex(
-      (edge) => edge.source === nodeBefore && edge.target === nodeAfter
-    );
-    if (existingEdgeIndex === -1) {
+    // If nodeAfter is provided, ensure both nodes exist in the workflow
+    if (!this.nodes.includes(nodeAfter)) {
+      throw new Error('The nodeAfter must exist in the workflow.');
+    }
+
+    // Check if an edge exists between nodeBefore and nodeAfter
+    const edgeBetween = this.edges.find(edge => edge.source === nodeBefore && edge.target === nodeAfter);
+    if (!edgeBetween) {
       throw new Error('No edge exists between nodeBefore and nodeAfter.');
     }
 
-    // Remove that old edge
-    this.edges.splice(existingEdgeIndex, 1);
+    // Add the new node to the workflow
+    this.addNode(nodeToInsert);
 
-    // Insert two new edges: nodeBefore -> nodeToInsert -> nodeAfter
-    this.edges.push(new Edge({ source: nodeBefore, target: nodeToInsert }));
-    this.edges.push(new Edge({ source: nodeToInsert, target: nodeAfter }));
+    // Remove the existing edge between nodeBefore and nodeAfter
+    this.edges = this.edges.filter(edge => edge !== edgeBetween);
+
+    // Add new edges
+    const newEdge1 = new Edge({ source: nodeBefore, target: nodeToInsert });
+    const newEdge2 = new Edge({ source: nodeToInsert, target: nodeAfter });
+    this.addEdges([newEdge1, newEdge2]);
+
+    // Recalculate positions
     positionWorkflowNodesAvoidOverlap(this);
   }
 
