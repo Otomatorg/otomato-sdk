@@ -1,4 +1,3 @@
-import { TRIGGERS } from "../constants/Blocks";
 import { findBlockByPrototype } from "../models/Trigger";
 
 export function getExternalVariable(prototype: String, args: Array<any>) {
