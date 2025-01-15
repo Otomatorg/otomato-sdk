@@ -93,4 +93,16 @@ describe('external variables construction from object', () => {
         expect(variable).to.equal('{{external.functions.priceMovementAgainstCurrency(34443,,USD,,0xf0F161fDA2712DB8b566946122a5af183995e2eD)}}');
     });
 
+    it('should create price movement against currency and automatically fill default values if not provided', () => {
+        const variable = getExternalVariableFromParameters(
+            TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY.prototype,
+            [
+                {key: 'chainId', value: CHAINS.MODE},
+                {key: 'contractAddress', value: getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress},
+            ]
+        );
+
+        expect(variable).to.equal('{{external.functions.priceMovementAgainstCurrency(34443,,USD,,0xf0F161fDA2712DB8b566946122a5af183995e2eD)}}');
+    });
+
 });
