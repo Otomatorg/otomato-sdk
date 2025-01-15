@@ -70,24 +70,36 @@ export class Workflow {
   }
 
   /**
- * Inserts a new node into the workflow:
- * - If both nodeBefore and nodeAfter are provided, we expect an existing edge
- *   from nodeBefore -> nodeAfter, which gets replaced by two edges:
- *   nodeBefore -> nodeToInsert and nodeToInsert -> nodeAfter.
- *
- * - If nodeAfter is NOT provided, we create a single edge from nodeBefore
- *   to nodeToInsert, optionally using `edgeLabel` and `edgeValue`.
- *
- * @param nodeToInsert  The node you want to insert
- * @param nodeBefore    The existing node in the workflow that precedes `nodeToInsert`
- * @param nodeAfter     (Optional) The existing node that should follow `nodeToInsert`
- * @param edgeLabel     (Optional) Label for the edge, only allowed if `nodeAfter` is not provided
- * @param edgeValue     (Optional) Value for the edge, only allowed if `nodeAfter` is not provided
- */
-  insertNode(nodeToInsert: Node, nodeBefore: Node, nodeAfter?: Node): void {
+   * Inserts a new node into the workflow:
+   * - If both nodeBefore and nodeAfter are provided, we expect an existing edge
+   *   from nodeBefore -> nodeAfter, which gets replaced by two edges:
+   *   nodeBefore -> nodeToInsert and nodeToInsert -> nodeAfter.
+   *
+   * - If nodeAfter is NOT provided, we create a single edge from nodeBefore
+   *   to nodeToInsert. The user can optionally provide `edgeLabel` and `edgeValue`
+   *   in that scenario only.
+   *
+   * @param nodeToInsert  The node you want to insert
+   * @param nodeBefore    The existing node in the workflow that precedes `nodeToInsert`
+   * @param nodeAfter     (Optional) The existing node that should follow `nodeToInsert`
+   * @param edgeLabel     (Optional) Label for the edge, only allowed if `nodeAfter` is not provided
+   * @param edgeValue     (Optional) Value for the edge, only allowed if `nodeAfter` is not provided
+   */
+  insertNode(
+    nodeToInsert: Node,
+    nodeBefore: Node,
+    nodeAfter?: Node,
+    edgeLabel: string | null = null,
+    edgeValue: any | null = null
+  ): void {
     // Ensure nodeBefore exists in the workflow
     if (!this.nodes.includes(nodeBefore)) {
       throw new Error('The nodeBefore must exist in the workflow.');
+    }
+
+    // If nodeAfter is provided, disallow edgeLabel/edgeValue
+    if (nodeAfter && (edgeLabel !== null || edgeValue !== null)) {
+      throw new Error('Cannot provide edgeLabel/edgeValue if nodeAfter is specified.');
     }
 
     // If nodeAfter is not provided, insert the new node as a child of nodeBefore
@@ -95,8 +107,13 @@ export class Workflow {
       // Add the new node to the workflow
       this.addNode(nodeToInsert);
 
-      // Add a new edge between nodeBefore and nodeToInsert
-      const newEdge = new Edge({ source: nodeBefore, target: nodeToInsert });
+      // Add a new edge between nodeBefore and nodeToInsert (with optional label/value)
+      const newEdge = new Edge({
+        source: nodeBefore,
+        target: nodeToInsert,
+        label: edgeLabel ?? undefined,
+        value: edgeValue ?? undefined
+      });
       this.addEdge(newEdge);
 
       // Recalculate positions
