@@ -8,6 +8,7 @@ export const PROTOCOLS = {
   COMPOUND: 'COMPOUND',
   IONIC: 'IONIC',
   MOONWELL: 'MOONWELL',
+  IRONCLAD: 'IRONCLAD',
   WALLET: 'WALLET',
 } as const;
 export type Protocol = typeof PROTOCOLS[keyof typeof PROTOCOLS];
@@ -61,11 +62,13 @@ const chainTokenProtocolMap: ChainTokenProtocolMap = {
     // USDC on Mode
     '0xd988097fb8612cc24eec14542bc03424c656005f': [
       { protocol: PROTOCOLS.IONIC, token: '0x2BE717340023C9e14C1Bb12cb3ecBcfd3c3fB038' },
+      { protocol: PROTOCOLS.IRONCLAD, token: '0xe7334Ad0e325139329E747cF2Fc24538dD564987' },
       { protocol: PROTOCOLS.WALLET, token: '0xd988097fb8612cc24eeC14542bC03424c656005f' },
     ],
     // WETH on Mode
     '0x4200000000000000000000000000000000000006': [
       { protocol: PROTOCOLS.IONIC, token: '0x71ef7EDa2Be775E5A7aa8afD02C45F059833e9d2' },
+      { protocol: PROTOCOLS.IRONCLAD, token: '0x9c29a8eC901DBec4fFf165cD57D4f9E03D4838f7' },
       { protocol: PROTOCOLS.WALLET, token: '0x4200000000000000000000000000000000000006' },
     ],
   },
