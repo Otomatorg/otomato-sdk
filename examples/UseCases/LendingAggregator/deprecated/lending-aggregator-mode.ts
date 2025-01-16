@@ -1,15 +1,14 @@
-import { ACTIONS, Action, TRIGGERS, Trigger, CHAINS, getTokenFromSymbol, apiServices, convertToTokenUnitsFromSymbol, LOGIC_OPERATORS, ConditionGroup, Workflow, Edge } from '../../../src/index.js';
+import { ACTIONS, Action, TRIGGERS, Trigger, CHAINS, getTokenFromSymbol, apiServices, convertToTokenUnitsFromSymbol, LOGIC_OPERATORS, ConditionGroup, Workflow, Edge } from '../../../../src/index.js';
 import dotenv from 'dotenv';
-
 dotenv.config();
 
 const withdrawAmount = '115792089237316195423570985008687907853269984665640564039457584007913129639935n';
 
+const smartAccountAddress = '0x9ebF4899c05039a52407D919A63630Ccd3F399ae';
+
 enum ProtocolName {
-  AAVE = 'AAVE',
   IONIC = 'IONIC',
-  MOONWELL = 'MOONWELL',
-  COMPOUND = 'COMPOUND',
+  IRONCLAD = 'IRONCLAD',
 }
 
 enum BlockType {
@@ -17,178 +16,102 @@ enum BlockType {
   DEPOSIT = 'DEPOSIT',
 }
 
-const protocols = [ProtocolName.IONIC, ProtocolName.COMPOUND, ProtocolName.MOONWELL, ProtocolName.AAVE];
+const protocols = [ProtocolName.IONIC, ProtocolName.IRONCLAD];
 
-const USDCBalance = '{{external.functions.erc20Balance(8453,0x8e379aD0090f45a53A08007536cE2fa0a3F9F93d,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,,)}}';
+const USDCBalance = `{{external.functions.erc20Balance(34443,${smartAccountAddress},0xd988097fb8612cc24eeC14542bC03424c656005f,,)}}`;
 
 // ---------- Map protocols with their lending rate function ----------
 const lendingRateFunctions = {
-  [ProtocolName.AAVE]: "{{external.functions.aaveLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}",
-  [ProtocolName.IONIC]: "{{external.functions.ionicLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}",
-  [ProtocolName.MOONWELL]: "{{external.functions.moonwellLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,0)}}",
-  [ProtocolName.COMPOUND]: "{{external.functions.compoundLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,0)}}"
+  [ProtocolName.IONIC]: `{{external.functions.ionicLendingRate(34443,0xd988097fb8612cc24eeC14542bC03424c656005f)}}`,
+  [ProtocolName.IRONCLAD]: `{{external.functions.ironcladLendingRate(34443,0xd988097fb8612cc24eeC14542bC03424c656005f)}}`,
 };
 
 // ---------- Map protocols with their lending rate function ----------
 const balanceToWithdrawFunction = {
-  [ProtocolName.AAVE]: '{{external.functions.erc20Balance(8453,0x8e379aD0090f45a53A08007536cE2fa0a3F9F93d,0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB,,)}}',
-  [ProtocolName.IONIC]: '{{external.functions.erc20Balance(8453,0x8e379aD0090f45a53A08007536cE2fa0a3F9F93d,0xa900A17a49Bc4D442bA7F72c39FA2108865671f0,,)}}',
-  [ProtocolName.MOONWELL]: '{{external.functions.erc20Balance(8453,0x8e379aD0090f45a53A08007536cE2fa0a3F9F93d,0xEdc817A28E8B93B03976FBd4a3dDBc9f7D176c22,,)}}',
-  [ProtocolName.COMPOUND]: '{{external.functions.erc20Balance(8453,0x8e379aD0090f45a53A08007536cE2fa0a3F9F93d,0xb125E6687d4313864e53df431d5425969c15Eb2F,,)}}'
+  [ProtocolName.IONIC]: `{{external.functions.erc20Balance(34443,${smartAccountAddress},0x2BE717340023C9e14C1Bb12cb3ecBcfd3c3fB038,,)}}`,
+  [ProtocolName.IRONCLAD]: `{{external.functions.erc20Balance(34443,${smartAccountAddress},0xe7334Ad0e325139329E747cF2Fc24538dD564987,,)}}`,
 };
 
-// ---------- Aave Withdraw All ----------
-function createAaveWithdrawAll() {
-  const aaveWithdrawAll = new Action(ACTIONS.LENDING.AAVE.WITHDRAW);
+// ---------- Ironclad Withdraw All ----------
+function createIroncladWithdrawAll() {
+  const ironcladWithdrawAll = new Action(ACTIONS.LENDING.IRONCLAD.WITHDRAW);
 
-  aaveWithdrawAll.setChainId(CHAINS.BASE);
-  aaveWithdrawAll.setParams(
+  ironcladWithdrawAll.setChainId(CHAINS.MODE);
+  ironcladWithdrawAll.setParams(
     "abiParams.asset",
-    getTokenFromSymbol(CHAINS.BASE, "USDC").contractAddress
+    getTokenFromSymbol(CHAINS.MODE, "USDC").contractAddress
   );
-  aaveWithdrawAll.setParams(
-    "abiParams.amount", 
+  ironcladWithdrawAll.setParams(
+    "abiParams.amount",
     withdrawAmount
   );
 
-  return aaveWithdrawAll;
+  return ironcladWithdrawAll;
 }
 
 // ---------- Ionic Withdraw All ----------
 function createIonicWithdrawAll() {
   const ionicWithdrawAll = new Action(ACTIONS.LENDING.IONIC.WITHDRAW);
 
-  ionicWithdrawAll.setChainId(CHAINS.BASE);
+  ionicWithdrawAll.setChainId(CHAINS.MODE);
   ionicWithdrawAll.setParams(
     "tokenToWithdraw",
-    getTokenFromSymbol(CHAINS.BASE, "USDC").contractAddress
+    getTokenFromSymbol(CHAINS.MODE, "USDC").contractAddress
   );
   ionicWithdrawAll.setParams(
-    "abiParams.amount", 
+    "abiParams.amount",
     withdrawAmount
   );
 
   return ionicWithdrawAll;
 }
 
-// ---------- Moonwell Withdraw All ----------
-function createMoonwellWithdrawAll() {
-  const moonwellWithdrawAll = new Action(ACTIONS.LENDING.MOONWELL.WITHDRAW);
+// ---------- Ironclad Deposit ----------
+async function createIroncladDeposit() {
+  const ironcladDeposit = new Action(ACTIONS.LENDING.IRONCLAD.SUPPLY);
 
-  moonwellWithdrawAll.setChainId(CHAINS.BASE);
-  moonwellWithdrawAll.setParams(
-    "tokenToWithdraw",
-    getTokenFromSymbol(CHAINS.BASE, "USDC").contractAddress
-  );
-  moonwellWithdrawAll.setParams(
-    "abiParams.amount", 
-    withdrawAmount
-  );
+  ironcladDeposit.setChainId(CHAINS.MODE);
+  ironcladDeposit.setParams("abiParams.asset", getTokenFromSymbol(CHAINS.MODE, "USDC").contractAddress);
+  ironcladDeposit.setParams("abiParams.amount", USDCBalance);
+  ironcladDeposit.setParams("abiParams.referralCode", 0);
 
-  return moonwellWithdrawAll;
-}
-
-// ---------- Compound Withdraw All ----------
-function createCompoundWithdrawAll() {
-  const compoundWithdrawAll = new Action(ACTIONS.LENDING.COMPOUND.WITHDRAW);
-
-  compoundWithdrawAll.setChainId(CHAINS.BASE);
-  compoundWithdrawAll.setParams(
-    "abiParams.asset",
-    getTokenFromSymbol(CHAINS.BASE, "USDC").contractAddress
-  );
-  compoundWithdrawAll.setParams(
-    "abiParams.amount", 
-    withdrawAmount
-  );
-
-  return compoundWithdrawAll;
-}
-
-// ---------- Aave Deposit ----------
-async function createAaveDeposit() {
-  const aaveDeposit = new Action(ACTIONS.LENDING.AAVE.SUPPLY);
-
-  aaveDeposit.setChainId(CHAINS.BASE);
-  aaveDeposit.setParams("abiParams.asset", getTokenFromSymbol(CHAINS.BASE, "USDC").contractAddress);
-  aaveDeposit.setParams("abiParams.amount", USDCBalance);
-  aaveDeposit.setParams("abiParams.referralCode", 0);
-
-  return aaveDeposit;
+  return ironcladDeposit;
 }
 
 // ---------- Ionic Deposit ----------
 async function createIonicDeposit() {
   const ionicDeposit = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
 
-  ionicDeposit.setChainId(CHAINS.BASE);
+  ionicDeposit.setChainId(CHAINS.MODE);
   ionicDeposit.setParams(
-      "abiParams.amount",
-      USDCBalance
+    "abiParams.amount",
+    USDCBalance
   );
   ionicDeposit.setParams(
-      "tokenToDeposit",
-      getTokenFromSymbol(CHAINS.BASE, "USDC").contractAddress
+    "tokenToDeposit",
+    getTokenFromSymbol(CHAINS.MODE, "USDC").contractAddress
   );
 
   return ionicDeposit;
-}
-
-// ---------- Moonwell Deposit ----------
-async function createMoonwellDeposit() {
-  const moonwellDeposit = new Action(ACTIONS.LENDING.MOONWELL.DEPOSIT);
-
-  moonwellDeposit.setChainId(CHAINS.BASE);
-  moonwellDeposit.setParams(
-      "abiParams.amount",
-      USDCBalance
-  );
-  moonwellDeposit.setParams(
-      "tokenToDeposit",
-      getTokenFromSymbol(CHAINS.BASE, "USDC").contractAddress
-  );
-
-  return moonwellDeposit;
-}
-
-// ---------- Compound Deposit ----------
-async function createCompoundDeposit() {
-  const compoundDeposit = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
-
-  compoundDeposit.setChainId(CHAINS.BASE);
-  compoundDeposit.setParams(
-      "abiParams.amount",
-      USDCBalance
-  );
-  compoundDeposit.setParams(
-      "abiParams.asset",
-      getTokenFromSymbol(CHAINS.BASE, "USDC").contractAddress
-  );
-
-  return compoundDeposit;
 }
 
 // ---------- Function registry ----------
 const blockFunctionMap: Record<string, Function> = {
   [`${ProtocolName.IONIC}:${BlockType.DEPOSIT}`]: createIonicDeposit,
   [`${ProtocolName.IONIC}:${BlockType.WITHDRAW_ALL}`]: createIonicWithdrawAll,
-  [`${ProtocolName.AAVE}:${BlockType.DEPOSIT}`]: createAaveDeposit,
-  [`${ProtocolName.AAVE}:${BlockType.WITHDRAW_ALL}`]: createAaveWithdrawAll,
-  [`${ProtocolName.MOONWELL}:${BlockType.DEPOSIT}`]: createMoonwellDeposit,
-  [`${ProtocolName.MOONWELL}:${BlockType.WITHDRAW_ALL}`]: createMoonwellWithdrawAll,
-  [`${ProtocolName.COMPOUND}:${BlockType.DEPOSIT}`]: createCompoundDeposit,
-  [`${ProtocolName.COMPOUND}:${BlockType.WITHDRAW_ALL}`]: createCompoundWithdrawAll,
+  [`${ProtocolName.IRONCLAD}:${BlockType.DEPOSIT}`]: createIroncladDeposit,
+  [`${ProtocolName.IRONCLAD}:${BlockType.WITHDRAW_ALL}`]: createIroncladWithdrawAll,
 };
 
 // ---------- Create Withdraw/Supply Block
 async function getBlockFromProtocolName(protocol: ProtocolName, blockType: BlockType) {
   const key = `${protocol}:${blockType}`;
   const blockFunction = blockFunctionMap[key];
-  
+
   if (!blockFunction) {
     throw new Error(`No function found for protocol: ${protocol}, blockType: ${blockType}`);
   }
-  
+
   return await blockFunction();
 }
 
@@ -288,12 +211,266 @@ function createFearAndGreedTrigger() {
   return fearAndGreedTrigger;
 }
 
+const BLOCK_WIDTH = 250;
+const BLOCK_HEIGHT = 50;
+
+/** Return the bounding box (left, right, top, bottom) of a node,
+ *  assuming (x,y) is the center and block size is 100×50.
+ */
+function getBoundingBox(node: Action) {
+  const halfW = BLOCK_WIDTH / 2;
+  const halfH = BLOCK_HEIGHT / 2;
+  
+  // Fallback to 0 if x or y is undefined
+  const x = node.position?.x ?? 0;
+  const y = node.position?.y ?? 0;
+
+  return {
+    left:   x - halfW,
+    right:  x + halfW,
+    top:    y - halfH,
+    bottom: y + halfH,
+  };
+}
+
+/** Check if two bounding boxes overlap (including touching edges). */
+function isOverlap(a: ReturnType<typeof getBoundingBox>, b: ReturnType<typeof getBoundingBox>) {
+  // No overlap if one box is entirely to the left/right or above/below the other
+  return !(
+       a.right < b.left
+    || a.left > b.right
+    || a.bottom < b.top
+    || a.top > b.bottom
+  );
+}
+
+function initializePositions(actions: Action[], edges: Edge[]) {
+  if (actions.length === 0) return;
+
+  // 1. Find the trigger node
+  const triggerNode = actions.find(
+    (a) => a.blockId === TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.blockId
+  );
+  if (!triggerNode) return;
+
+  // 2. Build adjacency (node.ref -> Edge[])
+  const adjacency = buildEdgeAdjacencyMap(actions, edges);
+
+  // 3. We'll keep a queue for BFS and a visited set of `ref`s
+  const queue: Action[] = [];
+  const visited = new Set<string>();
+
+  // 4. Initialize the trigger node’s position
+  triggerNode.setPosition(400, 120);
+  visited.add(triggerNode.ref);
+  queue.push(triggerNode);
+
+  // 5. BFS
+  while (queue.length > 0) {
+    const parent = queue.shift() as Action;
+    if (!parent) continue;
+
+    const parentPos = {
+      x: parent.position?.x ?? 0,
+      y: parent.position?.y ?? 0,
+    };
+
+    // Get all outgoing edges from parent
+    const outgoingEdges = adjacency.get(parent.ref) || [];
+    if (outgoingEdges.length === 0) {
+      continue;
+    }
+
+    // -- IF/ELSE
+    if (parent.blockId === ACTIONS.CORE.CONDITION.IF.blockId) {
+      const trueEdges = outgoingEdges.filter((edge) => edge.label === "true");
+      const falseEdges = outgoingEdges.filter((edge) => edge.label === "false");
+
+      if (trueEdges.length > 0 && falseEdges.length > 0) {
+        // "true" children => place to the left
+        for (const edge of trueEdges) {
+          const child = edge.target;
+          if (!visited.has(child.ref)) {
+            child.setPosition(parentPos.x - 100, parentPos.y + 120);
+            visited.add(child.ref);
+            queue.push(child);
+          }
+        }
+        // "false" children => place to the right
+        for (const edge of falseEdges) {
+          const child = edge.target;
+          if (!visited.has(child.ref)) {
+            child.setPosition(parentPos.x + 100, parentPos.y + 120);
+            visited.add(child.ref);
+            queue.push(child);
+          }
+        }
+      }
+      else if (trueEdges.length > 0) {
+        // Only "true" edges
+        for (const edge of trueEdges) {
+          const child = edge.target;
+          if (!visited.has(child.ref)) {
+            child.setPosition(parentPos.x, parentPos.y + 120);
+            visited.add(child.ref);
+            queue.push(child);
+          }
+        }
+      }
+      else if (falseEdges.length > 0) {
+        // Only "false" edges
+        for (const edge of falseEdges) {
+          const child = edge.target;
+          if (!visited.has(child.ref)) {
+            child.setPosition(parentPos.x, parentPos.y + 120);
+            visited.add(child.ref);
+            queue.push(child);
+          }
+        }
+      }
+    }
+
+    // -- SPLIT
+    else if (parent.blockId === ACTIONS.CORE.SPLIT.SPLIT.blockId) {
+      // Filter out children we haven't visited
+      const unvisitedChildren = outgoingEdges.filter((edge) => !visited.has(edge.target.ref));
+
+      // We'll horizontally center them
+      const spacing = 150;
+      const n = unvisitedChildren.length;
+      const totalWidth = (n - 1) * spacing;
+      const leftX = parentPos.x - totalWidth / 2;
+      const childY = parentPos.y + 120;
+
+      unvisitedChildren.forEach((edge, i) => {
+        const child = edge.target;
+        const newX = leftX + i * spacing;
+        child.setPosition(newX, childY);
+        visited.add(child.ref);
+        queue.push(child);
+      });
+    }
+
+    // -- Default logic
+    else {
+      let childOffsetX = 0;
+      const childSpacing = 300;
+
+      for (const edge of outgoingEdges) {
+        const child = edge.target;
+        if (!visited.has(child.ref)) {
+          child.setPosition(parentPos.x + childOffsetX, parentPos.y + 120);
+          visited.add(child.ref);
+          queue.push(child);
+          childOffsetX += childSpacing;
+        }
+      }
+    }
+  } // end BFS
+}
+
+function buildActionAdjacencyMap(actions: Action[], edges: Edge[]): Map<string, Action[]> {
+  const adjacency = new Map<string, Action[]>();
+
+  for (const action of actions) {
+    adjacency.set(action.ref, []);
+  }
+
+  for (const edge of edges) {
+    const sourceRef = edge.source.ref;
+    const target = edge.target; // This is an Action
+    adjacency.get(sourceRef)?.push(target);
+  }
+
+  return adjacency;
+}
+
+function buildEdgeAdjacencyMap(actions: Action[], edges: Edge[]): Map<string, Edge[]> {
+  const adjacency = new Map<string, Edge[]>();
+
+  // Initialize an empty array for each action.ref
+  for (const action of actions) {
+    adjacency.set(action.ref, []);
+  }
+
+  // Populate adjacency with outgoing edges
+  for (const edge of edges) {
+    const sourceRef = edge.source.ref;
+    adjacency.get(sourceRef)?.push(edge);
+  }
+
+  return adjacency;
+}
+
+function shiftSubtree(
+  root: Action,
+  dx: number,
+  adjacency: Map<string, Action[]>
+) {
+  const queue = [root];
+  const visited = new Set([root.ref]);
+
+  while (queue.length > 0) {
+    const node = queue.shift()!;
+    const x = node.position?.x ?? 0;
+    const y = node.position?.y ?? 0;
+
+    // shift the node
+    node.setPosition(x + dx, y);
+
+    // enqueue children
+    const children = adjacency.get(node.ref) || [];
+    for (const child of children) {
+      if (!visited.has(child.ref)) {
+        visited.add(child.ref);
+        queue.push(child);
+      }
+    }
+  }
+}
+
+function resolveOverlaps(actions: Action[], edges: Edge[]) {
+  // adjacency for subtree shifting
+  const adjacency = buildActionAdjacencyMap(actions, edges);
+
+  // Sort nodes top->bottom, then left->right
+  actions.sort((a, b) => {
+    const ay = a.position?.y ?? 0;
+    const by = b.position?.y ?? 0;
+    if (ay !== by) {
+      return ay - by;
+    }
+    const ax = a.position?.x ?? 0;
+    const bx = b.position?.x ?? 0;
+    return ax - bx;
+  });
+
+  // For each node, compare with the ones after it
+  for (let i = 0; i < actions.length; i++) {
+    const nA = actions[i];
+    const boxA = getBoundingBox(nA);
+
+    for (let j = i + 1; j < actions.length; j++) {
+      const nB = actions[j];
+      const boxB = getBoundingBox(nB);
+
+      // If overlap, push nB (and its subtree) far enough to the right
+      if (isOverlap(boxA, boxB)) {
+        const shiftAmount = (boxA.right - boxB.left) + 10; // +10 for a gap
+        shiftSubtree(nB, shiftAmount, adjacency);
+
+        // Optionally recalc boxB if you want to avoid repeated collisions
+      }
+    }
+  }
+}
+
 // -------- Creating the workflow --------
 async function createWorkflow() {
 
   const actions = [];
   const edges = [];
-  
+
   const trigger = createFearAndGreedTrigger();
   actions.push(trigger);
 
@@ -301,18 +478,13 @@ async function createWorkflow() {
   let previousProtocolIf;
   let triggerEdgeExisted = false;
 
-  // Placeholder action to ensure all deposit action are executed
-  // const delayAction = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
-  // delayAction.setParams("time", "1"); // Wait 1 milisecond
-  // actions.push(delayAction);
-
   for (const protocol of protocols) {
 
     // Check case where user doesn't have any available asset to withdraw, go straight to deposit action if TRUE
     const noneBalanceSatisfiedIfBlock = createNoneOfBalanceCheckingSatisfiedConditionBlock(protocol);
     actions.push(noneBalanceSatisfiedIfBlock);
 
-    // Compare between protocol
+    // Compare between protocols
     const ifCondition = createConditionBlock(protocol);
 
     // Split to withdraw all actions
@@ -358,6 +530,7 @@ async function createWorkflow() {
       value: "false",
     }));
 
+
     const withdrawBalanceCheckBlocks = [];
     for (const protocolInner of protocols) {
 
@@ -370,7 +543,7 @@ async function createWorkflow() {
       actions.push(innerProtocolDeposit)
 
       if (protocolInner == protocol) {
-
+        // Split - Each of protocols' withdraw all edge
         edges.push(new Edge({
           source: split,
           target: checkWalletUSDCBalance,
@@ -382,7 +555,7 @@ async function createWorkflow() {
           label: "true",
           value: "true",
         }));
-        
+
         continue;
       }
 
@@ -421,11 +594,6 @@ async function createWorkflow() {
         label: "true",
         value: "true",
       }));
-
-      // edges.push(new Edge({
-      //   source: innerProtocolDeposit,
-      //   target: delayAction
-      // }));
     }
 
     // If the current protocol is the first, create an edge from the trigger
@@ -457,6 +625,9 @@ async function createWorkflow() {
     previousProtocolIf = ifCondition;
   }
 
+  initializePositions(actions, edges);
+  resolveOverlaps(actions, edges);
+
   return new Workflow("Lending aggregator", actions, edges);
 }
 
@@ -465,9 +636,11 @@ async function lending_aggregator() {
     return;
 
   apiServices.setUrl(process.env.API_URL);
-  apiServices.setAuth(process.env.AUTH_TOKEN); 
+  apiServices.setAuth(process.env.AUTH_TOKEN);
 
   const workflow = await createWorkflow();
+
+  console.log('Workflow JSON: ', JSON.stringify(workflow.toJSON()));
 
   const creationResult = await workflow.create();
 
