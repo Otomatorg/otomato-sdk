@@ -153,6 +153,20 @@ export const TOKENS: Tokens = {
       decimals: 18,
       image: null
     },
+    {
+      contractAddress: '0xe7334Ad0e325139329E747cF2Fc24538dD564987',
+      symbol: 'ironUSDC',
+      name: 'Ironclad USDC',
+      decimals: 18,
+      image: null
+    },
+    {
+      contractAddress: '0x02CD18c03b5b3f250d2B29C87949CDAB4Ee11488',
+      symbol: 'ironUSDT',
+      name: 'Ironclad USDT',
+      decimals: 18,
+      image: null
+    },
 
     // ionic
     {

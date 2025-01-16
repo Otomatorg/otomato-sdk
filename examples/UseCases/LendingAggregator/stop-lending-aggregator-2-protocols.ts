@@ -21,10 +21,14 @@ dotenv.config();
  * 1. Centralized Variables
  *************************************/
 const VARIABLES = {
-  TOKEN_ADDRESS: getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress,
+  // WETH
+  /*TOKEN_ADDRESS: getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress,
   MONEY_MARKET_1_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ion-WETH').contractAddress,
-  MONEY_MARKET_2_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ironETH').contractAddress,
-  BALANCE_THRESHOLD: 100000, // 0.1 USDC
+  MONEY_MARKET_2_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ironETH').contractAddress,*/
+  // USDC
+  TOKEN_ADDRESS: getTokenFromSymbol(CHAINS.MODE, 'USDC').contractAddress,
+  MONEY_MARKET_1_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ion-USDC').contractAddress,
+  MONEY_MARKET_2_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ironUSDC').contractAddress,
 };
 
 // Balances
@@ -164,12 +168,12 @@ export async function stopLendingAggregator() {
   console.log(JSON.stringify(workflow));
 
   // Create the workflow on the server
-  const creationResult = await workflow.create();
+  /*const creationResult = await workflow.create();
   console.log('Creation Result:', creationResult);
 
   // Optionally run it
   const runResult = await workflow.run();
-  console.log('Run Result:', runResult);
+  console.log('Run Result:', runResult);*/
 }
 
 // For local testing:
