@@ -10,7 +10,7 @@ import {
     ConditionGroup,
     CHAINS,
     getTokenFromSymbol,
-  } from '../../src/index.js';
+  } from '../../../src/index.js';
   import dotenv from 'dotenv';
   dotenv.config();
   

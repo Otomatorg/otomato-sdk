@@ -11,7 +11,7 @@ import {
   LOGIC_OPERATORS,
   ConditionGroup,
   CHAINS,
-} from '../../src/index.js';
+} from '../../../src/index.js';
 
 import dotenv from 'dotenv';
 dotenv.config();

@@ -1,4 +1,4 @@
-import { ACTIONS, Action, TRIGGERS, Trigger, CHAINS, getTokenFromSymbol, apiServices, convertToTokenUnitsFromSymbol, LOGIC_OPERATORS, ConditionGroup, Workflow, Edge } from '../../src/index.js';
+import { ACTIONS, Action, TRIGGERS, Trigger, CHAINS, getTokenFromSymbol, apiServices, convertToTokenUnitsFromSymbol, LOGIC_OPERATORS, ConditionGroup, Workflow, Edge } from '../../../src/index.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
