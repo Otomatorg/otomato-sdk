@@ -269,7 +269,7 @@ export const TRIGGERS = {
       "chains": [
         0
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/Approval.svg",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/approval.png",
       "APPROVAL": {
         "name": "Token Approval",
         "description": "Triggers when someone approves this token.",
@@ -359,7 +359,7 @@ export const TRIGGERS = {
           }
         ],
         "blockId": 27,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/Approval.svg"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/approval.png"
       }
     },
     "ON_CHAIN_PRICE_MOVEMENT": {
@@ -1188,7 +1188,6 @@ export const TRIGGERS = {
     "MOONWELL": {
       "description": "An advanced lending and borrowing platform focused on scalable, fast blockchain networks for optimal performance.",
       "chains": [
-        34443,
         8453
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png",
