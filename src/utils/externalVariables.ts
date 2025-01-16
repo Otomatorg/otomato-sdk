@@ -1,4 +1,4 @@
-import { findBlockByPrototype } from "../models/Trigger";
+import { findBlockByPrototype } from "../models/Trigger.js";
 
 export function getExternalVariable(prototype: String, args: Array<any>) {
     return `{{external.functions.${prototype}(${args})}}`;
