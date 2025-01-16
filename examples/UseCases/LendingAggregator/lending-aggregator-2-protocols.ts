@@ -10,46 +10,33 @@ import {
     ConditionGroup,
     CHAINS,
     getTokenFromSymbol,
-  } from '../../src/index.js';
+  } from '../../../src/index.js';
   import dotenv from 'dotenv';
   dotenv.config();
   
   /*************************************
    * 1. Static Constants
    *************************************/
-  const SLACK_WEBHOOK = process.env.SLACK_WEBHOOK;
   
-  const SMART_ACCOUNT_ADDRESS = '{{smartAccountAddress}}';
-  const TOKEN_ADDRESS = '0x4200000000000000000000000000000000000006';
+  const VARIABLES = {
+    CHAIN: CHAINS.MODE,
+    TOKEN_ADDRESS: getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress,
+    MONEY_MARKET_1_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ion-WETH').contractAddress,
+    MONEY_MARKET_2_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ironETH').contractAddress,
+    // BALANCE_THRESHOLD: 100000, // 0.1 USDC
+    BALANCE_THRESHOLD: 1000000000000, // 0.000001 ETH = 0.03 USDC
+    LOOP_PERIOD: 1000*60*60, // 1 hour
+  };
   
-  // For Ironclad
-  const IRONCLAD_TOKEN_ADDRESS = '0x9c29a8eC901DBec4fFf165cD57D4f9E03D4838f7';
-  
-  // === NEW for Ironclad yield better ===
-  // For Ionic
-  // Typically, the “cToken” address for USDC on Ionic. 
-  // (You might need to confirm the exact address in your environment)
-  const IONIC_TOKEN_ADDRESS = '0x71ef7EDa2Be775E5A7aa8afD02C45F059833e9d2';
-  
-  const IONIC_YIELD = `{{external.functions.ionicLendingRate(34443,${TOKEN_ADDRESS})}}`;
-  const IRONCLAD_YIELD = `{{external.functions.ironcladLendingRate(34443,${TOKEN_ADDRESS})}}`;
+  const IONIC_YIELD = `{{external.functions.ionicLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS})}}`;
+  const IRONCLAD_YIELD = `{{external.functions.ironcladLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS})}}`;
   
   // Balances
-  const IRONCLAD_USDC_BALANCE = `{{external.functions.erc20Balance(34443,${SMART_ACCOUNT_ADDRESS},${IRONCLAD_TOKEN_ADDRESS},,)}}`;
-  const WALLET_USDC_BALANCE = `{{external.functions.erc20Balance(34443,${SMART_ACCOUNT_ADDRESS},${TOKEN_ADDRESS},,)}}`;
-  const IONIC_USDC_BALANCE = `{{external.functions.erc20Balance(34443,${SMART_ACCOUNT_ADDRESS},${IONIC_TOKEN_ADDRESS},,)}}`;
+  const IONIC_USDC_BALANCE = `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${VARIABLES.MONEY_MARKET_1_TOKEN},,)}}`;
+  const IRONCLAD_USDC_BALANCE = `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${VARIABLES.MONEY_MARKET_2_TOKEN},,)}}`;
+  const WALLET_USDC_BALANCE = `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${VARIABLES.TOKEN_ADDRESS},,)}}`;
 
   const UINT256_MAX = '115792089237316195423570985008687907853269984665640564039457584007913129639935n';
-  
-  /*************************************
-   * 2. Slack Message Utility
-   *************************************/
-  function createSlackMessage(message: string): Action {
-    const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-    slackAction.setParams('webhook', SLACK_WEBHOOK);
-    slackAction.setParams('message', message);
-    return slackAction;
-  }
   
   /*************************************
    * 3. Logic/Action Functions
@@ -61,7 +48,7 @@ import {
   function createFearAndGreedTrigger(): Trigger {
     const trigger = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
     // Condition: index must be > 0
-    trigger.setParams('period', 1000*60*60);
+    trigger.setParams('period', VARIABLES.LOOP_PERIOD);
     return trigger;
   }
   
@@ -89,7 +76,7 @@ import {
     condition.setParams('logic', LOGIC_OPERATORS.OR);
   
     const conditionGroup = new ConditionGroup(LOGIC_OPERATORS.AND);
-    conditionGroup.addConditionCheck(IRONCLAD_USDC_BALANCE, 'gt', '100000'); // more than 0.1 USDC
+    conditionGroup.addConditionCheck(IRONCLAD_USDC_BALANCE, 'gt', VARIABLES.BALANCE_THRESHOLD);
   
     condition.setParams('groups', [conditionGroup]);
     return condition;
@@ -102,7 +89,7 @@ import {
     const withdraw = new Action(ACTIONS.LENDING.IRONCLAD.WITHDRAW);
     withdraw.setChainId(CHAINS.MODE);
     // Typically, you'd withdraw "max" by specifying a large number (2^256-1).
-    withdraw.setParams('abiParams.asset', TOKEN_ADDRESS);
+    withdraw.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
     withdraw.setParams(
       'abiParams.amount',
       UINT256_MAX
@@ -128,7 +115,7 @@ import {
     deposit.setChainId(CHAINS.MODE);
   
     deposit.setParams('abiParams.amount', WALLET_USDC_BALANCE);
-    deposit.setParams('tokenToDeposit', TOKEN_ADDRESS);
+    deposit.setParams('tokenToDeposit', VARIABLES.TOKEN_ADDRESS);
   
     return deposit;
   }
@@ -156,7 +143,7 @@ import {
     condition.setParams('logic', LOGIC_OPERATORS.OR);
   
     const conditionGroup = new ConditionGroup(LOGIC_OPERATORS.AND);
-    conditionGroup.addConditionCheck(IONIC_USDC_BALANCE, 'gt', '100000'); // more than 0.1 USDC
+    conditionGroup.addConditionCheck(IONIC_USDC_BALANCE, 'gt', VARIABLES.BALANCE_THRESHOLD);
   
     condition.setParams('groups', [conditionGroup]);
     return condition;
@@ -171,7 +158,7 @@ import {
     withdraw.setChainId(CHAINS.MODE);
   
     // Typically, you'd withdraw "max".
-    withdraw.setParams('tokenToWithdraw', TOKEN_ADDRESS);
+    withdraw.setParams('tokenToWithdraw', VARIABLES.TOKEN_ADDRESS);
     withdraw.setParams(
       'abiParams.amount',
       UINT256_MAX
@@ -188,7 +175,7 @@ import {
     const deposit = new Action(ACTIONS.LENDING.IRONCLAD.SUPPLY);
     deposit.setChainId(CHAINS.MODE);
   
-    deposit.setParams('abiParams.asset', TOKEN_ADDRESS);
+    deposit.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
     deposit.setParams('abiParams.amount', WALLET_USDC_BALANCE);
     deposit.setParams('abiParams.referralCode', 0);
   
@@ -218,19 +205,13 @@ import {
     /********************************
      * STEP 2: Compare Ionic vs Ironclad
      ********************************/
-    const compareMessage = createSlackMessage('Comparing Ionic vs Ironclad yields...');
-    actions.push(compareMessage);
-  
+
     const compareCondition = createCompareIonicVsIroncladCondition();
     actions.push(compareCondition);
   
     edges.push(
       new Edge({
         source: fearAndGreedTrigger,
-        target: compareMessage,
-      }),
-      new Edge({
-        source: compareMessage,
         target: compareCondition,
       })
     );
@@ -239,9 +220,6 @@ import {
      * STEP 3 (True): Ionic yield is higher
      * => Check if user has Ironclad USDC
      ********************************/
-    const ionicHigherMessage = createSlackMessage('Ionic yield is higher! Checking Ironclad USDC...');
-    actions.push(ionicHigherMessage);
-  
     const checkIroncladCondition = createCheckIroncladUSDCCondition();
     actions.push(checkIroncladCondition);
   
@@ -249,13 +227,9 @@ import {
       // True path from compareCondition => Ionic yield is higher
       new Edge({
         source: compareCondition,
-        target: ionicHigherMessage,
+        target: checkIroncladCondition,
         label: 'true',
         value: 'true',
-      }),
-      new Edge({
-        source: ionicHigherMessage,
-        target: checkIroncladCondition,
       })
     );
   
@@ -263,22 +237,11 @@ import {
      * STEP 4A: If user DOES have USDC on Ironclad
      * => Withdraw, wait 10s, deposit on Ionic
      ********************************/
-    const ironcladUSDCMessage = createSlackMessage('Withdrawing from Ironclad...');
-    actions.push(ironcladUSDCMessage);
-  
     const ironcladWithdraw = createIroncladWithdrawAll();
     actions.push(ironcladWithdraw);
   
-    // Wait 10s
-    const wait10Message = createSlackMessage('Waiting 10 seconds...');
-    actions.push(wait10Message);
-  
     const wait10seconds = createWaitAction10Seconds();
     actions.push(wait10seconds);
-  
-    // Deposit on Ionic
-    const depositMessage = createSlackMessage('Depositing USDC on Ionic...');
-    actions.push(depositMessage);
   
     const depositOnIonic = createDepositOnIonic();
     actions.push(depositOnIonic);
@@ -286,28 +249,16 @@ import {
     edges.push(
       new Edge({
         source: checkIroncladCondition,
-        target: ironcladUSDCMessage,
+        target: ironcladWithdraw,
         label: 'true',
         value: 'true',
       }),
       new Edge({
-        source: ironcladUSDCMessage,
-        target: ironcladWithdraw,
-      }),
-      new Edge({
         source: ironcladWithdraw,
-        target: wait10Message,
-      }),
-      new Edge({
-        source: wait10Message,
         target: wait10seconds,
       }),
       new Edge({
         source: wait10seconds,
-        target: depositMessage,
-      }),
-      new Edge({
-        source: depositMessage,
         target: depositOnIonic,
       })
     );
@@ -316,22 +267,15 @@ import {
      * STEP 4B: If user does NOT have USDC on Ironclad
      * => Check if user has USDC in wallet
      ********************************/
-    const checkWalletMessage = createSlackMessage('No Ironclad USDC. Checking wallet balance...');
-    actions.push(checkWalletMessage);
-  
     const checkWalletUSDC = createCheckWalletUSDCCondition();
     actions.push(checkWalletUSDC);
   
     edges.push(
       new Edge({
         source: checkIroncladCondition,
-        target: checkWalletMessage,
+        target: checkWalletUSDC,
         label: 'false',
         value: 'false',
-      }),
-      new Edge({
-        source: checkWalletMessage,
-        target: checkWalletUSDC,
       })
     );
   
@@ -339,22 +283,15 @@ import {
      * STEP 4C: If user does have USDC in wallet
      * => Deposit on Ionic
      ********************************/
-    const depositMessage2 = createSlackMessage('Depositing USDC on Ionic (no Ironclad holdings)...');
-    actions.push(depositMessage2);
-  
     const depositOnIonic2 = createDepositOnIonic();
     actions.push(depositOnIonic2);
   
     edges.push(
       new Edge({
         source: checkWalletUSDC,
-        target: depositMessage2,
+        target: depositOnIonic2,
         label: 'true',
         value: 'true',
-      }),
-      new Edge({
-        source: depositMessage2,
-        target: depositOnIonic2,
       })
     );
   
@@ -362,8 +299,6 @@ import {
      * === NEW for Ironclad yield better (False Path from compareCondition) ===
      * STEP 5: Ironclad yield is equal/higher => Check if user has Ionic USDC
      **************************************************************************/
-    const ironcladHigherMessage = createSlackMessage('Ironclad yield is better! Checking Ionic USDC...');
-    actions.push(ironcladHigherMessage);
   
     const checkIonicUSDC = createCheckIonicUSDCCondition();
     actions.push(checkIonicUSDC);
@@ -372,36 +307,17 @@ import {
       // False path from compareCondition => Ironclad yield is equal or higher
       new Edge({
         source: compareCondition,
-        target: ironcladHigherMessage,
+        target: checkIonicUSDC,
         label: 'false',
         value: 'false',
-      }),
-      new Edge({
-        source: ironcladHigherMessage,
-        target: checkIonicUSDC,
       })
     );
-  
-    /********************************
-     * STEP 5A: If user DOES have USDC on Ionic
-     * => Withdraw, wait 10s, deposit on Ironclad
-     ********************************/
-    const ionicUSDCMessage = createSlackMessage('Withdrawing from Ionic...');
-    actions.push(ionicUSDCMessage);
   
     const ionicWithdraw = createIonicWithdrawAll();
     actions.push(ionicWithdraw);
   
-    // Wait 10s
-    const wait10Message2 = createSlackMessage('Waiting 10 seconds...');
-    actions.push(wait10Message2);
-  
     const wait10seconds2 = createWaitAction10Seconds();
     actions.push(wait10seconds2);
-  
-    // Deposit on Ironclad
-    const depositIroncladMessage = createSlackMessage('Depositing USDC on Ironclad...');
-    actions.push(depositIroncladMessage);
   
     const depositOnIronclad = createDepositOnIronclad();
     actions.push(depositOnIronclad);
@@ -409,28 +325,16 @@ import {
     edges.push(
       new Edge({
         source: checkIonicUSDC,
-        target: ionicUSDCMessage,
+        target: ionicWithdraw,
         label: 'true',
         value: 'true',
       }),
       new Edge({
-        source: ionicUSDCMessage,
-        target: ionicWithdraw,
-      }),
-      new Edge({
         source: ionicWithdraw,
-        target: wait10Message2,
-      }),
-      new Edge({
-        source: wait10Message2,
         target: wait10seconds2,
       }),
       new Edge({
         source: wait10seconds2,
-        target: depositIroncladMessage,
-      }),
-      new Edge({
-        source: depositIroncladMessage,
         target: depositOnIronclad,
       })
     );
@@ -439,45 +343,31 @@ import {
      * STEP 5B: If user does NOT have USDC on Ionic
      * => Check if user has USDC in wallet
      ********************************/
-    const checkWalletMessage2 = createSlackMessage('No Ionic USDC. Checking wallet balance...');
-    actions.push(checkWalletMessage2);
-  
     const checkWalletUSDC2 = createCheckWalletUSDCCondition();
     actions.push(checkWalletUSDC2);
   
     edges.push(
       new Edge({
         source: checkIonicUSDC,
-        target: checkWalletMessage2,
+        target: checkWalletUSDC2,
         label: 'false',
         value: 'false',
       }),
-      new Edge({
-        source: checkWalletMessage2,
-        target: checkWalletUSDC2,
-      })
     );
   
     /********************************
      * STEP 5C: If user does have USDC in wallet
      * => Deposit on Ironclad
      ********************************/
-    const depositMessage3 = createSlackMessage('Depositing USDC on Ironclad (no Ionic holdings)...');
-    actions.push(depositMessage3);
-  
     const depositOnIronclad2 = createDepositOnIronclad();
     actions.push(depositOnIronclad2);
   
     edges.push(
       new Edge({
         source: checkWalletUSDC2,
-        target: depositMessage3,
+        target: depositOnIronclad2,
         label: 'true',
         value: 'true',
-      }),
-      new Edge({
-        source: depositMessage3,
-        target: depositOnIronclad2,
       })
     );
   

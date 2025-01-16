@@ -15,6 +15,7 @@ export const TRIGGERS = {
             "type": "integer",
             "description": "The period to wait between each run (in ms)",
             "mandatory": true,
+            "minValue": 600000,
             "category": 0
           },
           {
