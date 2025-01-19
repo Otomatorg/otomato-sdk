@@ -297,7 +297,7 @@ export class Workflow {
 
   async update(): Promise<{ success: boolean; error?: string }> {
     try {
-      const response = await apiServices.patch(`/workflows/${this.id}`, this.toJSON());
+      const response = await apiServices.put(`/workflows/${this.id}`, this.toJSON());
 
       if (response.status === 200) {
         this.dateModified = response.data.dateModified;
