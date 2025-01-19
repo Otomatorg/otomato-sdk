@@ -97,7 +97,7 @@ import { Edge } from '../models/Edge.js';
     }
 }*/
 
-export const xSpacing = 400;
+export const xSpacing = 600;
 export const ySpacing = 120;
 export const ROOT_X = 400;
 export const ROOT_Y = 120;
