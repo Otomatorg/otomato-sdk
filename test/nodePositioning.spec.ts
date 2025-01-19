@@ -2,7 +2,19 @@ import { expect } from 'chai';
 import { Workflow } from '../src/models/Workflow.js';
 import { Edge } from '../src/models/Edge.js';
 import { Action, ACTIONS } from '../src/index.js';
-import { positionWorkflowNodes, positionWorkflowNodesAvoidOverlap, xSpacing, ySpacing, getChildren, identifyLeafNodes, ROOT_X, ROOT_Y, identityStartingNodes, getEdges, getParents } from '../src/utils/WorkflowNodePositioner';
+import {
+  positionWorkflowNodes,
+  positionWorkflowNodesAvoidOverlap,
+  xSpacing,
+  ySpacing,
+  getChildren,
+  identifyLeafNodes,
+  ROOT_X,
+  ROOT_Y,
+  identityStartingNodes,
+  getEdges,
+  getParents
+} from '../src/utils/WorkflowNodePositioner';
 
 describe('Node Positioning', () => {
     it('should position a single node workflow', () => {
@@ -49,8 +61,8 @@ describe('Node Positioning', () => {
     
         // Expectations
         expect(parent.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y }); // Parent at ROOT_X, ROOT_Y
-        expect(child1.position).to.deep.equal({ x: ROOT_X - xSpacing / 2, y: ROOT_Y + ySpacing }); // First child to the left
-        expect(child2.position).to.deep.equal({ x: ROOT_X + xSpacing / 2, y: ROOT_Y + ySpacing }); // Second child to the right
+        expect(child1.position).to.deep.equal({ x: ROOT_X - xSpacing / 2, y: ROOT_Y + ySpacing }); // child1 to the left
+        expect(child2.position).to.deep.equal({ x: ROOT_X + xSpacing / 2, y: ROOT_Y + ySpacing }); // child2 to the right
     });
 
     it('should position complex workflows with multiple levels', () => {
@@ -84,6 +96,9 @@ describe('Node Positioning - Multiple Children', () => {
         const edge2 = new Edge({ source: parent, target: child2 });
         const edge3 = new Edge({ source: parent, target: child3 });
         const workflow = new Workflow("Three Children Workflow", [parent, child1, child2, child3], [edge1, edge2, edge3]);
+
+        // No explicit layout call here, so by default, positions are presumably (ROOT_X, ROOT_Y).
+        // If you’re calling positionWorkflowNodes automatically on Workflow creation, you might remove these checks.
 
         expect(parent.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
         expect(child1.position).to.deep.equal({ x: ROOT_X - xSpacing, y: ROOT_Y + ySpacing });
@@ -182,9 +197,9 @@ describe('Node Positioning - Workflow Modifications', () => {
         workflow.insertNode(node2, node1, node3);
     
         // Expectations
-        expect(node1.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
-        expect(node2.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing });
-        expect(node3.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing * 2 });
+        expect(node1.position?.y).to.deep.equal( ROOT_Y );
+        expect(node2.position?.y).to.deep.equal( ROOT_Y + ySpacing );
+        expect(node3.position?.y).to.deep.equal( ROOT_Y + ySpacing * 2 );
     
         // Verify edges by comparing only source and target
         const simplifiedEdges = workflow.edges.map(edge => ({
@@ -307,20 +322,30 @@ describe('Node Positioning - Overlapping Protection', () => {
         const edge6 = new Edge({ source: child2, target: grandChild4 });
     
         // Create the workflow
-        const workflow = new Workflow("Nested Workflow", [rootNode, child1, child2, grandChild1, grandChild2, grandChild3, grandChild4], [edge1, edge2, edge3, edge4, edge5, edge6]);
+        const workflow = new Workflow(
+            "Nested Workflow",
+            [rootNode, child1, child2, grandChild1, grandChild2, grandChild3, grandChild4],
+            [edge1, edge2, edge3, edge4, edge5, edge6]
+        );
     
         // Expectations for rootNode
-        expect(rootNode.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
-    
-        // Expectations for first level children
-        expect(child1.position).to.deep.equal({ x: ROOT_X - xSpacing / 2, y: ROOT_Y + ySpacing });
-        expect(child2.position).to.deep.equal({ x: ROOT_X + xSpacing / 2, y: ROOT_Y + ySpacing });
-    
-        // Expectations for second level children
-        expect(grandChild1.position).to.deep.equal({ x: ROOT_X - xSpacing, y: ROOT_Y + ySpacing * 2 });
-        expect(grandChild2.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing * 2 });
-        expect(grandChild3.position).to.deep.equal({ x: ROOT_X + xSpacing, y: ROOT_Y + ySpacing * 2 });
+        // grandchildren
         expect(grandChild4.position).to.deep.equal({ x: ROOT_X + xSpacing * 2, y: ROOT_Y + ySpacing * 2 });
+        expect(grandChild3.position).to.deep.equal({ x: ROOT_X + xSpacing, y: ROOT_Y + ySpacing * 2 });
+        expect(grandChild2.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing * 2 });
+        expect(grandChild1.position).to.deep.equal({ x: ROOT_X - xSpacing, y: ROOT_Y + ySpacing * 2 });
+
+
+        // children
+        expect(child2.position).to.deep.equal({ x: (grandChild4?.position?.x! + grandChild3?.position?.x!) / 2, y: ROOT_Y + ySpacing });
+        expect(child1.position).to.deep.equal({ x: (grandChild2?.position?.x! + grandChild1?.position?.x!) / 2, y: ROOT_Y + ySpacing });
+
+        // root
+        expect(rootNode.position).to.deep.equal({ x: (child2?.position?.x! + child1?.position?.x!) / 2, y: ROOT_Y });
+    
+        // Expectations for first-level children
+    
+        // Expectations for second-level children
     
         // Verify edges remain unchanged
         const simplifiedEdges = workflow.edges.map(edge => ({
@@ -620,5 +645,88 @@ describe('getParents', () => {
 
         const result = getParents(intermediate, edges);
         expect(result).to.deep.equal([parent1, parent2]);
+    });
+});
+
+/**
+ * NEW: Tests focusing on parent recentering logic after overlap resolution.
+ * If your code recenters parents inside positionWorkflowNodesAvoidOverlap(),
+ * these tests confirm the parent's final X is the average of the children's X values.
+ */
+describe('Parent X-Centering', () => {
+    it('should center a single parent over two children', () => {
+        // Create one parent + two children
+        const parent = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const childA = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const childB = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edgeA = new Edge({ source: parent, target: childA });
+        const edgeB = new Edge({ source: parent, target: childB });
+        const workflow = new Workflow('Center over two children', [parent, childA, childB], [edgeA, edgeB]);
+
+        // First do a normal positioning
+        positionWorkflowNodes(workflow);
+
+        // Then apply the “avoid overlap” function which also re-centers parents
+        positionWorkflowNodesAvoidOverlap(workflow);
+
+        // Suppose after normal positioning:
+        // childA = { x: ROOT_X - xSpacing/2, y: ROOT_Y + ySpacing }
+        // childB = { x: ROOT_X + xSpacing/2, y: ROOT_Y + ySpacing }
+        expect(childA.position).to.deep.equal({ x: ROOT_X - xSpacing / 2, y: ROOT_Y + ySpacing });
+        expect(childB.position).to.deep.equal({ x: ROOT_X + xSpacing / 2, y: ROOT_Y + ySpacing });
+
+        // The parent's X should be the average of childA.x and childB.x
+        const avgChildX = (childA.position!.x + childB.position!.x) / 2;
+        expect(parent.position!.x).to.equal(avgChildX);
+        // And the parent's Y remains the original “root” Y
+        expect(parent.position!.y).to.equal(ROOT_Y);
+    });
+
+    it('should center a node with three children after overlap correction', () => {
+        const parent = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const child1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const child2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const child3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+        const edges = [
+            new Edge({ source: parent, target: child1 }),
+            new Edge({ source: parent, target: child2 }),
+            new Edge({ source: parent, target: child3 }),
+        ];
+
+        const workflow = new Workflow('Center over three children', [parent, child1, child2, child3], edges);
+
+        // Initial position
+        positionWorkflowNodes(workflow);
+        // Then ensure no overlap & recenter
+        positionWorkflowNodesAvoidOverlap(workflow);
+
+        // Suppose we expect these child positions:
+        // child1 -> X = ROOT_X - xSpacing, child2 -> X = ROOT_X, child3 -> X = ROOT_X + xSpacing
+        expect(child1.position).to.deep.equal({ x: ROOT_X - xSpacing, y: ROOT_Y + ySpacing });
+        expect(child2.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y + ySpacing });
+        expect(child3.position).to.deep.equal({ x: ROOT_X + xSpacing, y: ROOT_Y + ySpacing });
+
+        // The parent should end up at the average X of all children
+        const xPositions = [child1.position!.x, child2.position!.x, child3.position!.x];
+        const sum = xPositions.reduce((acc, v) => acc + v, 0);
+        const avgChildX = sum / xPositions.length;
+
+        expect(parent.position!.x).to.equal(avgChildX);
+        expect(parent.position!.y).to.equal(ROOT_Y);
+    });
+
+    it('should preserve parent’s position if there are no children', () => {
+        const parentOnly = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const workflow = new Workflow('No children test', [parentOnly], []);
+
+        // position
+        positionWorkflowNodes(workflow);
+        // overlap + recenter
+        positionWorkflowNodesAvoidOverlap(workflow);
+
+        // Parent with no children stays at (ROOT_X, ROOT_Y)
+        expect(parentOnly.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
     });
 });

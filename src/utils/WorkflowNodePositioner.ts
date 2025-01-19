@@ -4,99 +4,6 @@ import { Workflow } from '../models/Workflow.js';
 import { Node } from '../models/Node.js';
 import { Edge } from '../models/Edge.js';
 
-/**
- * Positions nodes in a BFS manner, assuming exactly one root node.
- * - The root is placed at (400, 120) unless it already has a position.
- * - If a parent has exactly 1 child, that child is placed directly below the parent
- *   (same x, with an offset in y).
- * - If a parent has multiple children, they are horizontally spread around the parent's X.
- * - Existing positions are not overwritten.
- */
-/*export function autoPositionNodes(workflow: Workflow): void {
-    // 1. Build adjacency & incoming edge count
-    const adjacency = new Map<string, Node[]>();
-    const incomingCount = new Map<string, number>();
-
-    // Constants you can tweak or increase if you see overlap or crossing edges
-    const ROOT_X = 400;
-    const ROOT_Y = 120;
-    const MIN_SPACING_X = 500;  // Horizontal spacing between siblings
-    const MIN_SPACING_Y = 120;  // Vertical spacing from parent to child
-
-    // Initialize adjacency and incoming counts
-    workflow.nodes.forEach((node) => {
-        adjacency.set(node.getRef(), []);
-        incomingCount.set(node.getRef(), 0);
-    });
-
-    // Fill adjacency list (source -> array of targets) and count incoming edges
-    workflow.edges.forEach((edge: Edge) => {
-        const sourceRef = edge.source.getRef();
-        const targetRef = edge.target.getRef();
-        adjacency.get(sourceRef)?.push(edge.target);
-        incomingCount.set(targetRef, (incomingCount.get(targetRef) ?? 0) + 1);
-    });
-
-    // 2. Find all root nodes (no incoming edges). If multiple, just pick the first.
-    const rootNodes = workflow.nodes.filter(
-        (n) => (incomingCount.get(n.getRef()) || 0) === 0
-    );
-    if (rootNodes.length === 0) {
-        // No root found; nothing to do
-        return;
-    }
-
-    // We'll assume the first root is "the" root for this layout
-    const root = rootNodes[0];
-    if (!hasPosition(root)) {
-        root.setPosition(ROOT_X, ROOT_Y);
-    }
-
-    // 3. BFS from that single root
-    const queue = [root];
-    while (queue.length > 0) {
-        const parent = queue.shift()!;
-        const parentRef = parent.getRef();
-
-        // Identify the children
-        const children = adjacency.get(parentRef) || [];
-
-        // Among those children, find any that do NOT already have positions
-        const unpositionedKids = children.filter((c) => !hasPosition(c));
-
-        if (unpositionedKids.length > 0) {
-            const parentX = parent.position?.x ?? 0;
-            const parentY = parent.position?.y ?? 0;
-
-            if (unpositionedKids.length === 1) {
-                // Single child: place it straight below the parent
-                const onlyChild = unpositionedKids[0];
-                onlyChild.setPosition(parentX, parentY + MIN_SPACING_Y);
-            } else {
-                // Multiple children: spread them horizontally around the parent's X
-                const count = unpositionedKids.length;
-                unpositionedKids.forEach((child, i) => {
-                    const offset = i - (count - 1) / 2;
-                    const childX = parentX + offset * MIN_SPACING_X;
-                    const childY = parentY + MIN_SPACING_Y;
-                    child.setPosition(childX, childY);
-                });
-            }
-        }
-
-        // Decrement incoming edges for each child. Once a child hits 0, enqueue it
-        children.forEach((c) => {
-            const cRef = c.getRef();
-            const oldCount = incomingCount.get(cRef) ?? 0;
-            const newCount = oldCount - 1;
-            incomingCount.set(cRef, newCount);
-            if (newCount === 0) {
-                queue.push(c);
-            }
-        });
-    }
-}*/
-
 export const xSpacing = 600;
 export const ySpacing = 120;
 export const ROOT_X = 400;
@@ -146,7 +53,6 @@ export function positionNode(node: Node, edges: Edge[], xSpacing: number, ySpaci
 export function positionWorkflowNodesAvoidOverlap(workflow: Workflow): void {
     const levels: Map<number, Node[]> = new Map();
 
-    // Helper: Add node to its level
     function addToLevel(node: Node) {
         const level = Math.round(node.position!.y / ySpacing);
         if (!levels.has(level)) {
@@ -155,32 +61,65 @@ export function positionWorkflowNodesAvoidOverlap(workflow: Workflow): void {
         levels.get(level)!.push(node);
     }
 
-    // Step 1: Position nodes using the existing logic
+    // 1) Lay out nodes using existing logic
     positionWorkflowNodes(workflow);
 
-    // Step 2: Populate levels
+    // 2) Fill the `levels` map
     workflow.nodes.forEach((node) => {
         if (node.position) {
             addToLevel(node);
         }
     });
 
-    // Step 3: Resolve overlaps for each level
+    // 3) Resolve horizontal overlaps level by level
     levels.forEach((nodes, level) => {
-        // Sort nodes by X position
+        // Sort by x so we can detect collisions
         nodes.sort((a, b) => (a.position!.x ?? 0) - (b.position!.x ?? 0));
 
-        // Adjust overlapping nodes
+        // Shift nodes that collide
         for (let i = 1; i < nodes.length; i++) {
-            const prevNode = nodes[i - 1];
-            const currentNode = nodes[i];
-
-            if (currentNode.position!.x - prevNode.position!.x < xSpacing) {
-                const shift = xSpacing - (currentNode.position!.x - prevNode.position!.x);
-                moveNodeAndChildren(currentNode, shift, workflow.edges);
+            const prev = nodes[i - 1];
+            const current = nodes[i];
+            if (current.position!.x - prev.position!.x < xSpacing) {
+                const shift = xSpacing - (current.position!.x - prev.position!.x);
+                moveNodeAndChildren(current, shift, workflow.edges);
             }
         }
     });
+
+    // 4) **Center each parent over its children** (the new step)
+    centerParentXPositions(workflow);
+}
+
+/**
+ * Repositions each parent node so that its X is the average of the children’s X.
+ * We do a simple bottom-up pass: start with all leaves, then move upward to parents.
+ */
+function centerParentXPositions(workflow: Workflow): void {
+    // Identify the “leaf” nodes
+    const queue = identifyLeafNodes(workflow);
+
+    while (queue.length > 0) {
+        const child = queue.shift()!;
+        const parents = getParents(child, workflow.edges);
+
+        for (const parent of parents) {
+            const children = getChildren(parent, workflow.edges);
+            if (children.length) {
+                // Average x of all children
+                const sumX = children.reduce((acc, c) => acc + (c.position?.x ?? 0), 0);
+                const avgX = sumX / children.length;
+
+                // Move parent to that average, keep same y
+                parent.setPosition(avgX, parent.position?.y ?? 0);
+            }
+
+            // Add this parent to the queue so we can recurse upward
+            if (!queue.includes(parent)) {
+                queue.push(parent);
+            }
+        }
+    }
 }
 
 function moveNodeAndChildren(
