@@ -27,11 +27,13 @@ import {
     MONEY_MARKET_2_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ironETH').contractAddress,
     BALANCE_THRESHOLD: 1000000000000, // 0.000001 ETH = 0.03 USDC
     */
-    // USDC
-    TOKEN_ADDRESS: getTokenFromSymbol(CHAINS.MODE, 'USDC').contractAddress,
-    MONEY_MARKET_1_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ion-USDC').contractAddress,
-    MONEY_MARKET_2_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ironUSDC').contractAddress,
+    // USDC/USDC
+    TOKEN_ADDRESS: getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress,
+    MONEY_MARKET_1_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ion-USDT').contractAddress,
+    MONEY_MARKET_2_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ironUSDT').contractAddress,
     BALANCE_THRESHOLD: 100000, // 0.1 USDC
+
+    
     LOOP_PERIOD: 1000*60*60, // 1 hour
   };
   
@@ -387,7 +389,7 @@ import {
     console.log(JSON.stringify(workflow));
   
     // Create/run on your platform:
-    //const creationResult = await workflow.create();
+    const creationResult = await workflow.create();
     // console.log("Creation result:", creationResult);
     // console.log("Workflow ID:", workflow.id);
   

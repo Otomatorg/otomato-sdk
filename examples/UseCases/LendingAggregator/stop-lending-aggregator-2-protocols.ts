@@ -25,10 +25,10 @@ const VARIABLES = {
   /*TOKEN_ADDRESS: getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress,
   MONEY_MARKET_1_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ion-WETH').contractAddress,
   MONEY_MARKET_2_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ironETH').contractAddress,*/
-  // USDC
-  TOKEN_ADDRESS: getTokenFromSymbol(CHAINS.MODE, 'USDC').contractAddress,
-  MONEY_MARKET_1_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ion-USDC').contractAddress,
-  MONEY_MARKET_2_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ironUSDC').contractAddress,
+  // USDC/ USDT
+  TOKEN_ADDRESS: getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress,
+  MONEY_MARKET_1_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ion-USDT').contractAddress,
+  MONEY_MARKET_2_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ironUSDT').contractAddress,
 };
 
 // Balances
