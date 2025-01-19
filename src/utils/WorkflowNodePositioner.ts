@@ -43,7 +43,7 @@ export function positionNode(node: Node, edges: Edge[], xSpacing: number, ySpaci
     } else {
         const index = children.indexOf(node); // Get the position of this node among its siblings
         const totalChildren = children.length;
-    
+
         // Compute the x position for this node
         const offset = index - (totalChildren - 1) / 2; // Center the children around the parent
         node.setPosition(parentX + offset * xSpacing, parentY + ySpacing);
@@ -165,4 +165,13 @@ export function getParents(node: Node, edges: Edge[]): Node[] {
 
 export function getEdges(node: Node, edges: Edge[]): Edge[] {
     return edges.filter(edge => edge.source === node || edge.target === node);
+}
+
+export function getEndNodePositions(workflow: Workflow): { x: number; y: number }[] {
+    return workflow.nodes
+        .filter(node => getChildren(node, workflow.edges).length === 0) // node with no children
+        .map(node => ({
+            x: node.position?.x ?? 0,
+            y: (node.position?.y ?? 0) + ySpacing,
+        }));
 }

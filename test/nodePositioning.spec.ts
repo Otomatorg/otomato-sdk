@@ -13,7 +13,8 @@ import {
   ROOT_Y,
   identityStartingNodes,
   getEdges,
-  getParents
+  getParents,
+  getEndNodePositions
 } from '../src/utils/WorkflowNodePositioner';
 
 describe('Node Positioning', () => {
@@ -730,3 +731,112 @@ describe('Parent X-Centering', () => {
         expect(parentOnly.position).to.deep.equal({ x: ROOT_X, y: ROOT_Y });
     });
 });
+
+describe('getEndNodePositions', () => {
+    it('should return an empty array if workflow has no nodes', () => {
+      const workflow = new Workflow('Empty', [], []);
+      const endPositions = getEndNodePositions(workflow);
+      expect(endPositions).to.deep.equal([]);
+    });
+  
+    it('should return one end node position for a single-node workflow (no edges)', () => {
+      const singleNode = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+      const workflow = new Workflow('Single Node', [singleNode], []);
+  
+      // Position it
+      positionWorkflowNodes(workflow);
+  
+      // We expect one end position: { x: singleNode.x, y: singleNode.y + ySpacing }
+      const endPositions = getEndNodePositions(workflow);
+  
+      expect(endPositions).to.have.length(1);
+      expect(endPositions[0]).to.deep.equal({
+        x: singleNode.position?.x,
+        y: (singleNode.position?.y ?? 0) + ySpacing,
+      });
+    });
+  
+    it('should return correct end node positions for a linear workflow', () => {
+      const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+      const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+      const node3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+  
+      // node1 -> node2 -> node3
+      const edge1 = new Edge({ source: node1, target: node2 });
+      const edge2 = new Edge({ source: node2, target: node3 });
+  
+      const workflow = new Workflow('Linear 3-step', [node1, node2, node3], [edge1, edge2]);
+      positionWorkflowNodes(workflow);
+  
+      // only node3 is childless => one "end node" position
+      const endPositions = getEndNodePositions(workflow);
+  
+      expect(endPositions).to.have.length(1);
+      expect(endPositions[0]).to.deep.equal({
+        x: node3.position?.x,
+        y: (node3.position?.y ?? 0) + ySpacing,
+      });
+    });
+  
+    it('should return multiple end node positions if multiple leaf nodes exist', () => {
+      // root -> child1, child2 (both are leaves)
+      const root = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+      const child1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+      const child2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+  
+      const edge1 = new Edge({ source: root, target: child1 });
+      const edge2 = new Edge({ source: root, target: child2 });
+  
+      const workflow = new Workflow('Forked Workflow', [root, child1, child2], [edge1, edge2]);
+      positionWorkflowNodes(workflow);
+  
+      // child1 & child2 have no children => 2 end positions
+      const endPositions = getEndNodePositions(workflow);
+  
+      expect(endPositions).to.have.length(2);
+      // The order of array items can vary, so check existence instead of direct index if you prefer
+      const expected1 = {
+        x: child1.position?.x,
+        y: (child1.position?.y ?? 0) + ySpacing,
+      };
+      const expected2 = {
+        x: child2.position?.x,
+        y: (child2.position?.y ?? 0) + ySpacing,
+      };
+  
+      expect(endPositions).to.deep.include(expected1);
+      expect(endPositions).to.deep.include(expected2);
+    });
+  
+    it('should handle a more complex tree with multiple levels', () => {
+      // root -> mid1 -> leaf1, leaf2
+      //       -> mid2 -> leaf3
+      const root = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+      const mid1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+      const mid2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+      const leaf1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+      const leaf2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+      const leaf3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+  
+      const e1 = new Edge({ source: root, target: mid1 });
+      const e2 = new Edge({ source: root, target: mid2 });
+      const e3 = new Edge({ source: mid1, target: leaf1 });
+      const e4 = new Edge({ source: mid1, target: leaf2 });
+      const e5 = new Edge({ source: mid2, target: leaf3 });
+  
+      const workflow = new Workflow('Multi-level', [root, mid1, mid2, leaf1, leaf2, leaf3], [e1, e2, e3, e4, e5]);
+      positionWorkflowNodes(workflow);
+  
+      // Leaves are leaf1, leaf2, leaf3 => 3 end node positions
+      const endPositions = getEndNodePositions(workflow);
+      expect(endPositions).to.have.length(3);
+  
+      const expectedPos1 = { x: leaf1.position?.x, y: (leaf1.position?.y ?? 0) + ySpacing };
+      const expectedPos2 = { x: leaf2.position?.x, y: (leaf2.position?.y ?? 0) + ySpacing };
+      const expectedPos3 = { x: leaf3.position?.x, y: (leaf3.position?.y ?? 0) + ySpacing };
+  
+      expect(endPositions).to.deep.include(expectedPos1);
+      expect(endPositions).to.deep.include(expectedPos2);
+      expect(endPositions).to.deep.include(expectedPos3);
+    });
+  });

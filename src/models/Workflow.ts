@@ -4,7 +4,7 @@ import { apiServices } from '../services/ApiService.js';
 import { Action } from './Action.js';
 import { SessionKeyPermission } from './SessionKeyPermission.js';
 import { Note } from './Note.js';
-import { positionWorkflowNodesAvoidOverlap } from '../utils/WorkflowNodePositioner.js';
+import { getEndNodePositions, positionWorkflowNodesAvoidOverlap } from '../utils/WorkflowNodePositioner.js';
 
 export type WorkflowState = 'inactive' | 'active' | 'failed' | 'completed' | 'waiting';
 
@@ -405,5 +405,9 @@ export class Workflow {
       throw new Error('The workflow needs to be published first');
 
     return apiServices.getSessionKeyPermissions(this.id);
+  }
+
+  getEndNodePositions(): { x: number; y: number }[] {
+    return getEndNodePositions(this);
   }
 }
