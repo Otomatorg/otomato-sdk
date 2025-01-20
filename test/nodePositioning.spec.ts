@@ -84,6 +84,46 @@ describe('Node Positioning', () => {
         expect(nodeC.position).to.deep.equal({ x: ROOT_X + xSpacing / 2, y: ROOT_Y + ySpacing });
         expect(nodeD.position).to.deep.equal({ x: ROOT_X - xSpacing / 2, y: ROOT_Y + ySpacing * 2 });
     });
+
+    it('should order children based on edge labels', () => {
+        const parent = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const childTrue = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const childFalse = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    
+        const edge2 = new Edge({ source: parent, target: childTrue, label: 'true' });
+        const edge3 = new Edge({ source: parent, target: childFalse, label: 'false' });
+    
+        const workflow = new Workflow("Edge Label Workflow", [parent, childTrue, childFalse], [edge2, edge3]);
+        positionWorkflowNodes(workflow);
+    
+        const children = getChildren(parent, workflow.edges);
+    
+        // Check order of children
+        expect(children).to.deep.equal([childTrue, childFalse]);
+    
+        // Check positions
+        expect(childTrue.position?.x).to.be.lessThan(childFalse.position?.x!);
+    });
+
+    it('should order children based on edge labels - contrary setup', () => {
+        const parent = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const childTrue = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+        const childFalse = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    
+        const edge2 = new Edge({ source: parent, target: childTrue, label: 'false' });
+        const edge3 = new Edge({ source: parent, target: childFalse, label: 'true' });
+    
+        const workflow = new Workflow("Edge Label Workflow", [parent, childTrue, childFalse], [edge2, edge3]);
+        positionWorkflowNodes(workflow);
+    
+        const children = getChildren(parent, workflow.edges);
+    
+        // Check order of children
+        expect(children).to.deep.equal([childTrue, childFalse]);
+    
+        // Check positions
+        expect(childFalse.position?.x).to.be.lessThan(childTrue.position?.x!);
+    });
 });
 
 describe('Node Positioning - Multiple Children', () => {

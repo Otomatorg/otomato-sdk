@@ -28,21 +28,34 @@ export function positionWorkflowNodes(workflow: Workflow): void {
 }
 
 export function positionNode(node: Node, edges: Edge[], xSpacing: number, ySpacing: number, workflow: Workflow): void {
-    // Get children of the node
     const parents = getParents(node, edges);
 
     // todo: what if we have multiple parents?
     const children = getChildren(parents[0], edges);
-    const childrenCountOfParent = children.length;
+
+    const sortedChildren = children.sort((a, b) => {
+        const edgeA = edges.find(edge => edge.source === parents[0] && edge.target === a);
+        const edgeB = edges.find(edge => edge.source === parents[0] && edge.target === b);
+
+        const labelA = edgeA?.label ?? "";
+        const labelB = edgeB?.label ?? "";
+
+        if (labelA === "true" && labelB !== "true") return -1;
+        if (labelB === "true" && labelA !== "true") return 1;
+        if (labelA === "false" && labelB !== "false") return 1;
+        if (labelB === "false" && labelA !== "false") return -1;
+        return 0;
+    });
+
+    const childrenCountOfParent = sortedChildren.length;
     const parentX = parents.reduce((sum, parent) => sum + (parent.position?.x ?? ROOT_X), 0) / parents.length;
     const parentY = Math.max(...parents.map(parent => parent.position?.y ?? ROOT_Y));
 
-    // Compute position based on parent children count
     if (childrenCountOfParent === 1) {
         node.setPosition(parentX, parentY + ySpacing);
     } else {
-        const index = children.indexOf(node); // Get the position of this node among its siblings
-        const totalChildren = children.length;
+        const index = sortedChildren.indexOf(node); // Get the position of this node among its siblings
+        const totalChildren = sortedChildren.length;
 
         // Compute the x position for this node
         const offset = index - (totalChildren - 1) / 2; // Center the children around the parent
