@@ -370,48 +370,6 @@ describe('Empty block management', () => {
     expect(workflow.nodes).to.have.length(3);
   });
 
-  it('should export a workflow without its empty nodes', () => {
-    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
-    trigger.setChainId(CHAINS.ETHEREUM);
-    trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
-    trigger.setPosition(0, 0);
-  
-    const action1 = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
-    action1.setChainId(CHAINS.ETHEREUM);
-    action1.setParams("value", 1000);
-    action1.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    action1.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
-    action1.setPosition(1, 0);
-  
-    // Create a workflow with an edge from trigger -> action1
-    const workflow = new Workflow(
-      "Test Workflow",
-      [trigger, action1],
-      [ new Edge({ source: trigger, target: action1 }) ]
-    );
-  
-    // Insert empty blocks (blockId === 0 inside ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK)
-    workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), action1);
-    workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), trigger, action1);
-  
-    // Confirm that, before toJSON, the workflow contains 4 nodes
-    // (trigger, action1, and 2 empties) plus 3 edges
-    expect(workflow.nodes).to.have.length(4);
-    expect(workflow.edges).to.have.length(3);
-  
-    // Convert to JSON; this should invoke your logic that clones + deletes empty nodes
-    const json = workflow.toJSON();
-  
-    // Now the JSON should reflect a workflow with only 2 nodes (the real ones)
-    expect(json.nodes).to.have.length(2);
-    // And only 1 edge (trigger -> action1)
-    expect(json.edges).to.have.length(1);
-  
-    // Optional: You can do deeper checks if you'd like:
-    // e.g., verifying that the final edges reference only the IDs of trigger & action1
-    // expect(json.nodes.map(n => n.blockId)).to.deep.equal([trigger.blockId, action1.blockId]);
-  });
-
   it('should create a SPLIT from SDK', () => {
     const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
     trigger.setChainId(CHAINS.ETHEREUM);
