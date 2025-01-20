@@ -228,22 +228,6 @@ export class Workflow {
   }
 
   toJSON() {
-    // 1. Create a new Workflow instance, copying only the nodes, edges, and notes
-    const clonedWorkflow = new Workflow(
-      this.name,              // same name
-      [...this.nodes],        // shallow copy of nodes
-      [...this.edges]         // shallow copy of edges
-    );
-    clonedWorkflow.notes = [...this.notes]; // shallow copy of notes array
-
-    // 2. Identify any empty nodes (blockId === 0), then delete them from the clone
-    const emptyNodes = clonedWorkflow.nodes.filter(node => node.blockId === 0);
-    for (const emptyNode of emptyNodes) {
-      clonedWorkflow.deleteNode(emptyNode);
-    }
-
-    // 3. Return JSON using 'this' for top-level info (id, state, etc.),
-    //    but using the clonedWorkflow's nodes, edges, and notes
     return {
       id: this.id,
       name: this.name,
@@ -251,9 +235,9 @@ export class Workflow {
       dateCreated: this.dateCreated,
       dateModified: this.dateModified,
       executionId: this.executionId,
-      nodes: clonedWorkflow.nodes.map(node => node.toJSON()),
-      edges: clonedWorkflow.edges.map(edge => edge.toJSON()),
-      notes: clonedWorkflow.getNotes(),
+      nodes: this.nodes.map(node => node.toJSON()),
+      edges: this.edges.map(edge => edge.toJSON()),
+      notes: this.getNotes(),
     };
   }
 
