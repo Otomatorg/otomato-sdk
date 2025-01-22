@@ -209,6 +209,48 @@ const gasMonitoring = async () => {
     return new Workflow('Get notified when the gas price on Ethereum drops below 6 gwei', [trigger, notificationAction], [edge]);
 }
 
+const dailyYieldEmail = async () => {
+    const trigger = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+    notificationAction.setParams("body", `Daily Yield Report 🚀
+
+------------------      USDC     ------------------------
+
+📍 On Base
+    •   IONIC: {{external.functions.ionicLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}
+    •   AAVE: {{external.functions.aaveLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}
+    •   Compound: {{external.functions.compoundLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,0)}}
+    •   Ironclad: {{external.functions.ironcladLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}
+    •   Moonwell: {{external.functions.moonwellLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}
+
+📍 On Mode
+    •   IONIC: {{external.functions.ionicLendingRate(34443,0xd988097fb8612cc24eeC14542bC03424c656005f)}}
+    •   Ironclad: {{external.functions.ironcladLendingRate(34443,0xd988097fb8612cc24eeC14542bC03424c656005f)}}
+
+
+------------------      ETH     ------------------------
+
+📍 On Base
+    •   IONIC: {{external.functions.ionicLendingRate(8453,0x4200000000000000000000000000000000000006)}}
+    •   AAVE: {{external.functions.aaveLendingRate(8453,0x4200000000000000000000000000000000000006)}}
+    •   Compound: {{external.functions.compoundLendingRate(8453,0x4200000000000000000000000000000000000006,0)}}
+    •   Ironclad: {{external.functions.ironcladLendingRate(8453,0x4200000000000000000000000000000000000006)}}
+    •   Moonwell: {{external.functions.moonwellLendingRate(8453,0x4200000000000000000000000000000000000006)}}
+
+📍 On Mode
+    •   IONIC: {{external.functions.ionicLendingRate(34443,0x4200000000000000000000000000000000000006)}}
+    •   Ironclad: {{external.functions.ironcladLendingRate(34443,0x4200000000000000000000000000000000000006)}}
+
+
+See you tomorrow!`);
+    notificationAction.setParams("subject", "Daily yield updates");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    return new Workflow('Daily yield updates', [trigger, notificationAction], [edge]);
+}
+
 export const WORKFLOW_TEMPLATES = [
     {
         'name': 'MODE transfer notification',
@@ -311,5 +353,16 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
         createWorkflow: gasMonitoring
+    },
+    {
+        'name': 'Daily yield updates',
+        'description': 'Receive an email every day with a recap from all the money market yields for ETH and USDC.',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/gasMonitoring.jpg',
+        'image': [
+            TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        ],
+        createWorkflow: dailyYieldEmail
     }
 ];
