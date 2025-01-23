@@ -28,10 +28,6 @@ const generateDefaultTriggers = (): any[] => {
 
     // Explicitly create each trigger
     triggersList.push(createDefaultTrigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER));
-    triggersList.push(createDefaultTrigger(TRIGGERS.YIELD.SPLICE_FI.SWAP));
-    triggersList.push(createDefaultTrigger(TRIGGERS.YIELD.SPLICE_FI.LIQUIDITY_REMOVED));
-    triggersList.push(createDefaultTrigger(TRIGGERS.YIELD.SPLICE_FI.MARKET_CREATION));
-    triggersList.push(createDefaultTrigger(TRIGGERS.YIELD.SPLICE_FI.INTEREST_RATE_UPDATE));
     triggersList.push(createDefaultTrigger(TRIGGERS.LENDING.ASTARIA.LEND_RECALLED));
     triggersList.push(createDefaultTrigger(TRIGGERS.DEXES.ODOS.SWAP));
     triggersList.push(createDefaultTrigger(TRIGGERS.SOCIALS.MODE_NAME_SERVICE.NAME_REGISTERED));
@@ -84,33 +80,6 @@ const generateSpecificTriggers = (): any[] => {
     balanceTrigger.setCondition(">");
     balanceTrigger.setComparisonValue(45000);
 
-    const spliceFiSwapTrigger = new Trigger(TRIGGERS.YIELD.SPLICE_FI.SWAP);
-    spliceFiSwapTrigger.setParams("caller", "0x888888888889758f76e7103c6cbf23abbf58f946");
-    spliceFiSwapTrigger.setParams("market", "0x888888888889758f76e7103c6cbf23abbf58f946");
-    spliceFiSwapTrigger.setParams("receiver", "0x888888888889758f76e7103c6cbf23abbf58f946");
-    spliceFiSwapTrigger.setParams("netPtToAccount", 1000);
-    spliceFiSwapTrigger.setParams("netSyToAccount", 2000);
-
-    const liquidityRemovedTrigger = new Trigger(TRIGGERS.YIELD.SPLICE_FI.LIQUIDITY_REMOVED);
-    liquidityRemovedTrigger.setParams("caller", "0x888888888889758f76e7103c6cbf23abbf58f946");
-    liquidityRemovedTrigger.setParams("market", "0x888888888889758f76e7103c6cbf23abbf58f946");
-    liquidityRemovedTrigger.setParams("receiver", "0x888888888889758f76e7103c6cbf23abbf58f946");
-    liquidityRemovedTrigger.setParams("netLpToRemove", 1000);
-    liquidityRemovedTrigger.setParams("netPtOut", 500);
-    liquidityRemovedTrigger.setParams("netSyOut", 1500);
-
-    const marketCreationTrigger = new Trigger(TRIGGERS.YIELD.SPLICE_FI.MARKET_CREATION);
-    marketCreationTrigger.setParams("market", "0x888888888889758f76e7103c6cbf23abbf58f946");
-    marketCreationTrigger.setParams("PT", "0x888888888889758f76e7103c6cbf23abbf58f946");
-    marketCreationTrigger.setParams("scalarRoot", 1234);
-    marketCreationTrigger.setParams("initialAnchor", 5678);
-    marketCreationTrigger.setParams("lnFeeRateRoot", 91011);
-
-    const interestRateUpdateTrigger = new Trigger(TRIGGERS.YIELD.SPLICE_FI.INTEREST_RATE_UPDATE);
-    interestRateUpdateTrigger.setParams("timestamp", 1627848271);
-    interestRateUpdateTrigger.setParams("lastLnImpliedRate", 123456);
-    interestRateUpdateTrigger.setContractAddress("0xDE95511418EBD8Bd36294B11C86314DdFA50e212");
-
     const lendRecalledTrigger = new Trigger(TRIGGERS.LENDING.ASTARIA.LEND_RECALLED);
     lendRecalledTrigger.setParams("loanId", 123456);
     lendRecalledTrigger.setParams("recaller", "0x888888888889758f76e7103c6cbf23abbf58f946");
@@ -133,10 +102,6 @@ const generateSpecificTriggers = (): any[] => {
     return [
         transferTrigger.toJSON(),
         balanceTrigger.toJSON(),
-        spliceFiSwapTrigger.toJSON(),
-        liquidityRemovedTrigger.toJSON(),
-        marketCreationTrigger.toJSON(),
-        interestRateUpdateTrigger.toJSON(),
         lendRecalledTrigger.toJSON(),
         odosSwapTrigger.toJSON(),
         nameRegisteredTrigger.toJSON(),
