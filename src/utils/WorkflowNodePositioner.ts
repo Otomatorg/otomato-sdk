@@ -84,15 +84,34 @@ export function positionWorkflowNodesAvoidOverlap(workflow: Workflow): void {
         }
     });
 
-    // 3) Resolve horizontal overlaps level by level
+    // 3) Resolve horizontal overlaps and enforce parent grouping
     levels.forEach((nodes, level) => {
-        // Sort by x so we can detect collisions
-        nodes.sort((a, b) => (a.position!.x ?? 0) - (b.position!.x ?? 0));
+        // Group nodes by their parent
+        const parentGroups: Map<Node, Node[]> = new Map();
+        nodes.forEach((node) => {
+            const parents = getParents(node, workflow.edges);
+            if (parents.length > 0) {
+                const parent = parents[0]; // Assuming single parent for simplicity
+                if (!parentGroups.has(parent)) {
+                    parentGroups.set(parent, []);
+                }
+                parentGroups.get(parent)!.push(node);
+            }
+        });
 
-        // Shift nodes that collide
-        for (let i = 1; i < nodes.length; i++) {
-            const prev = nodes[i - 1];
-            const current = nodes[i];
+        // Flatten the groups back into a sorted array
+        const groupedNodes: Node[] = [];
+        parentGroups.forEach((group) => {
+            groupedNodes.push(...group);
+        });
+
+        // Sort nodes by x within each group to detect overlaps
+        groupedNodes.sort((a, b) => (a.position!.x ?? 0) - (b.position!.x ?? 0));
+
+        // Shift nodes within groups to resolve overlaps
+        for (let i = 1; i < groupedNodes.length; i++) {
+            const prev = groupedNodes[i - 1];
+            const current = groupedNodes[i];
             if (current.position!.x - prev.position!.x < xSpacing) {
                 const shift = xSpacing - (current.position!.x - prev.position!.x);
                 moveNodeAndChildren(current, shift, workflow.edges);
@@ -100,7 +119,7 @@ export function positionWorkflowNodesAvoidOverlap(workflow: Workflow): void {
         }
     });
 
-    // 4) **Center each parent over its children** (the new step)
+    // 4) **Center each parent over its children** (the existing step)
     centerParentXPositions(workflow);
 }
 
