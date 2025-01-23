@@ -4,7 +4,7 @@ import { Workflow } from '../models/Workflow.js';
 import { Node } from '../models/Node.js';
 import { Edge } from '../models/Edge.js';
 
-export const xSpacing = 600;
+export const xSpacing = 500;
 export const ySpacing = 120;
 export const ROOT_X = 400;
 export const ROOT_Y = 120;

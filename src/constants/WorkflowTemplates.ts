@@ -358,7 +358,7 @@ export const WORKFLOW_TEMPLATES = [
         'name': 'Daily yield updates',
         'description': 'Receive an email every day with a recap from all the money market yields for ETH and USDC.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/gasMonitoring.jpg',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
         'image': [
             TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image

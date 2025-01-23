@@ -610,208 +610,6 @@ export const TRIGGERS = {
         "blockId": 13,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethena.svg"
       }
-    },
-    "SPLICE_FI": {
-      "description": "Split any yield-bearing asset into separate yield and principal components",
-      "chains": [
-        34443
-      ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png",
-      "SWAP": {
-        "name": "Splice Finance Swap",
-        "description": "Swap in Splice Finance",
-        "type": 0,
-        "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
-        "output": {
-          "caller": "address",
-          "market": "address",
-          "receiver": "address",
-          "netPtToAccount": "int256",
-          "netSyToAccount": "int256",
-          "transactionHash": "string"
-        },
-        "parameters": [
-          {
-            "key": "abiParams.caller",
-            "type": "address",
-            "description": "Caller address",
-            "category": 1
-          },
-          {
-            "key": "abiParams.market",
-            "type": "address",
-            "description": "Market address",
-            "category": 1
-          },
-          {
-            "key": "abiParams.receiver",
-            "type": "address",
-            "description": "Receiver address",
-            "category": 1
-          },
-          {
-            "key": "abiParams.netPtToAccount",
-            "type": "int256",
-            "description": "Net PT to account",
-            "category": 1
-          },
-          {
-            "key": "abiParams.netSyToAccount",
-            "type": "int256",
-            "description": "Net SY to account",
-            "category": 1
-          },
-        ] as Parameter[],
-        "examples": [],
-        "blockId": 2,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
-      },
-      "LIQUIDITY_REMOVED": {
-        "name": "Liquidity Removed",
-        "description": "Liquidity removed in Splice Finance",
-        "type": 0,
-        "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
-        "output": {
-          "caller": "address",
-          "market": "address",
-          "receiver": "address",
-          "netLpToRemove": "uint256",
-          "netPtOut": "uint256",
-          "netSyOut": "uint256",
-          "transactionHash": "string"
-        },
-        "parameters": [
-          {
-            "key": "abiParams.caller",
-            "type": "address",
-            "description": "Caller address",
-            "category": 1
-          },
-          {
-            "key": "abiParams.market",
-            "type": "address",
-            "description": "Market address",
-            "category": 1
-          },
-          {
-            "key": "abiParams.receiver",
-            "type": "address",
-            "description": "Receiver address",
-            "category": 1
-          },
-          {
-            "key": "abiParams.netLpToRemove",
-            "type": "uint256",
-            "description": "Net LP to remove",
-            "category": 1
-          },
-          {
-            "key": "abiParams.netPtOut",
-            "type": "uint256",
-            "description": "Net PT out",
-            "category": 1
-          },
-          {
-            "key": "abiParams.netSyOut",
-            "type": "uint256",
-            "description": "Net SY out",
-            "category": 1
-          },
-        ] as Parameter[],
-        "examples": [],
-        "blockId": 6,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
-      },
-      "MARKET_CREATION": {
-        "name": "Market Creation",
-        "description": "Market creation in Splice Finance",
-        "type": 0,
-        "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
-        "output": {
-          "market": "address",
-          "PT": "erc20",
-          "scalarRoot": "int256",
-          "initialAnchor": "int256",
-          "lnFeeRateRoot": "uint256",
-          "transactionHash": "string"
-        },
-        "parameters": [
-          {
-            "key": "abiParams.market",
-            "type": "address",
-            "description": "Market address",
-            "category": 1
-          },
-          {
-            "key": "abiParams.PT",
-            "type": "address",
-            "description": "PT address",
-            "category": 1
-          },
-          {
-            "key": "abiParams.scalarRoot",
-            "type": "int256",
-            "description": "Scalar root",
-            "category": 1
-          },
-          {
-            "key": "abiParams.initialAnchor",
-            "type": "int256",
-            "description": "Initial anchor",
-            "category": 1
-          },
-          {
-            "key": "abiParams.lnFeeRateRoot",
-            "type": "uint256",
-            "description": "LN fee rate root",
-            "category": 1
-          },
-        ] as Parameter[],
-        "examples": [],
-        "blockId": 7,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
-      },
-      "INTEREST_RATE_UPDATE": {
-        "name": "Interest Rate Update",
-        "description": "Interest rate update in Splice Finance",
-        "type": 0,
-        "contractAddress": "0x7A3a94AE0fC1421A3eac23eA6371036ac8d8f448",
-        "output": {
-          "timestamp": "uint256",
-          "lastLnImpliedRate": "int256",
-          "transactionHash": "string"
-        },
-        "parameters": [
-          {
-            "key": "abiParams.timestamp",
-            "type": "uint256",
-            "description": "Timestamp",
-            "category": 1
-          },
-          {
-            "key": "abiParams.lastLnImpliedRate",
-            "type": "int256",
-            "description": "Last LN implied rate",
-            "category": 1
-          },
-          {
-            "key": "contractAddress",
-            "type": "erc20",
-            "description": "Token to monitor",
-            "mandatory": true,
-            "enum": [
-              "0xDE95511418EBD8Bd36294B11C86314DdFA50e212",
-              "0x34cf9BF641bd5f34197060A3f3478a1f97f78f0a",
-              "0xb950A73Ea0842B0Cd06D0e369aE974799BB346f1",
-              "0xbF14932e1A7962C77D0b31be80075936bE1A43D4"
-            ],
-            "category": 0
-          },
-        ] as Parameter[],
-        "examples": [],
-        "blockId": 9,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/splicefi.png"
-      }
     }
   },
   "LENDING": {
@@ -2725,7 +2523,7 @@ export const ACTIONS = {
           {
             "key": "time",
             "type": "string",
-            "description": "The time to wait (in milliseconds)",
+            "description": "The time to wait (in seconds)",
             "mandatory": true,
             "category": 0
           },
@@ -3085,7 +2883,20 @@ export const ACTIONS = {
           }
         },
         "examples": [
-          {}
+          {
+            "name": "Basic notification",
+            "description": "Notify you that the flow has been triggered on the otomato discord",
+            "parameters": [
+              {
+                "key": "webhook",
+                "value": "https://discord.com/api/webhooks/1303000202818621542/Wv7pGzZ8ZNGBk38uPJ5u4NPhghbARwKHXw3RN3QAKax6jKH85XOggRFFbGoDLI_sWSpt"
+              },
+              {
+                "key": "message",
+                "value": "Your workflow has been triggered! Go to https://app.otomato.xyz/execution-history to see its execution details"
+              }
+            ]
+          }
         ],
         "blockId": 100003,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png"
@@ -3203,7 +3014,7 @@ export const ACTIONS = {
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg",
       "DEPOSIT": {
-        "name": "Lend asset",
+        "name": "Supply asset to Ionic",
         "description": "Deposit token in any Ionic lending pool",
         "type": 1,
         "method": "function mint(uint256 amount) public returns (uint256)",
@@ -3307,7 +3118,7 @@ export const ACTIONS = {
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
       },
       "WITHDRAW": {
-        "name": "Withdraw asset",
+        "name": "Withdraw Asset from Ionic",
         "description": "Withdraw token deposited in any lending pool",
         "type": 1,
         "method": "function redeemUnderlying(uint256 amount) public returns (uint256)",
@@ -3598,20 +3409,6 @@ export const ACTIONS = {
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ionic.jpg"
       }
     },
-    "ETHER_FI": {
-      "description": "Liquid restaking on Ethereum",
-      "chains": [
-        34443
-      ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/etherfi.jpg"
-    },
-    "RENZO": {
-      "description": "Liquid restaking on Ethereum",
-      "chains": [
-        34443
-      ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/renzo.jpg"
-    },
     "AAVE": {
       "description": "A leading DeFi protocol enabling secure borrowing, lending, and yield generation across multiple assets.",
       "chains": [
@@ -3620,7 +3417,7 @@ export const ACTIONS = {
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.png",
       "SUPPLY": {
-        "name": "Supply Asset to Aave",
+        "name": "Supply asset to Aave",
         "description": "Supply an asset to AAVE",
         "type": 1,
         "method": "function supply(address asset, uint256 amount, address onBehalfOf, uint16 referralCode)",
@@ -3847,7 +3644,7 @@ export const ACTIONS = {
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png",
       "DEPOSIT": {
-        "name": "Lend asset",
+        "name": "Supply asset to Moonwell",
         "description": "Deposit token in any Moonwell lending pool",
         "type": 1,
         "method": "function mint(uint256 amount) external returns (uint256)",
@@ -3951,7 +3748,7 @@ export const ACTIONS = {
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/moonwell.png"
       },
       "WITHDRAW": {
-        "name": "Withdraw asset",
+        "name": "Withdraw asset from Ionic",
         "description": "Withdraw token deposited in any lending pool",
         "type": 1,
         "method": "function redeemUnderlying(uint256 amount) external returns (uint256)",
@@ -4249,7 +4046,7 @@ export const ACTIONS = {
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/compound.png",
       "DEPOSIT": {
-        "name": "Lend asset",
+        "name": "Supply asset to Compound",
         "description": "Deposit token in any Compound lending pool",
         "type": 1,
         "method": "function supply(address asset, uint amount)",
@@ -4336,7 +4133,7 @@ export const ACTIONS = {
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/compound.png"
       },
       "WITHDRAW": {
-        "name": "Withdraw asset",
+        "name": "Withdraw Asset from Compound",
         "description": "Withdraw token deposited in any lending pool",
         "type": 1,
         "method": "function withdraw(address asset, uint amount)",
