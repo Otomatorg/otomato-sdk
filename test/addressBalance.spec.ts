@@ -38,6 +38,30 @@ describe('getUserProtocolBalances', function() {
     });
   });
 
+  it('should fetch multiple protocol balances for recognized base token (USDT on Mode)', async () => {
+    // The user address, chain, etc.
+    const chainId = 34443;
+    const address = '0x9ebf4899c05039a52407d919a63630ccd3f399ae'; // Example
+    const modeUSDT = '0xf0f161fda2712db8b566946122a5af183995e2ed';
+
+    const results = await getUserProtocolBalances({
+      chainId,
+      address,
+      contractAddress: modeUSDT,
+    });
+
+    // We expect multiple protocol entries: AAVE, COMPOUND, IONIC, MOONWELL, WALLET
+    expect(results).to.be.an('array').with.lengthOf.at.least(1);
+
+    // Check each result has the structure
+    results.forEach((r : any) => {
+      expect(r).to.have.property('protocol');
+      expect(r).to.have.property('wrapperTokenAddress');
+      expect(r).to.have.property('wrapperBalance');
+      expect(r).to.have.property('underlyingBalance');
+    });
+  });
+
   it('should fallback to single WALLET if contractAddress not recognized', async () => {
     // e.g. random token address
     const chainId = 8453;

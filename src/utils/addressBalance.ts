@@ -71,6 +71,12 @@ const chainTokenProtocolMap: ChainTokenProtocolMap = {
       { protocol: PROTOCOLS.IRONCLAD, token: '0x9c29a8eC901DBec4fFf165cD57D4f9E03D4838f7' },
       { protocol: PROTOCOLS.WALLET, token: '0x4200000000000000000000000000000000000006' },
     ],
+    // USDT on Mode
+    '0xf0f161fda2712db8b566946122a5af183995e2ed': [
+      { protocol: PROTOCOLS.IONIC, token: '0x94812F2eEa03A49869f95e1b5868C6f3206ee3D3' },
+      { protocol: PROTOCOLS.IRONCLAD, token: '0x02CD18c03b5b3f250d2B29C87949CDAB4Ee11488' },
+      { protocol: PROTOCOLS.WALLET, token: '0xf0f161fda2712db8b566946122a5af183995e2ed' },
+    ],
   },
 };
 
@@ -122,12 +128,10 @@ async function getBalanceInUnderlying(
     case PROTOCOLS.WALLET:
       return balanceObj.displayValue;
 
+    case PROTOCOLS.IRONCLAD:
     case PROTOCOLS.AAVE:
+    case PROTOCOLS.COMPOUND:
       return balanceObj.displayValue;
-
-    case PROTOCOLS.COMPOUND: {
-      return balanceObj.displayValue;
-    }
 
     case PROTOCOLS.IONIC:
     case PROTOCOLS.MOONWELL: {
