@@ -2,12 +2,13 @@ import { CHAINS, apiServices } from '../../src/index.js';
 
 const main = async () => {
     const address = "0x9b1E25bBbee162A26B67B1fb00cf4d67157656F6"
-    let payload = await apiServices.generateLoginPayload(address, CHAINS.ETHEREUM, "abcdef");
+    const ownerAddress = "0x8b1E25bBbee162A26B67B1fb00cf4d67157656F6"
+    let payload = await apiServices.generateLoginPayload(address, CHAINS.ETHEREUM, "abcdef", ownerAddress);
 
     // we replace the payload to fit the signature, don't do that in your implementation
-    const signature = '0x92a3b551ff2bc2eb9a3537a0b477af14c33e649c3479c204bb0a4da95bfee89e4ae966e5d555d34c5dfcf3899910c58e936375634f5b0f58978139d25b5b54761b';
+    const signature = '0x92a3b551ff2bc2eb9a3537a0b477af14c33e649c3479c203bb0a4da95bfee89e4ae966e5d555d34c5dfcf3899910c58e936375634f5b0f58978139d25b5b54761b';
     payload = {
-        address: '0x9b1E25bBbee162A26B67B1fb00cf4d67157656F6',
+        address: address,
         chain_id: '1',
         domain: 'otomato-test.netlify.app',
         expiration_time: '2024-07-16T16:57:34.363Z',

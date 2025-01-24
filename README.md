@@ -50,7 +50,7 @@ async function authenticate() {
   const chainId = CHAINS.ETHEREUM;
   const accessCode = 'YOUR_ACCESS_CODE';
 
-  const loginPayload = await apiServices.generateLoginPayload(address, chainId, accessCode);
+  const loginPayload = await apiServices.generateLoginPayload(address, chainId, accessCode, ownerWalletAddress);
   const signature = 'SIGNATURE_OF_LOGIN_PAYLOAD';
   const { token } = await apiServices.getToken(loginPayload, signature);
 
