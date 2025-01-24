@@ -59,6 +59,7 @@ function createFearAndGreedTrigger(): Trigger {
   // Condition: index must be > 0
   trigger.setParams('period', VARIABLES.LOOP_PERIOD);
   trigger.setParams('limit', 1);
+  trigger.setParams('limit', 100000);
   return trigger;
 }
 

@@ -58,6 +58,7 @@ import {
     const trigger = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
     // Condition: index must be > 0
     trigger.setParams('period', VARIABLES.LOOP_PERIOD);
+    trigger.setParams('limit', 100000);
     return trigger;
   }
   
