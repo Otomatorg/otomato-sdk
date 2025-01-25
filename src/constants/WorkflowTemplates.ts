@@ -255,26 +255,26 @@ See you tomorrow!`);
 
 export const WORKFLOW_TEMPLATES = [
     {
-        'name': 'MODE transfer notification',
-        'description': 'Receive notifications when a top $MODE holder (0x74B8....C6B4) transfers $MODE',
+        'name': 'Get Notified When Ethereum Gas is Below 6 Gwei',
+        'description': 'Receive an email alert when Ethereum gas prices fall below 6 gwei.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer-monitoring.png',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/gasMonitoring.jpg',
         'image': [
-            TRIGGERS.TOKENS.TRANSFER.TRANSFER.image,
+            TRIGGERS.TECHNICAL.GAS.GAS_API,
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
-        createWorkflow: createModeTransferNotificationWorkflow
+        createWorkflow: gasMonitoring
     },
     {
-        'name': 'Buy ETH when the market sentiment is extremely fearful',
-        'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 30',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear_and_greed.jpg',
+        'name': 'Daily yield updates',
+        'description': 'Receive an email every day with a recap from all the money market yields for ETH and USDC.',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
         'image': [
-            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
-            ACTIONS.SWAP.ODOS.SWAP.image
+            TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
-        createWorkflow: createETHFearAndGreedBuy
+        createWorkflow: dailyYieldEmail
     },
     {
         'name': 'Buy ETH when the market sentiment is extremely fearful - capital efficient',
@@ -289,7 +289,7 @@ export const WORKFLOW_TEMPLATES = [
         ],
         createWorkflow: createETHFearAndGreedCapitalEfficientBuy
     },
-    {
+    /*{
         'name': 'Buy sUSDE when the yield is above 20%',
         'description': 'Buy sUSDE when the yield is above 20%',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING],
@@ -300,7 +300,7 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
         createWorkflow: createSUsdeYieldBuy
-    },
+    },*/
     {
         'name': 'sUSDE yield notification',
         'description': 'Notify me when the sUSDe yield becomes negative',
@@ -335,6 +335,28 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: ionicWithdrawIfYieldIsLow
     },
     {
+        'name': 'MODE transfer notification',
+        'description': 'Receive notifications when a top $MODE holder (0x74B8....C6B4) transfers $MODE',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer-monitoring.png',
+        'image': [
+            TRIGGERS.TOKENS.TRANSFER.TRANSFER.image,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        ],
+        createWorkflow: createModeTransferNotificationWorkflow
+    },
+    {
+        'name': 'Buy ETH when the market sentiment is extremely fearful',
+        'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 30',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear_and_greed.jpg',
+        'image': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
+            ACTIONS.SWAP.ODOS.SWAP.image
+        ],
+        createWorkflow: createETHFearAndGreedBuy
+    },
+    /*{
         'name': 'Copy-trade the trades done on Odos by vitalik.eth',
         'description': 'Buy 100$ of each token that vitalik.eth buys using Odos',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.TRADING],
@@ -344,27 +366,6 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.CORE.SWAP.SWAP.image,
         ],
         createWorkflow: copyTradeVitalikOdos
-    },
-    {
-        'name': 'Get Notified When Ethereum Gas is Below 6 Gwei',
-        'description': 'Receive an email alert when Ethereum gas prices fall below 6 gwei.',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/gasMonitoring.jpg',
-        'image': [
-            TRIGGERS.TECHNICAL.GAS.GAS_API,
-            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
-        ],
-        createWorkflow: gasMonitoring
-    },
-    {
-        'name': 'Daily yield updates',
-        'description': 'Receive an email every day with a recap from all the money market yields for ETH and USDC.',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
-        'image': [
-            TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
-            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
-        ],
-        createWorkflow: dailyYieldEmail
-    }
+    },*/
+    
 ];
