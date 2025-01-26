@@ -5,6 +5,7 @@ import { Action } from './Action.js';
 import { SessionKeyPermission } from './SessionKeyPermission.js';
 import { Note } from './Note.js';
 import { getEndNodePositions, positionWorkflowNodesAvoidOverlap } from '../utils/WorkflowNodePositioner.js';
+import { ACTIONS } from '../constants/Blocks.js';
 
 export type WorkflowState = 'inactive' | 'active' | 'failed' | 'completed' | 'waiting';
 
@@ -70,49 +71,49 @@ export class Workflow {
   }
 
   /**
-   * Inserts a new node into the workflow:
-   * - If both nodeBefore and nodeAfter are provided, we expect an existing edge
-   *   from nodeBefore -> nodeAfter, which gets replaced by two edges:
-   *   nodeBefore -> nodeToInsert and nodeToInsert -> nodeAfter.
+   * Inserts a new node into the workflow, potentially splitting an existing edge.
+   * 
+   * - If `nodeAfter` is specified, we expect an edge nodeBefore->nodeAfter to exist.
+   *   That edge is removed, and replaced by two new edges:
+   *      nodeBefore->nodeToInsert (with `edgeLabelBefore`, `edgeValueBefore`)
+   *      nodeToInsert->nodeAfter  (with `edgeLabelAfter`, `edgeValueAfter`)
    *
-   * - If nodeAfter is NOT provided, we create a single edge from nodeBefore
-   *   to nodeToInsert. The user can optionally provide `edgeLabel` and `edgeValue`
-   *   in that scenario only.
+   * - If `nodeAfter` is not specified, we create only one edge:
+   *      nodeBefore->nodeToInsert (with `edgeLabelBefore`, `edgeValueBefore`)
    *
-   * @param nodeToInsert  The node you want to insert
-   * @param nodeBefore    The existing node in the workflow that precedes `nodeToInsert`
-   * @param nodeAfter     (Optional) The existing node that should follow `nodeToInsert`
-   * @param edgeLabel     (Optional) Label for the edge, only allowed if `nodeAfter` is not provided
-   * @param edgeValue     (Optional) Value for the edge, only allowed if `nodeAfter` is not provided
+   * @param nodeToInsert      The node to insert
+   * @param nodeBefore        The existing node that precedes `nodeToInsert`
+   * @param nodeAfter         (Optional) The existing node that should follow `nodeToInsert`
+   * @param edgeLabelBefore   (Optional) Label for the edge nodeBefore->nodeToInsert
+   * @param edgeValueBefore   (Optional) Value for the edge nodeBefore->nodeToInsert
+   * @param edgeLabelAfter    (Optional) Label for the edge nodeToInsert->nodeAfter
+   * @param edgeValueAfter    (Optional) Value for the edge nodeToInsert->nodeAfter
    */
-  insertNode(
+  public insertNode(
     nodeToInsert: Node,
     nodeBefore: Node,
     nodeAfter?: Node,
-    edgeLabel: string | null = null,
-    edgeValue: any | null = null
+    edgeLabelBefore: string | null = null,
+    edgeValueBefore: any | null = null,
+    edgeLabelAfter: string | null = null,
+    edgeValueAfter: any | null = null
   ): void {
     // Ensure nodeBefore exists in the workflow
     if (!this.nodes.includes(nodeBefore)) {
       throw new Error('The nodeBefore must exist in the workflow.');
     }
 
-    // If nodeAfter is provided, disallow edgeLabel/edgeValue
-    if (nodeAfter && (edgeLabel !== null || edgeValue !== null)) {
-      throw new Error('Cannot provide edgeLabel/edgeValue if nodeAfter is specified.');
-    }
-
-    // If nodeAfter is not provided, insert the new node as a child of nodeBefore
+    // CASE A: If no nodeAfter => we create a single edge from nodeBefore to nodeToInsert
     if (!nodeAfter) {
       // Add the new node to the workflow
       this.addNode(nodeToInsert);
 
-      // Add a new edge between nodeBefore and nodeToInsert (with optional label/value)
+      // Create the edge nodeBefore->nodeToInsert
       const newEdge = new Edge({
         source: nodeBefore,
         target: nodeToInsert,
-        label: edgeLabel ?? undefined,
-        value: edgeValue ?? undefined
+        label: edgeLabelBefore ?? undefined,
+        value: edgeValueBefore ?? undefined
       });
       this.addEdge(newEdge);
 
@@ -121,13 +122,15 @@ export class Workflow {
       return;
     }
 
-    // If nodeAfter is provided, ensure both nodes exist in the workflow
+    // CASE B: nodeAfter is provided => we expect an edge nodeBefore->nodeAfter to exist
     if (!this.nodes.includes(nodeAfter)) {
       throw new Error('The nodeAfter must exist in the workflow.');
     }
 
-    // Check if an edge exists between nodeBefore and nodeAfter
-    const edgeBetween = this.edges.find(edge => edge.source === nodeBefore && edge.target === nodeAfter);
+    // Find the existing edge nodeBefore->nodeAfter
+    const edgeBetween = this.edges.find(
+      (edge) => edge.source === nodeBefore && edge.target === nodeAfter
+    );
     if (!edgeBetween) {
       throw new Error('No edge exists between nodeBefore and nodeAfter.');
     }
@@ -136,16 +139,117 @@ export class Workflow {
     this.addNode(nodeToInsert);
 
     // Remove the existing edge between nodeBefore and nodeAfter
-    this.edges = this.edges.filter(edge => edge !== edgeBetween);
+    this.edges = this.edges.filter((edge) => edge !== edgeBetween);
 
-    // Add new edges
-    const newEdge1 = new Edge({ source: nodeBefore, target: nodeToInsert });
-    const newEdge2 = new Edge({ source: nodeToInsert, target: nodeAfter });
+    // Create the two new edges:
+    // 1) nodeBefore->nodeToInsert
+    const newEdge1 = new Edge({
+      source: nodeBefore,
+      target: nodeToInsert,
+      label: edgeLabelBefore ?? undefined,
+      value: edgeValueBefore ?? undefined
+    });
+
+    // 2) nodeToInsert->nodeAfter
+    const newEdge2 = new Edge({
+      source: nodeToInsert,
+      target: nodeAfter,
+      label: edgeLabelAfter ?? undefined,
+      value: edgeValueAfter ?? undefined
+    });
+
     this.addEdges([newEdge1, newEdge2]);
 
     // Recalculate positions
     positionWorkflowNodesAvoidOverlap(this);
   }
+
+  insertCondition(
+    nodeToInsert: Node,
+    nodeBefore: Node,
+    nodeAfter?: Node,
+    addElseCase?: boolean
+  ): void {
+
+    if (nodeAfter) {
+      this.insertNode(nodeToInsert, nodeBefore, nodeAfter, null, null, 'true', 'true');
+    }
+
+    // Otherwise, create both "true" and "false" paths.
+    // 1) "true" path: nodeBefore -> nodeToInsert -> nodeAfter
+    if (!nodeAfter) {
+      this.insertNode(nodeToInsert, nodeBefore, undefined);
+      const emptyNode1 = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
+      this.insertNode(emptyNode1, nodeToInsert, undefined, 'true', 'true');
+    }
+
+    // 2) "false" path: nodeBefore -> nodeToInsert, 
+    //    but here we pass no nodeAfter (so nodeAfter=null),
+    //    and label/value are "false".
+    if (addElseCase) {
+      const emptyNode2 = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
+      this.insertNode(emptyNode2, nodeToInsert, undefined, 'false', 'false');
+    }
+  }
+
+/**
+ * Inserts a "split" node, creating `numberOfBranches` parallel branches.
+ * 
+ * If `nodeAfter` is given, we call `insertNode(...)` to splice the split node
+ * between `nodeBefore` and `nodeAfter`. That yields two edges:
+ *    nodeBefore->nodeToInsert and nodeToInsert->nodeAfter
+ * The first branch is effectively "nodeAfter."
+ * Then we add additional empty blocks for the remaining branches.
+ * 
+ * If `nodeAfter` is NOT given, we just insertNode(split, nodeBefore),
+ * which yields an edge: nodeBefore->split.
+ * Then we create `numberOfBranches` empty blocks off the split node.
+ * 
+ * @param nodeToInsert     The split node to insert (e.g. type="Split").
+ * @param nodeBefore       The node after which the split is inserted.
+ * @param nodeAfter        (Optional) If we’re splitting in the middle of a flow, the node that was originally after `nodeBefore`.
+ * @param numberOfBranches The total number of branches to create from `nodeToInsert`.
+ */
+public insertSplit(
+  nodeToInsert: Node,
+  nodeBefore: Node,
+  nodeAfter: Node | undefined,
+  numberOfBranches: number
+): void {
+  // Basic validation
+  if (!this.nodes.includes(nodeBefore)) {
+    throw new Error('nodeBefore must exist in the workflow.');
+  }
+  if (numberOfBranches < 2) {
+    throw new Error('numberOfBranches must be at least 2.');
+  }
+
+  // Step 1: Insert the "split" node via insertNode
+  // - If nodeAfter is defined, it removes nodeBefore->nodeAfter
+  //   and creates nodeBefore->nodeToInsert & nodeToInsert->nodeAfter.
+  // - If nodeAfter is undefined, we simply get nodeBefore->nodeToInsert.
+  this.insertNode(nodeToInsert, nodeBefore, nodeAfter);
+
+  // Step 2: Create the parallel branches
+  if (nodeAfter) {
+    // The first branch is already nodeToInsert->nodeAfter
+    // So we only need to create the remaining (numberOfBranches - 1) branches
+    const remaining = numberOfBranches - 1;
+    for (let i = 0; i < remaining; i++) {
+      const emptyBlock = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
+      // Insert the emptyBlock after nodeToInsert
+      // => this creates a new edge nodeToInsert->emptyBlock
+      this.insertNode(emptyBlock, nodeToInsert);
+    }
+  } else {
+    // nodeAfter is undefined => all branches must be created
+    // Each branch is nodeToInsert->(new empty block)
+    for (let i = 0; i < numberOfBranches; i++) {
+      const emptyBlock = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
+      this.insertNode(emptyBlock, nodeToInsert);
+    }
+  }
+}
 
   swapNode(oldNode: Node, newNode: Node): void {
     // Find the index of the node to replace

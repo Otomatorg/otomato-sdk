@@ -1,5 +1,3 @@
-// workflowNodePositioner.ts
-
 import { Workflow } from '../models/Workflow.js';
 import { Node } from '../models/Node.js';
 import { Edge } from '../models/Edge.js';
@@ -9,9 +7,54 @@ export const ySpacing = 120;
 export const ROOT_X = 400;
 export const ROOT_Y = 120;
 
+export function positionWorkflowNodesAvoidOverlap(workflow: Workflow): void {
+    // 1) Lay out nodes using existing logic
+    positionWorkflowNodes(workflow);
+
+    // 2) Group nodes by 'level' based on vertical position
+    const levels: Map<number, Node[]> = new Map();
+    workflow.nodes.forEach((node) => {
+        if (node.position) {
+            const level = Math.round(node.position.y / ySpacing);
+            if (!levels.has(level)) {
+                levels.set(level, []);
+            }
+            levels.get(level)!.push(node);
+        }
+    });
+
+    // 3) Resolve horizontal overlaps among *all* nodes in each level
+    levels.forEach((levelNodes) => {
+        // Sort the nodes in this level by X
+        levelNodes.sort((a, b) => (a.position!.x ?? 0) - (b.position!.x ?? 0));
+
+        // Walk left-to-right, shifting nodes that would collide with the previous one
+        for (let i = 1; i < levelNodes.length; i++) {
+            const prev = levelNodes[i - 1];
+            const current = levelNodes[i];
+
+            // Compute how close they are
+            const dx = current.position!.x - prev.position!.x;
+
+            // If they are too close, shift the current node (and its children) to the right
+            if (dx < xSpacing) {
+                const shift = xSpacing - dx;
+                moveNodeAndChildren(current, shift, workflow.edges);
+            }
+        }
+    });
+
+    // 4) Re-center parents above their children in a bottom-up pass
+    centerParentXPositions(workflow);
+}
+
+/**
+ * Lays out the workflow nodes in a rough top-down manner,
+ * then positions each node relative to its parent.
+ */
 export function positionWorkflowNodes(workflow: Workflow): void {
     try {
-        // Step 1: Find the starting nodes using identityStartingNodes function
+        // Step 1: Find the starting nodes
         const startingNodes = identityStartingNodes(workflow);
 
         // Step 2: Place the starting nodes
@@ -21,22 +64,36 @@ export function positionWorkflowNodes(workflow: Workflow): void {
             xPosition += xSpacing;
         });
 
-        // Step 3: Place all other nodes relative to their parents
-        const nodesToPosition = workflow.nodes.filter((node) => !startingNodes.includes(node));
-        nodesToPosition.forEach((node) => positionNode(node, workflow.edges, xSpacing, ySpacing, workflow));
-    } catch (e) { console.error(e) }
+        // Step 3: For all other nodes, position them based on their parent(s)
+        const nodesToPosition = workflow.nodes.filter(
+            (node) => !startingNodes.includes(node)
+        );
+        nodesToPosition.forEach((node) =>
+            positionNode(node, workflow.edges, xSpacing, ySpacing, workflow)
+        );
+    } catch (e) {
+        console.error(e);
+    }
 }
 
-export function positionNode(node: Node, edges: Edge[], xSpacing: number, ySpacing: number, workflow: Workflow): void {
+export function positionNode(
+    node: Node,
+    edges: Edge[],
+    xSpacing: number,
+    ySpacing: number,
+    workflow: Workflow
+): void {
     const parents = getParents(node, edges);
+    if (!parents.length) return; // Edge case: no parents?
 
-    // todo: what if we have multiple parents?
-    const children = getChildren(parents[0], edges);
-
-    const sortedChildren = children.sort((a, b) => {
-        const edgeA = edges.find(edge => edge.source === parents[0] && edge.target === a);
-        const edgeB = edges.find(edge => edge.source === parents[0] && edge.target === b);
-
+    // Sort children of the first parent by edge labels (true/false) so "true" is left, "false" is right
+    const children = getChildren(parents[0], edges).sort((a, b) => {
+        const edgeA = edges.find(
+            (edge) => edge.source === parents[0] && edge.target === a
+        );
+        const edgeB = edges.find(
+            (edge) => edge.source === parents[0] && edge.target === b
+        );
         const labelA = edgeA?.label ?? "";
         const labelB = edgeB?.label ?? "";
 
@@ -47,88 +104,26 @@ export function positionNode(node: Node, edges: Edge[], xSpacing: number, ySpaci
         return 0;
     });
 
-    const childrenCountOfParent = sortedChildren.length;
-    const parentX = parents.reduce((sum, parent) => sum + (parent.position?.x ?? ROOT_X), 0) / parents.length;
-    const parentY = Math.max(...parents.map(parent => parent.position?.y ?? ROOT_Y));
+    const parentX =
+        parents.reduce((sum, p) => sum + (p.position?.x ?? ROOT_X), 0) /
+        parents.length;
+    const parentY = Math.max(...parents.map((p) => p.position?.y ?? ROOT_Y));
 
-    if (childrenCountOfParent === 1) {
+    if (children.length <= 1) {
         node.setPosition(parentX, parentY + ySpacing);
     } else {
-        const index = sortedChildren.indexOf(node); // Get the position of this node among its siblings
-        const totalChildren = sortedChildren.length;
-
-        // Compute the x position for this node
-        const offset = index - (totalChildren - 1) / 2; // Center the children around the parent
+        // This node’s index among siblings
+        const index = children.indexOf(node);
+        const offset = index - (children.length - 1) / 2;
         node.setPosition(parentX + offset * xSpacing, parentY + ySpacing);
     }
 }
 
-export function positionWorkflowNodesAvoidOverlap(workflow: Workflow): void {
-    const levels: Map<number, Node[]> = new Map();
-
-    function addToLevel(node: Node) {
-        const level = Math.round(node.position!.y / ySpacing);
-        if (!levels.has(level)) {
-            levels.set(level, []);
-        }
-        levels.get(level)!.push(node);
-    }
-
-    // 1) Lay out nodes using existing logic
-    positionWorkflowNodes(workflow);
-
-    // 2) Fill the `levels` map
-    workflow.nodes.forEach((node) => {
-        if (node.position) {
-            addToLevel(node);
-        }
-    });
-
-    // 3) Resolve horizontal overlaps and enforce parent grouping
-    levels.forEach((nodes, level) => {
-        // Group nodes by their parent
-        const parentGroups: Map<Node, Node[]> = new Map();
-        nodes.forEach((node) => {
-            const parents = getParents(node, workflow.edges);
-            if (parents.length > 0) {
-                const parent = parents[0]; // Assuming single parent for simplicity
-                if (!parentGroups.has(parent)) {
-                    parentGroups.set(parent, []);
-                }
-                parentGroups.get(parent)!.push(node);
-            }
-        });
-
-        // Flatten the groups back into a sorted array
-        const groupedNodes: Node[] = [];
-        parentGroups.forEach((group) => {
-            groupedNodes.push(...group);
-        });
-
-        // Sort nodes by x within each group to detect overlaps
-        groupedNodes.sort((a, b) => (a.position!.x ?? 0) - (b.position!.x ?? 0));
-
-        // Shift nodes within groups to resolve overlaps
-        for (let i = 1; i < groupedNodes.length; i++) {
-            const prev = groupedNodes[i - 1];
-            const current = groupedNodes[i];
-            if (current.position!.x - prev.position!.x < xSpacing) {
-                const shift = xSpacing - (current.position!.x - prev.position!.x);
-                moveNodeAndChildren(current, shift, workflow.edges);
-            }
-        }
-    });
-
-    // 4) **Center each parent over its children** (the existing step)
-    centerParentXPositions(workflow);
-}
-
 /**
- * Repositions each parent node so that its X is the average of the children’s X.
- * We do a simple bottom-up pass: start with all leaves, then move upward to parents.
+ * Repositions each parent node so that its X = average of its children’s X.
  */
 function centerParentXPositions(workflow: Workflow): void {
-    // Identify the “leaf” nodes
+    // Identify the leaf nodes to start a bottom-up pass
     const queue = identifyLeafNodes(workflow);
 
     while (queue.length > 0) {
@@ -138,15 +133,11 @@ function centerParentXPositions(workflow: Workflow): void {
         for (const parent of parents) {
             const children = getChildren(parent, workflow.edges);
             if (children.length) {
-                // Average x of all children
                 const sumX = children.reduce((acc, c) => acc + (c.position?.x ?? 0), 0);
                 const avgX = sumX / children.length;
-
-                // Move parent to that average, keep same y
                 parent.setPosition(avgX, parent.position?.y ?? 0);
             }
-
-            // Add this parent to the queue so we can recurse upward
+            // Push this parent upward in the queue to continue up the chain
             if (!queue.includes(parent)) {
                 queue.push(parent);
             }
@@ -154,15 +145,11 @@ function centerParentXPositions(workflow: Workflow): void {
     }
 }
 
-function moveNodeAndChildren(
-    node: Node,
-    shift: number,
-    edges: Edge[],
-): void {
-    // Move the node
+/**
+ * Recursively shifts a node and all its descendants by `shift` in the x-direction.
+ */
+function moveNodeAndChildren(node: Node, shift: number, edges: Edge[]): void {
     node.setPosition(node.position!.x + shift, node.position!.y);
-
-    // Propagate to children
     edges
         .filter((edge) => edge.source === node)
         .forEach((edge) => {
@@ -170,39 +157,48 @@ function moveNodeAndChildren(
         });
 }
 
+/**
+ * A "leaf" node is one that has no children (it’s never the source of an edge).
+ */
 export function identifyLeafNodes(workflow: Workflow): Node[] {
-    const nonLeafNodes = new Set(workflow.edges.map(edge => edge.source.getRef()));
-    return workflow.nodes.filter(node => !nonLeafNodes.has(node.getRef()));
+    const sources = new Set(workflow.edges.map((edge) => edge.source.getRef()));
+    return workflow.nodes.filter((node) => !sources.has(node.getRef()));
 }
 
 /**
- * Identifies starting nodes (nodes with no incoming edges).
- * A starting node is defined as one that is not a target of any edge.
- * 
- * @param workflow The workflow to analyze.
- * @returns An array of nodes that have no incoming edges.
+ * Identify starting nodes (no incoming edges).
  */
 export function identityStartingNodes(workflow: Workflow): Node[] {
-    const childRefs = new Set(workflow.edges.map((edge) => edge.target.getRef()));
+    const childRefs = new Set(
+        workflow.edges.map((edge) => edge.target.getRef())
+    );
     return workflow.nodes.filter((node) => !childRefs.has(node.getRef()));
 }
 
 export function getChildren(node: Node, edges: Edge[]): Node[] {
-    return edges.filter(edge => edge.source === node).map(edge => edge.target);
+    return edges
+        .filter((edge) => edge.source === node)
+        .map((edge) => edge.target);
 }
 
 export function getParents(node: Node, edges: Edge[]): Node[] {
-    return edges.filter(edge => edge.target === node).map(edge => edge.source);
+    return edges
+        .filter((edge) => edge.target === node)
+        .map((edge) => edge.source);
 }
 
 export function getEdges(node: Node, edges: Edge[]): Edge[] {
-    return edges.filter(edge => edge.source === node || edge.target === node);
+    return edges.filter(
+        (edge) => edge.source === node || edge.target === node
+    );
 }
 
 export function getEndNodePositions(workflow: Workflow): { x: number; y: number }[] {
     return workflow.nodes
-        .filter(node => getChildren(node, workflow.edges).length === 0) // node with no children
-        .map(node => ({
+        .filter(
+            (node) => getChildren(node, workflow.edges).length === 0
+        )
+        .map((node) => ({
             x: node.position?.x ?? 0,
             y: (node.position?.y ?? 0) + ySpacing,
         }));

@@ -5,6 +5,349 @@ import { Action } from '../src/models/Action.js';
 import { TRIGGERS, ACTIONS, getTokenFromSymbol, CHAINS, Edge } from '../src/index.js';
 import { Note } from '../src/models/Note.js';
 
+describe('Workflow Class - insertSplit', () => {
+  /**
+   * Helper to create a base workflow: trigger -> action
+   */
+  function createBaseWorkflow() {
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setChainId(CHAINS.ETHEREUM);
+    trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+
+    const action = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+
+    const workflow = new Workflow('Base Workflow', [trigger, action]);
+    // Add an edge from trigger to action
+    workflow.addEdge(new Edge({ source: trigger, target: action }));
+
+    return { workflow, trigger, action };
+  }
+
+  it('Scenario 1: Insert a split with 2 branches at the end (no nodeAfter)', () => {
+    // Setup: trigger -> action
+    const { workflow, trigger, action } = createBaseWorkflow();
+
+    // Insert a "Split" node at the end, with 2 branches
+    const splitNode = new Action(ACTIONS.CORE.SPLIT.SPLIT);
+    workflow.insertSplit(splitNode, action, undefined, 2);
+
+    // Expected:
+    // 1) We still have trigger->action
+    // 2) A new edge action->splitNode
+    // 3) 2 new edges from splitNode -> emptyBlock1, splitNode -> emptyBlock2
+    // So total nodes: trigger, action, splitNode, and 2 empties => 5
+    // Total edges: 1 (old) + 1 (action->split) + 2 branches => 4
+    expect(workflow.nodes).to.have.lengthOf(5);
+    expect(workflow.edges).to.have.lengthOf(4);
+
+    // Check the old edge still exists
+    const oldEdge = workflow.edges.find(e => e.source === trigger && e.target === action);
+    expect(oldEdge, 'Original trigger->action is missing').to.exist;
+
+    // Check for new edge action->splitNode
+    const edgeActionToSplit = workflow.edges.find(e => e.source === action && e.target === splitNode);
+    expect(edgeActionToSplit, 'No edge from action->splitNode').to.exist;
+
+    // Expect 2 edges from splitNode to new empty blocks
+    const edgesFromSplit = workflow.edges.filter(e => e.source === splitNode);
+    expect(edgesFromSplit).to.have.lengthOf(2);
+  });
+
+  it('Scenario 2: Insert a split with 2 branches in the middle (nodeAfter)', () => {
+    // Setup: trigger -> action
+    const { workflow, trigger, action } = createBaseWorkflow();
+
+    // Insert a "Split" node between trigger and action
+    const splitNode = new Action(ACTIONS.CORE.SPLIT.SPLIT);
+    workflow.insertSplit(splitNode, trigger, action, 2);
+
+    // Expected:
+    // 1) Old edge trigger->action removed
+    // 2) trigger->splitNode
+    // 3) First branch: splitNode->action
+    // 4) Second branch: splitNode->(emptyBlock)
+    // => 4 total nodes: trigger, action, splitNode, emptyBlock
+    // => 3 total edges: (trigger->split), (split->action), (split->emptyBlock)
+    expect(workflow.nodes).to.have.lengthOf(4);
+    expect(workflow.edges).to.have.lengthOf(3);
+
+    // Check the new edges
+    const edgeTriggerToSplit = workflow.edges.find(e => e.source === trigger && e.target === splitNode);
+    expect(edgeTriggerToSplit, 'Missing trigger->split edge').to.exist;
+
+    const edgeSplitToAction = workflow.edges.find(e => e.source === splitNode && e.target === action);
+    expect(edgeSplitToAction, 'Missing split->action edge').to.exist;
+
+    // The other branch should be split->someEmptyBlock
+    const emptyBlock = workflow.nodes.find(
+      n => n !== trigger && n !== action && n !== splitNode
+    );
+    expect(emptyBlock, 'No empty block found').to.exist;
+
+    const edgeSplitToEmpty = workflow.edges.find(e => e.source === splitNode && e.target === emptyBlock);
+    expect(edgeSplitToEmpty, 'Missing split->emptyBlock edge').to.exist;
+  });
+
+  it('Scenario 3: Insert a split with 3 branches at the end', () => {
+    // Setup: trigger->action
+    const { workflow, trigger, action } = createBaseWorkflow();
+
+    // Insert the split node with 3 branches (no nodeAfter)
+    const splitNode = new Action(ACTIONS.CORE.SPLIT.SPLIT);
+    workflow.insertSplit(splitNode, action, undefined, 3);
+
+    // We expect:
+    //  - Still have trigger->action
+    //  - A new edge action->split
+    //  - 3 edges from split->empty blocks
+    // => total nodes = 1(trigger) + 1(action) + 1(split) + 3(empties) = 6
+    // => total edges = 1(original) + 1(action->split) + 3(split->empties) = 5
+    expect(workflow.nodes).to.have.lengthOf(6);
+    expect(workflow.edges).to.have.lengthOf(5);
+
+    // Check edges from `splitNode`
+    const edgesFromSplit = workflow.edges.filter(e => e.source === splitNode);
+    expect(edgesFromSplit).to.have.lengthOf(3);
+  });
+
+  it('Scenario 4: Insert a split with 3 branches in the middle', () => {
+    // Setup: trigger->action
+    const { workflow, trigger, action } = createBaseWorkflow();
+
+    // Insert the split node between trigger and action, with 3 branches
+    const splitNode = new Action(ACTIONS.CORE.SPLIT.SPLIT);
+    workflow.insertSplit(splitNode, trigger, action, 3);
+
+    // Expect:
+    //  - old edge removed
+    //  - trigger->split
+    //  - first branch: split->action
+    //  - second + third branches: split->emptyBlock1, split->emptyBlock2
+    // => total nodes: 5
+    // => total edges: 4
+    expect(workflow.nodes).to.have.lengthOf(5);
+    expect(workflow.edges).to.have.lengthOf(4);
+
+    const edgeTriggerToSplit = workflow.edges.find(e => e.source === trigger && e.target === splitNode);
+    expect(edgeTriggerToSplit, 'Missing trigger->split edge').to.exist;
+
+    const edgesFromSplit = workflow.edges.filter(e => e.source === splitNode);
+    expect(edgesFromSplit).to.have.lengthOf(3);
+
+    // One of them should target `action`, the other two target new empty blocks
+    const edgeSplitToAction = edgesFromSplit.find(e => e.target === action);
+    expect(edgeSplitToAction, 'Missing first branch to existing action').to.exist;
+
+    const emptyBlocks = workflow.nodes.filter(n => ![trigger, action, splitNode].includes(n));
+    expect(emptyBlocks, 'Missing 2 empty blocks').to.have.lengthOf(2);
+    emptyBlocks.forEach(eb => {
+      const hasEdge = edgesFromSplit.some(e => e.target === eb);
+      expect(hasEdge).to.be.true;
+    });
+  });
+
+  it('Scenario 5: numberOfBranches < 2 should throw an error', () => {
+    // Setup
+    const { workflow, trigger } = createBaseWorkflow();
+
+    // Attempt to insert a split with only 1 branch => error
+    const splitNode = new Action(ACTIONS.CORE.SPLIT.SPLIT);
+    expect(() => {
+      workflow.insertSplit(splitNode, trigger, undefined, 1);
+    }).to.throw('numberOfBranches must be at least 2.');
+  });
+
+  it('Scenario 6: nodeBefore not in workflow throws error', () => {
+    const { workflow, trigger } = createBaseWorkflow();
+    const otherNode = new Action(ACTIONS.CORE.SPLIT.SPLIT); // Not in workflow
+
+    expect(() => {
+      workflow.insertSplit(otherNode, otherNode, undefined, 2);
+    }).to.throw('nodeBefore must exist in the workflow.');
+  });
+
+  it('Scenario 7: nodeAfter exists but not connected to nodeBefore', () => {
+    // Setup: trigger->action
+    const { workflow, trigger, action } = createBaseWorkflow();
+
+    // We'll add a *different* node so that trigger->thisNode->action does NOT exist
+    // action2 is not connected in any edge
+    const action2 = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    workflow.addNode(action2);
+
+    // Insert a split using nodeBefore=trigger, nodeAfter=action2
+    // There's no edge trigger->action2, so it should throw "No edge exists..."
+    const splitNode = new Action(ACTIONS.CORE.SPLIT.SPLIT);
+
+    expect(() => {
+      workflow.insertSplit(splitNode, trigger, action2, 2);
+    }).to.throw('No edge exists between nodeBefore and nodeAfter.');
+  });
+});
+
+describe('Workflow Class - insertCondition', () => {
+  /**
+   * Helper to create a base workflow: trigger -> action
+   */
+  function createBaseWorkflow() {
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setChainId(CHAINS.ETHEREUM);
+    trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+
+    const action = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+
+    const workflow = new Workflow('Base Workflow', [trigger, action]);
+    // Add an edge from trigger to action
+    workflow.addEdge(new Edge({ source: trigger, target: action }));
+
+    return { workflow, trigger, action };
+  }
+
+  it('Scenario 1: Add IF before the action, no ELSE', () => {
+    // trigger -> action
+    const { workflow, trigger, action } = createBaseWorkflow();
+
+    // Insert the IF node: nodeBefore=trigger, nodeAfter=action, addElseCase=false
+    const conditionNode = new Action(ACTIONS.CORE.CONDITION.IF);
+    workflow.insertCondition(conditionNode, trigger, action, false);
+
+    // EXPECT: 3 nodes total => [trigger, action, IF]
+    expect(workflow.nodes).to.have.lengthOf(3);
+
+    // The old edge (trigger->action) is removed
+    // We now have edges:
+    //   1) trigger->conditionNode (label 'true' or unlabeled, depends on your insert logic)
+    //   2) conditionNode->action  (label 'true')
+    expect(workflow.edges).to.have.lengthOf(2);
+
+    const edge1 = workflow.edges.find(e => e.source === trigger && e.target === conditionNode);
+    const edge2 = workflow.edges.find(e => e.source === conditionNode && e.target === action);
+
+    expect(edge1, 'Missing edge from trigger to condition').to.exist;
+    expect(edge2, 'Missing edge from condition to action').to.exist;
+
+    // Typically they’re labeled “true,” but adapt if your code differs
+    expect(edge1?.label).to.equal(undefined);
+    expect(edge2?.label).to.equal('true');
+  });
+
+  it('Scenario 2: Add IF after the action, no ELSE', () => {
+    // trigger -> action
+    const { workflow, trigger, action } = createBaseWorkflow();
+
+    // Insert the IF node: nodeBefore=action, nodeAfter=undefined, addElseCase=false
+    const conditionNode = new Action(ACTIONS.CORE.CONDITION.IF);
+    workflow.insertCondition(conditionNode, action, undefined, false);
+
+    // EXPECT: We haven’t removed trigger->action. We only added:
+    //   action->conditionNode, plus conditionNode->(empty block?) if your code does so.
+    // But since there's “no else,” we expect a single “true” branch.
+    //
+    // Depending on your insertCondition logic, it might produce:
+    //   - action->IF, and IF-> emptyBlock (labeled 'true')
+    //   or possibly just action->IF if your code only inserts the condition node.
+    //
+    // Let’s assume your code spawns an “empty block” for the “true” path at the end:
+    // => We expect 4 nodes: trigger, action, IF, emptyBlock
+    // => We expect 3 edges: 
+    //    1) trigger->action
+    //    2) action->IF
+    //    3) IF->emptyBlock ( labeled 'true' )
+    const allNodes = workflow.nodes;
+    expect(allNodes).to.have.lengthOf(4);
+
+    const edges = workflow.edges;
+    expect(edges).to.have.lengthOf(3);
+
+    // Check the original edge is still there
+    const edgeTriggerAction = edges.find(e => e.source === trigger && e.target === action);
+    expect(edgeTriggerAction, 'Missing original trigger->action edge').to.exist;
+
+    // Check the new edges
+    const edgeActionIF = edges.find(e => e.source === action && e.target === conditionNode);
+    expect(edgeActionIF, 'Missing action->IF edge').to.exist;
+
+    // The “true” edge typically goes to the empty block
+    const emptyBlockNode = allNodes.find(n => n !== trigger && n !== action && n !== conditionNode);
+    const edgeIFEmpty = edges.find(e => e.source === conditionNode && e.target === emptyBlockNode);
+    expect(edgeIFEmpty, 'Missing IF->empty block edge').to.exist;
+    expect(edgeIFEmpty?.label).to.equal('true');
+  });
+
+  it('Scenario 3: Add IF before the action, with ELSE', () => {
+    // trigger -> action
+    const { workflow, trigger, action } = createBaseWorkflow();
+
+    // Insert the IF node: nodeBefore=trigger, nodeAfter=action, addElseCase=true
+    const conditionNode = new Action(ACTIONS.CORE.CONDITION.IF);
+    workflow.insertCondition(conditionNode, trigger, action, true);
+
+    // EXPECT: 4 nodes => [trigger, action, IF, emptyBlock(for false)]
+    expect(workflow.nodes).to.have.lengthOf(4);
+
+    // Edges:
+    //   1) trigger->IF (maybe unlabeled or “Condition”)
+    //   2) IF->action labeled “true”
+    //   3) IF->emptyBlock labeled “false”
+    expect(workflow.edges).to.have.lengthOf(3);
+
+    const edgeIFtoAction = workflow.edges.find(
+      e => e.source === conditionNode && e.target === action && e.label === 'true'
+    );
+    expect(edgeIFtoAction, 'Missing IF->action with label true').to.exist;
+
+    const falseEdge = workflow.edges.find(
+      e => e.source === conditionNode && e.label === 'false'
+    );
+    expect(falseEdge, 'Missing IF->(emptyBlock) with label false').to.exist;
+  });
+
+  it('Scenario 4: Add IF after the action, with ELSE', () => {
+    // trigger -> action
+    const { workflow, trigger, action } = createBaseWorkflow();
+
+    // Insert the IF node: nodeBefore=action, nodeAfter=undefined, addElseCase=true
+    const conditionNode = new Action(ACTIONS.CORE.CONDITION.IF);
+    workflow.insertCondition(conditionNode, action, undefined, true);
+
+    // EXPECT final flow: 
+    //   trigger -> action -> IF
+    //   IF->(emptyBlock1) labeled ‘true’
+    //   IF->(emptyBlock2) labeled ‘false’
+    //
+    // That yields 5 total nodes:
+    //   1) trigger
+    //   2) action
+    //   3) IF
+    //   4) emptyBlock1
+    //   5) emptyBlock2
+    expect(workflow.nodes).to.have.lengthOf(5);
+
+    // Original edge remains trigger->action.
+    // Then an edge from action->IF, plus edges from IF->emptyBlock1 ('true') and IF->emptyBlock2 ('false').
+    expect(workflow.edges).to.have.lengthOf(4);
+
+    // Check original
+    const edgeTriggerAction = workflow.edges.find(
+      e => e.source === trigger && e.target === action
+    );
+    expect(edgeTriggerAction, 'Missing original trigger->action edge').to.exist;
+
+    // Check action->IF
+    const edgeActionIF = workflow.edges.find(
+      e => e.source === action && e.target === conditionNode
+    );
+    expect(edgeActionIF, 'Missing action->IF edge').to.exist;
+
+    // The “true” and “false” edges from IF
+    const trueEdge = workflow.edges.find(e => e.source === conditionNode && e.label === 'true');
+    const falseEdge = workflow.edges.find(e => e.source === conditionNode && e.label === 'false');
+
+    expect(trueEdge, 'Missing IF->emptyBlock (true)').to.exist;
+    expect(falseEdge, 'Missing IF->emptyBlock (false)').to.exist;
+  });
+});
+
 describe('Workflow Class', () => {
   it('should create a workflow with a trigger and actions', () => {
     const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
