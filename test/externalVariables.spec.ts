@@ -68,7 +68,7 @@ describe('external variables construction from object', () => {
             [{"key": "chainId", "value": 34443}, {"key": "token", "value": "0xf0F161fDA2712DB8b566946122a5af183995e2eD"}],
         );
 
-        expect(variable).to.equal('{{external.functions.ionicLendingRate(34443,0xf0F161fDA2712DB8b566946122a5af183995e2eD)}}');
+        expect(variable).to.equal('{{external.functions.ionicLendingRate(34443,0xf0F161fDA2712DB8b566946122a5af183995e2eD,,)}}');
     });
 
     it('should create sUSDE yield', () => {
@@ -77,7 +77,7 @@ describe('external variables construction from object', () => {
             []
         );
 
-        expect(variable).to.equal('{{external.functions.sUSDEYield()}}');
+        expect(variable).to.equal('{{external.functions.sUSDEYield(,)}}');
     });
 
     it('should create price movement against currency', () => {
