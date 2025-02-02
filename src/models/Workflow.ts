@@ -168,7 +168,8 @@ export class Workflow {
     nodeToInsert: Node,
     nodeBefore: Node,
     nodeAfter?: Node,
-    addElseCase?: boolean
+    addElseCase?: boolean,
+    addEmptyNodes: boolean = true
   ): void {
 
     if (nodeAfter) {
@@ -179,77 +180,79 @@ export class Workflow {
     // 1) "true" path: nodeBefore -> nodeToInsert -> nodeAfter
     if (!nodeAfter) {
       this.insertNode(nodeToInsert, nodeBefore, undefined);
-      const emptyNode1 = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
-      this.insertNode(emptyNode1, nodeToInsert, undefined, 'true', 'true');
+      if (addEmptyNodes) {
+        const emptyNode1 = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
+        this.insertNode(emptyNode1, nodeToInsert, undefined, 'true', 'true');
+      }
     }
 
     // 2) "false" path: nodeBefore -> nodeToInsert, 
     //    but here we pass no nodeAfter (so nodeAfter=null),
     //    and label/value are "false".
-    if (addElseCase) {
+    if (addElseCase && addEmptyNodes) {
       const emptyNode2 = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
       this.insertNode(emptyNode2, nodeToInsert, undefined, 'false', 'false');
     }
   }
 
-/**
- * Inserts a "split" node, creating `numberOfBranches` parallel branches.
- * 
- * If `nodeAfter` is given, we call `insertNode(...)` to splice the split node
- * between `nodeBefore` and `nodeAfter`. That yields two edges:
- *    nodeBefore->nodeToInsert and nodeToInsert->nodeAfter
- * The first branch is effectively "nodeAfter."
- * Then we add additional empty blocks for the remaining branches.
- * 
- * If `nodeAfter` is NOT given, we just insertNode(split, nodeBefore),
- * which yields an edge: nodeBefore->split.
- * Then we create `numberOfBranches` empty blocks off the split node.
- * 
- * @param nodeToInsert     The split node to insert (e.g. type="Split").
- * @param nodeBefore       The node after which the split is inserted.
- * @param nodeAfter        (Optional) If we’re splitting in the middle of a flow, the node that was originally after `nodeBefore`.
- * @param numberOfBranches The total number of branches to create from `nodeToInsert`.
- */
-public insertSplit(
-  nodeToInsert: Node,
-  nodeBefore: Node,
-  nodeAfter: Node | undefined,
-  numberOfBranches: number
-): void {
-  // Basic validation
-  if (!this.nodes.includes(nodeBefore)) {
-    throw new Error('nodeBefore must exist in the workflow.');
-  }
-  if (numberOfBranches < 2) {
-    throw new Error('numberOfBranches must be at least 2.');
-  }
-
-  // Step 1: Insert the "split" node via insertNode
-  // - If nodeAfter is defined, it removes nodeBefore->nodeAfter
-  //   and creates nodeBefore->nodeToInsert & nodeToInsert->nodeAfter.
-  // - If nodeAfter is undefined, we simply get nodeBefore->nodeToInsert.
-  this.insertNode(nodeToInsert, nodeBefore, nodeAfter);
-
-  // Step 2: Create the parallel branches
-  if (nodeAfter) {
-    // The first branch is already nodeToInsert->nodeAfter
-    // So we only need to create the remaining (numberOfBranches - 1) branches
-    const remaining = numberOfBranches - 1;
-    for (let i = 0; i < remaining; i++) {
-      const emptyBlock = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
-      // Insert the emptyBlock after nodeToInsert
-      // => this creates a new edge nodeToInsert->emptyBlock
-      this.insertNode(emptyBlock, nodeToInsert);
+  /**
+   * Inserts a "split" node, creating `numberOfBranches` parallel branches.
+   * 
+   * If `nodeAfter` is given, we call `insertNode(...)` to splice the split node
+   * between `nodeBefore` and `nodeAfter`. That yields two edges:
+   *    nodeBefore->nodeToInsert and nodeToInsert->nodeAfter
+   * The first branch is effectively "nodeAfter."
+   * Then we add additional empty blocks for the remaining branches.
+   * 
+   * If `nodeAfter` is NOT given, we just insertNode(split, nodeBefore),
+   * which yields an edge: nodeBefore->split.
+   * Then we create `numberOfBranches` empty blocks off the split node.
+   * 
+   * @param nodeToInsert     The split node to insert (e.g. type="Split").
+   * @param nodeBefore       The node after which the split is inserted.
+   * @param nodeAfter        (Optional) If we’re splitting in the middle of a flow, the node that was originally after `nodeBefore`.
+   * @param numberOfBranches The total number of branches to create from `nodeToInsert`.
+   */
+  public insertSplit(
+    nodeToInsert: Node,
+    nodeBefore: Node,
+    nodeAfter: Node | undefined,
+    numberOfBranches: number
+  ): void {
+    // Basic validation
+    if (!this.nodes.includes(nodeBefore)) {
+      throw new Error('nodeBefore must exist in the workflow.');
     }
-  } else {
-    // nodeAfter is undefined => all branches must be created
-    // Each branch is nodeToInsert->(new empty block)
-    for (let i = 0; i < numberOfBranches; i++) {
-      const emptyBlock = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
-      this.insertNode(emptyBlock, nodeToInsert);
+    if (numberOfBranches < 2) {
+      throw new Error('numberOfBranches must be at least 2.');
+    }
+
+    // Step 1: Insert the "split" node via insertNode
+    // - If nodeAfter is defined, it removes nodeBefore->nodeAfter
+    //   and creates nodeBefore->nodeToInsert & nodeToInsert->nodeAfter.
+    // - If nodeAfter is undefined, we simply get nodeBefore->nodeToInsert.
+    this.insertNode(nodeToInsert, nodeBefore, nodeAfter);
+
+    // Step 2: Create the parallel branches
+    if (nodeAfter) {
+      // The first branch is already nodeToInsert->nodeAfter
+      // So we only need to create the remaining (numberOfBranches - 1) branches
+      const remaining = numberOfBranches - 1;
+      for (let i = 0; i < remaining; i++) {
+        const emptyBlock = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
+        // Insert the emptyBlock after nodeToInsert
+        // => this creates a new edge nodeToInsert->emptyBlock
+        this.insertNode(emptyBlock, nodeToInsert);
+      }
+    } else {
+      // nodeAfter is undefined => all branches must be created
+      // Each branch is nodeToInsert->(new empty block)
+      for (let i = 0; i < numberOfBranches; i++) {
+        const emptyBlock = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
+        this.insertNode(emptyBlock, nodeToInsert);
+      }
     }
   }
-}
 
   swapNode(oldNode: Node, newNode: Node): void {
     // Find the index of the node to replace
