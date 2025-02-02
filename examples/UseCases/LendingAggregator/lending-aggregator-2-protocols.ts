@@ -43,7 +43,7 @@ const PROTOCOL1 = {
     // Deposit function for protocol1:
     deposit: () => {
         const deposit = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
-        deposit.setChainId(CHAINS.MODE);
+        deposit.setChainId(VARIABLES.CHAIN);
         deposit.setParams('abiParams.amount', WALLET_USDC_BALANCE);
         deposit.setParams('tokenToDeposit', VARIABLES.TOKEN_ADDRESS);
         return deposit;
@@ -51,7 +51,7 @@ const PROTOCOL1 = {
     // Withdraw function for protocol1:
     withdraw: () => {
         const withdraw = new Action(ACTIONS.LENDING.IONIC.WITHDRAW);
-        withdraw.setChainId(CHAINS.MODE);
+        withdraw.setChainId(VARIABLES.CHAIN);
         withdraw.setParams('tokenToWithdraw', VARIABLES.TOKEN_ADDRESS);
         withdraw.setParams('abiParams.amount', UINT256_MAX);
         return withdraw;
@@ -65,7 +65,7 @@ const PROTOCOL2 = {
     // Deposit function for protocol2:
     deposit: () => {
         const deposit = new Action(ACTIONS.LENDING.IRONCLAD.SUPPLY);
-        deposit.setChainId(CHAINS.MODE);
+        deposit.setChainId(VARIABLES.CHAIN);
         deposit.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
         deposit.setParams('abiParams.amount', WALLET_USDC_BALANCE);
         deposit.setParams('abiParams.referralCode', 0);
@@ -74,7 +74,7 @@ const PROTOCOL2 = {
     // Withdraw function for protocol2:
     withdraw: () => {
         const withdraw = new Action(ACTIONS.LENDING.IRONCLAD.WITHDRAW);
-        withdraw.setChainId(CHAINS.MODE);
+        withdraw.setChainId(VARIABLES.CHAIN);
         withdraw.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
         withdraw.setParams('abiParams.amount', UINT256_MAX);
         return withdraw;
