@@ -164,7 +164,7 @@ export class Workflow {
     positionWorkflowNodesAvoidOverlap(this);
   }
 
-  insertCondition(
+  public insertCondition(
     nodeToInsert: Node,
     nodeBefore: Node,
     nodeAfter?: Node,
