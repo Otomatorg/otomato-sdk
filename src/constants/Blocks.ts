@@ -68,7 +68,7 @@ export const TRIGGERS = {
         "description": "This block gets triggered when someone transfers the ERC20 configured in the params",
         "type": 0,
         "output": {
-          "value": "uint256",
+          "value": "float",
           "from": "address",
           "to": "address",
           "transactionHash": "string"
@@ -114,6 +114,7 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "value": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -154,11 +155,12 @@ export const TRIGGERS = {
         "type": 1,
         "method": "function balanceOf(address account) view returns (uint256)",
         "output": {
-          "balance": "integer"
+          "balance": "float"
         },
         "frontendHelpers": {
           "output": {
             "balance": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -197,14 +199,10 @@ export const TRIGGERS = {
           },
           {
             "key": "comparisonValue",
-            "type": "any",
+            "type": "float",
             "description": "The value to compare to",
             "mandatory": true,
-            "category": 0,
-            "erc20FormattedAmount": {
-              "contractAddress": "{{parameters.contractAddress}}",
-              "chain": "{{parameters.chainId}}"
-            }
+            "category": 0
           },
         ] as Parameter[],
         "examples": [
@@ -218,7 +216,7 @@ export const TRIGGERS = {
               },
               {
                 "key": "comparisonValue",
-                "value": "10000000000000000000000n"
+                "value": 10000
               },
               {
                 "key": "condition",
@@ -244,7 +242,7 @@ export const TRIGGERS = {
               },
               {
                 "key": "comparisonValue",
-                "value": "7000000000000000000000000000n"
+                "value": 7000000000
               },
               {
                 "key": "condition",
@@ -278,7 +276,7 @@ export const TRIGGERS = {
         "output": {
           "owner": "address",
           "spender": "address",
-          "value": "uint256",
+          "value": "float",
           "transactionHash": "string"
         },
         "parameters": [
@@ -318,6 +316,7 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "value": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -1450,9 +1449,9 @@ export const TRIGGERS = {
         "type": 0,
         "output": {
           "sender": "address",
-          "inputAmount": "uint256",
+          "inputAmount": "float",
           "inputToken": "erc20",
-          "amountOut": "uint256",
+          "amountOut": "float",
           "outputToken": "erc20",
           "exchangeRate": "float",
           "transactionHash": "string"
@@ -1460,12 +1459,14 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "inputAmount": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{output.inputToken}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amountOut": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{output.outputToken}}",
                 "chainId": "{{parameters.chainId}}"
@@ -2212,6 +2213,57 @@ export const TRIGGERS = {
         "blockId": 11,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/fearAndGreed.png"
       }
+    },
+    "X": {
+      "description": "X, formerly known as Twitter, is a social media platform that allows users to share short messages, photos, videos, and more.",
+      "tags": {},
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/x.webp",
+      "X_POST_TRIGGER": {
+        "name": "X Post Trigger",
+        "description": "Track an account activity via their posts",
+        "type": 5,
+        "output": {
+          "tweetContent": "string",
+          "tweetURL": "string",
+          "timestamp": "string",
+          "account": "string"
+        },
+        "parameters": [
+          {
+            "key": "username",
+            "type": "string",
+            "description": "Username of the twitter account you want to track",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "includeRetweets",
+            "type": "string",
+            "description": "Toggle trigger if it is retweet",
+            "category": 0,
+            "default": "false",
+            "value": "false"
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "GCR tweets",
+            "description": "Gets triggered when GCR tweets something",
+            "parameters": [
+              {
+                "key": "username",
+                "value": "GiganticRebirth"
+              },
+              {
+                "key": "includeRetweets",
+                "value": false
+              }
+            ]
+          }
+        ],
+        "blockId": 34,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/x.webp"
+      }
     }
   },
   "ETFS": {
@@ -2279,11 +2331,68 @@ export const TRIGGERS = {
   },
   "NFTS": {
     "BLUR": {
-      "description": "The NFT marketplace for pro traders",
+      "description": "Get real-time NFT listings",
       "chains": [
         1
       ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/blur.jpg"
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/blur.jpg",
+      "LISTING": {
+        "name": "NFT Listing",
+        "description": "Subscribe to live NFT listing events based on filters.",
+        "type": 5,
+        "parameters": [
+          {
+            "key": "contract",
+            "type": "address",
+            "description": "The NFT collection to monitor.",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "price",
+            "type": "float",
+            "description": "Maximum price filter for the listings (in ETH). The workflow won't be triggered if a NFT that matches the other criterias is listed above this defined price limit.",
+            "mandatory": false,
+            "category": 1
+          },
+          {
+            "key": "traits",
+            "description": "Trait-based filters. For example, you can only monitor punks with specific traits you are interested in.",
+            "mandatory": false,
+            "category": 1
+          },
+        ] as Parameter[],
+        "output": {
+          "listingId": "string",
+          "tokenId": "string",
+          "price": "float",
+          "source": "string",
+          "imageUrl": "string",
+          "attributes": "array"
+        },
+        "examples": [
+          {
+            "name": "Monitor Pudgy listings",
+            "description": "Subscribe to Pudgy Penguins listings with a pineapple suit and blue background filtered for prices below 30 ETH.",
+            "parameters": [
+              {
+                "key": "contract",
+                "value": "0xbd3531da5cf5857e7cfaa92426877b022e612cf8"
+              },
+              {
+                "key": "price",
+                "value": 30
+              },
+              {
+                "key": "traits",
+                "value": "{\"Background\":[\"Blue\"],\"Body\":[\"Pineapple Suit\"]}"
+              }
+            ]
+          }
+        ],
+        "blockId": 35,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/blur.jpg"
+      }
     }
   },
   "PRE_MARKET": {
@@ -2381,130 +2490,14 @@ export const ACTIONS = {
       "description": "",
       "chains": [],
       "EMPTYBLOCK": {
-        "name": "Odos swap",
-        "description": "Swap on Odos to get the best market rates accross multiple pools",
-        "type": 1,
-        "requiredApprovals": [
-          {
-            "address": "{{parameters.tokenIn}}",
-            "amount": "{{parameters.amount}}",
-            "to": "{{before.contractAddress}}"
-          }
-        ],
-        "checks": [
-          {
-            "type": 0,
-            "chainId": "{{parameters.chainId}}",
-            "contractAddress": "{{parameters.tokenIn}}",
-            "amount": "{{parameters.amount}}"
-          }
-        ],
-        "output": {
-          "amountIn": "uint256",
-          "tokenIn": "erc20",
-          "amountOut": "uint256",
-          "tokenOut": "erc20",
-          "transactionHash": "string"
-        },
-        "frontendHelpers": {
-          "output": {
-            "amountIn": {
-              "erc20Token": {
-                "contractAddress": "{{output.tokenIn}}",
-                "chainId": "{{parameters.chainId}}"
-              }
-            },
-            "amountOut": {
-              "erc20Token": {
-                "contractAddress": "{{output.tokenOut}}",
-                "chainId": "{{parameters.chainId}}"
-              }
-            }
-          }
-        },
+        "name": "Empty block",
+        "description": "This block is just used in the app while waiting for the user to choose an actual block.",
+        "type": 2,
+        "checks": [],
+        "output": {},
         "parameters": [
-          {
-            "key": "chainId",
-            "type": "chainId",
-            "description": "Chain ID of the network",
-            "mandatory": true,
-            "category": 0
-          },
-          {
-            "key": "tokenIn",
-            "type": "erc20",
-            "description": "Token to sell",
-            "mandatory": true,
-            "category": 0
-          },
-          {
-            "key": "tokenOut",
-            "type": "erc20",
-            "description": "Token to buy",
-            "mandatory": true,
-            "category": 0
-          },
-          {
-            "key": "amount",
-            "type": "uint256",
-            "description": "Amount to sell",
-            "mandatory": true,
-            "category": 0,
-            "erc20FormattedAmount": {
-              "contractAddress": "{{parameters.tokenIn}}",
-              "chain": "{{parameters.chainId}}"
-            }
-          },
-          {
-            "key": "slippage",
-            "type": "percentage",
-            "description": "The maximum allowable difference between the expected price and the actual price at the time of execution, expressed as a percentage. This protects the transaction from significant price fluctuations.",
-            "value": 1,
-            "mandatory": true,
-            "category": 1
-          },
         ] as Parameter[],
-        "examples": [
-          {
-            "name": "Swap USDC to WETH",
-            "description": "Swap 100 USDC to WETH on Mode Network using Odos",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 34443
-              },
-              {
-                "key": "tokenIn",
-                "value": "0xd988097fb8612cc24eeC14542bC03424c656005f"
-              },
-              {
-                "key": "tokenOut",
-                "value": "0x4200000000000000000000000000000000000006"
-              },
-              {
-                "key": "amount",
-                "value": "100000000n"
-              },
-              {
-                "key": "slippage",
-                "value": 1
-              }
-            ]
-          }
-        ],
-        "permissions": {
-          "chainId": "{{parameters.chainId}}",
-          "approvedTargets": [
-            "{{before.contractAddress}}",
-            "{{parameters.tokenIn}}"
-          ],
-          "label": [
-            "Swap {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenIn}})}} to {{tokenSymbol({{parameters.chainId}}, {{parameters.tokenOut}})}}"
-          ],
-          "labelNotAuthorized": [
-            "Transfer ETH"
-          ]
-        },
+        "examples": [],
         "blockId": 0,
         "image": ""
       }
@@ -2739,12 +2732,12 @@ export const ACTIONS = {
       }
     },
     "SPLIT": {
-      "description": "Split a branch in multiple ones",
+      "description": "Split a branch in multiple ones to parallelized executions",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/split.png",
       "SPLIT": {
         "name": "Split",
         "type": 4,
-        "description": "Split a branch in multiples ones",
+        "description": "Split a branch in multiple ones to parallelized executions",
         "parameters": [
         ] as Parameter[],
         "examples": [],

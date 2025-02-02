@@ -91,7 +91,7 @@ export function getEndNodePositions(workflow: Workflow): { x: number; y: number 
         .filter((node) => getChildren(node, workflow.edges).length === 0)
         .map((node) => ({
             x: node.position?.x ?? 0,
-            y: (node.position?.y ?? 0) + ySpacing,
+            y: (node.position?.y ?? 0) + ySpacing * 2,
         }));
 }
 
