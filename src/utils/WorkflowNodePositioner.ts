@@ -2,7 +2,8 @@ import { Workflow } from '../models/Workflow.js';
 import { Node } from '../models/Node.js';
 import { Edge } from '../models/Edge.js';
 // Note: Using 'dagre' for layered DAG layout
-import dagre from 'dagre';
+import dagre from '@dagrejs/dagre'
+
 // or: import * as dagre from 'dagre';
 
 export const xSpacing = 700; // used by dagre as node separation

@@ -1,6 +1,6 @@
 {
   "name": "otomato-sdk",
-  "version": "2.0.38",
+  "version": "2.0.51",
   "description": "An SDK for building and managing automations on Otomato",
   "main": "dist/src/index.js",
   "types": "dist/types/src/index.d.ts",
@@ -43,8 +43,10 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@dagrejs/dagre": "^1.1.4",
     "axios": "^1.7.2",
     "dagre": "^0.8.5",
+    "elkjs": "^0.9.3",
     "ethers": "^6.13.1",
     "jsonwebtoken": "^9.0.2",
     "mustache": "^4.2.0"
