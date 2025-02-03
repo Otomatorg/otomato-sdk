@@ -4,7 +4,7 @@ import { Edge } from '../models/Edge.js';
 import ELK from 'elkjs/lib/elk.bundled.js';
 
 export const xSpacing = 700; // similar to Dagre’s node separation
-export const ySpacing = 75;
+export const ySpacing = 10;
 export const ROOT_X = 400;   // reference positions (if needed)
 export const ROOT_Y = 120;
 
@@ -35,7 +35,7 @@ export async function positionWorkflowNodes(workflow: Workflow): Promise<void> {
       // Space between nodes (ELK uses this for both horizontal and vertical spacing)
       'elk.layered.spacing.nodeNode': ySpacing.toString(),
       // Add some padding around the graph
-      'elk.padding': '20', // you can also use "20,20,20,20" for (top,right,bottom,left)
+      'elk.padding': '200', // you can also use "20,20,20,20" for (top,right,bottom,left)
     },
     // 2) Map workflow nodes to ELK “children”
     children: workflow.nodes.map((node) => ({
