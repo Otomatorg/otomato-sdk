@@ -43,8 +43,8 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@dagrejs/dagre": "^1.1.4",
     "axios": "^1.7.2",
-    "dagre": "^0.8.5",
     "ethers": "^6.13.1",
     "jsonwebtoken": "^9.0.2",
     "mustache": "^4.2.0"
