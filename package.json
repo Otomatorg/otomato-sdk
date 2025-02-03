@@ -43,6 +43,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@dagrejs/dagre": "^1.1.4",
     "axios": "^1.7.2",
     "dagre": "^0.8.5",
     "elkjs": "^0.9.3",
