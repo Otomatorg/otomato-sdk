@@ -29,6 +29,9 @@
   "author": "otomato",
   "license": "ISC",
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
     "@types/axios": "^0.14.0",
     "@types/chai": "^4.3.16",
     "@types/dagre": "^0.7.52",
