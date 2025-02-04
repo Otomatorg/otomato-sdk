@@ -1,22 +1,28 @@
-// rollup.config.js
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import polyfillNode from 'rollup-plugin-polyfill-node';
 
 export default {
-  input: 'dist/src/index.js', // your entry point
+  input: 'dist/src/index.js',
   output: {
-    file: 'dist/bundled/otomato-sdk.esm.js', // you might choose an ESM build or UMD, see below
-    format: 'esm', // or 'umd' if you prefer (but note the differences in import style)
+    file: 'dist/bundled/otomato-sdk.esm.js',
+    format: 'esm',
   },
   plugins: [
     polyfillNode(),
     resolve({
-      browser: true,       // ensure we resolve browser-compatible versions
-      preferBuiltins: false // do not prefer Node built-ins; use polyfills instead
+      browser: true,
+      preferBuiltins: false,
     }),
-    commonjs(),
+    commonjs({
+      // Explicitly include dagre and other CJS modules
+      include: /node_modules\/(dagre|graphlib|lodash)/,
+      dynamicRequireTargets: [
+        // List any specific dynamic requires if needed
+        'node_modules/dagre/**/*.js'
+      ],
+    }),
     json()
   ]
 };

@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "axios": "^1.7.2",
-    "dagre": "^0.8.5",
+    "dagre-esm-wrapper": "1.0.1",
     "ethers": "^6.13.1",
     "jsonwebtoken": "^9.0.2",
     "mustache": "^4.2.0"
