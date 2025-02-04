@@ -30,12 +30,8 @@
   "author": "otomato",
   "license": "ISC",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.2",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^16.0.0",
     "@types/axios": "^0.14.0",
     "@types/chai": "^4.3.16",
-    "@types/dagre": "^0.7.52",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/mocha": "^10.0.6",
     "@types/mustache": "^4.2.5",
@@ -43,8 +39,6 @@
     "chai": "^5.1.1",
     "dotenv": "^16.4.5",
     "mocha": "^10.4.0",
-    "rollup-plugin-polyfill-node": "^0.13.0",
-    "stream-browserify": "^3.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
