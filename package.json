@@ -22,6 +22,7 @@
   ],
   "files": [
     "dist/src",
+    "dist/bundled",
     "dist/types",
     "README.md",
     "LICENSE"
@@ -42,6 +43,8 @@
     "chai": "^5.1.1",
     "dotenv": "^16.4.5",
     "mocha": "^10.4.0",
+    "rollup-plugin-polyfill-node": "^0.13.0",
+    "stream-browserify": "^3.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },

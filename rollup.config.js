@@ -2,22 +2,21 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
+import polyfillNode from 'rollup-plugin-polyfill-node';
 
 export default {
-  input: 'dist/src/index.js', // your compiled SDK entry point
+  input: 'dist/src/index.js', // your entry point
   output: {
-    file: 'dist/bundled/otomato-sdk.umd.js',
-    format: 'umd',
-    name: 'OtomatoSDK',
-    // If you see warnings about "this" being undefined and your dependencies rely on a non-strict global,
-    // you can set the context to 'this'. Uncomment the line below if needed:
-    // context: 'this',
+    file: 'dist/bundled/otomato-sdk.esm.js', // you might choose an ESM build or UMD, see below
+    format: 'esm', // or 'umd' if you prefer (but note the differences in import style)
   },
-  // Set the overall context for modules (if your dependencies require a non-strict "this")
-  // context: 'this',
   plugins: [
-    resolve(),  // Resolves node_modules packages
-    commonjs(), // Converts CommonJS modules to ES modules
-    json()      // Allows Rollup to import JSON files
+    polyfillNode(),
+    resolve({
+      browser: true,       // ensure we resolve browser-compatible versions
+      preferBuiltins: false // do not prefer Node built-ins; use polyfills instead
+    }),
+    commonjs(),
+    json()
   ]
 };
