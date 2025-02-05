@@ -154,7 +154,6 @@ export const TRIGGERS = {
         "prototype": "erc20Balance",
         "type": 1,
         "method": "function balanceOf(address account) view returns ((uint256 balance))",
-        "method": "function balanceOf(address account) view returns ((uint256 balance))",
         "output": {
           "balance": "float"
         },
@@ -1560,8 +1559,6 @@ export const TRIGGERS = {
           "recipient": "address",
           "token0": "erc20",
           "token1": "erc20",
-          "token0": "erc20",
-          "token1": "erc20",
           "amount0": "int256",
           "amount1": "int256",
           "sqrtPriceX96": "uint160",
@@ -1650,8 +1647,6 @@ export const TRIGGERS = {
         "type": 0,
         "output": {
           "sender": "address",
-          "token0": "erc20",
-          "token1": "erc20",
           "token0": "erc20",
           "token1": "erc20",
           "amount0In": "uint256",
@@ -1764,8 +1759,6 @@ export const TRIGGERS = {
           "recipient": "address",
           "token0": "erc20",
           "token1": "erc20",
-          "token0": "erc20",
-          "token1": "erc20",
           "amount0": "int256",
           "amount1": "int256",
           "sqrtPriceX96": "uint160",
@@ -1857,8 +1850,6 @@ export const TRIGGERS = {
           "to": "address",
           "token0": "erc20",
           "token1": "erc20",
-          "token0": "erc20",
-          "token1": "erc20",
           "amount0In": "uint256",
           "amount1In": "uint256",
           "amount0Out": "uint256",
@@ -1945,7 +1936,6 @@ export const TRIGGERS = {
       "description": "Monitors swaps on Velodrome pools",
       "chains": [
         34443
-        34443
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/velodrome.jpg",
       "SWAP_IN_CONCENTRATED_POOL": {
@@ -1955,8 +1945,6 @@ export const TRIGGERS = {
         "output": {
           "sender": "address",
           "recipient": "address",
-          "token0": "erc20",
-          "token1": "erc20",
           "token0": "erc20",
           "token1": "erc20",
           "amount0": "int256",
@@ -1970,7 +1958,6 @@ export const TRIGGERS = {
           {
             "key": "chainId",
             "type": "chainId",
-            "description": "The network to monitor swaps on (MODE).",
             "description": "The network to monitor swaps on (MODE).",
             "mandatory": true,
             "category": 0
@@ -2027,16 +2014,13 @@ export const TRIGGERS = {
           {
             "name": "Monitor all swaps in concentrated pool",
             "description": "Triggers whenever a swap occurs in a Velodrome concentrated liquidity pool (WETH/USDC 0.05%).",
-            "description": "Triggers whenever a swap occurs in a Velodrome concentrated liquidity pool (WETH/USDC 0.05%).",
             "parameters": [
               {
                 "key": "chainId",
                 "value": 34443
-                "value": 34443
               },
               {
                 "key": "contractAddress",
-                "value": "0x3Adf15f77F2911f84b0FE9DbdfF43ef60D40012c"
                 "value": "0x3Adf15f77F2911f84b0FE9DbdfF43ef60D40012c"
               }
             ]
@@ -2062,7 +2046,6 @@ export const TRIGGERS = {
           {
             "key": "chainId",
             "type": "chainId",
-            "description": "The network to monitor swaps on (MODE).",
             "description": "The network to monitor swaps on (MODE).",
             "mandatory": true,
             "category": 0
@@ -2122,7 +2105,6 @@ export const TRIGGERS = {
             "parameters": [
               {
                 "key": "chainId",
-                "value": 34443
                 "value": 34443
               },
               {
@@ -2509,7 +2491,7 @@ export const TRIGGERS = {
       }
     }
   }
-};;
+};
 
 export const ACTIONS = {
   "CORE": {
