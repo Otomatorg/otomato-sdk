@@ -501,4 +501,27 @@ export class Workflow {
   getEndNodePositions(): { x: number; y: number }[] {
     return getEndNodePositions(this);
   }
+
+  static async fromJSON(json: any): Promise<Workflow> {
+    const workflow = new Workflow(json.name);
+    workflow.id = json.id || null;
+    workflow.state = json.state as WorkflowState;
+    workflow.dateCreated = json.dateCreated || null;
+    workflow.executionId = json.executionId || null;
+    workflow.dateModified = json.dateModified || null;
+
+    // Convert nodes from JSON
+    workflow.nodes = await Promise.all(json.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
+
+    // Convert edges from JSON (ensuring they link to the correct nodes)
+    workflow.edges = json.edges.map((edgeData: any) => Edge.fromJSON(edgeData, workflow.nodes));
+
+    // Convert notes from JSON
+    workflow.notes = json.notes.map((noteData: any) => Note.fromJSON(noteData));
+
+    // Recalculate positions
+    positionWorkflowNodes(workflow);
+
+    return workflow;
+  }
 }

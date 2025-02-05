@@ -5,6 +5,114 @@ import { Action } from '../src/models/Action.js';
 import { TRIGGERS, ACTIONS, getTokenFromSymbol, CHAINS, Edge } from '../src/index.js';
 import { Note } from '../src/models/Note.js';
 
+describe('Workflow Class - fromJSON', () => {
+  it('should correctly instantiate a Workflow from a JSON object', async () => {
+    const json = {
+      "id": "ce0feea1-4d83-42b5-9972-0d434c179ac9",
+      "name": "My new Agent 8",
+      "executionId": "cb31ca59-599f-42e4-887e-51d4a07a7867",
+      "agentId": null,
+      "state": "inactive",
+      "settings": null,
+      "dateCreated": "2025-02-05T09:18:29.273Z",
+      "dateModified": "2025-02-05T09:18:29.272Z",
+      "nodes": [
+          {
+              "id": "a87d0e82-f3f9-4a1d-b02f-f9a9147751c8",
+              "ref": "10",
+              "blockId": 4,
+              "executionId": "c2463d60-299f-4a24-b3a4-37869f8b8331",
+              "type": "trigger",
+              "state": "completed",
+              "position": {
+                  "x": 400,
+                  "y": 120
+              },
+              "parameters": {
+                  "abi": {
+                      "parameters": {
+                          "sender": null,
+                          "amountOut": null,
+                          "inputToken": null,
+                          "inputAmount": null,
+                          "outputToken": null
+                      }
+                  },
+                  "chainId": 1
+              },
+              "dateCreated": "2025-02-05T09:18:29.275177+00:00",
+              "dateModified": "2025-02-05T09:18:29.275177+00:00"
+          },
+          {
+              "id": "93f98a37-ef31-45e9-8dcd-0980861f5c48",
+              "ref": "11",
+              "blockId": 100010,
+              "executionId": "25676362-b7ec-44bf-82e2-56be7ce1f4ae",
+              "type": "action",
+              "state": "completed",
+              "position": {
+                  "x": 400,
+                  "y": 240
+              },
+              "parameters": {
+                  "time": "1000"
+              },
+              "dateCreated": "2025-02-05T09:18:29.275177+00:00",
+              "dateModified": "2025-02-05T09:18:29.275177+00:00"
+          }
+      ],
+      "edges": [
+          {
+              "id": "a57c362b-e80d-4719-9161-7da536b69091",
+              "source": "10",
+              "target": "11",
+              "value": null,
+              "label": null
+          }
+      ],
+      "notes": []
+  }
+
+    const workflow = await Workflow.fromJSON(json);
+
+    expect(workflow.id).to.equal(json.id);
+    expect(workflow.name).to.equal(json.name);
+    expect(workflow.state).to.equal(json.state);
+    expect(workflow.dateCreated).to.equal(json.dateCreated);
+    expect(workflow.dateModified).to.equal(json.dateModified);
+    expect(workflow.nodes).to.have.lengthOf(json.nodes.length);
+    expect(workflow.edges).to.have.lengthOf(json.edges.length);
+    expect(workflow.notes).to.have.lengthOf(json.notes.length);
+  });
+
+  it('should handle empty nodes, edges, and notes arrays', async () => {
+    const json = {
+      id: 'workflow-2',
+      name: 'Empty Workflow',
+      state: 'inactive',
+      dateCreated: null,
+      dateModified: null,
+      executionId: null,
+      nodes: [],
+      edges: [],
+      notes: []
+    };
+
+    const workflow = await Workflow.fromJSON(json);
+
+    expect(workflow.id).to.equal(json.id);
+    expect(workflow.name).to.equal(json.name);
+    expect(workflow.state).to.equal(json.state);
+    expect(workflow.dateCreated).to.be.null;
+    expect(workflow.dateModified).to.be.null;
+    expect(workflow.executionId).to.be.null;
+    expect(workflow.nodes).to.be.empty;
+    expect(workflow.edges).to.be.empty;
+    expect(workflow.notes).to.be.empty;
+  });
+});
+
+
 describe('Workflow Class - insertSplit', () => {
   /**
    * Helper to create a base workflow: trigger -> action
@@ -717,21 +825,21 @@ describe('Empty block management', () => {
     const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
     trigger.setChainId(CHAINS.ETHEREUM);
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
-  
+
     const split = new Action(ACTIONS.CORE.SPLIT.SPLIT);
-  
+
     // Initial workflow has 2 nodes and 1 edge (trigger -> split)
     const workflow = new Workflow(
       "Test Workflow",
       [trigger, split],
-      [ new Edge({ source: trigger, target: split }) ]
+      [new Edge({ source: trigger, target: split })]
     );
-  
+
     // Insert three empty blocks after split (no nodeAfter => child of `split`)
     workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), split);
     workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), split);
     workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), split);
-  
+
     // Now we expect:
     //   - 5 total nodes: (trigger, split, 3 empties)
     //   - 4 edges:
@@ -741,37 +849,37 @@ describe('Empty block management', () => {
     //       4) split -> emptyBlock3
     expect(workflow.nodes).to.have.lengthOf(5);
     expect(workflow.edges).to.have.lengthOf(4);
-  
+
     // Confirm original edge from trigger -> split still exists
     const edgeFromTrigger = workflow.edges.find(e => e.source === trigger && e.target === split);
     expect(edgeFromTrigger).to.exist;
-  
+
     // Confirm we have three new edges from `split` to the newly inserted empty blocks
     const edgesFromSplit = workflow.edges.filter(e => e.source === split);
     expect(edgesFromSplit).to.have.lengthOf(3);
-  
+
     // (Optional) Further checks that each inserted node is indeed an EMPTYBLOCK, etc.
   });
-  
+
   it('should create a IF/ELSE from SDK', () => {
     const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
     trigger.setChainId(CHAINS.ETHEREUM);
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
-  
+
     const condition = new Action(ACTIONS.CORE.CONDITION.IF);
-  
+
     // Initial workflow has 2 nodes, 1 edge (trigger -> condition)
     const workflow = new Workflow(
       "Test Workflow",
       [trigger, condition],
-      [ new Edge({ source: trigger, target: condition }) ]
+      [new Edge({ source: trigger, target: condition })]
     );
-  
+
     // Insert two nodes after condition, each with edge labels "true" and "false"
     const ifAction = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
     workflow.insertNode(ifAction, condition, undefined, "true", "true");
     workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), condition, undefined, "false", "false");
-  
+
     // Now we expect:
     //   - 4 total nodes: (trigger, condition, ifAction, elseAction)
     //   - 3 edges:
@@ -780,30 +888,30 @@ describe('Empty block management', () => {
     //       3) condition -> elseAction  (label: "false", value: "false")
     expect(workflow.nodes).to.have.lengthOf(4);
     expect(workflow.edges).to.have.lengthOf(3);
-  
+
     const edgesFromCondition = workflow.edges.filter(e => e.source === condition);
     expect(edgesFromCondition).to.have.lengthOf(2);
-  
+
     const trueEdge = edgesFromCondition.find(e => e.label === "true");
     expect(trueEdge).to.exist;
     expect(trueEdge?.value).to.equal("true");
-  
+
     const falseEdge = edgesFromCondition.find(e => e.label === "false");
     expect(falseEdge).to.exist;
     expect(falseEdge?.value).to.equal("false");
-  
+
     // Now swap the ifAction (an EMPTYBLOCK) with an actual WAIT node
     const waitNode = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
     workflow.swapNode(ifAction, waitNode);
-  
+
     // The number of nodes remains 4, but `ifAction` is replaced by `waitNode`
     expect(workflow.nodes).to.have.lengthOf(4);
     expect(workflow.nodes).to.include(waitNode);
     expect(workflow.nodes).to.not.include(ifAction);
-  
+
     // Edges remain 3, but the edge labeled "true" now targets the `waitNode`
     expect(workflow.edges).to.have.lengthOf(3);
-  
+
     const updatedTrueEdge = workflow.edges.find(e => e.label === "true");
     expect(updatedTrueEdge?.target).to.equal(waitNode);
   });
