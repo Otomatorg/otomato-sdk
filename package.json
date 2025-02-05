@@ -44,7 +44,6 @@
   },
   "dependencies": {
     "axios": "^1.7.2",
-    "d3-dag": "^1.1.0",
     "ethers": "^6.13.1",
     "jsonwebtoken": "^9.0.2",
     "mustache": "^4.2.0"
