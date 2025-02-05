@@ -153,7 +153,7 @@ export const TRIGGERS = {
         "description": "Fetches the balance of an ERC20 and checks it against the specified condition.",
         "prototype": "erc20Balance",
         "type": 1,
-        "method": "function balanceOf(address account) view returns (uint256)",
+        "method": "function balanceOf(address account) view returns ((uint256 balance))",
         "output": {
           "balance": "float"
         },
@@ -1557,6 +1557,8 @@ export const TRIGGERS = {
         "output": {
           "sender": "address",
           "recipient": "address",
+          "token0": "erc20",
+          "token1": "erc20",
           "amount0": "int256",
           "amount1": "int256",
           "sqrtPriceX96": "uint160",
@@ -1645,6 +1647,8 @@ export const TRIGGERS = {
         "type": 0,
         "output": {
           "sender": "address",
+          "token0": "erc20",
+          "token1": "erc20",
           "amount0In": "uint256",
           "amount1In": "uint256",
           "amount0Out": "uint256",
@@ -1753,6 +1757,8 @@ export const TRIGGERS = {
         "output": {
           "sender": "address",
           "recipient": "address",
+          "token0": "erc20",
+          "token1": "erc20",
           "amount0": "int256",
           "amount1": "int256",
           "sqrtPriceX96": "uint160",
@@ -1842,6 +1848,8 @@ export const TRIGGERS = {
         "output": {
           "sender": "address",
           "to": "address",
+          "token0": "erc20",
+          "token1": "erc20",
           "amount0In": "uint256",
           "amount1In": "uint256",
           "amount0Out": "uint256",
@@ -1927,7 +1935,7 @@ export const TRIGGERS = {
     "VELODROME": {
       "description": "Monitors swaps on Velodrome pools",
       "chains": [
-        8453
+        34443
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/velodrome.jpg",
       "SWAP_IN_CONCENTRATED_POOL": {
@@ -1937,6 +1945,8 @@ export const TRIGGERS = {
         "output": {
           "sender": "address",
           "recipient": "address",
+          "token0": "erc20",
+          "token1": "erc20",
           "amount0": "int256",
           "amount1": "int256",
           "sqrtPriceX96": "uint160",
@@ -1948,7 +1958,7 @@ export const TRIGGERS = {
           {
             "key": "chainId",
             "type": "chainId",
-            "description": "The network to monitor swaps on (Base).",
+            "description": "The network to monitor swaps on (MODE).",
             "mandatory": true,
             "category": 0
           },
@@ -2003,15 +2013,15 @@ export const TRIGGERS = {
         "examples": [
           {
             "name": "Monitor all swaps in concentrated pool",
-            "description": "Triggers whenever a swap occurs in a Velodrome concentrated liquidity pool (WETH/MODE 0.3%).",
+            "description": "Triggers whenever a swap occurs in a Velodrome concentrated liquidity pool (WETH/USDC 0.05%).",
             "parameters": [
               {
                 "key": "chainId",
-                "value": 8453
+                "value": 34443
               },
               {
                 "key": "contractAddress",
-                "value": "0x1E41CDE26b30646bb3DBBea48A63708b00470c1c"
+                "value": "0x3Adf15f77F2911f84b0FE9DbdfF43ef60D40012c"
               }
             ]
           }
@@ -2036,7 +2046,7 @@ export const TRIGGERS = {
           {
             "key": "chainId",
             "type": "chainId",
-            "description": "The network to monitor swaps on (Base).",
+            "description": "The network to monitor swaps on (MODE).",
             "mandatory": true,
             "category": 0
           },
@@ -2095,7 +2105,7 @@ export const TRIGGERS = {
             "parameters": [
               {
                 "key": "chainId",
-                "value": 8453
+                "value": 34443
               },
               {
                 "key": "contractAddress",
@@ -2481,7 +2491,7 @@ export const TRIGGERS = {
       }
     }
   }
-};
+};;
 
 export const ACTIONS = {
   "CORE": {
@@ -2598,7 +2608,9 @@ export const ACTIONS = {
           "tokenIn": "erc20",
           "amountOut": "uint256",
           "tokenOut": "erc20",
-          "transactionHash": "string"
+          "transactionHash": "string",
+          "exchangeRate": "float",
+          "logs": "Object"
         },
         "frontendHelpers": {
           "output": {
@@ -4482,7 +4494,9 @@ export const ACTIONS = {
           "tokenIn": "erc20",
           "amountOut": "uint256",
           "tokenOut": "erc20",
-          "transactionHash": "string"
+          "transactionHash": "string",
+          "exchangeRate": "float",
+          "logs": "Object"
         },
         "frontendHelpers": {
           "output": {
