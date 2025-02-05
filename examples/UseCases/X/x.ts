@@ -16,7 +16,7 @@ async function x_trigger() {
   );
   xTrigger.setParams(
       'username',
-      'GiganticRebirth'
+      'Cbb0fe'
   );
   xTrigger.setParams(
       'includeRetweets',

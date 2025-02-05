@@ -26,7 +26,7 @@ async function blur_trigger() {
   // -------- Send Slack Message --------
   const slackMessage = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
   slackMessage.setParams('webhook', process.env.WEBHOOK_URL);
-  slackMessage.setParams('message', 'New blur image just dropped: ' + blurTrigger.getOutputVariableName('imageUrl'));
+  slackMessage.setParams('message', 'New blur listing just dropped: ' + blurTrigger.getOutputVariableName('imageUrl'));
 
   const edge1 = new Edge({
     source: blurTrigger,
