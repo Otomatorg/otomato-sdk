@@ -1609,12 +1609,14 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "amount0": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amount1": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -1711,12 +1713,14 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "amount0In": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amount1In": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -1809,12 +1813,14 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "amount0": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amount1": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -1899,12 +1905,14 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "amount0In": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amount1In": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -1997,12 +2005,14 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "amount0": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amount1": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -2085,12 +2095,14 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "amount0In": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amount1In": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
