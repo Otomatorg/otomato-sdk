@@ -15,11 +15,11 @@ async function aerodrome() {
     TRIGGERS.YIELD.PENDLE.PT_IMPLIED_YIELD
   );
   pendleTrigger.setChainId(
-      CHAINS.ETHEREUM
+      CHAINS.BASE
   );
   pendleTrigger.setParams(
       'marketAddress',
-      '0x34280882267ffa6383b363e278b027be083bbe3b'
+      '0xe15578523937ed7f08e8f7a1fa8a021e07025a08'
   );
   pendleTrigger.setComparisonValue(1.5);
   pendleTrigger.setCondition('gt');
