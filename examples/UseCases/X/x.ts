@@ -25,7 +25,7 @@ async function x_trigger() {
 
   // -------- Send Slack Message --------
   const slackMessage = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-  slackMessage.setParams('webhook', process.env.WEBHOOK_URL);
+  slackMessage.setParams('webhook', process.env.SLACK_WEBHOOK);
   slackMessage.setParams('message', xTrigger.getOutputVariableName('account') + ' new tweet: ' + xTrigger.getOutputVariableName('tweetContent'));
 
   const edge1 = new Edge({

@@ -11,31 +11,33 @@ async function aerodrome() {
   apiServices.setAuth(process.env.AUTH_TOKEN); 
 
   // -------- Aerodrome Concentrated Trigger --------
-  const aerodromeTrigger = new Trigger(
-    TRIGGERS.DEXES.AERODROME.SWAP_IN_CONCENTRATED_POOL
+  const pendleTrigger = new Trigger(
+    TRIGGERS.YIELD.PENDLE.PT_IMPLIED_YIELD
   );
-  aerodromeTrigger.setChainId(
-      CHAINS.BASE
+  pendleTrigger.setChainId(
+      CHAINS.ETHEREUM
   );
-  aerodromeTrigger.setParams(
-      'contractAddress',
-      '0xb2cc224c1c9feE385f8ad6a55b4d94E92359DC59'
+  pendleTrigger.setParams(
+      'marketAddress',
+      '0x34280882267ffa6383b363e278b027be083bbe3b'
   );
+  pendleTrigger.setComparisonValue(1.5);
+  pendleTrigger.setCondition('gt');
 
   // -------- Send Slack Message --------
   const slackMessage = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-  slackMessage.setParams('webhook', process.env.WEBHOOK_URL);
-  slackMessage.setParams('message', `Aerodrome Concentrated Swapped ${aerodromeTrigger.getOutputVariableName('amount0')} ${aerodromeTrigger.getOutputVariableName('token0')} to ${aerodromeTrigger.getOutputVariableName('amount1')} ${aerodromeTrigger.getOutputVariableName('token1')}`);
+  slackMessage.setParams('webhook', process.env.SLACK_WEBHOOK);
+  slackMessage.setParams('message', `stETH PT yield (DEC 25, 2025): ${pendleTrigger.getOutputVariableName('ptImpliedYield')}`);
 
   const edge1 = new Edge({
-    source: aerodromeTrigger,
+    source: pendleTrigger,
     target: slackMessage,
   });
 
   const workflow = new Workflow(
-    'Aerodrome Concentrated Trigger',
+    'Pendle Trigger',
     [
-      aerodromeTrigger,
+      pendleTrigger,
       slackMessage,
     ],
     [edge1]
@@ -43,13 +45,13 @@ async function aerodrome() {
 
   const creationResult = await workflow.create();
 
-  console.log('aerodrome state before: ' + workflow.getState());
+  console.log('pendle state before: ' + workflow.getState());
 
   console.log('Workflow ID: ' + workflow.id);
 
   const runResult = await workflow.run();
 
-  console.log('aerodrome state after: ' + workflow.getState());
+  console.log('pendle state after: ' + workflow.getState());
 }
 
 aerodrome();

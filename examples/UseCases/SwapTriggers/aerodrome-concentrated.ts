@@ -12,20 +12,20 @@ async function aerodrome() {
 
   // -------- Aerodrome Concentrated Trigger --------
   const aerodromeTrigger = new Trigger(
-    TRIGGERS.DEXES.AERODROME.SWAP_IN_BASIC_POOL
+    TRIGGERS.DEXES.AERODROME.SWAP_IN_CONCENTRATED_POOL
   );
   aerodromeTrigger.setChainId(
       CHAINS.BASE
   );
   aerodromeTrigger.setParams(
       'contractAddress',
-      '0x6cDcb1C4A4D1C3C6d054b27AC5B77e89eAFb971d'
+      '0xb2cc224c1c9feE385f8ad6a55b4d94E92359DC59'
   );
 
   // -------- Send Slack Message --------
   const slackMessage = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-  slackMessage.setParams('webhook', process.env.WEBHOOK_URL);
-  slackMessage.setParams('message', `Aerodrome Basic: ${aerodromeTrigger.getOutputVariableName('amount0In')} (amount0In) ${aerodromeTrigger.getOutputVariableName('amount0Out')} (amount0Out) ${aerodromeTrigger.getOutputVariableName('token0')} to ${aerodromeTrigger.getOutputVariableName('amount1In')} (amount1In) ${aerodromeTrigger.getOutputVariableName('amount1Out')} (amount1Out) ${aerodromeTrigger.getOutputVariableName('token1')}`);
+  slackMessage.setParams('webhook', process.env.SLACK_WEBHOOK);
+  slackMessage.setParams('message', `Aerodrome Concentrated Swapped ${aerodromeTrigger.getOutputVariableName('amount0')} ${aerodromeTrigger.getOutputVariableName('token0')} to ${aerodromeTrigger.getOutputVariableName('amount1')} ${aerodromeTrigger.getOutputVariableName('token1')}`);
 
   const edge1 = new Edge({
     source: aerodromeTrigger,
@@ -33,7 +33,7 @@ async function aerodrome() {
   });
 
   const workflow = new Workflow(
-    'Aerodrome Basic Trigger',
+    'Aerodrome Concentrated Trigger',
     [
       aerodromeTrigger,
       slackMessage,

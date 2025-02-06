@@ -24,7 +24,7 @@ async function velodrome() {
 
   // -------- Send Slack Message --------
   const slackMessage = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-  slackMessage.setParams('webhook', process.env.WEBHOOK_URL);
+  slackMessage.setParams('webhook', process.env.SLACK_WEBHOOK);
   slackMessage.setParams('message', `Velodrome Concentrated Swapped ${velodromeTrigger.getOutputVariableName('amount0')} ${velodromeTrigger.getOutputVariableName('token0')} to ${velodromeTrigger.getOutputVariableName('amount1')} ${velodromeTrigger.getOutputVariableName('token1')}`);
 
   const edge1 = new Edge({

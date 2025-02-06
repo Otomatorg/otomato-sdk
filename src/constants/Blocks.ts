@@ -68,7 +68,7 @@ export const TRIGGERS = {
         "description": "This block gets triggered when someone transfers the ERC20 configured in the params",
         "type": 0,
         "output": {
-          "value": "float",
+          "value": "uint256",
           "from": "address",
           "to": "address",
           "transactionHash": "string"
@@ -114,7 +114,6 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "value": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -153,14 +152,13 @@ export const TRIGGERS = {
         "description": "Fetches the balance of an ERC20 and checks it against the specified condition.",
         "prototype": "erc20Balance",
         "type": 1,
-        "method": "function balanceOf(address account) view returns ((uint256 balance))",
+        "method": "function balanceOf(address account) view returns (uint256)",
         "output": {
-          "balance": "float"
+          "balance": "integer"
         },
         "frontendHelpers": {
           "output": {
             "balance": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -199,10 +197,14 @@ export const TRIGGERS = {
           },
           {
             "key": "comparisonValue",
-            "type": "float",
+            "type": "any",
             "description": "The value to compare to",
             "mandatory": true,
-            "category": 0
+            "category": 0,
+            "erc20FormattedAmount": {
+              "contractAddress": "{{parameters.contractAddress}}",
+              "chain": "{{parameters.chainId}}"
+            }
           },
         ] as Parameter[],
         "examples": [
@@ -216,7 +218,7 @@ export const TRIGGERS = {
               },
               {
                 "key": "comparisonValue",
-                "value": 10000
+                "value": "10000000000000000000000n"
               },
               {
                 "key": "condition",
@@ -242,7 +244,7 @@ export const TRIGGERS = {
               },
               {
                 "key": "comparisonValue",
-                "value": 7000000000
+                "value": "7000000000000000000000000000n"
               },
               {
                 "key": "condition",
@@ -276,7 +278,7 @@ export const TRIGGERS = {
         "output": {
           "owner": "address",
           "spender": "address",
-          "value": "float",
+          "value": "uint256",
           "transactionHash": "string"
         },
         "parameters": [
@@ -316,7 +318,6 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "value": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -608,6 +609,73 @@ export const TRIGGERS = {
         ],
         "blockId": 13,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethena.svg"
+      }
+    },
+    "PENDLE": {
+      "description": "Pendle protocol functions for market yield calculation.",
+      "chains": [
+        1,
+        8453
+      ],
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/pendle.webp",
+      "PT_IMPLIED_YIELD": {
+        "name": "PT Implied Yield",
+        "description": "Retrieves the PT implied yield for a specified Pendle market by reading its state and computing exp(lnImpliedRate) - 1.",
+        "prototype": "pendlePtImpliedYield",
+        "type": 1,
+        "method": "function readState(address marketAddress) external view returns (int256 totalPt, int256 totalSy, int256 totalLp, address treasury, int256 scalarRoot, uint256 expiry, uint256 lnFeeRateRoot, uint256 reserveFeePercent, uint256 lastLnImpliedRate)",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.marketAddress",
+            "type": "address",
+            "description": "The Pendle market address",
+            "mandatory": true,
+            "category": 0,
+            "enum": "\n        (env) => {\n            if (!env.parameters.chainId)\n                throw new Error('You need to provide the chainId first');\n\n            const availableLendingTokens = {\n  \"1\": [\n    {\n      \"value\": \"0xf99985822fb361117fcf3768d34a6353e6022f5f\",\n      \"label\": \"stETH\",\n      \"expiry\": \"DEC 25, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/ac9b8802-61d9-4c3f-a2de-2da35c87e24b.svg\"\n    },\n    {\n      \"value\": \"0xb253eff1104802b97ac7e3ac9fdd73aece295a2c\",\n      \"label\": \"stETH\",\n      \"expiry\": \"DEC 30, 2027\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/f7d6a626-a00e-4150-aadc-e937e34818ca.svg\"\n    },\n    {\n      \"value\": \"0xa6a0c2b9d06b769635f6c85deb6b500f49f672e8\",\n      \"label\": \"apxETH\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/151c9217-2512-4d26-b9d0-755c49299b12.svg\"\n    },\n    {\n      \"value\": \"0xe00bd3df25fb187d6abbb620b3dfd19839947b81\",\n      \"label\": \"sUSDe\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/56eb1ed3-d1f7-4685-a7b2-5a6e05cb234f.svg\"\n    },\n    {\n      \"value\": \"0x8a47b431a7d947c6a3ed6e42d501803615a97eaa\",\n      \"label\": \"USDe\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/7299bcd0-6ba1-411e-8d54-f7e5b68aa154.svg\"\n    },\n    {\n      \"value\": \"0xb930dd4ea22cd4404c30d68b72e18453adcf93a2\",\n      \"label\": \"rsENA\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/37110810-606f-4d92-8ea8-5ede71d6abdc.svg\"\n    },\n    {\n      \"value\": \"0x76260912b132c6548d9d936996ad1e754d3f53ee\",\n      \"label\": \"rsUSDe\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/1d444261-bdf7-483b-8e35-bdb725a702ce.svg\"\n    },\n    {\n      \"value\": \"0xec5a52c685cc3ad79a6a347abace330d69e0b1ed\",\n      \"label\": \"LBTC\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/773047f5-3963-4577-93f9-4333f225442c.svg\"\n    },\n    {\n      \"value\": \"0x276dc1714bdb1beb869babc6e84c0b102e75bf32\",\n      \"label\": \"USDS Rewards\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/bdf98058-9191-44bf-b9a7-4a460457f756.svg\"\n    },\n    {\n      \"value\": \"0x8ac5fc4085f6baeabad8f4a6bb1dd7d18a320230\",\n      \"label\": \"sENA\",\n      \"expiry\": \"APR 24, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/34ccfdb6-4acf-4d13-8dc9-080b47dfb8fa.svg\"\n    },\n    {\n      \"value\": \"0xe0e4d07e90508a53ad03155e86ecdd09d24ce98a\",\n      \"label\": \"sENA\",\n      \"expiry\": \"APR 24, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/9fa08efc-e32b-4cf7-98da-9d75c9453c35.svg\"\n    },\n    {\n      \"value\": \"0x152b8629fee8105248ba3b7ba6afb94f7a468302\",\n      \"label\": \"sUSDS\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/3226daff-03a2-4078-af4e-28a72ef5b252.svg\"\n    },\n    {\n      \"value\": \"0x997ec6bf18a30ef01ed8d9c90718c7726a213527\",\n      \"label\": \"pumpBTC\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/df3270cd-7ee9-4119-8ad8-c81336fad690.svg\"\n    },\n    {\n      \"value\": \"0x44a7876ca99460ef3218bf08b5f52e2dbe199566\",\n      \"label\": \"eBTC (Corn)\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/35a6e08f-82da-49cf-8dc0-c120a4386b0f.svg\"\n    },\n    {\n      \"value\": \"0x5bae9a5d67d1ca5b09b14c91935f635cfbf3b685\",\n      \"label\": \"USD0++\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/a66178ef-2097-4b72-9d19-75fe6a4b8821.svg\"\n    },\n    {\n      \"value\": \"0xd2b9f0587e89a508e5786525c82ae494389f2dda\",\n      \"label\": \"eEIGEN\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/33c90ae2-9675-4f9f-80e8-0554dc0dc5b5.svg\"\n    },\n    {\n      \"value\": \"0xf05312a0d01e5a0f9eba87a539c37100fabf9b5e\",\n      \"label\": \"stkGHO\",\n      \"expiry\": \"APR 24, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/05cdb874-4679-4b6a-bedc-9de81e817e79.svg\"\n    },\n    {\n      \"value\": \"0xe08c45f3cfe70f4e03668dc6e84af842bee95a68\",\n      \"label\": \"rsETH\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/be3e997d-8f3c-46ed-b978-2518668aaa2b.svg\"\n    },\n    {\n      \"value\": \"0xef6122835a2bbf575d0117d394fda24ab7d09d4e\",\n      \"label\": \"eETH\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/58971e16-6cf3-4ac4-9f3a-df82267fc5c8.svg\"\n    },\n    {\n      \"value\": \"0x8b89d5ea6c9ea52dab5834e9789aa10085c14858\",\n      \"label\": \"eBTC (Zerolend)\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/39b1b707-b537-4c87-811d-110047aa7b9f.svg\"\n    },\n    {\n      \"value\": \"0x6e43f6abce001c14c7115d20908d0c272338eaf1\",\n      \"label\": \"agETH\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/d4f45c90-7317-4d07-ae67-1e8ec9caa9a7.svg\"\n    },\n    {\n      \"value\": \"0x302091967c09323815594ad8db2d8de35c3a1985\",\n      \"label\": \"uniETH\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/025623d4-1fc4-44db-b981-03d60d93d90a.svg\"\n    },\n    {\n      \"value\": \"0x9cfc9917c171a384c7168d3529fc7e851a2e0d6d\",\n      \"label\": \"pufETH\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/ad53c3bf-7a0c-481e-80cd-0eea4e0e9554.svg\"\n    },\n    {\n      \"value\": \"0xb7de5dfcb74d25c2f21841fbd6230355c50d9308\",\n      \"label\": \"sUSDe\",\n      \"expiry\": \"MAY 29, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/8fdd3402-5238-4e90-b4db-12e32ea28e67.svg\"\n    },\n    {\n      \"value\": \"0x003984ecc30bafe364efa8c0112cdd94b8216406\",\n      \"label\": \"rswETH\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/221673b1-5839-4140-ad82-3f865dc05c4d.png\"\n    },\n    {\n      \"value\": \"0xf696fe29ef85e892b5926313897d178288faa07e\",\n      \"label\": \"USD0++\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/a66178ef-2097-4b72-9d19-75fe6a4b8821.svg\"\n    },\n    {\n      \"value\": \"0x6e96041a7f6a3a974a90016f277fb7457a64ef9b\",\n      \"label\": \"pWBTC\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/f59d005c-a34f-40e3-bdf7-bd84c2094765.svg\"\n    },\n    {\n      \"value\": \"0x1cb3c1c1e0f61770c224a66bb251c59f2c37ab91\",\n      \"label\": \"scrvUSD\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/50bc1fdb-ca50-4c38-9a0c-1669e35896f1.svg\"\n    },\n    {\n      \"value\": \"0xead5939df65f19b866615a7853faa52cf4a1635d\",\n      \"label\": \"OETH\",\n      \"expiry\": \"DEC 25, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/af71269f-d089-47f1-8106-532af44b49e0.svg\"\n    },\n    {\n      \"value\": \"0xd1a1984cc5cacbd36f6a511877d13662c950fd62\",\n      \"label\": \"SolvBTC.BBN\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/abdb21c4-7fc2-44f7-bbbb-27416583ac66.svg\"\n    },\n    {\n      \"value\": \"0xd4fa2b2b7a3b2be26ca9349763f55de07e2fbfd0\",\n      \"label\": \"uniBTC\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/04bdd8ee-4a79-48c5-88a0-b2593ebf939d.svg\"\n    },\n    {\n      \"value\": \"0x386ae941d4262b0ee96354499df2ab8442734ec0\",\n      \"label\": \"sUSDe\",\n      \"expiry\": \"FEB 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/ecaa79c6-7223-48e9-a3f0-30e10dbbfbfe.svg\"\n    },\n    {\n      \"value\": \"0x770751e8ad85451754d3c23e71f4afe19ce6afdb\",\n      \"label\": \"USD0++\",\n      \"expiry\": \"FEB 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/a66178ef-2097-4b72-9d19-75fe6a4b8821.svg\"\n    },\n    {\n      \"value\": \"0xd86f4d98b34108cb4c059d540bd513f09b2ddd30\",\n      \"label\": \"USD0++\",\n      \"expiry\": \"APR 24, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/a66178ef-2097-4b72-9d19-75fe6a4b8821.svg\"\n    },\n    {\n      \"value\": \"0xea1180804bdba8ac04e2a4406b11fb7970c474f1\",\n      \"label\": \"aUSDC\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/1d127217-c2d1-4e5c-9bf4-70ae1a208d28.svg\"\n    },\n    {\n      \"value\": \"0xf358ffe722a0984e940351462fef4a77dde04c33\",\n      \"label\": \"aUSDT\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/a875dcab-6a6d-449a-b519-dce222d873c9.svg\"\n    },\n    {\n      \"value\": \"0x6704c353b0c2527863e4ef03dca07175b9318cbf\",\n      \"label\": \"fUSDC\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/9049a93c-6645-4c84-b19f-9ebfa0cce6dd.svg\"\n    },\n    {\n      \"value\": \"0xfd1bb7d74698da38d8b5d871b189549ef4b7d976\",\n      \"label\": \"fUSDT\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/6c349c1b-9671-489c-be2c-8750738da3aa.svg\"\n    },\n    {\n      \"value\": \"0xbf2c0f3689c46a0923de8829bb269ca8f81c8137\",\n      \"label\": \"weETHk\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/9f9ec77b-efe0-4119-a4fc-a733ff5fd04a.svg\"\n    },\n    {\n      \"value\": \"0xa3170a9ee20d9832d933d4355676d09f66909d12\",\n      \"label\": \"weETHs\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/2244883b-428a-4f86-ad63-dcaa143b70d6.svg\"\n    },\n    {\n      \"value\": \"0x68a2a15fd9832a4b03a5907e067220773aa71214\",\n      \"label\": \"eBTC\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/685e07f1-e50d-4ff9-bac2-158611f718a6.svg\"\n    },\n    {\n      \"value\": \"0xc653f79de1274ee65674befda54986020d6f8fc1\",\n      \"label\": \"eBTC\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/685e07f1-e50d-4ff9-bac2-158611f718a6.svg\"\n    },\n    {\n      \"value\": \"0x36f4ec0a7c46923c4f6508c404ee1c6fbe175e1c\",\n      \"label\": \"USUALx\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/ff146e2f-3e2d-4e71-9a9d-e1a866b75da2.svg\"\n    },\n    {\n      \"value\": \"0xa8c8861b5ccf8cce0ade6811cd2a7a7d3222b0b8\",\n      \"label\": \"wstUSR\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/7a8188bd-cae6-492d-b30d-cbd128493f00.svg\"\n    },\n    {\n      \"value\": \"0x6e45845b9019fa598fe829c20c8c9a00647c0a75\",\n      \"label\": \"uniBTC (Corn)\",\n      \"expiry\": \"FEB 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/7ce722a1-c74e-4226-a80d-1028861e4b62.svg\"\n    },\n    {\n      \"value\": \"0x29859bb7c30c0e36b69ef1ecb40396ab9b970b60\",\n      \"label\": \"LBTC (Corn)\",\n      \"expiry\": \"FEB 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/0b1f24c8-2a29-46bd-b400-5f7043e3c573.svg\"\n    },\n    {\n      \"value\": \"0xcbbfa588285d370571e52db62fa7c5241bd5b7d9\",\n      \"label\": \"SolvBTC.BBN (Corn)\",\n      \"expiry\": \"FEB 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/4b1032d7-94ba-4075-8233-85808d186ebd.svg\"\n    },\n    {\n      \"value\": \"0x856ca0217838e9fefefd6141028c85bd423ec54b\",\n      \"label\": \"pumpBTC\",\n      \"expiry\": \"MAY 29, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/df3270cd-7ee9-4119-8ad8-c81336fad690.svg\"\n    },\n    {\n      \"value\": \"0xa2621f9b02549d05289b46700e9d53fcd2ee0b6d\",\n      \"label\": \"liquidBeraBTC\",\n      \"expiry\": \"APR 10, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/5506f24b-06b7-4f28-af95-11f5c8b0e085.svg\"\n    },\n    {\n      \"value\": \"0x50bf5c6445b79b79e368856095a70c564d0c6966\",\n      \"label\": \"liquidBeraETH\",\n      \"expiry\": \"APR 10, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/5ab37246-4c5b-4a95-a534-e60ec618010b.svg\"\n    },\n    {\n      \"value\": \"0x500f4ac4b1cfae7de51799ecf5bd09649a8b05d3\",\n      \"label\": \"sUSDe (Bera Concrete)\",\n      \"expiry\": \"APR 10, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/aa218d17-62e2-42a4-986b-4f6fcebf9aa4.svg\"\n    },\n    {\n      \"value\": \"0x532486c59cd371ffedb19241186d786a1e8ee111\",\n      \"label\": \"USDe (Bera Concrete)\",\n      \"expiry\": \"APR 10, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/85be79d7-942c-4cc9-b364-5e1c891a242b.svg\"\n    },\n    {\n      \"value\": \"0x40b7b4ab1e95e28df06971581276966fdf95688e\",\n      \"label\": \"beraSTONE\",\n      \"expiry\": \"APR 10, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/378a54dc-779f-40f0-b859-03dbb3b425e8.svg\"\n    },\n    {\n      \"value\": \"0xdfb913b117bc93fde164a4ff8b3176662d4198f3\",\n      \"label\": \"LBTC (Bera Concrete)\",\n      \"expiry\": \"APR 10, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/39e54d77-2c8f-49f2-ba92-b40386a55673.svg\"\n    },\n    {\n      \"value\": \"0x96fe14bf8c1681db311fa95547b254a178ab5527\",\n      \"label\": \"WBTC (Bera Concrete)\",\n      \"expiry\": \"APR 10, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/0a043dbb-827c-4692-9c52-272745db30c3.svg\"\n    },\n    {\n      \"value\": \"0x2beeb2c4809954e5b514a3205afbdc097eb810b4\",\n      \"label\": \"syrupUSDC\",\n      \"expiry\": \"APR 24, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/3bebc608-b228-4b1a-81de-363ee24b999b.svg\"\n    },\n    {\n      \"value\": \"0x74ada3987bcc29e64f5fd3f9229b9d319268c005\",\n      \"label\": \"SolvBTC.BERA\",\n      \"expiry\": \"APR 10, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/b9407b43-e7fe-4b27-a78d-0e1db14b8a4b.svg\"\n    },\n    {\n      \"value\": \"0x4ef516d5f8644d19caadf352e2c97ec346b6b986\",\n      \"label\": \"sUSDa\",\n      \"expiry\": \"APR 24, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/ddcbbbc3-af3c-4b35-a2a6-ebd4e0189256.svg\"\n    },\n    {\n      \"value\": \"0x84d17ef6bec165484c320b852eeb294203e191be\",\n      \"label\": \"tETH\",\n      \"expiry\": \"MAY 29, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/d8db35e6-a493-4879-b0de-a9b3fb40924c.svg\"\n    },\n    {\n      \"value\": \"0xeead826151d25f44418553303f2722893f08478c\",\n      \"label\": \"asdCRV\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/2ad15ff1-e832-4786-9da3-fac560d1a34c.svg\"\n    }\n  ],\n  \"56\": [\n    {\n      \"value\": \"0x04eb6b56ff53f457c8e857ca8d4fbc8d9a531c0c\",\n      \"label\": \"ankrBNB\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/c172da67-2428-48cb-8602-58bfc0276af0.svg\"\n    },\n    {\n      \"value\": \"0x541b5eeac7d4434c8f87e2d32019d67611179606\",\n      \"label\": \"SolvBTC.BBN\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/eab31d5d-401e-4720-a5b4-6b90b73611e0.svg\"\n    },\n    {\n      \"value\": \"0x5d1735b8e33bae069708cea245066de1a12cd38d\",\n      \"label\": \"vBNB\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/821bd337-240a-4c03-b4cb-07c7f0d59544.svg\"\n    },\n    {\n      \"value\": \"0xe8f1c9804770e11ab73395be54686ad656601e9e\",\n      \"label\": \"clisBNB\",\n      \"expiry\": \"APR 24, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/609a2f5a-d97e-4015-b1c9-f93893e94620.svg\"\n    }\n  ],\n  \"5000\": [\n    {\n      \"value\": \"0xebf4ff21459fecf96e36cf1dd00db01367254bcd\",\n      \"label\": \"cmETH\",\n      \"expiry\": \"FEB 13, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/16ebbece-2e29-4e7b-acba-d3d23fa8dec0.svg\"\n    }\n  ],\n  \"8453\": [\n    {\n      \"value\": \"0x7ae6d25e8ef05e424ae8c04b48822e8211b3cddc\",\n      \"label\": \"LBTC-29MAY2025\",\n      \"expiry\": \"MAY 29, 2025\",\n      \"image\": \"https://storage.googleapis.com/pendle-assets-staging/images/assets/unknown.svg\"\n    },\n    {\n      \"value\": \"0xe46c8ba948f8071b425a1f7ba45c0a65cbacea2e\",\n      \"label\": \"cbETH\",\n      \"expiry\": \"DEC 25, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/cec7c095-6d6c-400b-9509-c2b68a1f54f3.svg\"\n    },\n    {\n      \"value\": \"0x5d746848005507da0b1717c137a10c30ad9ee307\",\n      \"label\": \"LBTC\",\n      \"expiry\": \"MAY 29, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/95280b7c-e3a4-43ce-8a73-e544e2600624.svg\"\n    },\n    {\n      \"value\": \"0x2a9e9256e0d1ad0f7f9d7c7248cb7e2f06072deb\",\n      \"label\": \"mUSDC\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/dd3dd5af-a072-409a-af35-3ac803ede34a.svg\"\n    },\n    {\n      \"value\": \"0x5c6593f57ee95519ff6a8cd16a5e41ff50af239a\",\n      \"label\": \"mcbBTC\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/c877240e-a45b-4e8c-b42e-a2b6d96ed332.svg\"\n    },\n    {\n      \"value\": \"0x6e5f3a139acd6c8258472fa08d2133b555d10fb2\",\n      \"label\": \"wsupperOETHb-26JUN2025\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/pendle-assets-staging/images/assets/unknown.svg\"\n    },\n    {\n      \"value\": \"0x25d2b7e3b71f4edcc366e79134570704a079923a\",\n      \"label\": \"wsuperOETHb\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/ac4127a6-cda2-41ba-8db7-9cda2d2c2e94.svg\"\n    },\n    {\n      \"value\": \"0xc1e4d7ca05045dfbc654b67e11124901148b1266\",\n      \"label\": \"sUSDz\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/296a6c38-c626-42f0-9cf1-456837aa29d4.svg\"\n    },\n    {\n      \"value\": \"0x603e2d1af3d0673f4af756b6e12a2044bfebb714\",\n      \"label\": \"VIRTUAL/cbBTC\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/706e880e-c1ee-4258-827e-5be4e935b0a8.svg\"\n    },\n    {\n      \"value\": \"0xec443e7e0e745348e500084892c89218b3ba4683\",\n      \"label\": \"USR\",\n      \"expiry\": \"APR 24, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/ceb019d3-32ce-4dc5-875f-c930a0f2bde8.svg\"\n    }\n  ],\n  \"42161\": [\n    {\n      \"value\": \"0xb7337f35daff97781f5c6d5bea396d2327f70017\",\n      \"label\": \"wstETH-26JUN2025\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/pendle-assets-staging/images/assets/unknown.svg\"\n    },\n    {\n      \"value\": \"0xbc242bd3e32209a4d3541d6ca322302acf4b4f47\",\n      \"label\": \"rETH-26JUN2025\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/pendle-assets-staging/images/assets/unknown.svg\"\n    },\n    {\n      \"value\": \"0x1255638efeca62e12e344e0b6b22ea853ec6e2c7\",\n      \"label\": \"wstETH\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/ae07850a-421b-4fe1-87ec-5ba8fa65da68.svg\"\n    },\n    {\n      \"value\": \"0x685155d3bd593508fe32be39729810a591ed9c87\",\n      \"label\": \"rETH\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/dca97a36-3121-46db-a22f-154d68e4b466.svg\"\n    },\n    {\n      \"value\": \"0xcef75d0914d183c8eadfafaea9dfef688aaffcf3\",\n      \"label\": \"PENDLE-ETH\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/c1e597df-fb6b-4475-9d3f-7f8bcd08bbeb.svg\"\n    },\n    {\n      \"value\": \"0x4d5d8375c39dc91a8aca33ff4a4564de92dcd04c\",\n      \"label\": \"gDAI\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/d21b47c3-f316-430e-ba22-1bd07e63f0bb.svg\"\n    },\n    {\n      \"value\": \"0x137f793505e7884cb70ee5933c83447e85b1bd17\",\n      \"label\": \"dUSDC\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/590ebc0d-ad8a-4574-92c7-364c557a2a13.svg\"\n    },\n    {\n      \"value\": \"0x98510fbe752a97f97abd7d971a1b3290dd62ec4a\",\n      \"label\": \"dWBTC\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/b0d49b1b-01ed-4c17-b07c-bd66159b94a2.svg\"\n    },\n    {\n      \"value\": \"0x8db96f2fccf7cdd74a60e8eff5801df043cd11de\",\n      \"label\": \"rsETH\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/aa206b8c-0a44-4ee3-aeb4-95e9087424d0.svg\"\n    },\n    {\n      \"value\": \"0x0ab24ecb207602983a20cfcf0e3045c08c651778\",\n      \"label\": \"spSILO\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/79b08c9a-ac55-41b9-b767-96c95afb8269.svg\"\n    },\n    {\n      \"value\": \"0xb33808ea0e883138680ba29311a220a7377cdb92\",\n      \"label\": \"eETH\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/d5b1f12c-7cb3-4572-9bb7-68865c138cd6.svg\"\n    },\n    {\n      \"value\": \"0xb3ebcc844f1eda040a3620267cdaaea6e14518a9\",\n      \"label\": \"uniETH\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/507bfb70-4c6b-4480-8ef8-b7cc250b82e2.svg\"\n    },\n    {\n      \"value\": \"0x9d8eadeb4e7311e340a5ee39dbf62d7694f1aa85\",\n      \"label\": \"MUXLP\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/5a74829d-0611-46cc-9fa5-98fcc13870a8.svg\"\n    },\n    {\n      \"value\": \"0x0b6121b4c00ca4fbbb6516c11eb4bf61722e0f8d\",\n      \"label\": \"gUSDC\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/fc507e18-ddcd-48ce-8518-8f3610719a2b.svg\"\n    },\n    {\n      \"value\": \"0x0fc042b32a9a6191834ea12ffa04f2044d0eb302\",\n      \"label\": \"aUSDC\",\n      \"expiry\": \"JUN 26, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/db96e8da-a779-43df-b012-ceeb3d298c8d.svg\"\n    },\n    {\n      \"value\": \"0x4a94091cadd74bdf313b74d58eac908c5fc53704\",\n      \"label\": \"mPENDLE\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/8592b56d-0004-4b30-9604-9f82bb32abac.png\"\n    },\n    {\n      \"value\": \"0x2a18a490ec18b019837f6153269d21a772167292\",\n      \"label\": \"ePENDLE\",\n      \"expiry\": \"MAR 27, 2025\",\n      \"image\": \"https://storage.googleapis.com/prod-pendle-bucket-a/images/uploads/e7a078b9-3bb4-4fdf-9319-124e0389b463.svg\"\n    }\n  ]\n};\n            return availableLendingTokens[env.parameters.chainId] || [];\n    }"
+          },
+          {
+            "key": "condition",
+            "type": "logic_operator",
+            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ...",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "comparisonValue",
+            "type": "float",
+            "description": "The value to compare to",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "output": {
+          "ptImpliedYield": "float"
+        },
+        "examples": [
+          {
+            "name": "PT Implied Yield for USUALx Market",
+            "description": "Retrieves the PT implied yield for the USUALx market on Ethereum.",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 1
+              },
+              {
+                "key": "marketAddress",
+                "value": "0xb9b7840ec34094ce1269c38ba7a6ac7407f9c4e3"
+              }
+            ]
+          }
+        ],
+        "blockId": 101,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/pendle.webp"
       }
     }
   },
@@ -1449,9 +1517,9 @@ export const TRIGGERS = {
         "type": 0,
         "output": {
           "sender": "address",
-          "inputAmount": "float",
+          "inputAmount": "uint256",
           "inputToken": "erc20",
-          "amountOut": "float",
+          "amountOut": "uint256",
           "outputToken": "erc20",
           "exchangeRate": "float",
           "transactionHash": "string"
@@ -1459,14 +1527,12 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "inputAmount": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{output.inputToken}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amountOut": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{output.outputToken}}",
                 "chainId": "{{parameters.chainId}}"
@@ -1557,8 +1623,6 @@ export const TRIGGERS = {
         "output": {
           "sender": "address",
           "recipient": "address",
-          "token0": "erc20",
-          "token1": "erc20",
           "amount0": "int256",
           "amount1": "int256",
           "sqrtPriceX96": "uint160",
@@ -1609,14 +1673,12 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "amount0": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amount1": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -1649,8 +1711,6 @@ export const TRIGGERS = {
         "type": 0,
         "output": {
           "sender": "address",
-          "token0": "erc20",
-          "token1": "erc20",
           "amount0In": "uint256",
           "amount1In": "uint256",
           "amount0Out": "uint256",
@@ -1713,14 +1773,12 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "amount0In": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amount1In": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -1761,8 +1819,6 @@ export const TRIGGERS = {
         "output": {
           "sender": "address",
           "recipient": "address",
-          "token0": "erc20",
-          "token1": "erc20",
           "amount0": "int256",
           "amount1": "int256",
           "sqrtPriceX96": "uint160",
@@ -1813,14 +1869,12 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "amount0": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amount1": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -1854,8 +1908,6 @@ export const TRIGGERS = {
         "output": {
           "sender": "address",
           "to": "address",
-          "token0": "erc20",
-          "token1": "erc20",
           "amount0In": "uint256",
           "amount1In": "uint256",
           "amount0Out": "uint256",
@@ -1905,14 +1957,12 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "amount0In": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amount1In": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -1943,7 +1993,7 @@ export const TRIGGERS = {
     "VELODROME": {
       "description": "Monitors swaps on Velodrome pools",
       "chains": [
-        34443
+        8453
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/velodrome.jpg",
       "SWAP_IN_CONCENTRATED_POOL": {
@@ -1953,8 +2003,6 @@ export const TRIGGERS = {
         "output": {
           "sender": "address",
           "recipient": "address",
-          "token0": "erc20",
-          "token1": "erc20",
           "amount0": "int256",
           "amount1": "int256",
           "sqrtPriceX96": "uint160",
@@ -1966,7 +2014,7 @@ export const TRIGGERS = {
           {
             "key": "chainId",
             "type": "chainId",
-            "description": "The network to monitor swaps on (MODE).",
+            "description": "The network to monitor swaps on (Base).",
             "mandatory": true,
             "category": 0
           },
@@ -2005,14 +2053,12 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "amount0": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amount1": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -2023,15 +2069,15 @@ export const TRIGGERS = {
         "examples": [
           {
             "name": "Monitor all swaps in concentrated pool",
-            "description": "Triggers whenever a swap occurs in a Velodrome concentrated liquidity pool (WETH/USDC 0.05%).",
+            "description": "Triggers whenever a swap occurs in a Velodrome concentrated liquidity pool (WETH/MODE 0.3%).",
             "parameters": [
               {
                 "key": "chainId",
-                "value": 34443
+                "value": 8453
               },
               {
                 "key": "contractAddress",
-                "value": "0x3Adf15f77F2911f84b0FE9DbdfF43ef60D40012c"
+                "value": "0x1E41CDE26b30646bb3DBBea48A63708b00470c1c"
               }
             ]
           }
@@ -2056,7 +2102,7 @@ export const TRIGGERS = {
           {
             "key": "chainId",
             "type": "chainId",
-            "description": "The network to monitor swaps on (MODE).",
+            "description": "The network to monitor swaps on (Base).",
             "mandatory": true,
             "category": 0
           },
@@ -2095,14 +2141,12 @@ export const TRIGGERS = {
         "frontendHelpers": {
           "output": {
             "amount0In": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amount1In": {
-              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{parameters.contractAddress}}",
                 "chainId": "{{parameters.chainId}}"
@@ -2117,7 +2161,7 @@ export const TRIGGERS = {
             "parameters": [
               {
                 "key": "chainId",
-                "value": 34443
+                "value": 8453
               },
               {
                 "key": "contractAddress",

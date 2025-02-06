@@ -12,20 +12,20 @@ async function uniswap_v3() {
 
   // -------- Uniswap Trigger --------
   const uniswapTrigger = new Trigger(
-    TRIGGERS.DEXES.UNISWAP.V3_SWAP
+    TRIGGERS.DEXES.UNISWAP.V2_SWAP
   );
   uniswapTrigger.setChainId(
       CHAINS.BASE
   );
   uniswapTrigger.setParams(
       'contractAddress',
-      '0x68B27E9066d3aAdC6078E17C8611b37868F96A1D'
+      '0x88A43bbDF9D098eEC7bCEda4e2494615dfD9bB9C'
   );
 
   // -------- Send Slack Message --------
   const slackMessage = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-  slackMessage.setParams('webhook', process.env.WEBHOOK_URL);
-  slackMessage.setParams('message', `Swapped ${uniswapTrigger.getOutputVariableName('amount0')} ${uniswapTrigger.getOutputVariableName('token0')} to ${uniswapTrigger.getOutputVariableName('amount1')} ${uniswapTrigger.getOutputVariableName('token1')}`);
+  slackMessage.setParams('webhook', process.env.SLACK_WEBHOOK);
+  slackMessage.setParams('message', `UniswapV2: ${uniswapTrigger.getOutputVariableName('amount0In')} (amount0In) ${uniswapTrigger.getOutputVariableName('amount0Out')} (amount0Out) ${uniswapTrigger.getOutputVariableName('token0')} to ${uniswapTrigger.getOutputVariableName('amount1In')} (amount1In) ${uniswapTrigger.getOutputVariableName('amount1Out')} (amount1Out) ${uniswapTrigger.getOutputVariableName('token1')}`);
 
   const edge1 = new Edge({
     source: uniswapTrigger,
@@ -33,7 +33,7 @@ async function uniswap_v3() {
   });
 
   const workflow = new Workflow(
-    'Uniswap V3 Trigger',
+    'Uniswap V2 Trigger',
     [
       uniswapTrigger,
       slackMessage,
