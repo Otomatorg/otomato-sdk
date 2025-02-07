@@ -2731,11 +2731,12 @@ export const ACTIONS = {
           },
           {
             "key": "amount",
-            "type": "uint256",
+            "type": "float",
             "description": "Amount to sell",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.tokenIn}}",
               "chain": "{{parameters.chainId}}"
             }
@@ -2991,104 +2992,6 @@ export const ACTIONS = {
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg"
     }
   },
-  "TOKENS": {
-    "TRANSFER": {
-      "description": "Transfer token",
-      "chains": [
-        34443
-      ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/Transfer.svg",
-      "TRANSFER": {
-        "name": "Transfer token",
-        "description": "Transfers an ERC20 token",
-        "type": 1,
-        "method": "function transfer(address to, uint256 value)",
-        "output": {
-          "transactionHash": "string"
-        },
-        "parameters": [
-          {
-            "key": "chainId",
-            "type": "chainId",
-            "description": "Chain ID of the network",
-            "mandatory": true,
-            "category": 0
-          },
-          {
-            "key": "contractAddress",
-            "type": "erc20",
-            "description": "The contract address of the ERC20",
-            "mandatory": true,
-            "category": 0
-          },
-          {
-            "key": "abiParams.to",
-            "type": "address",
-            "description": "Address to transfer crypto to",
-            "mandatory": true,
-            "category": 0
-          },
-          {
-            "key": "abiParams.value",
-            "type": "uint256",
-            "description": "Amount of crypto to transfer",
-            "mandatory": true,
-            "category": 0,
-            "erc20FormattedAmount": {
-              "contractAddress": "{{parameters.contractAddress}}",
-              "chain": "{{parameters.chainId}}"
-            }
-          },
-        ] as Parameter[],
-        "checks": [
-          {
-            "type": 0,
-            "chainId": "{{parameters.chainId}}",
-            "contractAddress": "{{parameters.contractAddress}}",
-            "amount": "{{parameters.abi.parameters.value}}"
-          }
-        ],
-        "examples": [
-          {
-            "name": "Transfer USDC",
-            "description": "Transfer 100 USDC to vitalik.eth on Mode",
-            "parameters": [
-              {
-                "key": "chainId",
-                "value": 34443
-              },
-              {
-                "key": "abiParams.value",
-                "value": "100000000n"
-              },
-              {
-                "key": "abiParams.to",
-                "value": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
-              },
-              {
-                "key": "contractAddress",
-                "value": "0xd988097fb8612cc24eeC14542bC03424c656005f"
-              }
-            ]
-          }
-        ],
-        "permissions": {
-          "chainId": "{{parameters.chainId}}",
-          "approvedTargets": [
-            "{{parameters.contractAddress}}"
-          ],
-          "label": [
-            "Transfer {{tokenSymbol({{parameters.chainId}}, {{parameters.contractAddress}})}}"
-          ],
-          "labelNotAuthorized": [
-            "Transfer {{otherTokenSymbol({{parameters.chainId}}, {{parameters.contractAddress}})}}"
-          ]
-        },
-        "blockId": 100004,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/Transfer.svg"
-      }
-    }
-  },
   "LENDING": {
     "IONIC": {
       "description": "#1 money market for Yield Bearing Assets on the OP Superchain",
@@ -3120,11 +3023,12 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.amount",
-            "type": "uint256",
+            "type": "float",
             "description": "Amount of crypto to deposit",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.tokenToDeposit}}",
               "chain": "{{parameters.chainId}}"
             }
@@ -3224,11 +3128,12 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.amount",
-            "type": "uint256",
+            "type": "float",
             "description": "Amount of crypto to withdraw",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{before.contractAddress}}",
               "chain": "{{parameters.chainId}}"
             }
@@ -3390,11 +3295,12 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.amount",
-            "type": "uint256",
+            "type": "float",
             "description": "Amount of crypto to repay",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.tokenToRepay}}",
               "chain": "{{parameters.chainId}}"
             }
@@ -3523,11 +3429,12 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.amount",
-            "type": "uint256",
+            "type": "float",
             "description": "The amount of the asset to supply",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.abi.parameters.asset}}",
               "chain": "{{parameters.chainId}}"
             }
@@ -3633,11 +3540,12 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.amount",
-            "type": "uint256",
+            "type": "float",
             "description": "The amount of the asset to withdraw. Use type(uint).max for full balance.",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.abi.parameters.asset}}",
               "chain": "{{parameters.chainId}}"
             },
@@ -3750,11 +3658,12 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.amount",
-            "type": "uint256",
+            "type": "float",
             "description": "Amount of token to deposit",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.tokenToDeposit}}",
               "chain": "{{parameters.chainId}}"
             }
@@ -3854,11 +3763,12 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.amount",
-            "type": "uint256",
+            "type": "float",
             "description": "Amount of token to withdraw",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.tokenToWithdraw}}",
               "chain": "{{parameters.chainId}}"
             }
@@ -3948,11 +3858,12 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.amount",
-            "type": "uint256",
+            "type": "float",
             "description": "Amount of crypto to borrow",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.tokenToBorrow}}",
               "chain": "{{parameters.chainId}}"
             }
@@ -4020,11 +3931,12 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.amount",
-            "type": "uint256",
+            "type": "float",
             "description": "Amount of crypto to repay",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.tokenToRepay}}",
               "chain": "{{parameters.chainId}}"
             }
@@ -4152,11 +4064,12 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.amount",
-            "type": "uint256",
+            "type": "float",
             "description": "Amount of crypto to deposit",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.abi.parameters.asset}}",
               "chain": "{{parameters.chainId}}"
             }
@@ -4239,11 +4152,12 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.amount",
-            "type": "uint256",
+            "type": "float",
             "description": "Amount of crypto to withdraw",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.abi.parameters.asset}}",
               "chain": "{{parameters.chainId}}"
             }
@@ -4342,11 +4256,12 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.amount",
-            "type": "uint256",
+            "type": "float",
             "description": "The amount of the asset to supply",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.abi.parameters.asset}}",
               "chain": "{{parameters.chainId}}"
             }
@@ -4452,11 +4367,12 @@ export const ACTIONS = {
           },
           {
             "key": "abiParams.amount",
-            "type": "uint256",
+            "type": "float",
             "description": "The amount of the asset to withdraw. Use type(uint).max for full balance.",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.abi.parameters.asset}}",
               "chain": "{{parameters.chainId}}"
             },
@@ -4617,11 +4533,12 @@ export const ACTIONS = {
           },
           {
             "key": "amount",
-            "type": "uint256",
+            "type": "float",
             "description": "Amount to sell",
             "mandatory": true,
             "category": 0,
             "erc20FormattedAmount": {
+              "convertItsDecimal": false,
               "contractAddress": "{{parameters.tokenIn}}",
               "chain": "{{parameters.chainId}}"
             }

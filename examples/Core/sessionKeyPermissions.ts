@@ -11,7 +11,7 @@ const workflow_complex = async () => {
 
     const transferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
     const slackAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
     const ionicAction = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
 
     transferTrigger.setContractAddress(getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress);
@@ -62,7 +62,7 @@ const workflow_simple = async () => {
     const transferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
 
     // Create a transfer action
-    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
 
     // Set trigger properties
     transferTrigger.setContractAddress(getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress);
