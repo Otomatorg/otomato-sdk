@@ -431,6 +431,31 @@ export const TOKENS: Tokens = {
         decimals: 18,
         image: "https://assets.coingecko.com/coins/images/26133/small/WELL.png?1696525221"
     }
+  ],
+  2741: [
+    {
+      contractAddress: "0x3439153eb7af838ad19d56e1571fbd09333c2809",
+      name: "WETH",
+      symbol: "WETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/61844453e63cf81301f845d7864236f6.png"
+    },
+    {
+      contractAddress: "0x84a71ccd554cc1b02749b35d22f684cc8ec987e1",
+      name: "USDC",
+      symbol: "USDC.e",
+      decimals: 6,
+      image: "https://static.debank.com/image/coin/logo_url/usdc/e87790bfe0b3f2ea855dc29069b38818.png"
+    },
+    {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "ETH",
+      symbol: "ETH",
+      decimals: 18,
+      nativeCurrency: true,
+      equivalentERC20: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png"
+    },
   ]
 };
 
