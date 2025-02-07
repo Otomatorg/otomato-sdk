@@ -5,7 +5,7 @@ describe('Edge Class', () => {
 
   it('should create an edge between two nodes', () => {
     const action1 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-    const action2 = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const action2 = new Action(ACTIONS.CORE.CONDITION.IF);
     const edge = new Edge({ source: action1, target: action2 });
 
     expect(edge.source).to.equal(action1);
@@ -15,7 +15,7 @@ describe('Edge Class', () => {
 
   it('should set edge id correctly', () => {
     const action1 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-    const action2 = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const action2 = new Action(ACTIONS.CORE.CONDITION.IF);
     const edge = new Edge({ id: 'edge-id-123', source: action1, target: action2 });
 
     expect(edge.id).to.equal('edge-id-123');
@@ -23,7 +23,7 @@ describe('Edge Class', () => {
 
   it('should serialize edge to JSON correctly', () => {
     const action1 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-    const action2 = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const action2 = new Action(ACTIONS.CORE.CONDITION.IF);
     const edge = new Edge({ id: 'edge-id-123', source: action1, target: action2 });
 
     const json = edge.toJSON();
@@ -36,7 +36,7 @@ describe('Edge Class', () => {
 
   it('should deserialize edge from JSON correctly', () => {
     const action1 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-    const action2 = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const action2 = new Action(ACTIONS.CORE.CONDITION.IF);
     const nodes = [action1, action2];
     const json = {
       id: 'edge-id-123',
@@ -72,7 +72,7 @@ describe('Edge Class', () => {
 
   it('should throw error when deleting edge without id', async () => {
     const action1 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-    const action2 = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const action2 = new Action(ACTIONS.CORE.CONDITION.IF);
     const edge = new Edge({ source: action1, target: action2 });
 
     try {

@@ -6,7 +6,7 @@ const DEFAULT_ADDRESS = "0x0000000000000000000000000000000000000000";
 describe('Action Class', () => {
 
   it('should create a transfer action without parameters', () => {
-    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
     const params = transferAction.getParameters();
 
     expect(params.chainId).to.be.null;
@@ -16,7 +16,7 @@ describe('Action Class', () => {
   });
 
   it('should create a transfer action and set parameters correctly', () => {
-    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
     transferAction.setChainId(CHAINS.ETHEREUM);
     transferAction.setParams("value", 1000);
     transferAction.setParams("to", DEFAULT_ADDRESS);
@@ -30,7 +30,7 @@ describe('Action Class', () => {
   });
 
   it('should be able to export an action as json', () => {
-    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
     transferAction.setChainId(CHAINS.ETHEREUM);
     transferAction.setParams("value", 1000);
     transferAction.setParams("to", DEFAULT_ADDRESS);
@@ -38,7 +38,7 @@ describe('Action Class', () => {
 
     const json = transferAction.toJSON();
     expect(json).to.deep.equal({
-      blockId: ACTIONS.TOKENS.TRANSFER.TRANSFER.blockId,
+      blockId: ACTIONS.CORE.CONDITION.IF.blockId,
       ref: transferAction.getRef(),
       type: 'action',
       id: null,
@@ -68,12 +68,12 @@ describe('Action Class', () => {
   });
 
   it('should throw an error for invalid parameter type', () => {
-    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
     expect(() => transferAction.setParams("value", "invalid")).to.throw('Invalid type for parameter abiParams.value. Expected uint256.');
   });
 
   it('should throw an error for invalid address', () => {
-    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
     expect(() => transferAction.setParams("to", "invalid_address")).to.throw('Invalid type for parameter abiParams.to. Expected address.');
   });
 

@@ -122,7 +122,7 @@ describe('Workflow Class - insertSplit', () => {
     trigger.setChainId(CHAINS.ETHEREUM);
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
-    const action = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const action = new Action(ACTIONS.CORE.CONDITION.IF);
 
     const workflow = new Workflow('Base Workflow', [trigger, action]);
     // Add an edge from trigger to action
@@ -280,7 +280,7 @@ describe('Workflow Class - insertSplit', () => {
 
     // We'll add a *different* node so that trigger->thisNode->action does NOT exist
     // action2 is not connected in any edge
-    const action2 = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const action2 = new Action(ACTIONS.CORE.CONDITION.IF);
     workflow.addNode(action2);
 
     // Insert a split using nodeBefore=trigger, nodeAfter=action2
@@ -302,7 +302,7 @@ describe('Workflow Class - insertCondition', () => {
     trigger.setChainId(CHAINS.ETHEREUM);
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
-    const action = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const action = new Action(ACTIONS.CORE.CONDITION.IF);
 
     const workflow = new Workflow('Base Workflow', [trigger, action]);
     // Add an edge from trigger to action
@@ -463,7 +463,7 @@ describe('Workflow Class', () => {
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     trigger.setPosition(0, 0);
 
-    const action1 = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const action1 = new Action(ACTIONS.CORE.CONDITION.IF);
     action1.setChainId(CHAINS.ETHEREUM);
     action1.setParams("value", 1000);
     action1.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
@@ -568,7 +568,7 @@ describe('Workflow Class', () => {
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     trigger.setPosition(0, 0);
 
-    const action1 = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const action1 = new Action(ACTIONS.CORE.CONDITION.IF);
     action1.setChainId(CHAINS.ETHEREUM);
     action1.setParams("value", 1000);
     action1.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
@@ -593,7 +593,7 @@ describe('Workflow Class', () => {
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     trigger.setPosition(0, 0);
 
-    const action = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const action = new Action(ACTIONS.CORE.CONDITION.IF);
     action.setChainId(CHAINS.ETHEREUM);
     action.setParams("value", 1000);
     action.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
@@ -808,7 +808,7 @@ describe('Empty block management', () => {
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     trigger.setPosition(0, 0);
 
-    const action1 = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const action1 = new Action(ACTIONS.CORE.CONDITION.IF);
     action1.setChainId(CHAINS.ETHEREUM);
     action1.setParams("value", 1000);
     action1.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
@@ -921,7 +921,7 @@ describe('Empty block management', () => {
 describe('Workflow Class - getNode', () => {
   it('should return the correct node when a valid ref is provided', () => {
     const workflow = new Workflow("Test Workflow");
-    const node = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const node = new Action(ACTIONS.CORE.CONDITION.IF);
     workflow.addNode(node);
 
     const result = workflow.getNode(node.getRef());

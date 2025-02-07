@@ -29,7 +29,7 @@ describe('E2E Workflow Test', async function () {
     transferTrigger.setPosition(100, 100);
 
     // Create a transfer action
-    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
     transferAction.setChainId(CHAINS.MODE);
     transferAction.setContractAddress(getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress);
     transferAction.setParams('to', "0x356696BFBd8aaa37f4526f0eD6391999E53a9857");
@@ -69,7 +69,7 @@ describe('E2E Workflow Test', async function () {
     ionicDepositAction.setPosition(200, 100);
 
     // Create a transfer action
-    const transferAction = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
     transferAction.setChainId(CHAINS.MODE);
     transferAction.setContractAddress(getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress);
     transferAction.setParams('to', "0x356696BFBd8aaa37f4526f0eD6391999E53a9857");
