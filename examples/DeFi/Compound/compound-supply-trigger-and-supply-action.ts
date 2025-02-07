@@ -16,7 +16,7 @@ async function compound_supply_trigger_and_supply_action() {
   );
   compoundSupplyTrigger.setChainId(CHAINS.BASE);
   compoundSupplyTrigger.setCondition("gt");
-  compoundSupplyTrigger.setComparisonValue(0);
+  compoundSupplyTrigger.setComparisonValue(0.1);
   compoundSupplyTrigger.setParams("token", getTokenFromSymbol(CHAINS.BASE, "WETH").contractAddress);
 
   // -------- Supply Compound --------
@@ -25,7 +25,7 @@ async function compound_supply_trigger_and_supply_action() {
 
   compoundSupply.setParams(
       "abiParams.amount",
-      await convertToTokenUnitsFromSymbol(0.000001, CHAINS.BASE, "USDC")
+      0.000001
   );
   compoundSupply.setParams(
       "abiParams.asset",
