@@ -917,3 +917,26 @@ describe('Empty block management', () => {
   });
 
 });
+
+describe('Workflow Class - getNode', () => {
+  it('should return the correct node when a valid ref is provided', () => {
+    const workflow = new Workflow("Test Workflow");
+    const node = new Action(ACTIONS.TOKENS.TRANSFER.TRANSFER);
+    workflow.addNode(node);
+
+    const result = workflow.getNode(node.getRef());
+    expect(result).to.equal(node);
+  });
+
+  it('should return null when the node with the given ref does not exist', () => {
+    const workflow = new Workflow("Test Workflow");
+    const result = workflow.getNode("non-existent-ref");
+    expect(result).to.be.null;
+  });
+
+  it('should work correctly when the workflow has no nodes', () => {
+    const workflow = new Workflow("Empty Workflow");
+    const result = workflow.getNode("any-ref");
+    expect(result).to.be.null;
+  });
+});

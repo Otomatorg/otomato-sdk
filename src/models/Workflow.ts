@@ -42,6 +42,10 @@ export class Workflow {
     positionWorkflowNodes(this);
   }
 
+  getNode(ref: string): Node | null {
+    return this.nodes.find(node => node.getRef() === ref) || null;
+  }
+
   deleteNode(nodeToDelete: Node): void {
     // Remove the node from the nodes array
     const nodeIndex = this.nodes.findIndex(node => node === nodeToDelete);
