@@ -6,39 +6,35 @@ const DEFAULT_ADDRESS = "0x0000000000000000000000000000000000000000";
 describe('Action Class', () => {
 
   it('should create a transfer action without parameters', () => {
-    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
+    const transferAction = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
     const params = transferAction.getParameters();
 
     expect(params.chainId).to.be.null;
-    expect(params.abi.parameters.value).to.be.null;
-    expect(params.abi.parameters.to).to.be.null;
-    expect(params.contractAddress).to.be.null;
+    expect(params.abi.parameters.asset).to.be.null;
+    expect(params.abi.parameters.amount).to.be.null;
   });
 
   it('should create a transfer action and set parameters correctly', () => {
-    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
+    const transferAction = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
     transferAction.setChainId(CHAINS.ETHEREUM);
-    transferAction.setParams("value", 1000);
-    transferAction.setParams("to", DEFAULT_ADDRESS);
-    transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    transferAction.setParams("amount", 1);
+    transferAction.setParams("asset", getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
     const params = transferAction.getParameters();
     expect(params.chainId).to.equal(CHAINS.ETHEREUM);
-    expect(params.abi.parameters.value).to.equal(1000);
-    expect(params.abi.parameters.to).to.equal(DEFAULT_ADDRESS);
-    expect(params.contractAddress).to.equal(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    expect(params.abi.parameters.amount).to.equal(1);
+    expect(params.abi.parameters.asset).to.equal(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
   });
 
   it('should be able to export an action as json', () => {
-    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
+    const transferAction = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
     transferAction.setChainId(CHAINS.ETHEREUM);
-    transferAction.setParams("value", 1000);
-    transferAction.setParams("to", DEFAULT_ADDRESS);
-    transferAction.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    transferAction.setParams("amount", 1);
+    transferAction.setParams("asset", getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
 
     const json = transferAction.toJSON();
     expect(json).to.deep.equal({
-      blockId: ACTIONS.CORE.CONDITION.IF.blockId,
+      blockId: ACTIONS.LENDING.COMPOUND.DEPOSIT.blockId,
       ref: transferAction.getRef(),
       type: 'action',
       id: null,
@@ -47,11 +43,10 @@ describe('Action Class', () => {
         chainId: CHAINS.ETHEREUM,
         abi: {
           parameters: {
-            to: DEFAULT_ADDRESS,
-            value: 1000
+            asset: getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress,
+            amount: 1
           }
-        },
-        contractAddress: getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress
+        }
       },
       frontendHelpers: {},
     });
@@ -68,13 +63,13 @@ describe('Action Class', () => {
   });
 
   it('should throw an error for invalid parameter type', () => {
-    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
-    expect(() => transferAction.setParams("value", "invalid")).to.throw('Invalid type for parameter abiParams.value. Expected uint256.');
+    const transferAction = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
+    expect(() => transferAction.setParams("amount", "invalid")).to.throw('Invalid type for parameter abiParams.amount. Expected float.');
   });
 
   it('should throw an error for invalid address', () => {
-    const transferAction = new Action(ACTIONS.CORE.CONDITION.IF);
-    expect(() => transferAction.setParams("to", "invalid_address")).to.throw('Invalid type for parameter abiParams.to. Expected address.');
+    const transferAction = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
+    expect(() => transferAction.setParams("asset", "invalid_address")).to.throw('Invalid type for parameter abiParams.asset. Expected erc20.');
   });
 
   it('should throw an error for invalid URL', () => {
@@ -115,18 +110,17 @@ describe('Action Class', () => {
     const json = {
       "id": "d6e6884f-cd8f-4c96-b36c-e5539b3599fc",
       "ref": "n-3",
-      "blockId": 100004,
+      "blockId": ACTIONS.LENDING.COMPOUND.DEPOSIT.blockId,
       "type": "action",
       "state": "inactive",
       "parameters": {
         "abi": {
           "parameters": {
-            "to": "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6",
-            "value": 1000
+            "asset": "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6",
+            "amount": 1000
           }
         },
         "chainId": 1,
-        "contractAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
       },
       "frontendHelpers": {}
     };
@@ -135,12 +129,10 @@ describe('Action Class', () => {
 
     expect(action.id).to.equal("d6e6884f-cd8f-4c96-b36c-e5539b3599fc");
     expect(action.getRef()).to.equal("n-3");
-    expect(action.blockId).to.equal(100004);
+    expect(action.blockId).to.equal(ACTIONS.LENDING.COMPOUND.DEPOSIT.blockId);
     expect(action.getParameters().chainId).to.equal(1);
-    expect(action.getParameters().contractAddress).to.equal("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48");
-    expect(action.getParameters().abi.parameters.to).to.equal("0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    expect(action.getParameters().abi.parameters.value).to.equal(1000);
-    expect(action.getParentInfo()?.name).to.equal("TRANSFER");
+    expect(action.getParameters().abi.parameters.asset).to.equal("0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
+    expect(action.getParameters().abi.parameters.amount).to.equal(1000);
     expect(action.toJSON()).to.deep.equal(json);
   });
 

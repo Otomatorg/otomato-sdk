@@ -58,6 +58,7 @@ describe('Trigger Class', () => {
       frontendHelpers: {
         "output": {
           "value": {
+            "formatAmount": false,
             "erc20Token": {
               "chainId": "{{parameters.chainId}}",
               "contractAddress": "{{parameters.contractAddress}}"
@@ -157,6 +158,7 @@ describe('Trigger Class', () => {
       "frontendHelpers": {
         "output": {
           "value": {
+            "formatAmount": false,
             "erc20Token": {
               "chainId": "{{parameters.chainId}}",
               "contractAddress": "{{parameters.contractAddress}}"

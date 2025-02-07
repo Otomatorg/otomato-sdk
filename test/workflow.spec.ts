@@ -463,11 +463,10 @@ describe('Workflow Class', () => {
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     trigger.setPosition(0, 0);
 
-    const action1 = new Action(ACTIONS.CORE.CONDITION.IF);
+    const action1 = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
     action1.setChainId(CHAINS.ETHEREUM);
-    action1.setParams("value", 1000);
-    action1.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    action1.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    action1.setParams("amount", 1000);
+    action1.setParams("asset", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
     action1.setPosition(1, 0);
 
     const action2 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
@@ -568,11 +567,10 @@ describe('Workflow Class', () => {
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     trigger.setPosition(0, 0);
 
-    const action1 = new Action(ACTIONS.CORE.CONDITION.IF);
+    const action1 = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
     action1.setChainId(CHAINS.ETHEREUM);
-    action1.setParams("value", 1000);
-    action1.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    action1.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    action1.setParams("amount", 1000);
+    action1.setParams("asset", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
     action1.setPosition(1, 0);
 
     const action2 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
@@ -593,11 +591,10 @@ describe('Workflow Class', () => {
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     trigger.setPosition(0, 0);
 
-    const action = new Action(ACTIONS.CORE.CONDITION.IF);
+    const action = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
     action.setChainId(CHAINS.ETHEREUM);
-    action.setParams("value", 1000);
-    action.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    action.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    action.setParams("amount", 1000);
+    action.setParams("asset", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
     action.setPosition(1, 0);
 
     const edge = new Edge({
@@ -808,13 +805,11 @@ describe('Empty block management', () => {
     trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
     trigger.setPosition(0, 0);
 
-    const action1 = new Action(ACTIONS.CORE.CONDITION.IF);
+    const action1 = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
     action1.setChainId(CHAINS.ETHEREUM);
-    action1.setParams("value", 1000);
-    action1.setParams("to", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
-    action1.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    action1.setParams("amount", 1000);
+    action1.setParams("asset", "0xe1432599B51d9BE1b5A27E2A2FB8e5dF684749C6");
     action1.setPosition(1, 0);
-
 
     const workflow = new Workflow("Test Workflow", [trigger, action1], [new Edge({ source: trigger, target: action1 })]);
     workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), trigger, action1);

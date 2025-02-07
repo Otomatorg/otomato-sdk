@@ -8,12 +8,6 @@ export const xSpacing = 500;
 export const ySpacing = 120;
 export const ROOT_X = 400;
 export const ROOT_Y = 120;
-const TOLERANCE = 50;  // Used only in group repositioning; no clamping for parent centering now
-
-// --- Debug logging helper ---
-function debugLog(message: string, data?: any) {
-  console.log(`[DEBUG] ${message}`, data);
-}
 
 /**
  * Helper: Returns a group key for a node based on its primary parent.
@@ -60,7 +54,6 @@ function assignLayers(workflow: Workflow): void {
       }
     }
   }
-  debugLog(`Layer assignment complete:`, workflow.nodes.map(n => ({ ref: n.getRef(), layer: (n as any).layer })));
 }
 
 /**
@@ -111,7 +104,6 @@ export function positionWorkflowNodes(workflow: Workflow): void {
       const groupInfos: GroupInfo[] = [];
       // Sort group keys numerically.
       const sortedGroupKeys = Array.from(groups.keys()).sort((a, b) => Number(a) - Number(b));
-      debugLog(`Layer ${layer} sorted group keys:`, sortedGroupKeys);
       for (const key of sortedGroupKeys) {
         const groupNodes = groups.get(key)!;
         groupNodes.sort((a, b) => Number(a.getRef()) - Number(b.getRef()));
@@ -148,11 +140,9 @@ export function positionWorkflowNodes(workflow: Workflow): void {
       // Now assign positions for nodes in each group using the new left.
       for (const group of groupInfos) {
         const { nodes, newLeft } = group;
-        debugLog(`Layer ${layer} Group ${group.groupKey}: desiredCenter=${group.desiredCenter}, desiredLeft=${group.desiredLeft}, newLeft=${newLeft}, groupSize=${nodes.length}`);
         for (let i = 0; i < nodes.length; i++) {
           const nodeX = newLeft! + i * xSpacing;
           nodes[i].setPosition(nodeX, yPos);
-          debugLog(`Set position for node ${nodes[i].getRef()} to x=${nodeX}, y=${yPos}`);
         }
       }
     }
@@ -184,7 +174,6 @@ export function positionWorkflowNodes(workflow: Workflow): void {
             const diff = current.position!.x - prev.position!.x;
             if (diff < xSpacing) {
               const shift = xSpacing - diff;
-              debugLog(`Layer ${layer} Group ${groupKey}: Overlap detected between node ${prev.getRef()} (x=${prev.position!.x}) and ${current.getRef()} (x=${current.position!.x}). Shifting ${current.getRef()} by ${shift}`);
               moveNodeAndChildren(current, shift, workflow.edges);
               changed = true;
             }
@@ -205,7 +194,6 @@ export function positionWorkflowNodes(workflow: Workflow): void {
         if (groupA !== groupB) return groupA - groupB;
         return Number(a.getRef()) - Number(b.getRef());
       });
-      debugLog(`Final sorted order for layer ${layer}:`, nodes.map(n => n.getRef()));
     });
 
   } catch (e) {
@@ -232,7 +220,6 @@ function centerParentXPositions(workflow: Workflow): void {
       if (children.length) {
         const xs = children.map(c => c.position!.x);
         const avgX = xs.reduce((acc, x) => acc + x, 0) / xs.length;
-        debugLog(`Centering parent ${parent.getRef()} over children [${children.map(n => n.getRef()).join(', ')}]: setting x to ${avgX}`);
         parent.setPosition(avgX, parent.position?.y ?? 0);
       }
       if (!queue.includes(parent)) {
@@ -248,7 +235,6 @@ function centerParentXPositions(workflow: Workflow): void {
 function moveNodeAndChildren(node: Node, shift: number, edges: Edge[]): void {
   const oldX = node.position!.x;
   node.setPosition(oldX + shift, node.position!.y);
-  debugLog(`Moved node ${node.getRef()} from x=${oldX} to x=${node.position!.x}`);
   edges.filter(edge => edge.source === node)
        .forEach(edge => moveNodeAndChildren(edge.target, shift, edges));
 }
