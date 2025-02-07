@@ -382,15 +382,15 @@ export async function aggregatorWorkflow() {
   /********************************
    * Final Workflow
    ********************************/
-  const workflow = new Workflow('Aggregator Workflow', actions, edges);
+  const workflow = new Workflow('SmartYield USDC', actions, edges);
 
   // Log JSON (optional)
   console.log(JSON.stringify(workflow));
 
   // Create/run on your platform:
-  const creationResult = await workflow.create();
+  //const creationResult = await workflow.create();
   // console.log("Creation result:", creationResult);
-  console.log("Workflow ID:", workflow.id);
+  //console.log("Workflow ID:", workflow.id);
 
   //const runResult = await workflow.run();
   //console.log("Run result:", runResult);
