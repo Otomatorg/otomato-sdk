@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { Action, ACTIONS, getTokenFromSymbol, CHAINS } from '../src/index';
 
-const DEFAULT_ADDRESS = "0x0000000000000000000000000000000000000000";
+const MAX_BIGINT = 115792089237316195423570985008687907853269984665640564039457584007913129639935n;
 
 describe('Action Class', () => {
 
@@ -65,6 +65,11 @@ describe('Action Class', () => {
   it('should throw an error for invalid parameter type', () => {
     const transferAction = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
     expect(() => transferAction.setParams("amount", "invalid")).to.throw('Invalid type for parameter abiParams.amount. Expected float.');
+  });
+
+  it('should accept max uint256 for floats', () => {
+    const transferAction = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
+    transferAction.setParams("amount", MAX_BIGINT);
   });
 
   it('should throw an error for invalid address', () => {

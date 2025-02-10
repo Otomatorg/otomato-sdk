@@ -2769,7 +2769,7 @@ export const ACTIONS = {
               },
               {
                 "key": "amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "slippage",
@@ -3045,7 +3045,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "tokenToDeposit",
@@ -3150,7 +3150,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "tokenToWithdraw",
@@ -3244,7 +3244,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "tokenToBorrow",
@@ -3325,7 +3325,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "tokenToRepay",
@@ -3485,7 +3485,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "abiParams.onBehalfOf",
@@ -3574,7 +3574,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "10000000n"
+                "value": 10
               },
               {
                 "key": "abiParams.to",
@@ -3728,7 +3728,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "tokenToDeposit",
@@ -3785,7 +3785,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "tokenToWithdraw",
@@ -3880,7 +3880,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "tokenToBorrow",
@@ -3961,7 +3961,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "tokenToRepay",
@@ -4086,7 +4086,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "abiParams.asset",
@@ -4182,7 +4182,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "abiParams.asset",
@@ -4312,7 +4312,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "abiParams.onBehalfOf",
@@ -4401,7 +4401,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": "10000000n"
+                "value": 10
               },
               {
                 "key": "abiParams.to",
@@ -4571,7 +4571,7 @@ export const ACTIONS = {
               },
               {
                 "key": "amount",
-                "value": "100000000n"
+                "value": 100
               },
               {
                 "key": "slippage",

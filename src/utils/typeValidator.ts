@@ -1,5 +1,7 @@
 import { ethers } from 'ethers';
 
+const MAX_BIGINT = 115792089237316195423570985008687907853269984665640564039457584007913129639935n;
+
 export function validateType(expectedType: string, value: any): boolean {
     if (typeof value === 'string' && isVariable(value)) {
         return true; // Allow all variable strings
@@ -23,7 +25,7 @@ export function validateType(expectedType: string, value: any): boolean {
         case 'float':
         case 'fixed':
         case 'ufixed':
-            return typeof value === 'number';
+            return (typeof value === 'number') || value === MAX_BIGINT;
         case 'percentage':
             return typeof value === 'number' && value >= 0 && value <= 100;
         case 'url':
