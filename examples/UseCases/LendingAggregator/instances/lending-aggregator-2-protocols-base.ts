@@ -388,11 +388,11 @@ export async function aggregatorWorkflow() {
   console.log(JSON.stringify(workflow));
 
   // Create/run on your platform:
-  //const creationResult = await workflow.create();
+  const creationResult = await workflow.create();
   // console.log("Creation result:", creationResult);
   //console.log("Workflow ID:", workflow.id);
 
-  //const runResult = await workflow.run();
+  const runResult = await workflow.run();
   //console.log("Run result:", runResult);
 }
 
