@@ -54,26 +54,26 @@ const createETHFearAndGreedCapitalEfficientBuy = async () => {
     trigger.setComparisonValue(45);
     trigger.setPosition(400, 120);
 
-    const chain = CHAINS.MODE;
+    const chain = CHAINS.BASE;
     const tokenIn = 'USDC';
     const tokenOut = 'WETH';
 
-    const ionicWithdraw = new Action(ACTIONS.LENDING.IONIC.WITHDRAW);
+    const ionicWithdraw = new Action(ACTIONS.LENDING.AAVE.WITHDRAW);
     ionicWithdraw.setChainId(chain);
-    ionicWithdraw.setParams('tokenToWithdraw', getTokenFromSymbol(chain, tokenIn).contractAddress);
-    ionicWithdraw.setParams('amount', await convertToTokenUnitsFromSymbol(1, chain, tokenIn));
+    ionicWithdraw.setParams('asset', getTokenFromSymbol(chain, tokenIn).contractAddress);
+    ionicWithdraw.setParams('amount', 10);
     ionicWithdraw.setPosition(400, 240);
 
-    const odosAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
+    const odosAction = new Action(ACTIONS.CORE.SWAP.SWAP);
     odosAction.setChainId(chain);
     odosAction.setParams("tokenIn", getTokenFromSymbol(chain, tokenIn).contractAddress);
     odosAction.setParams("tokenOut", getTokenFromSymbol(chain, tokenOut).contractAddress);
     odosAction.setParams("amount", ionicWithdraw.getParameterVariableName('amount'));
     odosAction.setPosition(400, 360);
 
-    const ionicDeposit = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
+    const ionicDeposit = new Action(ACTIONS.LENDING.AAVE.SUPPLY);
     ionicDeposit.setChainId(chain);
-    ionicDeposit.setParams('tokenToDeposit', getTokenFromSymbol(chain, tokenOut).contractAddress);
+    ionicDeposit.setParams('asset', getTokenFromSymbol(chain, tokenOut).contractAddress);
     ionicDeposit.setParams('amount', odosAction.getOutputVariableName('amountOut'));
     ionicDeposit.setPosition(400, 480);
 
@@ -113,8 +113,8 @@ const createSUsdeYieldBuy = async () => {
 const createSusdeYieldNotification = async () => {
     const trigger = new Trigger(TRIGGERS.YIELD.ETHENA.SUSDE_YIELD);
 
-    trigger.setCondition('lt');
-    trigger.setComparisonValue(0);
+    trigger.setCondition('lte');
+    trigger.setComparisonValue(0.001);
     trigger.setPosition(400, 120);
 
     const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
@@ -125,50 +125,6 @@ const createSusdeYieldNotification = async () => {
     const edge = new Edge({ source: trigger, target: notificationAction });
 
     return new Workflow('sUSDE yield notification', [trigger, notificationAction], [edge]);
-}
-
-const ionicDepositIfYieldIsHigh = async () => {
-    const trigger = new Trigger(TRIGGERS.LENDING.IONIC.LENDING_RATE);
-
-    const tokenIn = (await getTokenFromSymbol(CHAINS.MODE, 'USDT')).contractAddress;
-
-    trigger.setCondition('gte');
-    trigger.setComparisonValue(10);
-    trigger.setChainId(CHAINS.MODE);
-    trigger.setParams('token', tokenIn);
-    trigger.setPosition(400, 120);
-
-    const ionicDeposit = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
-    ionicDeposit.setChainId(CHAINS.MODE);
-    ionicDeposit.setParams('tokenToDeposit', tokenIn);
-    ionicDeposit.setParams('amount', await convertToTokenUnits(1, CHAINS.MODE, tokenIn));
-    ionicDeposit.setPosition(400, 240);
-
-    const edge = new Edge({ source: trigger, target: ionicDeposit });
-
-    return new Workflow('Deposit USDT on Ionic if yield > 10% APY', [trigger, ionicDeposit], [edge]);
-}
-
-const ionicWithdrawIfYieldIsLow = async () => {
-    const trigger = new Trigger(TRIGGERS.LENDING.IONIC.LENDING_RATE);
-
-    const tokenIn = (await getTokenFromSymbol(CHAINS.MODE, 'USDC')).contractAddress;
-
-    trigger.setCondition('lte');
-    trigger.setComparisonValue(4);
-    trigger.setChainId(CHAINS.MODE);
-    trigger.setParams('token', tokenIn);
-    trigger.setPosition(400, 120);
-
-    const ionicWithdraw = new Action(ACTIONS.LENDING.IONIC.WITHDRAW);
-    ionicWithdraw.setChainId(CHAINS.MODE);
-    ionicWithdraw.setParams('tokenToWithdraw', tokenIn);
-    ionicWithdraw.setParams('amount', await convertToTokenUnits(1, CHAINS.MODE, tokenIn));
-    ionicWithdraw.setPosition(400, 240);
-
-    const edge = new Edge({ source: trigger, target: ionicWithdraw });
-
-    return new Workflow('Withdraw USDC from Ionic if yield < 4% APY', [trigger, ionicWithdraw], [edge]);
 }
 
 const copyTradeVitalikOdos = async () => {
@@ -243,6 +199,7 @@ const dailyYieldEmail = async () => {
     •   IONIC: {{external.functions.ionicLendingRate(34443,0x4200000000000000000000000000000000000006)}}%
     •   Ironclad: {{external.functions.ironcladLendingRate(34443,0x4200000000000000000000000000000000000006)}}%
 
+The gas price on Ethereum is {{external.functions.mainnetGasPrice(,)}}
 
 See you tomorrow!`);
     notificationAction.setParams("subject", "Daily yield updates");
@@ -267,7 +224,7 @@ export const WORKFLOW_TEMPLATES = [
     },
     {
         'name': 'Daily yield updates',
-        'description': 'Receive an email every day with a recap from all the money market yields for ETH and USDC.',
+        'description': 'Receive an email every day with a recap from all the money market yields for ETH and USDC & the current gas price.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
         'image': [
@@ -283,9 +240,9 @@ export const WORKFLOW_TEMPLATES = [
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fearAndGreed2.png',
         'image': [
             TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
-            ACTIONS.LENDING.IONIC.WITHDRAW.image,
-            ACTIONS.SWAP.ODOS.SWAP.image,
-            ACTIONS.LENDING.IONIC.DEPOSIT.image
+            ACTIONS.LENDING.AAVE.WITHDRAW.image,
+            ACTIONS.CORE.SWAP.SWAP.image,
+            ACTIONS.LENDING.AAVE.SUPPLY.image
         ],
         createWorkflow: createETHFearAndGreedCapitalEfficientBuy
     },
@@ -311,28 +268,6 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
         createWorkflow: createSusdeYieldNotification
-    },
-    {
-        'name': 'Deposit USDT on Ionic if yield > 10% APY',
-        'description': 'Deposit USDT on Ionic if the yield gets above 10%',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.YIELD],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/ionic_10.jpg',
-        'image': [
-            TRIGGERS.LENDING.IONIC.LENDING_RATE.image,
-            ACTIONS.LENDING.IONIC.DEPOSIT.image,
-        ],
-        createWorkflow: ionicDepositIfYieldIsHigh
-    },
-    {
-        'name': 'Withdraw USDC from Ionic if yield < 4% APY',
-        'description': 'Withdraw USDC from Ionic if the yield gets below 4%',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.YIELD],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/yield_4.png',
-        'image': [
-            TRIGGERS.LENDING.IONIC.LENDING_RATE.image,
-            ACTIONS.LENDING.IONIC.WITHDRAW.image,
-        ],
-        createWorkflow: ionicWithdrawIfYieldIsLow
     },
     {
         'name': 'MODE transfer notification',
