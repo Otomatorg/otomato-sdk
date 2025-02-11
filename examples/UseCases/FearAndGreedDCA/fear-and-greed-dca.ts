@@ -19,15 +19,13 @@ import {
    *************************************/
   
   const VARIABLES = {
-    CHAIN: CHAINS.MODE,
-    TOKEN_WETH: getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress,
-    TOKEN_USDC: getTokenFromSymbol(CHAINS.MODE, 'USDC').contractAddress,
+    CHAIN: CHAINS.BASE,
+    TOKEN_BTC: getTokenFromSymbol(CHAINS.BASE, 'cbBTC').contractAddress,
+    TOKEN_USDC: getTokenFromSymbol(CHAINS.BASE, 'USDC').contractAddress,
     PERIOD: 1000 * 60 * 60 * 24, // 24 hours
     FEAR_AND_GREED_INDEX: '{{external.functions.btcFearAndGreed()}}',
-    SELL_AMOUNT_WETH: '3000000000000000', // 0.003 WETH (in 18 decimal format)
-    SELL_AMOUNT_USDC: '10000000', // 10 USDC (in 6 decimal format)
-    //SELL_AMOUNT_WETH: '30000000000000', // 0.00003 WETH (in 18 decimal format)
-    //SELL_AMOUNT_USDC: '100000', // 0.1 USDC (in 6 decimal format)
+    SELL_AMOUNT_BTC: 0.0001, // 0.0001 BTC (in 18 decimal format)
+    SELL_AMOUNT_USDC: 10, // 10 USDC (in 6 decimal format)
   };
   
   /*************************************
@@ -68,12 +66,12 @@ import {
    * Action: Swap 0.003 WETH to USDC
    */
   function createSwapWETHToUSDC(): Action {
-    const swap = new Action(ACTIONS.SWAP.ODOS.SWAP);
+    const swap = new Action(ACTIONS.CORE.SWAP.SWAP);
     swap.setChainId(VARIABLES.CHAIN);
   
-    swap.setParams('tokenIn', VARIABLES.TOKEN_WETH);
+    swap.setParams('tokenIn', VARIABLES.TOKEN_BTC);
     swap.setParams('tokenOut', VARIABLES.TOKEN_USDC);
-    swap.setParams('amount', VARIABLES.SELL_AMOUNT_WETH);
+    swap.setParams('amount', VARIABLES.SELL_AMOUNT_BTC);
     swap.setParams('slippage', 0.1); // todo: put to 0.1
   
     return swap;
@@ -101,7 +99,7 @@ import {
     swap.setChainId(VARIABLES.CHAIN);
   
     swap.setParams('tokenIn', VARIABLES.TOKEN_USDC);
-    swap.setParams('tokenOut', VARIABLES.TOKEN_WETH);
+    swap.setParams('tokenOut', VARIABLES.TOKEN_BTC);
     swap.setParams('amount', VARIABLES.SELL_AMOUNT_USDC);
     swap.setParams('slippage', 0.3);
   

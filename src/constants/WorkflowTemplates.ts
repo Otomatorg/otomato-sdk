@@ -47,6 +47,11 @@ const createETHFearAndGreedBuy = async () => {
     return new Workflow('Buy ETH when the market sentiment is extremely fearful', [trigger, odosAction], [edge]);
 }
 
+const createDCAFearAndGreed = async () => {
+    // created with examples/UseCases/FearAndGreedDCA
+    return Workflow.fromJSON({"id":null,"name":"Fear and Greed Workflow","state":"inactive","dateCreated":null,"dateModified":null,"executionId":null,"nodes":[{"id":null,"ref":"1","blockId":18,"type":"trigger","state":"inactive","parameters":{"period":86400000,"timeout":null,"limit":null},"frontendHelpers":{},"position":{"x":400,"y":120}},{"id":null,"ref":"2","blockId":100015,"type":"action","state":"inactive","parameters":{},"frontendHelpers":{},"position":{"x":400,"y":240}},{"id":null,"ref":"3","blockId":100016,"type":"action","state":"inactive","parameters":{"logic":"or","groups":[{"logic":"and","checks":[{"value1":"{{external.functions.btcFearAndGreed()}}","condition":"gt","value2":"80"}]}]},"frontendHelpers":{},"position":{"x":150,"y":360}},{"id":null,"ref":"4","blockId":100013,"type":"action","state":"inactive","parameters":{"chainId":8453,"tokenIn":"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf","tokenOut":"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913","amount":0.0001,"slippage":0.1},"frontendHelpers":{"output":{"amountIn":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenIn}}","chainId":"{{parameters.chainId}}"}},"amountOut":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenOut}}","chainId":"{{parameters.chainId}}"}}}},"position":{"x":150,"y":480}},{"id":null,"ref":"5","blockId":100016,"type":"action","state":"inactive","parameters":{"logic":"or","groups":[{"logic":"and","checks":[{"value1":"{{external.functions.btcFearAndGreed()}}","condition":"lt","value2":"20"}]}]},"frontendHelpers":{},"position":{"x":650,"y":360}},{"id":null,"ref":"6","blockId":100013,"type":"action","state":"inactive","parameters":{"chainId":8453,"tokenIn":"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913","tokenOut":"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf","amount":10,"slippage":0.3},"frontendHelpers":{"output":{"amountIn":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenIn}}","chainId":"{{parameters.chainId}}"}},"amountOut":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenOut}}","chainId":"{{parameters.chainId}}"}}}},"position":{"x":650,"y":480}}],"edges":[{"id":null,"source":"1","target":"2"},{"id":null,"source":"2","target":"3"},{"id":null,"source":"3","target":"4","label":"true","value":"true"},{"id":null,"source":"2","target":"5"},{"id":null,"source":"5","target":"6","label":"true","value":"true"}],"notes":[]});
+}
+
 const createETHFearAndGreedCapitalEfficientBuy = async () => {
     const trigger = new Trigger(TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX);
 
@@ -234,6 +239,17 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: dailyYieldEmail
     },
     {
+        'name': 'Daily Fear & Greed-Based cbBTC Trading',
+        'description': 'Automatically trade cbBTC daily based on the Fear & Greed Index—buy when low, sell when high.',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dcaFearAndGreed.png',
+        'image': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
+            ACTIONS.CORE.SWAP.SWAP.image
+        ],
+        createWorkflow: createDCAFearAndGreed
+    },
+    {
         'name': 'Buy ETH when the market sentiment is extremely fearful - capital efficient',
         'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 45. The idle funds are generating yield on Ionic.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.YIELD],
@@ -280,7 +296,7 @@ export const WORKFLOW_TEMPLATES = [
         ],
         createWorkflow: createModeTransferNotificationWorkflow
     },
-    {
+    /*{
         'name': 'Buy ETH when the market sentiment is extremely fearful',
         'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 30',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
@@ -290,7 +306,8 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.SWAP.ODOS.SWAP.image
         ],
         createWorkflow: createETHFearAndGreedBuy
-    },
+    },*/
+    
     /*{
         'name': 'Copy-trade the trades done on Odos by vitalik.eth',
         'description': 'Buy 100$ of each token that vitalik.eth buys using Odos',
