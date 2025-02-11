@@ -2694,12 +2694,14 @@ export const ACTIONS = {
         "frontendHelpers": {
           "output": {
             "amountIn": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{output.tokenIn}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amountOut": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{output.tokenOut}}",
                 "chainId": "{{parameters.chainId}}"
@@ -2769,7 +2771,7 @@ export const ACTIONS = {
               },
               {
                 "key": "amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "slippage",
@@ -3045,7 +3047,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "tokenToDeposit",
@@ -3150,7 +3152,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "tokenToWithdraw",
@@ -3244,7 +3246,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "tokenToBorrow",
@@ -3325,7 +3327,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "tokenToRepay",
@@ -3485,7 +3487,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "abiParams.onBehalfOf",
@@ -3574,7 +3576,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 10
+                "value": "10000000n"
               },
               {
                 "key": "abiParams.to",
@@ -3728,7 +3730,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "tokenToDeposit",
@@ -3785,7 +3787,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "tokenToWithdraw",
@@ -3880,7 +3882,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "tokenToBorrow",
@@ -3961,7 +3963,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "tokenToRepay",
@@ -4086,7 +4088,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "abiParams.asset",
@@ -4182,7 +4184,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "abiParams.asset",
@@ -4312,7 +4314,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "abiParams.onBehalfOf",
@@ -4401,7 +4403,7 @@ export const ACTIONS = {
               },
               {
                 "key": "abiParams.amount",
-                "value": 10
+                "value": "10000000n"
               },
               {
                 "key": "abiParams.to",
@@ -4496,12 +4498,14 @@ export const ACTIONS = {
         "frontendHelpers": {
           "output": {
             "amountIn": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{output.tokenIn}}",
                 "chainId": "{{parameters.chainId}}"
               }
             },
             "amountOut": {
+              "formatAmount": false,
               "erc20Token": {
                 "contractAddress": "{{output.tokenOut}}",
                 "chainId": "{{parameters.chainId}}"
@@ -4571,7 +4575,7 @@ export const ACTIONS = {
               },
               {
                 "key": "amount",
-                "value": 100
+                "value": "100000000n"
               },
               {
                 "key": "slippage",
