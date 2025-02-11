@@ -38,6 +38,7 @@ import {
   function createPeriodicTrigger(): Trigger {
     const trigger = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
     trigger.setParams('period', VARIABLES.PERIOD);
+    trigger.setParams('limit', 30);
     return trigger;
   }
   
