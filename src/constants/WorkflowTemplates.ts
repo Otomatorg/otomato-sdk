@@ -204,7 +204,7 @@ const dailyYieldEmail = async () => {
     •   IONIC: {{external.functions.ionicLendingRate(34443,0x4200000000000000000000000000000000000006)}}%
     •   Ironclad: {{external.functions.ironcladLendingRate(34443,0x4200000000000000000000000000000000000006)}}%
 
-The gas price on Ethereum is {{external.functions.mainnetGasPrice(,)}}
+The gas price on Ethereum is currently {{external.functions.mainnetGasPrice(,)}} gwei.
 
 See you tomorrow!`);
     notificationAction.setParams("subject", "Daily yield updates");
