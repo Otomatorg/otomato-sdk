@@ -30,12 +30,12 @@ const VARIABLES = {
   TOKEN_ADDRESS: getTokenFromSymbol(chain, 'USDC').contractAddress,
   MONEY_MARKET_1_TOKEN: '0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB', // aave USDC
   MONEY_MARKET_2_TOKEN: '0xb125E6687d4313864e53df431d5425969c15Eb2F', // compound USDC
-  BALANCE_THRESHOLD: '10000',
+  BALANCE_THRESHOLD: 0.1,
 };
 
 // Balances
-const MONEY_MARKET_1_BALANCE = `{{external.functions.erc20Balance(34443,{{smartAccountAddress}},${VARIABLES.MONEY_MARKET_1_TOKEN},,)}}`;
-const MONEY_MARKET_2_BALANCE = `{{external.functions.erc20Balance(34443,{{smartAccountAddress}},${VARIABLES.MONEY_MARKET_2_TOKEN},,)}}`;
+const MONEY_MARKET_1_BALANCE = `{{external.functions.erc20Balance(${chain},{{smartAccountAddress}},${VARIABLES.MONEY_MARKET_1_TOKEN},,)}}`;
+const MONEY_MARKET_2_BALANCE = `{{external.functions.erc20Balance(${chain},{{smartAccountAddress}},${VARIABLES.MONEY_MARKET_2_TOKEN},,)}}`;
 
 const UINT256_MAX =
   '115792089237316195423570985008687907853269984665640564039457584007913129639935n';
@@ -178,12 +178,12 @@ export async function stopLendingAggregator() {
   console.log(JSON.stringify(workflow));
 
   // Create the workflow on the server
-  /*const creationResult = await workflow.create();
+  const creationResult = await workflow.create();
   console.log('Creation Result:', creationResult);
 
   // Optionally run it
   const runResult = await workflow.run();
-  console.log('Run Result:', runResult);*/
+  console.log('Run Result:', runResult);
 }
 
 // For local testing:
