@@ -14,27 +14,6 @@ export async function convertToTokenUnits(amount: number, chainId: number, contr
     // Calculate the result as a number first
     const result = amount * Math.pow(10, decimals);
 
-    // Check if the result is an integer
-    if (!Number.isInteger(result)) {
-        throw new Error(`Conversion resulted in a non-integer value: ${result}. Please provide an amount that results in a whole number of token units.`);
-    }
-    
-    // If we've reached here, the result is an integer, so we can safely convert to BigInt
-    return BigInt(Math.round(result));
-}
-
-export async function convertToTokenUnitsTruncate(amount: number, chainId: number, contractAddress: string): Promise<ethers.BigNumberish> {
-    const token = await getToken(chainId, contractAddress);
-    const decimals = token.decimals;
-
-    // Max BigInt - For Withdraw All from protocols
-    if (amount.toString() === "115792089237316195423570985008687907853269984665640564039457584007913129639935n") {
-      return amount;
-    }
-    
-    // Calculate the result as a number first
-    const result = amount * Math.pow(10, decimals);
-
     return BigInt(Math.floor(result));
 }
 
