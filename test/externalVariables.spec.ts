@@ -43,7 +43,7 @@ describe('external variables construction', () => {
     
     it('should create price movement against currency', () => {
         const variable = getExternalVariable(
-            TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY.prototype,
+            TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY.prototype,
             [
                 CHAINS.MODE,
                 , // comparisonValue
@@ -82,7 +82,7 @@ describe('external variables construction from object', () => {
 
     it('should create price movement against currency', () => {
         const variable = getExternalVariableFromParameters(
-            TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY.prototype,
+            TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY.prototype,
             [
                 {key: 'chainId', value: CHAINS.MODE},
                 {key: 'currency', value: 'USD'}, // currency
@@ -95,7 +95,7 @@ describe('external variables construction from object', () => {
 
     it('should create price movement against currency and automatically fill default values if not provided', () => {
         const variable = getExternalVariableFromParameters(
-            TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY.prototype,
+            TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY.prototype,
             [
                 {key: 'chainId', value: CHAINS.MODE},
                 {key: 'contractAddress', value: getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress},

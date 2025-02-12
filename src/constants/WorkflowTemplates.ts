@@ -62,7 +62,6 @@ const createETHFearAndGreedCapitalEfficientBuy = async () => {
     const chain = CHAINS.BASE;
     const tokenIn = 'USDC';
     const tokenOut = 'WETH';
-
     const ionicWithdraw = new Action(ACTIONS.LENDING.AAVE.WITHDRAW);
     ionicWithdraw.setChainId(chain);
     ionicWithdraw.setParams('asset', getTokenFromSymbol(chain, tokenIn).contractAddress);

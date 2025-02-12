@@ -362,8 +362,8 @@ export const TRIGGERS = {
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/approval.png"
       }
     },
-    "ON_CHAIN_PRICE_MOVEMENT": {
-      "description": "Triggers based on the movement of on-chain prices against specified currencies",
+    "PRICE": {
+      "description": "Triggers based on on-chain price changes",
       "chains": [
         0
       ],
@@ -420,11 +420,11 @@ export const TRIGGERS = {
         "examples": [
           {
             "name": "ETH > 2850$",
-            "description": "Gets triggered when ETH rises above 2850$ on Mode",
+            "description": "Gets triggered when ETH rises above 2850$ on Base",
             "parameters": [
               {
                 "key": "chainId",
-                "value": 34443
+                "value": 8453
               },
               {
                 "key": "comparisonValue",
@@ -440,13 +440,13 @@ export const TRIGGERS = {
               },
               {
                 "key": "contractAddress",
-                "value": "0x0000000000000000000000000000000000000000"
+                "value": "0x4200000000000000000000000000000000000006"
               }
             ]
           },
           {
             "name": "ETH < 2100$",
-            "description": "Gets triggered when ETH falls below 2100$ on Mode",
+            "description": "Gets triggered when ETH falls below 2100$ on Base",
             "parameters": [
               {
                 "key": "chainId",
@@ -466,7 +466,7 @@ export const TRIGGERS = {
               },
               {
                 "key": "contractAddress",
-                "value": "0x0000000000000000000000000000000000000000"
+                "value": "0x4200000000000000000000000000000000000006"
               }
             ]
           },
@@ -504,7 +504,7 @@ export const TRIGGERS = {
   },
   "YIELD": {
     "ETHENA": {
-      "description": "Ethena is a synthetic dollar protocol built on Ethereum that provides a crypto-native solution for money not reliant on traditional banking system infrastructure",
+      "description": "Ethena is a synthetic dollar protocol on Ethereum",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/ethena.svg",
       "SUSDE_YIELD": {
         "name": "sUSDE yield",
@@ -680,7 +680,7 @@ export const TRIGGERS = {
   },
   "LENDING": {
     "IONIC": {
-      "description": "#1 money market for Yield Bearing Assets on the OP Superchain",
+      "description": "Yield-bearing money market on the OP Superchain",
       "chains": [
         34443,
         8453
@@ -822,7 +822,7 @@ export const TRIGGERS = {
       }
     },
     "ASTARIA": {
-      "description": "Astaria is an oracle-less, intent-based, fixed-rate lending protocol supporting unlimited loan durations for any asset",
+      "description": "Intent-based lending protocol",
       "chains": [
         34443
       ],
@@ -910,7 +910,7 @@ export const TRIGGERS = {
       }
     },
     "AAVE": {
-      "description": "A leading DeFi protocol enabling secure borrowing, lending, and yield generation across multiple assets.",
+      "description": "The most used protocol for borrowing, lending, and yield generation",
       "chains": [
         8453
       ],
@@ -1051,7 +1051,7 @@ export const TRIGGERS = {
       }
     },
     "MOONWELL": {
-      "description": "An advanced lending and borrowing platform focused on scalable, fast blockchain networks for optimal performance.",
+      "description": "Yield-bearing money market",
       "chains": [
         8453
       ],
@@ -1202,7 +1202,7 @@ export const TRIGGERS = {
       }
     },
     "COMPOUND": {
-      "description": "Compound is an algorithmic, autonomous interest rate protocol built for developers, to unlock a universe of open financial applications.",
+      "description": "One of the biggest yield-bearing money market",
       "chains": [
         8453
       ],
@@ -1359,7 +1359,7 @@ export const TRIGGERS = {
       }
     },
     "IRONCLAD": {
-      "description": "DeFi needs safe, liquid lending markets and steady stablecoins that drives value to users. We’ve built that foundation and made it Ironclad.",
+      "description": "Yield-bearing money market available on multiple chains.",
       "chains": [
         8453,
         34443
@@ -1503,7 +1503,7 @@ export const TRIGGERS = {
   },
   "DEXES": {
     "ODOS": {
-      "description": "Smart Order Routing across multiple blockchain protocols, 700+ Liquidity Sources and thousands of token pairs, delivering ultimate savings to users",
+      "description": "Monitors events on Odos router",
       "chains": [
         34443,
         1,
@@ -2199,48 +2199,6 @@ export const TRIGGERS = {
     }
   },
   "SOCIALS": {
-    "MODE_NAME_SERVICE": {
-      "description": "Next generation of Mode Mainnet Domains",
-      "chains": [
-        34443
-      ],
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/modens.png",
-      "NAME_REGISTERED": {
-        "name": "Name Registered",
-        "description": "Name registered in Mode Name Service",
-        "type": 0,
-        "contractAddress": "0x2aD86eeEC513AC16804bb05310214C3Fd496835B",
-        "output": {
-          "id": "uint256",
-          "owner": "address",
-          "expires": "uint256",
-          "transactionHash": "string"
-        },
-        "parameters": [
-          {
-            "key": "abiParams.id",
-            "type": "uint256",
-            "description": "ID of the name registered",
-            "category": 1
-          },
-          {
-            "key": "abiParams.owner",
-            "type": "address",
-            "description": "Owner address",
-            "category": 1
-          },
-          {
-            "key": "abiParams.expires",
-            "type": "uint256",
-            "description": "Expiration time",
-            "category": 1
-          },
-        ] as Parameter[],
-        "examples": [],
-        "blockId": 3,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/modens.png"
-      }
-    },
     "FEAR_AND_GREED": {
       "description": "Fetches the Fear and Greed Index",
       "tags": {},
@@ -2304,7 +2262,7 @@ export const TRIGGERS = {
       }
     },
     "X": {
-      "description": "X, formerly known as Twitter, is a social media platform that allows users to share short messages, photos, videos, and more.",
+      "description": "Tracks new tweets in real time",
       "tags": {},
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/X.webp",
       "X_POST_TRIGGER": {

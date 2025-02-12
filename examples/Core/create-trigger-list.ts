@@ -30,7 +30,6 @@ const generateDefaultTriggers = (): any[] => {
     triggersList.push(createDefaultTrigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER));
     triggersList.push(createDefaultTrigger(TRIGGERS.LENDING.ASTARIA.LEND_RECALLED));
     triggersList.push(createDefaultTrigger(TRIGGERS.DEXES.ODOS.SWAP));
-    triggersList.push(createDefaultTrigger(TRIGGERS.SOCIALS.MODE_NAME_SERVICE.NAME_REGISTERED));
 
     return triggersList;
 };
@@ -94,17 +93,11 @@ const generateSpecificTriggers = (): any[] => {
     odosSwapTrigger.setParams("outputToken", "0x888888888889758f76e7103c6cbf23abbf58f946");
     odosSwapTrigger.setParams("exchangeRate", 1.23);
 
-    const nameRegisteredTrigger = new Trigger(TRIGGERS.SOCIALS.MODE_NAME_SERVICE.NAME_REGISTERED);
-    nameRegisteredTrigger.setParams("id", 123456);
-    nameRegisteredTrigger.setParams("owner", "0x888888888889758f76e7103c6cbf23abbf58f946");
-    nameRegisteredTrigger.setParams("expires", 1627848271);
-
     return [
         transferTrigger.toJSON(),
         balanceTrigger.toJSON(),
         lendRecalledTrigger.toJSON(),
         odosSwapTrigger.toJSON(),
-        nameRegisteredTrigger.toJSON(),
     ]
 };
 

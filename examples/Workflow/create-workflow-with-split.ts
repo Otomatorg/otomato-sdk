@@ -11,7 +11,7 @@ async function basicSplit() {
     apiServices.setUrl(process.env.API_URL);
     apiServices.setAuth(process.env.AUTH_TOKEN);    
     
-    const trigger = new Trigger(TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY);
+    const trigger = new Trigger(TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY);
     trigger.setChainId(CHAINS.MODE);
     trigger.setComparisonValue(3000);
     trigger.setCondition('lte');

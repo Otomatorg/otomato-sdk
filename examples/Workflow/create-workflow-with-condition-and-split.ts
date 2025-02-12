@@ -10,7 +10,7 @@ async function ethPriceWorkflowWithSplit() {
     apiServices.setAuth(process.env.AUTH_TOKEN);
 
     // Step 1: Trigger to monitor ETH price
-    const trigger = new Trigger(TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY);
+    const trigger = new Trigger(TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY);
     trigger.setChainId(CHAINS.MODE);
     trigger.setComparisonValue(3000);
     trigger.setCondition('lt'); // 'lt' for less than

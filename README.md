@@ -66,7 +66,7 @@ A Workflow is a collection of Nodes (Triggers and Actions) connected by Edges.
 import { Workflow, Trigger, Action, Edge, TRIGGERS, ACTIONS, CHAINS } from 'otomato-sdk';
 
 // Initialize Trigger and Action nodes
-const priceTrigger = new Trigger(TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY);
+const priceTrigger = new Trigger(TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY);
 priceTrigger.setChainId(CHAINS.MODE);
 priceTrigger.setComparisonValue(3000);
 priceTrigger.setCondition('lte');
@@ -166,7 +166,7 @@ This example demonstrates how to create a workflow that swaps tokens and then de
 import { Workflow, Trigger, Action, Edge, TRIGGERS, ACTIONS, CHAINS, getTokenFromSymbol } from 'otomato-sdk';
 
 // Initialize Trigger
-const priceTrigger = new Trigger(TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY);
+const priceTrigger = new Trigger(TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY);
 priceTrigger.setChainId(CHAINS.MODE);
 priceTrigger.setComparisonValue(3000);
 priceTrigger.setCondition('lte');
@@ -204,7 +204,7 @@ An advanced workflow using conditional branching based on ETH price.
 import { Workflow, Trigger, Action, Edge, TRIGGERS, ACTIONS, CHAINS, LOGIC_OPERATORS, ConditionGroup } from 'otomato-sdk';
 
 // Initialize Trigger
-const ethPriceTrigger = new Trigger(TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY);
+const ethPriceTrigger = new Trigger(TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY);
 ethPriceTrigger.setChainId(CHAINS.MODE);
 ethPriceTrigger.setComparisonValue(3000);
 ethPriceTrigger.setCondition('lt');

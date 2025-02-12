@@ -25,7 +25,7 @@ import {
   
     // Create a trigger
     const trigger = new Trigger(
-      TRIGGERS.TOKENS.ON_CHAIN_PRICE_MOVEMENT.PRICE_MOVEMENT_AGAINST_CURRENCY
+      TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY
     );
     trigger.setChainId(CHAINS.MODE);
     trigger.setComparisonValue(3000);
