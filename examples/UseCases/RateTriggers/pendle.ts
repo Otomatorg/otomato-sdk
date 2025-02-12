@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-async function aerodrome() {
+/*async function aerodrome() {
   if (!process.env.API_URL || !process.env.AUTH_TOKEN)
     return;
 
@@ -54,4 +54,4 @@ async function aerodrome() {
   console.log('pendle state after: ' + workflow.getState());
 }
 
-aerodrome();
+aerodrome();*/

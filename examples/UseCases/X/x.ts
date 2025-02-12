@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-async function x_trigger() {
+/*async function x_trigger() {
   if (!process.env.API_URL || !process.env.AUTH_TOKEN)
     return;
 
@@ -53,4 +53,4 @@ async function x_trigger() {
   console.log('x_trigger state after: ' + workflow.getState());
 }
 
-x_trigger();
+x_trigger();*/
