@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-async function blur_trigger() {
+/*async function blur_trigger() {
   if (!process.env.API_URL || !process.env.AUTH_TOKEN)
     return;
 
@@ -53,4 +53,4 @@ async function blur_trigger() {
   console.log('blur_trigger state after: ' + workflow.getState());
 }
 
-blur_trigger();
+blur_trigger();*/
