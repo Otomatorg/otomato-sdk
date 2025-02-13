@@ -2791,8 +2791,26 @@ export const ACTIONS = {
         "type": 4,
         "description": "Split a branch in multiple ones to parallelized executions",
         "parameters": [
+          {
+            "key": "branchesAmount",
+            "type": "integer",
+            "description": "Amount of parallel branches",
+            "mandatory": true,
+            "category": 0
+          },
         ] as Parameter[],
-        "examples": [],
+        "examples": [
+          {
+            "name": "Split the flow in 3 branches",
+            "description": "Split the flow in 3 branches",
+            "parameters": [
+              {
+                "key": "branchesAmount",
+                "value": 3
+              }
+            ]
+          }
+        ],
         "blockId": 100015,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/split.png"
       }
