@@ -47,6 +47,13 @@ export const TOKENS: Tokens = {
       decimals: 18,
       image: "https://static.debank.com/image/coin/logo_url/usdt/23af7472292cb41dc39b3f1146ead0fe.png"
     },
+    {
+      contractAddress: "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0",
+      name: "wstETH",
+      symbol: "wstETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/project/logo_url/lido/081388ebc44fa042561749bd5338d49e.png"
+    },
   ],
   34443: [
     {
@@ -235,54 +242,54 @@ export const TOKENS: Tokens = {
   ],
   8453: [
     {
-      contractAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
-      name: "USDC",
-      symbol: "USDC",
-      decimals: 6,
-      image: "https://static.debank.com/image/coin/logo_url/usdc/e87790bfe0b3f2ea855dc29069b38818.png"
+        contractAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+        name: "USDC",
+        symbol: "USDC",
+        decimals: 6,
+        image: "https://static.debank.com/image/coin/logo_url/usdc/e87790bfe0b3f2ea855dc29069b38818.png"
     },
     {
-      contractAddress: "0x2416092f143378750bb29b79eD961ab195CcEea5",
-      name: "Renzo Restaked ETH",
-      symbol: "ezETH",
-      decimals: 18,
-      image: "https://assets.coingecko.com/coins/images/34753/small/Ezeth_logo_circle.png?1713496404"
+        contractAddress: "0x2416092f143378750bb29b79eD961ab195CcEea5",
+        name: "Renzo Restaked ETH",
+        symbol: "ezETH",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/34753/small/Ezeth_logo_circle.png?1713496404"
     },
     {
-      contractAddress: "0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452",
-      name: "Wrapped liquid staked Ether 2.0",
-      symbol: "wstETH",
-      decimals: 18,
-      image: "https://basescan.org/token/images/wsteth3_32.png"
+        contractAddress: "0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452",
+        name: "Wrapped liquid staked Ether 2.0",
+        symbol: "wstETH",
+        decimals: 18,
+        image: "https://basescan.org/token/images/wsteth3_32.png"
     },
     
     {
-      contractAddress: "0x4200000000000000000000000000000000000006",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-      decimals: 18,
-      image: "https://basescan.org/token/images/weth_28.png"
+        contractAddress: "0x4200000000000000000000000000000000000006",
+        name: "Wrapped Ether",
+        symbol: "WETH",
+        decimals: 18,
+        image: "https://basescan.org/token/images/weth_28.png"
     },
     {
-      contractAddress: "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
-      name: "USDe",
-      symbol: "USDe",
-      decimals: 18,
-      image: "https://basescan.org/token/images/ethenausde_32.png"
+        contractAddress: "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
+        name: "USDe",
+        symbol: "USDe",
+        decimals: 18,
+        image: "https://basescan.org/token/images/ethenausde_32.png"
     },
     {
-      contractAddress: "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf",
-      name: "Coinbase Wrapped BTC",
-      symbol: "cbBTC",
-      decimals: 8,
-      image: "https://basescan.org/token/images/cbbtc_32.png"
+        contractAddress: "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf",
+        name: "Coinbase Wrapped BTC",
+        symbol: "cbBTC",
+        decimals: 8,
+        image: "https://basescan.org/token/images/cbbtc_32.png"
     },
     {
-      contractAddress: "0x940181a94a35a4569e4529a3cdfb74e38fd98631",
-      name: "Aerodrome",
-      symbol: "AERO",
-      decimals: 18,
-      image: "https://basescan.org/token/images/aerodrome_32.png"
+        contractAddress: "0x940181a94a35a4569e4529a3cdfb74e38fd98631",
+        name: "Aerodrome",
+        symbol: "AERO",
+        decimals: 18,
+        image: "https://basescan.org/token/images/aerodrome_32.png"
     },
     {
         contractAddress: "0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22",
@@ -430,6 +437,20 @@ export const TOKENS: Tokens = {
         symbol: "WELL",
         decimals: 18,
         image: "https://assets.coingecko.com/coins/images/26133/small/WELL.png?1696525221"
+    },
+    {
+        contractAddress: "0xecac9c5f704e954931349da37f60e39f515c11c1",
+        name: "LBTC",
+        symbol: "LBTC",
+        decimals: 8,
+        image: "https://basescan.org/token/images/lombardlbtc_32.png"
+    },
+    {
+        contractAddress: "0x7fcd174e80f264448ebee8c88a7c4476aaf58ea6",
+        name: "wsuperOETHb",
+        symbol: "wsuperOETHb",
+        decimals: 18,
+        image: "https://basescan.org/token/images/originwsuperoethb_32.png"
     }
   ],
   2741: [
