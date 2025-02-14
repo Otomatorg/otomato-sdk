@@ -22,11 +22,6 @@ dotenv.config();
  *************************************/
 const chain = CHAINS.BASE;
 const VARIABLES = {
-  // WETH
-  /*TOKEN_ADDRESS: getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress,
-  MONEY_MARKET_1_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ion-WETH').contractAddress,
-  MONEY_MARKET_2_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ironETH').contractAddress,*/
-  // USDC/ USDT
   TOKEN_ADDRESS: getTokenFromSymbol(chain, 'WETH').contractAddress,
   // MONEY_MARKET_1_TOKEN: "0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB", // aBasUSDC
   MONEY_MARKET_1_TOKEN: "0xD4a0e0b9149BCee3C920d2E00b5dE09138fd8bb7", // aBasWETH
