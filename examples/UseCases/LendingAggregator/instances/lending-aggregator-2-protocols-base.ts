@@ -29,12 +29,15 @@ const VARIABLES = {
   MONEY_MARKET_2_TOKEN: getTokenFromSymbol(CHAINS.MODE, 'ironETH').contractAddress,
   BALANCE_THRESHOLD: 1000000000000, // 0.000001 ETH = 0.03 USDC
   */
-  // USDC/USDC
-  TOKEN_ADDRESS: getTokenFromSymbol(chain, 'USDC').contractAddress,
-  MONEY_MARKET_1_TOKEN: "0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB", // aBasUSDC
-  MONEY_MARKET_2_TOKEN: "0xb125E6687d4313864e53df431d5425969c15Eb2F", // compound USDC on Base
-  BALANCE_THRESHOLD: 0.1, // 0.1 USDC
+  // USDC/USDT
+  TOKEN_ADDRESS: getTokenFromSymbol(chain, 'WETH').contractAddress,
+  // MONEY_MARKET_1_TOKEN: "0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB", // aBasUSDC
+  MONEY_MARKET_1_TOKEN: "0xD4a0e0b9149BCee3C920d2E00b5dE09138fd8bb7", // aBasWETH
+  // MONEY_MARKET_2_TOKEN: "0xb125E6687d4313864e53df431d5425969c15Eb2F", // compound USDC on Base
+  MONEY_MARKET_2_TOKEN: "0x46e6b214b524310239732D51387075E0e70970bf", // compound WETH on Base
+  BALANCE_THRESHOLD: 0.00003, // 0.1 USDC
   LOOP_PERIOD: 1000 * 60 * 60, // 1 hour
+  NAME: "SmartYield WETH",
 };
 
 const IONIC_YIELD = `{{external.functions.aaveLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS})}}`;
@@ -382,7 +385,7 @@ export async function aggregatorWorkflow() {
   /********************************
    * Final Workflow
    ********************************/
-  const workflow = new Workflow('SmartYield USDC', actions, edges);
+  const workflow = new Workflow(VARIABLES.NAME, actions, edges);
 
   // Log JSON (optional)
   console.log(JSON.stringify(workflow));
@@ -392,7 +395,7 @@ export async function aggregatorWorkflow() {
   // console.log("Creation result:", creationResult);
   //console.log("Workflow ID:", workflow.id);
 
-  const runResult = await workflow.run();
+  // const runResult = await workflow.run();
   //console.log("Run result:", runResult);
 }
 
