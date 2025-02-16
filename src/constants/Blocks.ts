@@ -209,6 +209,7 @@ export const TRIGGERS = {
           {
             "name": "Mode balance check",
             "description": "Gets triggered when the MODE balance of vitalik.eth falls below 10,000",
+            "externalVariableDescription": "Fetches the MODE balance of vitalik.eth on Mode",
             "parameters": [
               {
                 "key": "chainId",
@@ -235,6 +236,7 @@ export const TRIGGERS = {
           {
             "name": "Binance balance check",
             "description": "Gets triggered when the Binance hot wallet balance falls below 7B USDT",
+            "externalVariableDescription": "Fetches the USDT balance of Binance hot wallet on Ethereum",
             "parameters": [
               {
                 "key": "chainId",
@@ -421,6 +423,7 @@ export const TRIGGERS = {
           {
             "name": "ETH > 2850$",
             "description": "Gets triggered when ETH rises above 2850$ on Base",
+            "externalVariableDescription": "Fetches the current ETH price in USD on Base",
             "parameters": [
               {
                 "key": "chainId",
@@ -473,6 +476,7 @@ export const TRIGGERS = {
           {
             "name": "MODE < 0.01$",
             "description": "Gets triggered when MODE falls below 0.01$ on Mode Network",
+            "externalVariableDescription": "Fetches the current MODE price in USD on Mode",
             "parameters": [
               {
                 "key": "chainId",
@@ -534,6 +538,7 @@ export const TRIGGERS = {
           {
             "name": "Yield decreasing below 8%",
             "description": "Gets triggered when the yield is below 8%",
+            "externalVariableDescription": "Fetches the current sUSDE staking yield",
             "parameters": [
               {
                 "key": "condition",
@@ -594,6 +599,7 @@ export const TRIGGERS = {
           {
             "name": "Supply above 3B$",
             "description": "Gets triggered when the USDE supply is above 3B$",
+            "externalVariableDescription": "Fetches the USDE total supply",
             "parameters": [
               {
                 "key": "comparisonValue",
@@ -661,6 +667,7 @@ export const TRIGGERS = {
           {
             "name": "PT Implied Yield for USUALx Market",
             "description": "Retrieves the PT implied yield for the USUALx market on Ethereum.",
+            "externalVariableDescription": "Fetches the current PT implied yield for USUALx market on Ethereum",
             "parameters": [
               {
                 "key": "chainId",
@@ -727,6 +734,7 @@ export const TRIGGERS = {
           {
             "name": "USDT Yield is above 5%",
             "description": "Gets triggered when USDT yield rises above 5% on Ionic",
+            "externalVariableDescription": "Fetches the current USDT lending rate on Mode",
             "parameters": [
               {
                 "key": "chainId",
@@ -794,6 +802,7 @@ export const TRIGGERS = {
           {
             "name": "USDT Borrowing Rate is below 3%",
             "description": "Gets triggered when the USDT borrowing rate falls below 3% on Ionic",
+            "externalVariableDescription": "Fetches the current USDT borrowing rate on Mode",
             "parameters": [
               {
                 "key": "chainId",
@@ -959,6 +968,7 @@ export const TRIGGERS = {
           {
             "name": "USDC Lending Rate is above 5%",
             "description": "USDC Lending Rate is above 5% on Base",
+            "externalVariableDescription": "Fetches the current USDC lending rate on Base",
             "parameters": [
               {
                 "key": "chainId",
@@ -1026,6 +1036,7 @@ export const TRIGGERS = {
           {
             "name": "USDC Borrowing Rate is above 3%",
             "description": "USDC Borrowing Rate is above 3% on Base",
+            "externalVariableDescription": "Fetches the current USDC borrowing rate on Base",
             "parameters": [
               {
                 "key": "chainId",
@@ -1105,6 +1116,7 @@ export const TRIGGERS = {
           {
             "name": "USDC Lending Rate is above 5%",
             "description": "USDC Lending Rate is above 5%",
+            "externalVariableDescription": "Fetches the current USDC lending rate on Base",
             "parameters": [
               {
                 "key": "chainId",
@@ -1177,6 +1189,7 @@ export const TRIGGERS = {
           {
             "name": "USDC Borrowing Rate is above 3%",
             "description": "USDC Borrowing Rate is above 3%",
+            "externalVariableDescription": "Fetches the current USDC borrowing rate on Base",
             "parameters": [
               {
                 "key": "chainId",
@@ -1255,6 +1268,7 @@ export const TRIGGERS = {
           {
             "name": "USDC Yield is above 5%",
             "description": "Gets triggered when USDC yield rises above 5% on Compound",
+            "externalVariableDescription": "Fetches the current USDC lending rate on Base",
             "parameters": [
               {
                 "key": "chainId",
@@ -1330,6 +1344,7 @@ export const TRIGGERS = {
           {
             "name": "USDC Borrowing Rate is below 10%",
             "description": "Gets triggered when the USDC borrowing rate falls below 10% on Compound",
+            "externalVariableDescription": "Fetches the current USDC borrowing rate on Base",
             "parameters": [
               {
                 "key": "chainId",
@@ -1409,6 +1424,7 @@ export const TRIGGERS = {
           {
             "name": "USDT Lending Rate is above 5%",
             "description": "USDT Lending Rate is above 5%",
+            "externalVariableDescription": "Fetches the current USDT lending rate on Mode",
             "parameters": [
               {
                 "key": "chainId",
@@ -1476,6 +1492,7 @@ export const TRIGGERS = {
           {
             "name": "USDT Borrowing Rate is above 3%",
             "description": "USDT Borrowing Rate is above 3%",
+            "externalVariableDescription": "Fetches the current USDT borrowing rate on Mode",
             "parameters": [
               {
                 "key": "chainId",
@@ -1552,6 +1569,7 @@ export const TRIGGERS = {
           {
             "name": "USDC Lending Rate is above 5%",
             "description": "USDC Lending Rate is above 5% on Base",
+            "externalVariableDescription": "Fetches the current USDC lending rate on Base",
             "parameters": [
               {
                 "key": "chainId",
@@ -1627,6 +1645,7 @@ export const TRIGGERS = {
           {
             "name": "USDC Lending Rate is above 5%",
             "description": "USDC Lending Rate is above 5% on Mainnet",
+            "externalVariableDescription": "Fetches the current WETH lending rate on Ethereum",
             "parameters": [
               {
                 "key": "chainId",
@@ -2349,7 +2368,7 @@ export const TRIGGERS = {
       }
     },
     "HYPERLIQUID": {
-      "description": "The blockchain to house all finance. Trade, build apps, and launch tokens on the same hyper-performant chain",
+      "description": "Monitor funding rates of any token",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/hyperliquid.webp",
       "FUNDING_RATE": {
         "name": "Funding rate",
@@ -2574,7 +2593,8 @@ export const TRIGGERS = {
         "examples": [
           {
             "name": "Aave hourly rate above 0.01%",
-            "description": "Gets triggered when Aave hourly rate above 0.01%",
+            "description": "Gets triggered when Aave hourly funding rate above 0.01%",
+            "externalVariableDescription": "Gets the AAVE hourly funding rate",
             "parameters": [
               {
                 "key": "asset",
@@ -2629,6 +2649,7 @@ export const TRIGGERS = {
           {
             "name": "Market in extreme fear",
             "description": "Gets triggered when the index is below 20",
+            "externalVariableDescription": "Fetches the Bitcoin Fear and Greed Index value",
             "parameters": [
               {
                 "key": "condition",
@@ -2743,6 +2764,7 @@ export const TRIGGERS = {
           {
             "name": "AUM above 30B$",
             "description": "Gets triggered when the assets under management are above 30B$",
+            "externalVariableDescription": "Fetches IBIT's current assets under management in USD",
             "parameters": [
               {
                 "key": "condition",
@@ -2881,6 +2903,7 @@ export const TRIGGERS = {
           {
             "name": "Gas Price Below 6 Gwei",
             "description": "Triggers when the gas price is below 6 Gwei.",
+            "externalVariableDescription": "Fetches the current Ethereum gas price in Gwei",
             "parameters": [
               {
                 "key": "condition",
