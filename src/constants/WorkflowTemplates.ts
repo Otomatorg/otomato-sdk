@@ -131,6 +131,23 @@ const createSusdeYieldNotification = async () => {
     return new Workflow('sUSDE yield notification', [trigger, notificationAction], [edge]);
 }
 
+const createAAVEBorrowingRateNotificationWorkflow = async () => {
+    const trigger = new Trigger(TRIGGERS.LENDING.AAVE.BORROWING_RATES);
+
+    trigger.setCondition('gte');
+    trigger.setComparisonValue(5);
+    trigger.setChainId(CHAINS.BASE);
+    trigger.setParams('asset', getTokenFromSymbol(CHAINS.BASE, 'USDC').contractAddress);
+
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+    notificationAction.setParams("body", "The USDC borrowing rate on AAVE is above 5%");
+    notificationAction.setParams("subject", "AAVE rates increased!");
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    return new Workflow('AAVE borrowing rate notification', [trigger, notificationAction], [edge]);
+}
+
 const copyTradeVitalikOdos = async () => {
     const trigger = new Trigger(TRIGGERS.DEXES.ODOS.SWAP);
 
@@ -294,6 +311,17 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
         createWorkflow: createModeTransferNotificationWorkflow
+    },
+    {
+        'name': 'AAVE borrowing rate notification',
+        'description': 'Notify me when the USDC borrowing rate on Base is above 5%',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.YIELD],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
+        'image': [
+            TRIGGERS.TOKENS.TRANSFER.TRANSFER.image,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        ],
+        createWorkflow: createAAVEBorrowingRateNotificationWorkflow
     },
     /*{
         'name': 'Buy ETH when the market sentiment is extremely fearful',
