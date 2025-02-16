@@ -3236,6 +3236,70 @@ export const ACTIONS = {
         "blockId": 100015,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/split.png"
       }
+    },
+    "MATHEMATICS": {
+      "description": "Perform basic mathematical operations between two numbers",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/mathematics.png",
+      "SPLIT": {
+        "name": "Mathematics",
+        "type": 6,
+        "description": "Perform mathematical operations between two numbers",
+        "output": {
+          "resultAsFloat": "float",
+          "resultAsInteger": "integer"
+        },
+        "parameters": [
+          {
+            "key": "number1",
+            "type": "integer",
+            "description": "First number for the operation",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "operator",
+            "type": "math_operators",
+            "description": "Mathematical operator to use",
+            "mandatory": true,
+            "enum": [
+              "Multiply",
+              "Subtract",
+              "Add",
+              "Divide"
+            ],
+            "category": 0
+          },
+          {
+            "key": "number2",
+            "type": "integer",
+            "description": "Second number for the operation",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "examples": [
+          {
+            "name": "Multiply two numbers",
+            "description": "Multiply by 1.1 the AAVE USDC lending rate on Base",
+            "parameters": [
+              {
+                "key": "number1",
+                "value": "{{external.functions.aaveLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,,)}}"
+              },
+              {
+                "key": "operator",
+                "value": "Multiply"
+              },
+              {
+                "key": "number2",
+                "value": 1.1
+              }
+            ]
+          }
+        ],
+        "blockId": 100019,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/mathematics.png"
+      }
     }
   },
   "NOTIFICATIONS": {
