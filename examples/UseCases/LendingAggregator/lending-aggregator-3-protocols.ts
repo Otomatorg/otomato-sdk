@@ -137,12 +137,6 @@ function createCheckWalletBalanceCondition(): Action {
   return condition;
 }
 
-function createWaitAction(duration: string = '10000'): Action {
-  const waitAction: Action = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
-  waitAction.setParams('time', duration);
-  return waitAction;
-}
-
 /*************************************
  * 5. Main Workflow Builder (No manual edges or pushes)
  *************************************/
@@ -160,11 +154,11 @@ export async function lendingAggregatorWorkflow(): Promise<void> {
   const periodicTrigger = createPeriodicTrigger();
   workflow.addNode(periodicTrigger);  // This just places the first node (no "before" node yet)
 
-  // 4) Insert a “primary split” after the trigger
+  // 4) Insert a "primary split" after the trigger
   const primarySplit = createSplitAction();
   workflow.insertNode(primarySplit, periodicTrigger);
 
-  // 5) Insert three “best yield” conditions from the same parent (primarySplit)
+  // 5) Insert three "best yield" conditions from the same parent (primarySplit)
   const bestYieldP1 = createHighestYieldCondition(PROTOCOL1.yield, PROTOCOL2.yield, PROTOCOL3.yield);
   const bestYieldP2 = createHighestYieldCondition(PROTOCOL2.yield, PROTOCOL1.yield, PROTOCOL3.yield);
   const bestYieldP3 = createHighestYieldCondition(PROTOCOL3.yield, PROTOCOL1.yield, PROTOCOL2.yield);
@@ -173,7 +167,7 @@ export async function lendingAggregatorWorkflow(): Promise<void> {
   workflow.insertNode(bestYieldP2, primarySplit);
   workflow.insertNode(bestYieldP3, primarySplit);
 
-  // 6) For each “best yield” node, insert a sub-split that branches to 3 sub-scenarios:
+  // 6) For each "best yield" node, insert a sub-split that branches to 3 sub-scenarios:
   //    - Move funds from Protocol X
   //    - Move funds from Protocol Y
   //    - Wait and deposit from wallet
@@ -199,11 +193,9 @@ export async function lendingAggregatorWorkflow(): Promise<void> {
   const depositP1FromP3 = PROTOCOL1.deposit();
   workflow.insertNode(depositP1FromP3, withdrawP3ForP1);
 
-  // Sub-branch C: Insert a wait, then an IF to check wallet funds
-  const waitP1 = createWaitAction('120000');
-  workflow.insertNode(waitP1, splitP1);
+  // Sub-branch C: Check wallet funds directly (remove wait)
   const checkWalletForP1 = createCheckWalletBalanceCondition();
-  workflow.insertCondition(checkWalletForP1, waitP1, undefined, false, false);
+  workflow.insertCondition(checkWalletForP1, splitP1, undefined, false, false);
   const depositWalletToP1 = PROTOCOL1.deposit();
   workflow.insertNode(depositWalletToP1, checkWalletForP1);
 
@@ -227,11 +219,9 @@ export async function lendingAggregatorWorkflow(): Promise<void> {
   const depositP2FromP3 = PROTOCOL2.deposit();
   workflow.insertNode(depositP2FromP3, withdrawP3ForP2);
 
-  // Sub-branch C
-  const waitP2 = createWaitAction('120000');
-  workflow.insertNode(waitP2, splitP2);
+  // Sub-branch C: Check wallet funds directly (remove wait)
   const checkWalletForP2 = createCheckWalletBalanceCondition();
-  workflow.insertCondition(checkWalletForP2, waitP2, undefined, false, false);
+  workflow.insertCondition(checkWalletForP2, splitP2, undefined, false, false);
   const depositWalletToP2 = PROTOCOL2.deposit();
   workflow.insertNode(depositWalletToP2, checkWalletForP2);
 
@@ -255,11 +245,9 @@ export async function lendingAggregatorWorkflow(): Promise<void> {
   const depositP3FromP2 = PROTOCOL3.deposit();
   workflow.insertNode(depositP3FromP2, withdrawP2ForP3);
 
-  // Sub-branch C
-  const waitP3 = createWaitAction('120000');
-  workflow.insertNode(waitP3, splitP3);
+  // Sub-branch C: Check wallet funds directly (remove wait)
   const checkWalletForP3 = createCheckWalletBalanceCondition();
-  workflow.insertCondition(checkWalletForP3, waitP3, undefined, false, false);
+  workflow.insertCondition(checkWalletForP3, splitP3, undefined, false, false);
   const depositWalletToP3 = PROTOCOL3.deposit();
   workflow.insertNode(depositWalletToP3, checkWalletForP3);
 
@@ -268,6 +256,6 @@ export async function lendingAggregatorWorkflow(): Promise<void> {
   const creationResult = await workflow.create();
 
   // Optionally, run it:
-  // const runResult = await workflow.run();
+  const runResult = await workflow.run();
 }
 lendingAggregatorWorkflow();
