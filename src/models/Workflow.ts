@@ -109,10 +109,7 @@ export class Workflow {
 
     // CASE A: If no nodeAfter => we create a single edge from nodeBefore to nodeToInsert
     if (!nodeAfter) {
-      // Add the new node to the workflow
       this.addNode(nodeToInsert);
-
-      // Create the edge nodeBefore->nodeToInsert
       const newEdge = new Edge({
         source: nodeBefore,
         target: nodeToInsert,
@@ -120,33 +117,30 @@ export class Workflow {
         value: edgeValueBefore ?? undefined
       });
       this.addEdge(newEdge);
-
-      // Recalculate positions
       positionWorkflowNodes(this);
       return;
     }
 
-    // CASE B: nodeAfter is provided => we expect an edge nodeBefore->nodeAfter to exist
+    // CASE B: nodeAfter is provided => we expect edge(s) nodeBefore->nodeAfter to exist
     if (!this.nodes.includes(nodeAfter)) {
       throw new Error('The nodeAfter must exist in the workflow.');
     }
 
-    // Find the existing edge nodeBefore->nodeAfter
-    const edgeBetween = this.edges.find(
+    // Find all existing edges between nodeBefore and nodeAfter
+    const edgesBetween = this.edges.filter(
       (edge) => edge.source === nodeBefore && edge.target === nodeAfter
     );
-    if (!edgeBetween) {
+    if (edgesBetween.length === 0) {
       throw new Error('No edge exists between nodeBefore and nodeAfter.');
     }
 
     // Add the new node to the workflow
     this.addNode(nodeToInsert);
 
-    // Remove the existing edge between nodeBefore and nodeAfter
-    this.edges = this.edges.filter((edge) => edge !== edgeBetween);
+    // Remove all existing edges between nodeBefore and nodeAfter
+    this.edges = this.edges.filter((edge) => !edgesBetween.includes(edge));
 
     // Create the two new edges:
-    // 1) nodeBefore->nodeToInsert
     const newEdge1 = new Edge({
       source: nodeBefore,
       target: nodeToInsert,
@@ -154,7 +148,6 @@ export class Workflow {
       value: edgeValueBefore ?? undefined
     });
 
-    // 2) nodeToInsert->nodeAfter
     const newEdge2 = new Edge({
       source: nodeToInsert,
       target: nodeAfter,
@@ -163,8 +156,6 @@ export class Workflow {
     });
 
     this.addEdges([newEdge1, newEdge2]);
-
-    // Recalculate positions
     positionWorkflowNodes(this);
   }
 
@@ -214,7 +205,7 @@ export class Workflow {
    * 
    * @param nodeToInsert     The split node to insert (e.g. type="Split").
    * @param nodeBefore       The node after which the split is inserted.
-   * @param nodeAfter        (Optional) If we’re splitting in the middle of a flow, the node that was originally after `nodeBefore`.
+   * @param nodeAfter        (Optional) If we're splitting in the middle of a flow, the node that was originally after `nodeBefore`.
    * @param numberOfBranches The total number of branches to create from `nodeToInsert`.
    */
   public insertSplit(

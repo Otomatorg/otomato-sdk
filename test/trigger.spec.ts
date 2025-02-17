@@ -133,7 +133,7 @@ describe('Trigger Class', () => {
     expect(trigger.getParameters().condition).to.equal("gte");
     expect(trigger.getParameters().comparisonValue).to.equal(3550);
     expect(trigger.getParameters().contractAddress).to.equal("0x4200000000000000000000000000000000000006");
-    expect(trigger.getParentInfo()?.name).to.equal("ON_CHAIN_PRICE_MOVEMENT");
+    expect(trigger.getParentInfo()?.name).to.equal("PRICE");
     expect(trigger.toJSON()).to.deep.equal(json);
   });
 

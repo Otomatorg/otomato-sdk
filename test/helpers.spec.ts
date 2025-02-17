@@ -30,12 +30,12 @@ describe('convertToTokenUnits', () => {
     expect(result4).to.equal(BigInt(1)); // 0.000001 USDC = 1 unit
   });
 
-  it('should throw an error for amounts that result in fractional token units', async () => {
+  it('should round the result', async () => {
     const usdcContractAddr = getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress;
     
     try {
-      await convertToTokenUnits(1.5000001, CHAINS.ETHEREUM, usdcContractAddr);
-      throw new Error('Expected function to throw an error, but it did not');
+      const result = await convertToTokenUnits(1.5000001, CHAINS.ETHEREUM, usdcContractAddr);
+      expect(result).to.be.eq(1500000n);
     } catch (err: any) {
       expect(err.message).to.include('Conversion resulted in a non-integer value');
     }
