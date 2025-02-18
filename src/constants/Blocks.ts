@@ -3240,7 +3240,7 @@ export const ACTIONS = {
     "MATHEMATICS": {
       "description": "Perform basic mathematical operations between two numbers",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/mathematics.png",
-      "SPLIT": {
+      "MATHEMATICS": {
         "name": "Mathematics",
         "type": 6,
         "description": "Perform mathematical operations between two numbers",
@@ -3251,27 +3251,27 @@ export const ACTIONS = {
         "parameters": [
           {
             "key": "number1",
-            "type": "integer",
+            "type": "float",
             "description": "First number for the operation",
             "mandatory": true,
             "category": 0
           },
           {
             "key": "operator",
-            "type": "math_operators",
+            "type": "string",
             "description": "Mathematical operator to use",
             "mandatory": true,
             "enum": [
-              "Multiply",
-              "Subtract",
-              "Add",
-              "Divide"
+              "+",
+              "-",
+              "*",
+              "/"
             ],
             "category": 0
           },
           {
             "key": "number2",
-            "type": "integer",
+            "type": "float",
             "description": "Second number for the operation",
             "mandatory": true,
             "category": 0
@@ -3288,7 +3288,7 @@ export const ACTIONS = {
               },
               {
                 "key": "operator",
-                "value": "Multiply"
+                "value": "*"
               },
               {
                 "key": "number2",
@@ -3453,7 +3453,42 @@ export const ACTIONS = {
     },
     "TELEGRAM": {
       "description": "Telegram is a cloud-based mobile and desktop messaging app with a focus on security and speed.",
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg"
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg",
+      "SEND_MESSAGE": {
+        "name": "Send message",
+        "type": 0,
+        "description": "Notifies you by sending a Telegram message to the chat of your choice",
+        "output": {
+          "message": "string"
+        },
+        "parameters": [
+          {
+            "key": "message",
+            "type": "paragraph",
+            "description": "The text content to send",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "chat_id",
+            "type": "string",
+            "description": "Channel id",
+            "mandatory": true,
+            "private": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "template": {
+          "url": "{{webhook}}",
+          "body": {
+            "chat_id": "{{chat_id}}",
+            "text": "{{message}}"
+          }
+        },
+        "examples": [],
+        "blockId": 100001,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg"
+      }
     }
   },
   "LENDING": {

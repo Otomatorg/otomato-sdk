@@ -19,8 +19,9 @@ dotenv.config();
 const VARIABLES = {
   CHAIN: CHAINS.BASE,
   TOKEN_ADDRESS: getTokenFromSymbol(CHAINS.BASE, 'USDC').contractAddress,
-  BALANCE_THRESHOLD: 100000, // for example, 0.1 USDC
+  BALANCE_THRESHOLD: 0.1, // for example, 0.1 USDC
   LOOP_PERIOD: 1000 * 60 * 60, // 1 hour (in ms)
+  YIELD_BUFFER: 1.1,
 };
 
 /*************************************
@@ -35,7 +36,7 @@ const UINT256_MAX: string =
 const WALLET_USDC_BALANCE: string = `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${VARIABLES.TOKEN_ADDRESS},,)}}`;
 
 const PROTOCOL1 = {
-  yield: `{{external.functions.aaveLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS})}}`,
+  yield: `{{external.functions.aaveLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS},,)}}`,
   balance: `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${'0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB'},,)}}`,
   deposit: (): Action => {
     const deposit: Action = new Action(ACTIONS.LENDING.AAVE.SUPPLY);
@@ -54,7 +55,7 @@ const PROTOCOL1 = {
 };
 
 const PROTOCOL2 = {
-  yield: `{{external.functions.compoundLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS})}}`,
+  yield: `{{external.functions.compoundLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS},,,)}}`,
   balance: `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${'0xb125E6687d4313864e53df431d5425969c15Eb2F'},,)}}`,
   deposit: (): Action => {
     const deposit: Action = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
@@ -73,7 +74,7 @@ const PROTOCOL2 = {
 };
 
 const PROTOCOL3 = {
-  yield: `{{external.functions.moonwellLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS})}}`,
+  yield: `{{external.functions.moonwellLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS},,)}}`,
   balance: `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${'0xEdc817A28E8B93B03976FBd4a3dDBc9f7D176c22'},,)}}`,
   deposit: (): Action => {
     const deposit: Action = new Action(ACTIONS.LENDING.MOONWELL.DEPOSIT);
@@ -105,6 +106,14 @@ function createSplitAction(): Action {
   return new Action(ACTIONS.CORE.SPLIT.SPLIT);
 }
 
+function createYieldBufferBlock(yieldExpression: string): Action {
+  const mathBlock = new Action(ACTIONS.CORE.MATHEMATICS.MATHEMATICS);
+  mathBlock.setParams('number1', yieldExpression);
+  mathBlock.setParams('operator', '*');
+  mathBlock.setParams('number2', VARIABLES.YIELD_BUFFER);
+  return mathBlock;
+}
+
 function createHighestYieldCondition(
   winningYield: string,
   otherYield1: string,
@@ -119,11 +128,12 @@ function createHighestYieldCondition(
   return condition;
 }
 
-function createCheckProtocolBalanceCondition(balanceExpression: string): Action {
+function createCheckProtocolBalanceConditionAndYieldAbove10Percent(balanceExpression: string, actualYield: string, protocolYield: string): Action {
   const condition: Action = new Action(ACTIONS.CORE.CONDITION.IF);
   condition.setParams('logic', LOGIC_OPERATORS.OR);
   const group: ConditionGroup = new ConditionGroup(LOGIC_OPERATORS.AND);
   group.addConditionCheck(balanceExpression, 'gt', VARIABLES.BALANCE_THRESHOLD);
+  group.addConditionCheck(protocolYield, 'lte', actualYield);
   condition.setParams('groups', [group]);
   return condition;
 }
@@ -152,11 +162,36 @@ export async function lendingAggregatorWorkflow(): Promise<void> {
 
   // 3) Add a root node: the periodic trigger
   const periodicTrigger = createPeriodicTrigger();
-  workflow.addNode(periodicTrigger);  // This just places the first node (no "before" node yet)
+  workflow.addNode(periodicTrigger);
 
-  // 4) Insert a "primary split" after the trigger
+  const bufferedYieldP1 = createYieldBufferBlock(PROTOCOL1.yield);
+  const bufferedYieldP2 = createYieldBufferBlock(PROTOCOL2.yield);
+  const bufferedYieldP3 = createYieldBufferBlock(PROTOCOL3.yield);
+
+  workflow.insertNode(bufferedYieldP1, periodicTrigger);
+  workflow.insertNode(bufferedYieldP2, bufferedYieldP1);
+  workflow.insertNode(bufferedYieldP3, bufferedYieldP2);
+
+  const currentYieldP1 = bufferedYieldP1.getParameterVariableName('number1')
+  const currentYieldP2 = bufferedYieldP2.getParameterVariableName('number1')
+  const currentYieldP3 = bufferedYieldP3.getParameterVariableName('number1')
+  const bumpedYieldP1 = bufferedYieldP1.getOutputVariableName('resultAsFloat');
+  const bumpedYieldP2 = bufferedYieldP2.getOutputVariableName('resultAsFloat');
+  const bumpedYieldP3 = bufferedYieldP3.getOutputVariableName('resultAsFloat');
+
+  const telegramAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+  telegramAction.setParams("message", `
+    AAVE yield: ${currentYieldP1} | ${bumpedYieldP1}
+    Compound yield: ${currentYieldP2} | ${bumpedYieldP2}
+    Moonwell yield: ${currentYieldP3} | ${bumpedYieldP3}
+    `);
+  telegramAction.setParams("webhook", `https://hooks.slack.com/services/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`);
+  
+  workflow.insertNode(telegramAction, bufferedYieldP3);
+
+  // 4) Insert a "primary split" after the 3rd mathematics block
   const primarySplit = createSplitAction();
-  workflow.insertNode(primarySplit, periodicTrigger);
+  workflow.insertNode(primarySplit, telegramAction);
 
   // 5) Insert three "best yield" conditions from the same parent (primarySplit)
   const bestYieldP1 = createHighestYieldCondition(PROTOCOL1.yield, PROTOCOL2.yield, PROTOCOL3.yield);
@@ -174,74 +209,74 @@ export async function lendingAggregatorWorkflow(): Promise<void> {
 
   // ========== Protocol 1 Wins ==========
   const splitP1 = createSplitAction();
-  workflow.insertNode(splitP1, bestYieldP1);
+  workflow.insertNode(splitP1, bestYieldP1, undefined, 'true', 'true');
 
   // Sub-branch A: Insert an IF to check for Protocol2 balance
-  const checkP2ForP1 = createCheckProtocolBalanceCondition(PROTOCOL2.balance);
-  workflow.insertCondition(checkP2ForP1, splitP1, undefined, false, false); 
+  const checkP2ForP1 = createCheckProtocolBalanceConditionAndYieldAbove10Percent(PROTOCOL2.balance, currentYieldP1, bumpedYieldP2);
+  workflow.insertNode(checkP2ForP1, splitP1); 
   // Then chain withdraw -> deposit
   const withdrawP2ForP1 = PROTOCOL2.withdraw();
-  workflow.insertNode(withdrawP2ForP1, checkP2ForP1);
+  workflow.insertNode(withdrawP2ForP1, checkP2ForP1, undefined, 'true', 'true');
   const depositP1FromP2 = PROTOCOL1.deposit();
   workflow.insertNode(depositP1FromP2, withdrawP2ForP1);
 
   // Sub-branch B: Insert an IF to check for Protocol3 balance
-  const checkP3ForP1 = createCheckProtocolBalanceCondition(PROTOCOL3.balance);
-  workflow.insertCondition(checkP3ForP1, splitP1, undefined, false, false);
+  const checkP3ForP1 = createCheckProtocolBalanceConditionAndYieldAbove10Percent(PROTOCOL3.balance, currentYieldP1, bumpedYieldP3);
+  workflow.insertNode(checkP3ForP1, splitP1);
   const withdrawP3ForP1 = PROTOCOL3.withdraw();
-  workflow.insertNode(withdrawP3ForP1, checkP3ForP1);
+  workflow.insertNode(withdrawP3ForP1, checkP3ForP1, undefined, 'true', 'true');
   const depositP1FromP3 = PROTOCOL1.deposit();
   workflow.insertNode(depositP1FromP3, withdrawP3ForP1);
 
   // Sub-branch C: Check wallet funds directly (remove wait)
   const checkWalletForP1 = createCheckWalletBalanceCondition();
-  workflow.insertCondition(checkWalletForP1, splitP1, undefined, false, false);
+  workflow.insertNode(checkWalletForP1, splitP1);
   const depositWalletToP1 = PROTOCOL1.deposit();
-  workflow.insertNode(depositWalletToP1, checkWalletForP1);
+  workflow.insertNode(depositWalletToP1, checkWalletForP1, undefined, 'true', 'true');
 
   // ========== Protocol 2 Wins ==========
   const splitP2 = createSplitAction();
-  workflow.insertNode(splitP2, bestYieldP2);
+  workflow.insertNode(splitP2, bestYieldP2, undefined, 'true', 'true');
 
   // Sub-branch A
-  const checkP1ForP2 = createCheckProtocolBalanceCondition(PROTOCOL1.balance);
-  workflow.insertCondition(checkP1ForP2, splitP2, undefined, false, false);
+  const checkP1ForP2 = createCheckProtocolBalanceConditionAndYieldAbove10Percent(PROTOCOL1.balance, currentYieldP2, bumpedYieldP1);
+  workflow.insertNode(checkP1ForP2, splitP2);
   const withdrawP1ForP2 = PROTOCOL1.withdraw();
-  workflow.insertNode(withdrawP1ForP2, checkP1ForP2);
+  workflow.insertNode(withdrawP1ForP2, checkP1ForP2, undefined, 'true', 'true');
   const depositP2FromP1 = PROTOCOL2.deposit();
   workflow.insertNode(depositP2FromP1, withdrawP1ForP2);
 
   // Sub-branch B
-  const checkP3ForP2 = createCheckProtocolBalanceCondition(PROTOCOL3.balance);
-  workflow.insertCondition(checkP3ForP2, splitP2, undefined, false, false);
+  const checkP3ForP2 = createCheckProtocolBalanceConditionAndYieldAbove10Percent(PROTOCOL3.balance, currentYieldP2, bumpedYieldP3);
+  workflow.insertNode(checkP3ForP2, splitP2);
   const withdrawP3ForP2 = PROTOCOL3.withdraw();
-  workflow.insertNode(withdrawP3ForP2, checkP3ForP2);
+  workflow.insertNode(withdrawP3ForP2, checkP3ForP2, undefined, 'true', 'true');
   const depositP2FromP3 = PROTOCOL2.deposit();
   workflow.insertNode(depositP2FromP3, withdrawP3ForP2);
 
   // Sub-branch C: Check wallet funds directly (remove wait)
   const checkWalletForP2 = createCheckWalletBalanceCondition();
-  workflow.insertCondition(checkWalletForP2, splitP2, undefined, false, false);
+  workflow.insertNode(checkWalletForP2, splitP2);
   const depositWalletToP2 = PROTOCOL2.deposit();
-  workflow.insertNode(depositWalletToP2, checkWalletForP2);
+  workflow.insertNode(depositWalletToP2, checkWalletForP2, undefined, 'true', 'true');
 
   // ========== Protocol 3 Wins ==========
   const splitP3 = createSplitAction();
-  workflow.insertNode(splitP3, bestYieldP3);
+  workflow.insertNode(splitP3, bestYieldP3, undefined, 'true', 'true');
 
   // Sub-branch A
-  const checkP1ForP3 = createCheckProtocolBalanceCondition(PROTOCOL1.balance);
-  workflow.insertCondition(checkP1ForP3, splitP3, undefined, false, false);
+  const checkP1ForP3 = createCheckProtocolBalanceConditionAndYieldAbove10Percent(PROTOCOL1.balance, currentYieldP3, bumpedYieldP1);
+  workflow.insertNode(checkP1ForP3, splitP3);
   const withdrawP1ForP3 = PROTOCOL1.withdraw();
-  workflow.insertNode(withdrawP1ForP3, checkP1ForP3);
+  workflow.insertNode(withdrawP1ForP3, checkP1ForP3, undefined, 'true', 'true');
   const depositP3FromP1 = PROTOCOL3.deposit();
   workflow.insertNode(depositP3FromP1, withdrawP1ForP3);
 
   // Sub-branch B
-  const checkP2ForP3 = createCheckProtocolBalanceCondition(PROTOCOL2.balance);
+  const checkP2ForP3 = createCheckProtocolBalanceConditionAndYieldAbove10Percent(PROTOCOL2.balance, currentYieldP3, bumpedYieldP2);
   workflow.insertCondition(checkP2ForP3, splitP3, undefined, false, false);
   const withdrawP2ForP3 = PROTOCOL2.withdraw();
-  workflow.insertNode(withdrawP2ForP3, checkP2ForP3);
+  workflow.insertNode(withdrawP2ForP3, checkP2ForP3, undefined, 'true', 'true');
   const depositP3FromP2 = PROTOCOL3.deposit();
   workflow.insertNode(depositP3FromP2, withdrawP2ForP3);
 
@@ -249,7 +284,7 @@ export async function lendingAggregatorWorkflow(): Promise<void> {
   const checkWalletForP3 = createCheckWalletBalanceCondition();
   workflow.insertCondition(checkWalletForP3, splitP3, undefined, false, false);
   const depositWalletToP3 = PROTOCOL3.deposit();
-  workflow.insertNode(depositWalletToP3, checkWalletForP3);
+  workflow.insertNode(depositWalletToP3, checkWalletForP3, undefined, 'true', 'true');
 
   // 7) Create the final workflow on the server
   console.log('Final aggregator workflow:', JSON.stringify(workflow, null, 2));
