@@ -480,6 +480,7 @@ describe('Workflow Class', () => {
     expect(json).to.deep.equal({
       name: "Test Workflow",
       id: null,
+      agentId: null,
       dateCreated: null,
       dateModified: null,
       executionId: null,
