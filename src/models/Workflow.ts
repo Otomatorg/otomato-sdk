@@ -422,20 +422,18 @@ export class Workflow {
   async load(workflowId: string): Promise<Workflow> {
     try {
       const response = await apiServices.get(`/workflows/${workflowId}`);
-      const data = response.data;
-
-      const workflow = new Workflow(data.name);
-      workflow.id = data.id;
-      workflow.state = data.state;
-      workflow.dateCreated = data.dateCreated;
-      workflow.dateModified = data.dateModified;
-      workflow.executionId = data.executionId;
-      workflow.agentId = data.agentId;
-      this.nodes = await Promise.all(data.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
-      this.edges = data.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
-      this.notes = data.notes.map((noteData: any) => Note.fromJSON(noteData));
-      positionWorkflowNodes(workflow);
-      return workflow;
+      this.id = response.id;
+      this.name = response.name;
+      this.state = response.state as WorkflowState;
+      this.dateCreated = response.dateCreated;
+      this.executionId = response.executionId;
+      this.agentId = response.agentId;
+      this.dateModified = response.dateModified;
+      this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
+      this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
+      this.notes = response.notes.map((noteData: any) => Note.fromJSON(noteData));
+      positionWorkflowNodes(this);
+      return this;
     } catch (error: any) {
       throw new Error(`Failed to load workflow: ${error.message}`);
     }
