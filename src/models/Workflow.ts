@@ -18,6 +18,7 @@ export class Workflow {
   dateCreated: string | null = null;
   dateModified: string | null = null;
   executionId: string | null = null;
+  agentId: string | null = null;
   notes: Note[] = [];
 
   constructor(name: string = '', nodes: Node[] = [], edges: Edge[] = []) {
@@ -337,6 +338,7 @@ export class Workflow {
       dateCreated: this.dateCreated,
       dateModified: this.dateModified,
       executionId: this.executionId,
+      agentId: this.agentId,
       nodes: this.nodes.map(node => node.toJSON()),
       edges: this.edges.map(edge => edge.toJSON()),
       notes: this.getNotes(),
@@ -348,9 +350,10 @@ export class Workflow {
       const response = await apiServices.post('/workflows', this.toJSON());
 
       if (response.status === 201) {
-        this.id = response.data.id; // Assign the returned ID to the workflow instance
+        this.id = response.data.id;
         this.dateCreated = response.data.dateCreated;
         this.dateModified = response.data.dateModified;
+        this.agentId = response.data.agentId;
 
         // Assign IDs to the nodes based on the response
         response.data.nodes.forEach((nodeResponse: any) => {
@@ -419,17 +422,20 @@ export class Workflow {
   async load(workflowId: string): Promise<Workflow> {
     try {
       const response = await apiServices.get(`/workflows/${workflowId}`);
-      this.id = response.id;
-      this.name = response.name;
-      this.state = response.state as WorkflowState;
-      this.dateCreated = response.dateCreated;
-      this.executionId = response.executionId;
-      this.dateModified = response.dateModified;
-      this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
-      this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
-      this.notes = response.notes.map((noteData: any) => Note.fromJSON(noteData));
-      positionWorkflowNodes(this);
-      return this;
+      const data = response.data;
+
+      const workflow = new Workflow(data.name);
+      workflow.id = data.id;
+      workflow.state = data.state;
+      workflow.dateCreated = data.dateCreated;
+      workflow.dateModified = data.dateModified;
+      workflow.executionId = data.executionId;
+      workflow.agentId = data.agentId;
+      this.nodes = await Promise.all(data.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
+      this.edges = data.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
+      this.notes = data.notes.map((noteData: any) => Note.fromJSON(noteData));
+      positionWorkflowNodes(workflow);
+      return workflow;
     } catch (error: any) {
       throw new Error(`Failed to load workflow: ${error.message}`);
     }
