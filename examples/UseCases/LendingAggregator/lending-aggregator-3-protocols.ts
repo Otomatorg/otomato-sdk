@@ -1,4 +1,4 @@
-import {
+/*import {
   ACTIONS,
   Action,
   Trigger,
@@ -13,9 +13,9 @@ import {
 import dotenv from 'dotenv';
 dotenv.config();
 
-/*************************************
- * 1. Generic Variables
- *************************************/
+/////////////////////
+// 1. Generic Variables
+/////////////////////
 const VARIABLES = {
   CHAIN: CHAINS.BASE,
   TOKEN_ADDRESS: getTokenFromSymbol(CHAINS.BASE, 'USDC').contractAddress,
@@ -24,15 +24,15 @@ const VARIABLES = {
   YIELD_BUFFER: 1.1,
 };
 
-/*************************************
- * 2. Global Constants
- *************************************/
+/////////////////////
+// 2. Global Constants
+/////////////////////
 const UINT256_MAX: string =
   '115792089237316195423570985008687907853269984665640564039457584007913129639935n';
 
-/*************************************
- * 3. Protocol-Specific Configurations
- *************************************/
+/////////////////////
+// 3. Protocol-Specific Configurations
+/////////////////////
 const WALLET_USDC_BALANCE: string = `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${VARIABLES.TOKEN_ADDRESS},,)}}`;
 
 const PROTOCOL1 = {
@@ -92,9 +92,9 @@ const PROTOCOL3 = {
   },
 };
 
-/*************************************
- * 4. Helper Functions
- *************************************/
+/////////////////////
+// 4. Helper Functions
+/////////////////////
 function createPeriodicTrigger(): Action {
   const trigger: Action = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
   trigger.setParams('period', VARIABLES.LOOP_PERIOD);
@@ -147,9 +147,9 @@ function createCheckWalletBalanceCondition(): Action {
   return condition;
 }
 
-/*************************************
- * 5. Main Workflow Builder (No manual edges or pushes)
- *************************************/
+/////////////////////
+// 5. Main Workflow Builder
+/////////////////////
 export async function lendingAggregatorWorkflow(): Promise<void> {
   if (!process.env.API_URL || !process.env.AUTH_TOKEN) return;
 
@@ -185,7 +185,7 @@ export async function lendingAggregatorWorkflow(): Promise<void> {
     Compound yield: ${currentYieldP2} | ${bumpedYieldP2}
     Moonwell yield: ${currentYieldP3} | ${bumpedYieldP3}
     `);
-  telegramAction.setParams("webhook", `https://hooks.slack.com/services/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`);
+  telegramAction.setParams("webhook", process.env.SLACK_WEBHOOK);
   
   workflow.insertNode(telegramAction, bufferedYieldP3);
 
@@ -294,3 +294,4 @@ export async function lendingAggregatorWorkflow(): Promise<void> {
   const runResult = await workflow.run();
 }
 lendingAggregatorWorkflow();
+*/

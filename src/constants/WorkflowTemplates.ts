@@ -254,7 +254,7 @@ export const WORKFLOW_TEMPLATES = [
         ],
         createWorkflow: dailyYieldEmail
     },
-    /*{
+    {
         'name': 'Daily Fear & Greed-Based cbBTC Trading',
         'description': 'Automatically trade cbBTC daily based on the Fear & Greed Index—buy when low, sell when high.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
@@ -264,10 +264,10 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.CORE.SWAP.SWAP.image
         ],
         createWorkflow: createDCAFearAndGreed
-    },*/
+    },
     {
         'name': 'Buy ETH when the market sentiment is extremely fearful - capital efficient',
-        'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 45. The idle funds are generating yield on Ionic.',
+        'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 45. The idle funds are generating yield on AAVE.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.YIELD],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fearAndGreed2.png',
         'image': [

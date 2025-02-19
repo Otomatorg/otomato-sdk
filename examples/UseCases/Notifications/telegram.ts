@@ -1,4 +1,4 @@
-import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices, LOGIC_OPERATORS, ConditionGroup } from '../../../src/index.js';
+/*import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices, LOGIC_OPERATORS, ConditionGroup } from '../../../src/index.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -51,3 +51,4 @@ async function ethPriceWorkflowWithTelegram() {
 }
 
 ethPriceWorkflowWithTelegram();
+*/
