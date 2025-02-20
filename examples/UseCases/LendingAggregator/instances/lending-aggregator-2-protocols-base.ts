@@ -56,22 +56,23 @@ const P1 = {
 };
 
 const P2_PROOF_OF_DEPOSIT_TOKEN = '0x46e6b214b524310239732D51387075E0e70970bf';
-const P2 = {
-  yield: `{{external.functions.compoundLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS},,)}}`,
+const PROTOCOL2 = {
+  yield: `{{external.functions.compoundLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS},,,)}}`,
   balance: `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${P2_PROOF_OF_DEPOSIT_TOKEN},,)}}`,
   deposit: (): Action => {
-    const deposit = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
-    deposit.setChainId(chain);
+    const deposit: Action = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
+    deposit.setChainId(VARIABLES.CHAIN);
     deposit.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
-    deposit.setParams('abiParams.amount', VARIABLES.TOKEN_ADDRESS);
+    deposit.setParams('abiParams.amount', WALLET_USDC_BALANCE);
     return deposit;
   },
   withdraw: (): Action => {
-    const withdraw = new Action(ACTIONS.LENDING.COMPOUND.WITHDRAW);
-    withdraw.setChainId(chain);
+    const withdraw: Action = new Action(ACTIONS.LENDING.COMPOUND.WITHDRAW);
+    withdraw.setChainId(VARIABLES.CHAIN);
     withdraw.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
+    withdraw.setParams('abiParams.amount', UINT256_MAX);
     return withdraw;
-  }
+  },
 };
 
 const UINT256_MAX = '115792089237316195423570985008687907853269984665640564039457584007913129639935n';
