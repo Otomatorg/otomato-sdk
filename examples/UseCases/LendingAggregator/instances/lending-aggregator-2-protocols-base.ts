@@ -30,15 +30,49 @@ const VARIABLES = {
   BALANCE_THRESHOLD: 0.00003, // 0.1 USDC
   LOOP_PERIOD: 1000 * 60 * 60, // 1 hour
   NAME: "SmartYield WETH",
+  YIELD_BUFFER: 1.1, // 10% buffer
 };
 
-const IONIC_YIELD = `{{external.functions.aaveLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS})}}`;
-const IRONCLAD_YIELD = `{{external.functions.compoundLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS},)}}`;
+const WALLET_USDC_BALANCE = `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${VARIABLES.TOKEN_ADDRESS},,)}}`
 
-// Balances
-const IONIC_USDC_BALANCE = `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${VARIABLES.MONEY_MARKET_1_TOKEN},,)}}`;
-const IRONCLAD_USDC_BALANCE = `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${VARIABLES.MONEY_MARKET_2_TOKEN},,)}}`;
-const WALLET_USDC_BALANCE = `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${VARIABLES.TOKEN_ADDRESS},,)}}`;
+const P1_PROOF_OF_DEPOSIT_TOKEN = '0xD4a0e0b9149BCee3C920d2E00b5dE09138fd8bb7';
+const P1 = {
+  yield: `{{external.functions.aaveLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS},,)}}`,
+  balance: `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${P1_PROOF_OF_DEPOSIT_TOKEN},,)}}`,
+  deposit: (): Action => {
+    const deposit: Action = new Action(ACTIONS.LENDING.AAVE.SUPPLY);
+    deposit.setChainId(VARIABLES.CHAIN);
+    deposit.setParams('abiParams.amount', WALLET_USDC_BALANCE);
+    deposit.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
+    return deposit;
+  },
+  withdraw: (): Action => {
+    const withdraw: Action = new Action(ACTIONS.LENDING.AAVE.WITHDRAW);
+    withdraw.setChainId(VARIABLES.CHAIN);
+    withdraw.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
+    withdraw.setParams('abiParams.amount', UINT256_MAX);
+    return withdraw;
+  },
+};
+
+const P2_PROOF_OF_DEPOSIT_TOKEN = '0x46e6b214b524310239732D51387075E0e70970bf';
+const P2 = {
+  yield: `{{external.functions.compoundLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS},,)}}`,
+  balance: `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${P2_PROOF_OF_DEPOSIT_TOKEN},,)}}`,
+  deposit: (): Action => {
+    const deposit = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
+    deposit.setChainId(chain);
+    deposit.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
+    deposit.setParams('abiParams.amount', VARIABLES.TOKEN_ADDRESS);
+    return deposit;
+  },
+  withdraw: (): Action => {
+    const withdraw = new Action(ACTIONS.LENDING.COMPOUND.WITHDRAW);
+    withdraw.setChainId(chain);
+    withdraw.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
+    return withdraw;
+  }
+};
 
 const UINT256_MAX = '115792089237316195423570985008687907853269984665640564039457584007913129639935n';
 
@@ -58,40 +92,48 @@ function createFearAndGreedTrigger(): Trigger {
   return trigger;
 }
 
+function createYieldBufferBlock(yieldExpression: string): Action {
+  const mathBlock = new Action(ACTIONS.CORE.MATHEMATICS.MATHEMATICS);
+  mathBlock.setParams('number1', yieldExpression);
+  mathBlock.setParams('operator', '*');
+  mathBlock.setParams('number2', VARIABLES.YIELD_BUFFER);
+  return mathBlock;
+}
+
 /** 
- * Condition: Compare Ionic yield > Ironclad yield
- * True path => Ionic yield is higher
- * False path => Ironclad yield is equal or higher
+ * Condition: Compare p1 yield > p2 yield
+ * True path => p1 yield is higher
+ * False path => p2 yield is equal or higher
  */
-function createCompareIonicVsIroncladCondition(): Action {
+function createCompareP1VSP2Condition(yield1: any, yield2: any): Action {
   const condition = new Action(ACTIONS.CORE.CONDITION.IF);
   condition.setParams('logic', LOGIC_OPERATORS.OR);
 
   const conditionGroup = new ConditionGroup(LOGIC_OPERATORS.AND);
-  conditionGroup.addConditionCheck(IONIC_YIELD, 'gt', IRONCLAD_YIELD);
+  conditionGroup.addConditionCheck(yield1, 'gt', yield2);
 
   condition.setParams('groups', [conditionGroup]);
   return condition;
 }
 
 /**
- * Condition: Check if user has Ironclad USDC
+ * Condition: Check if user has P2 USDC
  */
-function createCheckIroncladUSDCCondition(): Action {
+function createCheckP2USDCCondition(): Action {
   const condition = new Action(ACTIONS.CORE.CONDITION.IF);
   condition.setParams('logic', LOGIC_OPERATORS.OR);
 
   const conditionGroup = new ConditionGroup(LOGIC_OPERATORS.AND);
-  conditionGroup.addConditionCheck(IRONCLAD_USDC_BALANCE, 'gt', VARIABLES.BALANCE_THRESHOLD);
+  conditionGroup.addConditionCheck(P2.balance, 'gt', VARIABLES.BALANCE_THRESHOLD);
 
   condition.setParams('groups', [conditionGroup]);
   return condition;
 }
 
 /**
- * Action: Withdraw from Ironclad
+ * Action: Withdraw from P2
  */
-function createIroncladWithdrawAll(): Action {
+function createP2WithdrawAll(): Action {
   const withdraw = new Action(ACTIONS.LENDING.COMPOUND.WITHDRAW);
   withdraw.setChainId(chain);
   // Typically, you'd withdraw "max" by specifying a large number (2^256-1).
@@ -104,19 +146,9 @@ function createIroncladWithdrawAll(): Action {
 }
 
 /**
- * Action: Wait 10 seconds
+ * Action: Deposit USDC on P1
  */
-function createWaitAction10Seconds(): Action {
-  const waitAction = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
-  // "time" is in milliseconds
-  waitAction.setParams('time', '10000'); // 10 seconds
-  return waitAction;
-}
-
-/**
- * Action: Deposit USDC on Ionic
- */
-function createDepositOnIonic(): Action {
+function createDepositOnP1(): Action {
   const deposit = new Action(ACTIONS.LENDING.AAVE.SUPPLY);
   deposit.setChainId(chain);
 
@@ -141,25 +173,25 @@ function createCheckWalletUSDCCondition(): Action {
 }
 
 /** 
- * === NEW for Ironclad yield better ===
- * Condition: Check if user has IONIC USDC 
+ * === NEW for P2 yield better ===
+ * Condition: Check if user has USDC on P1
  */
-function createCheckIonicUSDCCondition(): Action {
+function createCheckP1USDCCondition(): Action {
   const condition = new Action(ACTIONS.CORE.CONDITION.IF);
   condition.setParams('logic', LOGIC_OPERATORS.OR);
 
   const conditionGroup = new ConditionGroup(LOGIC_OPERATORS.AND);
-  conditionGroup.addConditionCheck(IONIC_USDC_BALANCE, 'gt', VARIABLES.BALANCE_THRESHOLD);
+  conditionGroup.addConditionCheck(P1.balance, 'gt', VARIABLES.BALANCE_THRESHOLD);
 
   condition.setParams('groups', [conditionGroup]);
   return condition;
 }
 
 /**
- * === NEW for Ironclad yield better ===
- * Action: Withdraw from Ionic
+ * === NEW for P2 yield better ===
+ * Action: Withdraw from P1
  */
-function createIonicWithdrawAll(): Action {
+function createP1WithdrawAll(): Action {
   const withdraw = new Action(ACTIONS.LENDING.AAVE.WITHDRAW);
   withdraw.setChainId(chain);
 
@@ -174,10 +206,10 @@ function createIonicWithdrawAll(): Action {
 }
 
 /**
- * === NEW for Ironclad yield better ===
- * Action: Deposit on Ironclad
+ * === NEW for P2 yield better ===
+ * Action: Deposit on P2
  */
-function createDepositOnIronclad(): Action {
+function createDepositOnP2(): Action {
   const deposit = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
   deposit.setChainId(chain);
   deposit.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
@@ -206,68 +238,85 @@ export async function aggregatorWorkflow() {
   actions.push(fearAndGreedTrigger);
 
   /********************************
-   * STEP 2: Compare Ionic vs Ironclad
+   * STEP 2: Compare p1 vs p2 yields
    ********************************/
 
-  const compareCondition = createCompareIonicVsIroncladCondition();
+  const p1YieldMath = createYieldBufferBlock(P1.yield);
+  const p2YieldMath = createYieldBufferBlock(P2.yield);
+  
+  actions.push(p1YieldMath, p2YieldMath);
+  edges.push(
+    new Edge({ source: fearAndGreedTrigger, target: p1YieldMath }),
+    new Edge({ source: p1YieldMath, target: p2YieldMath })
+  );
+
+  const compareCondition = createCompareP1VSP2Condition(
+    p1YieldMath.getParameterVariableName('number1'),
+    p2YieldMath.getParameterVariableName('number1'),
+  );
   actions.push(compareCondition);
 
   edges.push(
     new Edge({
-      source: fearAndGreedTrigger,
+      source: p2YieldMath,
       target: compareCondition,
     })
   );
 
   /********************************
-   * STEP 3 (True): Ionic yield is higher
-   * => Check if user has Ironclad USDC
+   * STEP 3 (True): P1 yield is higher
+   * => Check if user has P2 USDC
    ********************************/
-  const checkIroncladCondition = createCheckIroncladUSDCCondition();
-  actions.push(checkIroncladCondition);
+  const checkP2Condition = createCheckP2USDCCondition();
+  actions.push(checkP2Condition);
 
   edges.push(
-    // True path from compareCondition => Ionic yield is higher
+    // True path from compareCondition => P1 yield is higher
     new Edge({
       source: compareCondition,
-      target: checkIroncladCondition,
+      target: checkP2Condition,
       label: 'true',
       value: 'true',
     })
   );
 
   /********************************
-   * STEP 4A: If user DOES have USDC on Ironclad
-   * => Withdraw, wait 10s, deposit on Ionic
+   * STEP 4A: If user DOES have USDC on p2
+   * => Withdraw, deposit on p1
    ********************************/
-  const ironcladWithdraw = createIroncladWithdrawAll();
-  actions.push(ironcladWithdraw);
+  const checkYieldIsWorthTheMove = createCompareP1VSP2Condition(
+    p1YieldMath.getParameterVariableName('number1'),
+    p2YieldMath.getOutputVariableName('resultAsFloat'),
+  );
+  actions.push(checkYieldIsWorthTheMove);
 
-  const wait10seconds = createWaitAction10Seconds();
-  actions.push(wait10seconds);
+  const withdrawFromP2 = P2.withdraw();
+  actions.push(withdrawFromP2);
 
-  const depositOnIonic = createDepositOnIonic();
-  actions.push(depositOnIonic);
+  const depositToP1 = P1.deposit();
+  actions.push(depositToP1);
 
   edges.push(
     new Edge({
-      source: checkIroncladCondition,
-      target: ironcladWithdraw,
+      source: checkP2Condition,
+      target: checkYieldIsWorthTheMove,
       label: 'true',
       value: 'true',
     }),
     new Edge({
-      source: ironcladWithdraw,
-      target: wait10seconds,
+      source: checkYieldIsWorthTheMove,
+      target: withdrawFromP2,
+      label: 'true',
+      value: 'true',
     }),
     new Edge({
-      source: wait10seconds,
-      target: depositOnIonic,
+      source: withdrawFromP2,
+      target: depositToP1,
     })
   );
 
   /********************************
-   * STEP 4B: If user does NOT have USDC on Ironclad
+   * STEP 4B: If user does NOT have USDC on P2
    * => Check if user has USDC in wallet
    ********************************/
   const checkWalletUSDC = createCheckWalletUSDCCondition();
@@ -275,7 +324,7 @@ export async function aggregatorWorkflow() {
 
   edges.push(
     new Edge({
-      source: checkIroncladCondition,
+      source: checkP2Condition,
       target: checkWalletUSDC,
       label: 'false',
       value: 'false',
@@ -284,66 +333,70 @@ export async function aggregatorWorkflow() {
 
   /********************************
    * STEP 4C: If user does have USDC in wallet
-   * => Deposit on Ionic
+   * => Deposit on P1
    ********************************/
-  const depositOnIonic2 = createDepositOnIonic();
-  actions.push(depositOnIonic2);
+  const depositToP1_2 = P1.deposit();
+  actions.push(depositToP1_2);
 
   edges.push(
     new Edge({
       source: checkWalletUSDC,
-      target: depositOnIonic2,
+      target: depositToP1_2,
       label: 'true',
       value: 'true',
     })
   );
 
   /***************************************************************************
-   * === NEW for Ironclad yield better (False Path from compareCondition) ===
-   * STEP 5: Ironclad yield is equal/higher => Check if user has Ionic USDC
+   * === NEW for P2 yield better (False Path from compareCondition) ===
+   * STEP 5: P2 yield is equal/higher => Check if user has USDC on P1
    **************************************************************************/
-
-  const checkIonicUSDC = createCheckIonicUSDCCondition();
-  actions.push(checkIonicUSDC);
+  const checkP1USDC = createCheckP1USDCCondition();
+  actions.push(checkP1USDC);
 
   edges.push(
-    // False path from compareCondition => Ironclad yield is equal or higher
+    // False path from compareCondition => P2 yield is equal or higher
     new Edge({
       source: compareCondition,
-      target: checkIonicUSDC,
+      target: checkP1USDC,
       label: 'false',
       value: 'false',
     })
   );
 
-  const ionicWithdraw = createIonicWithdrawAll();
-  actions.push(ionicWithdraw);
+  const checkYieldIsWorthTheMove2 = createCompareP1VSP2Condition(
+    p2YieldMath.getParameterVariableName('number1'),
+    p1YieldMath.getOutputVariableName('resultAsFloat'),
+  );
+  actions.push(checkYieldIsWorthTheMove2);
 
-  const wait10seconds2 = createWaitAction10Seconds();
-  actions.push(wait10seconds2);
+  const withdrawFromP1 = P1.withdraw();
+  actions.push(withdrawFromP1);
 
-  const depositOnIronclad = createDepositOnIronclad();
-  actions.push(depositOnIronclad);
+  const depositToP2 = P2.deposit();
+  actions.push(depositToP2);
 
   edges.push(
     new Edge({
-      source: checkIonicUSDC,
-      target: ionicWithdraw,
+      source: checkP1USDC,
+      target: checkYieldIsWorthTheMove2,
       label: 'true',
       value: 'true',
     }),
     new Edge({
-      source: ionicWithdraw,
-      target: wait10seconds2,
+      source: checkYieldIsWorthTheMove2,
+      target: withdrawFromP1,
+      label: 'true',
+      value: 'true',
     }),
     new Edge({
-      source: wait10seconds2,
-      target: depositOnIronclad,
+      source: withdrawFromP1,
+      target: depositToP2,
     })
   );
 
   /********************************
-   * STEP 5B: If user does NOT have USDC on Ionic
+   * STEP 5B: If user does NOT have USDC on P1
    * => Check if user has USDC in wallet
    ********************************/
   const checkWalletUSDC2 = createCheckWalletUSDCCondition();
@@ -351,7 +404,7 @@ export async function aggregatorWorkflow() {
 
   edges.push(
     new Edge({
-      source: checkIonicUSDC,
+      source: checkP1USDC,
       target: checkWalletUSDC2,
       label: 'false',
       value: 'false',
@@ -360,15 +413,15 @@ export async function aggregatorWorkflow() {
 
   /********************************
    * STEP 5C: If user does have USDC in wallet
-   * => Deposit on Ironclad
+   * => Deposit on P2
    ********************************/
-  const depositOnIronclad2 = createDepositOnIronclad();
-  actions.push(depositOnIronclad2);
+  const depositToP2_2 = P2.deposit();
+  actions.push(depositToP2_2);
 
   edges.push(
     new Edge({
       source: checkWalletUSDC2,
-      target: depositOnIronclad2,
+      target: depositToP2_2,
       label: 'true',
       value: 'true',
     })
@@ -387,7 +440,7 @@ export async function aggregatorWorkflow() {
   // console.log("Creation result:", creationResult);
   //console.log("Workflow ID:", workflow.id);
 
-  // const runResult = await workflow.run();
+  const runResult = await workflow.run();
   //console.log("Run result:", runResult);
 }
 

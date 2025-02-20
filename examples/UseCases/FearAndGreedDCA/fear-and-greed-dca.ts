@@ -46,7 +46,9 @@ import {
    * SPLIT Action: Creates a branching point in the flow
    */
   function createSplitAction(): Action {
-    return new Action(ACTIONS.CORE.SPLIT.SPLIT);
+    const action: Action = new Action(ACTIONS.CORE.SPLIT.SPLIT);
+    action.setParams('branchesAmount', 2);
+    return action;
   }
   
   /**

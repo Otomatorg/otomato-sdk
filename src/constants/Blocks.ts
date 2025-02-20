@@ -3241,7 +3241,7 @@ export const ACTIONS = {
     "MATHEMATICS": {
       "description": "Perform basic mathematical operations between two numbers",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/mathematics.png",
-      /*"SPLIT": {
+      "MATHEMATICS": {
         "name": "Mathematics",
         "type": 6,
         "description": "Perform mathematical operations between two numbers",
@@ -3300,7 +3300,7 @@ export const ACTIONS = {
         ],
         "blockId": 100019,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/mathematics.png"
-      }*/
+      }
     }
   },
   "NOTIFICATIONS": {

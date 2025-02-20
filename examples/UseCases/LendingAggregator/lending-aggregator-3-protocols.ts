@@ -1,4 +1,4 @@
-/*import {
+import {
   ACTIONS,
   Action,
   Trigger,
@@ -35,9 +35,10 @@ const UINT256_MAX: string =
 /////////////////////
 const WALLET_USDC_BALANCE: string = `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${VARIABLES.TOKEN_ADDRESS},,)}}`;
 
+const P1_PROOF_OF_DEPOSIT_TOKEN = '0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB';
 const PROTOCOL1 = {
   yield: `{{external.functions.aaveLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS},,)}}`,
-  balance: `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${'0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB'},,)}}`,
+  balance: `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${P1_PROOF_OF_DEPOSIT_TOKEN},,)}}`,
   deposit: (): Action => {
     const deposit: Action = new Action(ACTIONS.LENDING.AAVE.SUPPLY);
     deposit.setChainId(VARIABLES.CHAIN);
@@ -54,9 +55,10 @@ const PROTOCOL1 = {
   },
 };
 
+const P2_PROOF_OF_DEPOSIT_TOKEN = '0xb125E6687d4313864e53df431d5425969c15Eb2F';
 const PROTOCOL2 = {
   yield: `{{external.functions.compoundLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS},,,)}}`,
-  balance: `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${'0xb125E6687d4313864e53df431d5425969c15Eb2F'},,)}}`,
+  balance: `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${P2_PROOF_OF_DEPOSIT_TOKEN},,)}}`,
   deposit: (): Action => {
     const deposit: Action = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
     deposit.setChainId(VARIABLES.CHAIN);
@@ -73,9 +75,10 @@ const PROTOCOL2 = {
   },
 };
 
+const P3_PROOF_OF_DEPOSIT_TOKEN = '0xEdc817A28E8B93B03976FBd4a3dDBc9f7D176c22';
 const PROTOCOL3 = {
   yield: `{{external.functions.moonwellLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS},,)}}`,
-  balance: `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${'0xEdc817A28E8B93B03976FBd4a3dDBc9f7D176c22'},,)}}`,
+  balance: `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${P3_PROOF_OF_DEPOSIT_TOKEN},,)}}`,
   deposit: (): Action => {
     const deposit: Action = new Action(ACTIONS.LENDING.MOONWELL.DEPOSIT);
     deposit.setChainId(VARIABLES.CHAIN);
@@ -294,4 +297,3 @@ export async function lendingAggregatorWorkflow(): Promise<void> {
   const runResult = await workflow.run();
 }
 lendingAggregatorWorkflow();
-*/
