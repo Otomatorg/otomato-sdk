@@ -142,6 +142,29 @@ export function typeIsNumber(type: string): boolean {
     }
 }
 
+export function typeIsInteger(type: string): boolean {
+    switch (type) {
+        case 'integer':
+        case 'fixed':
+        case 'ufixed':
+        case 'chainId':
+        case 'int8': case 'int16': case 'int32': case 'int64': case 'int128': case 'int256':
+        case 'uint8': case 'uint16': case 'uint32': case 'uint64': case 'uint128': case 'uint256':
+            return true;
+        default:
+            return false;
+    }
+}
+
+export function typeIsFloat(type: string): boolean {
+    switch (type) {
+        case 'float':
+            return true;
+        default:
+            return false;
+    }
+}
+
 function isIntInRange(value: number | bigint, bits: number): boolean {
     const min = BigInt(-(2 ** (bits - 1)));
     const max = BigInt((2 ** (bits - 1)) - 1);

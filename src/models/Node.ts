@@ -1,5 +1,5 @@
 import { Parameter } from './Parameter.js';
-import { validateType, typeIsNumber, isVariable } from '../utils/typeValidator.js';
+import { validateType, typeIsNumber, isVariable, typeIsInteger, typeIsFloat } from '../utils/typeValidator.js';
 import { ACTIONS, TRIGGERS } from '../constants/Blocks.js';
 import { apiServices } from '../services/ApiService.js';
 
@@ -113,8 +113,15 @@ export abstract class Node {
         }
 
         // String to integer conversion
-        if (typeIsNumber(param.type) && typeof value === 'string') {
+        if (typeIsInteger(param.type) && typeof value === 'string') {
           const parsedValue = parseInt(value, 10);
+          if (!isNaN(parsedValue)) {
+            value = parsedValue;
+          }
+        }
+
+        if (typeIsFloat(param.type) && typeof value === 'string') {
+          const parsedValue = parseFloat(value);
           if (!isNaN(parsedValue)) {
             value = parsedValue;
           }
