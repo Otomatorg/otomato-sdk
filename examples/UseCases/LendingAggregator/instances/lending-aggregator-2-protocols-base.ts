@@ -56,7 +56,7 @@ const P1 = {
 };
 
 const P2_PROOF_OF_DEPOSIT_TOKEN = '0x46e6b214b524310239732D51387075E0e70970bf';
-const PROTOCOL2 = {
+const P2 = {
   yield: `{{external.functions.compoundLendingRate(${VARIABLES.CHAIN},${VARIABLES.TOKEN_ADDRESS},,,)}}`,
   balance: `{{external.functions.erc20Balance(${VARIABLES.CHAIN},{{smartAccountAddress}},${P2_PROOF_OF_DEPOSIT_TOKEN},,)}}`,
   deposit: (): Action => {
@@ -89,11 +89,11 @@ function createFearAndGreedTrigger(): Trigger {
   // Condition: index must be > 0
   trigger.setParams('period', VARIABLES.LOOP_PERIOD);
   trigger.setParams('limit', 1);
-  trigger.setParams('limit', 100000);
+  trigger.setParams('limit', 1);
   return trigger;
 }
 
-function createYieldBufferBlock(yieldExpression: string): Action {
+function createYieldBufferBlock(yieldExpression: any): Action {
   const mathBlock = new Action(ACTIONS.CORE.MATHEMATICS.MATHEMATICS);
   mathBlock.setParams('number1', yieldExpression);
   mathBlock.setParams('operator', '*');
@@ -132,34 +132,6 @@ function createCheckP2USDCCondition(): Action {
 }
 
 /**
- * Action: Withdraw from P2
- */
-function createP2WithdrawAll(): Action {
-  const withdraw = new Action(ACTIONS.LENDING.COMPOUND.WITHDRAW);
-  withdraw.setChainId(chain);
-  // Typically, you'd withdraw "max" by specifying a large number (2^256-1).
-  withdraw.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
-  withdraw.setParams(
-    'abiParams.amount',
-    UINT256_MAX
-  );
-  return withdraw;
-}
-
-/**
- * Action: Deposit USDC on P1
- */
-function createDepositOnP1(): Action {
-  const deposit = new Action(ACTIONS.LENDING.AAVE.SUPPLY);
-  deposit.setChainId(chain);
-
-  deposit.setParams('abiParams.amount', WALLET_USDC_BALANCE);
-  deposit.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
-
-  return deposit;
-}
-
-/**
  * Condition: Check if user has any USDC in wallet
  */
 function createCheckWalletUSDCCondition(): Action {
@@ -186,36 +158,6 @@ function createCheckP1USDCCondition(): Action {
 
   condition.setParams('groups', [conditionGroup]);
   return condition;
-}
-
-/**
- * === NEW for P2 yield better ===
- * Action: Withdraw from P1
- */
-function createP1WithdrawAll(): Action {
-  const withdraw = new Action(ACTIONS.LENDING.AAVE.WITHDRAW);
-  withdraw.setChainId(chain);
-
-  // Typically, you'd withdraw "max".
-  withdraw.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
-  withdraw.setParams(
-    'abiParams.amount',
-    UINT256_MAX
-  );
-
-  return withdraw;
-}
-
-/**
- * === NEW for P2 yield better ===
- * Action: Deposit on P2
- */
-function createDepositOnP2(): Action {
-  const deposit = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
-  deposit.setChainId(chain);
-  deposit.setParams('abiParams.asset', VARIABLES.TOKEN_ADDRESS);
-  deposit.setParams('abiParams.amount', WALLET_USDC_BALANCE);
-  return deposit;
 }
 
 /*************************************
@@ -438,11 +380,11 @@ export async function aggregatorWorkflow() {
 
   // Create/run on your platform:
   const creationResult = await workflow.create();
-  // console.log("Creation result:", creationResult);
-  //console.log("Workflow ID:", workflow.id);
+  // // console.log("Creation result:", creationResult);
+  // //console.log("Workflow ID:", workflow.id);
 
   const runResult = await workflow.run();
-  //console.log("Run result:", runResult);
+  // //console.log("Run result:", runResult);
 }
 
 // Optional immediate call to test
