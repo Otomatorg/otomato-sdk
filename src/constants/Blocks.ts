@@ -623,7 +623,7 @@ export const TRIGGERS = {
         8453
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/pendle.webp",
-      /*"PT_IMPLIED_YIELD": {
+      "PT_IMPLIED_YIELD": {
         "name": "PT Implied Yield",
         "description": "Retrieves the PT implied yield for a specified Pendle market by reading its state and computing exp(lnImpliedRate) - 1.",
         "prototype": "pendlePtImpliedYield",
@@ -682,7 +682,7 @@ export const TRIGGERS = {
         ],
         "blockId": 101,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/pendle.webp"
-      }*/
+      }
     }
   },
   "LENDING": {
@@ -2685,7 +2685,7 @@ export const TRIGGERS = {
       "description": "Tracks new tweets in real time",
       "tags": {},
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/X.webp",
-      /*"X_POST_TRIGGER": {
+    "X_POST_TRIGGER": {
         "name": "X Post Trigger",
         "description": "Track an account activity via their posts",
         "type": 5,
@@ -2730,7 +2730,7 @@ export const TRIGGERS = {
         ],
         "blockId": 34,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/X.webp"
-      }*/
+      }
     }
   },
   "ETFS": {
@@ -2804,7 +2804,7 @@ export const TRIGGERS = {
         1
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/blur.jpg",
-      /*"LISTING": {
+      "LISTING": {
         "name": "NFT Listing",
         "description": "Subscribe to live NFT listing events based on filters.",
         "type": 5,
@@ -2860,7 +2860,7 @@ export const TRIGGERS = {
         ],
         "blockId": 35,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/blur.jpg"
-      }*/
+      }
     }
   },
   "PRE_MARKET": {
@@ -3452,7 +3452,7 @@ export const ACTIONS = {
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/discord.png"
       }
     },
-    /*"TELEGRAM": {
+    "TELEGRAM": {
       "description": "Telegram is a cloud-based mobile and desktop messaging app with a focus on security and speed.",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg",
       "SEND_MESSAGE": {
@@ -3489,7 +3489,7 @@ export const ACTIONS = {
         "blockId": 100001,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg"
       }
-    }*/
+    }
   },
   "LENDING": {
     "IONIC": {
