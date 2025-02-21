@@ -623,6 +623,7 @@ export const TRIGGERS = {
         8453
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/pendle.webp",
+      "comingSoon": true,
       "PT_IMPLIED_YIELD": {
         "name": "PT Implied Yield",
         "description": "Retrieves the PT implied yield for a specified Pendle market by reading its state and computing exp(lnImpliedRate) - 1.",
@@ -2686,6 +2687,7 @@ export const TRIGGERS = {
       "description": "Tracks new tweets in real time",
       "tags": {},
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/X.webp",
+      "comingSoon": true,
       "X_POST_TRIGGER": {
         "name": "X Post Trigger",
         "description": "Track an account activity via their posts",
@@ -2805,6 +2807,7 @@ export const TRIGGERS = {
         1
       ],
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/blur.jpg",
+      "comingSoon": true,
       "LISTING": {
         "name": "NFT Listing",
         "description": "Subscribe to live NFT listing events based on filters.",
