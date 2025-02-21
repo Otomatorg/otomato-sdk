@@ -78,4 +78,12 @@ export class Edge {
             return { success: false, error: error.message || 'Unknown error' };
         }
     }
+
+    setValue(newValue: any): void {
+        this.value = newValue;
+    }
+
+    setLabel(newLabel: string): void {
+        this.label = newLabel;
+    }
 }

@@ -84,3 +84,23 @@ describe('Edge Class', () => {
   });
 
 });
+
+describe('Edge Class - Setters', () => {
+  it('should set a new value for the edge', () => {
+    const node1 = new Action(ACTIONS.CORE.CONDITION.IF);
+    const node2 = new Action(ACTIONS.CORE.CONDITION.IF);
+    const edge = new Edge({ source: node1, target: node2, value: 'initial' });
+
+    edge.setValue('newValue');
+    expect(edge.value).to.equal('newValue');
+  });
+
+  it('should set a new label for the edge', () => {
+    const node1 = new Action(ACTIONS.CORE.CONDITION.IF);
+    const node2 = new Action(ACTIONS.CORE.CONDITION.IF);
+    const edge = new Edge({ source: node1, target: node2, label: 'initialLabel' });
+
+    edge.setLabel('newLabel');
+    expect(edge.label).to.equal('newLabel');
+  });
+});
