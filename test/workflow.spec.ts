@@ -334,7 +334,7 @@ describe('Workflow Class - insertCondition', () => {
     expect(edge1, 'Missing edge from trigger to condition').to.exist;
     expect(edge2, 'Missing edge from condition to action').to.exist;
 
-    // Typically they’re labeled “true,” but adapt if your code differs
+    // Typically they're labeled "true," but adapt if your code differs
     expect(edge1?.label).to.equal(undefined);
     expect(edge2?.label).to.equal('true');
   });
@@ -347,15 +347,15 @@ describe('Workflow Class - insertCondition', () => {
     const conditionNode = new Action(ACTIONS.CORE.CONDITION.IF);
     workflow.insertCondition(conditionNode, action, undefined, false);
 
-    // EXPECT: We haven’t removed trigger->action. We only added:
+    // EXPECT: We haven't removed trigger->action. We only added:
     //   action->conditionNode, plus conditionNode->(empty block?) if your code does so.
-    // But since there's “no else,” we expect a single “true” branch.
+    // But since there's "no else," we expect a single "true" branch.
     //
     // Depending on your insertCondition logic, it might produce:
     //   - action->IF, and IF-> emptyBlock (labeled 'true')
     //   or possibly just action->IF if your code only inserts the condition node.
     //
-    // Let’s assume your code spawns an “empty block” for the “true” path at the end:
+    // Let's assume your code spawns an "empty block" for the "true" path at the end:
     // => We expect 4 nodes: trigger, action, IF, emptyBlock
     // => We expect 3 edges: 
     //    1) trigger->action
@@ -375,7 +375,7 @@ describe('Workflow Class - insertCondition', () => {
     const edgeActionIF = edges.find(e => e.source === action && e.target === conditionNode);
     expect(edgeActionIF, 'Missing action->IF edge').to.exist;
 
-    // The “true” edge typically goes to the empty block
+    // The "true" edge typically goes to the empty block
     const emptyBlockNode = allNodes.find(n => n !== trigger && n !== action && n !== conditionNode);
     const edgeIFEmpty = edges.find(e => e.source === conditionNode && e.target === emptyBlockNode);
     expect(edgeIFEmpty, 'Missing IF->empty block edge').to.exist;
@@ -394,9 +394,9 @@ describe('Workflow Class - insertCondition', () => {
     expect(workflow.nodes).to.have.lengthOf(4);
 
     // Edges:
-    //   1) trigger->IF (maybe unlabeled or “Condition”)
-    //   2) IF->action labeled “true”
-    //   3) IF->emptyBlock labeled “false”
+    //   1) trigger->IF (maybe unlabeled or "Condition")
+    //   2) IF->action labeled "true"
+    //   3) IF->emptyBlock labeled "false"
     expect(workflow.edges).to.have.lengthOf(3);
 
     const edgeIFtoAction = workflow.edges.find(
@@ -420,8 +420,8 @@ describe('Workflow Class - insertCondition', () => {
 
     // EXPECT final flow: 
     //   trigger -> action -> IF
-    //   IF->(emptyBlock1) labeled ‘true’
-    //   IF->(emptyBlock2) labeled ‘false’
+    //   IF->(emptyBlock1) labeled 'true'
+    //   IF->(emptyBlock2) labeled 'false'
     //
     // That yields 5 total nodes:
     //   1) trigger
@@ -447,7 +447,7 @@ describe('Workflow Class - insertCondition', () => {
     );
     expect(edgeActionIF, 'Missing action->IF edge').to.exist;
 
-    // The “true” and “false” edges from IF
+    // The "true" and "false" edges from IF
     const trueEdge = workflow.edges.find(e => e.source === conditionNode && e.label === 'true');
     const falseEdge = workflow.edges.find(e => e.source === conditionNode && e.label === 'false');
 
@@ -934,5 +934,145 @@ describe('Workflow Class - getNode', () => {
     const workflow = new Workflow("Empty Workflow");
     const result = workflow.getNode("any-ref");
     expect(result).to.be.null;
+  });
+});
+
+describe('Workflow Class - Edge Management', () => {
+  it('should get all outgoing edges from a node', () => {
+    const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node3 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+
+    const edge1 = new Edge({ source: node1, target: node2, label: 'true', value: 'true' });
+    const edge2 = new Edge({ source: node1, target: node3, label: 'false', value: 'false' });
+    const edge3 = new Edge({ source: node2, target: node3 }); // Different source
+
+    const workflow = new Workflow("Test Workflow", [node1, node2, node3], [edge1, edge2, edge3]);
+
+    const edges = workflow.getEdges(node1);
+    
+    // Should only get edges where node1 is the source
+    expect(edges).to.have.lengthOf(2);
+    expect(edges).to.deep.include(edge1);
+    expect(edges).to.deep.include(edge2);
+    expect(edges).to.not.deep.include(edge3);
+  });
+
+  it('should return empty array when node has no outgoing edges', () => {
+    const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    
+    const edge1 = new Edge({ source: node2, target: node1 }); // node1 has no outgoing edges
+    
+    const workflow = new Workflow("Test Workflow", [node1, node2], [edge1]);
+    
+    const edges = workflow.getEdges(node1);
+    expect(edges).to.be.empty;
+  });
+
+  it('should preserve edge labels and values when getting edges', () => {
+    const node1 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    const node2 = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
+    
+    const edge1 = new Edge({ 
+      source: node1, 
+      target: node2, 
+      label: 'custom-label',
+      value: 'custom-value'
+    });
+    
+    const workflow = new Workflow("Test Workflow", [node1, node2], [edge1]);
+    
+    const edges = workflow.getEdges(node1);
+    
+    expect(edges).to.have.lengthOf(1);
+    expect(edges[0].label).to.equal('custom-label');
+    expect(edges[0].value).to.equal('custom-value');
+  });
+});
+
+describe('Workflow Class - Complex Condition Tree', () => {
+  it('should create a workflow with nested conditions', () => {
+    // Create initial trigger
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setChainId(CHAINS.ETHEREUM);
+    trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+
+    // First condition node
+    const condition1 = new Action(ACTIONS.CORE.CONDITION.IF);
+    
+    // Create initial workflow with trigger -> condition1
+    const workflow = new Workflow(
+      "Nested Conditions Workflow",
+      [trigger, condition1],
+      [new Edge({ source: trigger, target: condition1 })]
+    );
+
+    // Add true/false branches for condition1
+    const condition1TrueBlock = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
+    const condition1FalseBlock = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
+    workflow.insertNode(condition1TrueBlock, condition1, undefined, "true", "true");
+    workflow.insertNode(condition1FalseBlock, condition1, undefined, "false", "false");
+
+    // Create and add nested conditions
+    const condition2True = new Action(ACTIONS.CORE.CONDITION.IF);  // For true branch
+    const condition2False = new Action(ACTIONS.CORE.CONDITION.IF); // For false branch
+    
+    // Replace empty blocks with new conditions
+    workflow.swapNode(condition1TrueBlock, condition2True);
+    workflow.swapNode(condition1FalseBlock, condition2False);
+
+    // Add empty blocks for condition2True's branches
+    workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), condition2True, undefined, "true", "true");
+    workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), condition2True, undefined, "false", "false");
+
+    // Add empty blocks for condition2False's branches
+    workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), condition2False, undefined, "true", "true");
+    workflow.insertNode(new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK), condition2False, undefined, "false", "false");
+
+    // Verify the structure
+    // Expected: 7 nodes total
+    // 1 trigger + 3 conditions + 4 empty blocks
+    expect(workflow.nodes).to.have.lengthOf(8);
+
+    // Expected: 7 edges total
+    // 1 (trigger->condition1) + 
+    // 2 (condition1->condition2True/False) +
+    // 2 (condition2True->emptyBlocks) +
+    // 2 (condition2False->emptyBlocks)
+    expect(workflow.edges).to.have.lengthOf(7);
+
+    // Verify edge from trigger to first condition
+    const triggerEdge = workflow.edges.find(e => e.source === trigger);
+    expect(triggerEdge?.target).to.equal(condition1);
+
+    // Verify condition1's edges
+    const condition1Edges = workflow.getEdges(condition1);
+    expect(condition1Edges).to.have.lengthOf(2);
+    expect(condition1Edges.find(e => e.label === "true")?.target).to.equal(condition2True);
+    expect(condition1Edges.find(e => e.label === "false")?.target).to.equal(condition2False);
+
+    // Verify condition2True's edges
+    const condition2TrueEdges = workflow.getEdges(condition2True);
+    expect(condition2TrueEdges).to.have.lengthOf(2);
+    expect(condition2TrueEdges.find(e => e.label === "true")).to.exist;
+    expect(condition2TrueEdges.find(e => e.label === "false")).to.exist;
+
+    // Verify condition2False's edges
+    const condition2FalseEdges = workflow.getEdges(condition2False);
+    expect(condition2FalseEdges).to.have.lengthOf(2);
+    expect(condition2FalseEdges.find(e => e.label === "true")).to.exist;
+    expect(condition2FalseEdges.find(e => e.label === "false")).to.exist;
+
+    // Verify all condition edges have proper labels and values
+    const allConditionEdges = [
+      ...condition1Edges,
+      ...condition2TrueEdges,
+      ...condition2FalseEdges
+    ];
+    allConditionEdges.forEach(edge => {
+      expect(edge.label).to.be.oneOf(["true", "false"]);
+      expect(edge.value).to.equal(edge.label);
+    });
   });
 });

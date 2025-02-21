@@ -295,6 +295,15 @@ export class Workflow {
     positionWorkflowNodes(this);
   }
 
+  /**
+ * Gets all outgoing edges from a given node.
+ * @param node The source node to get edges from
+ * @returns Array of edges that have the given node as their source
+ */
+  getEdges(node: Node): Edge[] {
+    return this.edges.filter(edge => edge.source === node);
+  }
+
   getState(): WorkflowState {
     return this.state;
   }
