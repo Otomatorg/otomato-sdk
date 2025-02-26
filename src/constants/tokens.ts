@@ -262,7 +262,6 @@ export const TOKENS: Tokens = {
         decimals: 18,
         image: "https://basescan.org/token/images/wsteth3_32.png"
     },
-    
     {
         contractAddress: "0x4200000000000000000000000000000000000006",
         name: "Wrapped Ether",
@@ -451,6 +450,146 @@ export const TOKENS: Tokens = {
         symbol: "wsuperOETHb",
         decimals: 18,
         image: "https://basescan.org/token/images/originwsuperoethb_32.png"
+    },
+    {
+        contractAddress: "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed",
+        name: "DEGEN",
+        symbol: "DEGEN",
+        decimals: 18,
+        image: "https://static.debank.com/image/project/logo_url/base_degen/a9e31f68d950d60e7613b6f26c52c428.png"
+    },
+    {
+        contractAddress: "0x7Ba6F01772924a82D9626c126347A28299E98c98",
+        name: "Metronome Synth ETH",
+        symbol: "msETH",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/mseth.svg"
+    },
+    {
+        contractAddress: "0xbf1aeA8670D2528E08334083616dD9C5F3B087aE",
+        name: "Mai Stablecoin",
+        symbol: "MAI",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/mai.svg"
+    },
+    {
+        contractAddress: "0xC0D3700000987C99b3C9009069E4f8413fD22330",
+        name: "Cod3x USD",
+        symbol: "cdxUSD",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/cdxusd.svg"
+    },
+    {
+        contractAddress: "0x35E5dB674D8e93a03d814FA0ADa70731efe8a4b9",
+        name: "Resolv USD",
+        symbol: "USR",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/usr.svg"
+    },
+    {
+        contractAddress: "0x5875eEE11Cf8398102FdAd704C9E96607675467a",
+        name: "Savings USDS",
+        symbol: "sUSDS",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/susds.svg"
+    },
+    {
+        contractAddress: "0x59aaF835D34b1E3dF2170e4872B785f11E2a964b",
+        name: "Verified USDC",
+        symbol: "verUSDC", 
+        decimals: 6,
+        image: "https://cdn.morpho.org/assets/logos/verusdc.svg"
+    },
+    {
+        contractAddress: "0x9c0e042d65a2e1fF31aC83f404E5Cb79F452c337",
+        name: "Aptos (Universal)",
+        symbol: "uAPT",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/uapt.svg"
+    },
+    {
+        contractAddress: "0x2615a94df961278DcbC41Fb0a54fEc5f10a693aE",
+        name: "XRP (Universal)",
+        symbol: "uXRP",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/uxrp.svg"
+    },
+    {
+        contractAddress: "0x0000206329b97DB379d5E1Bf586BbDB969C63274",
+        name: "USDA",
+        symbol: "USDA",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/usda.svg"
+    },
+    {
+        contractAddress: "0xA61BeB4A3d02decb01039e378237032B351125B4",
+        name: "EURA (previously agEUR)",
+        symbol: "EURA",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/eura.svg"
+    },
+    {
+        contractAddress: "0x004626A008B1aCdC4c74ab51644093b155e59A23",
+        name: "Staked EURA",
+        symbol: "stEUR",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/steur.svg"
+    },
+    {
+        contractAddress: "0x0022228a2cc5E7eF0274A7Baa600d44da5aB5776",
+        name: "Staked USDA",
+        symbol: "stUSD",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/stusd.svg"
+    },
+    {
+        contractAddress: "0xDD629E5241CbC5919847783e6C96B2De4754e438",
+        name: "Midas US Treasury Bill Token",
+        symbol: "mTBILL",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/mtbill.svg"
+    },
+    {
+        contractAddress: "0x1C2757c1FeF1038428b5bEF062495ce94BBe92b2",
+        name: "Midas Basis Trading Token",
+        symbol: "mBASIS",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/mbasis.svg"
+    },
+    {
+        contractAddress: "0xC31389794Ffac23331E0D9F611b7953f90AA5fDC",
+        name: "Resolv Liquidity Provider Token",
+        symbol: "RLP",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/rlp.svg"
+    },
+    {
+        contractAddress: "0xec443e7E0e745348E500084892C89218B3ba4683",
+        name: "PT Resolv USD 24APR2025",
+        symbol: "PT-USR-24APR2025",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/ptusr.svg"
+    },
+    {
+        contractAddress: "0x5d746848005507DA0b1717C137A10C30AD9ee307",
+        name: "PT Lombard LBTC 29MAY2025",
+        symbol: "PT-LBTC-29MAY2025",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/pt-lbtc-29may2025.svg"
+    },
+    {
+        contractAddress: "0xeeE7aF832440884d2b693B4193FA2ec26A48C7d3",
+        name: "US Yield Coin",
+        symbol: "USYC",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/usyc.svg"
+    },
+    {
+        contractAddress: "0x8c213ee79581Ff4984583C6a801e5263418C4b86",
+        name: "Janus Henderson Anemoy Treasury Fund",
+        symbol: "JTRSY",
+        decimals: 18,
+        image: "https://cdn.morpho.org/assets/logos/jtrsy.svg"
     }
   ],
   2741: [
