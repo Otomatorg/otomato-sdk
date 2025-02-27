@@ -1061,6 +1061,111 @@ export const TRIGGERS = {
         ],
         "blockId": 20,
         "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.png"
+      },
+      "LTV": {
+        "name": "LTV",
+        "description": "Get the maximum and current Loan-to-Value (LTV) ratios for a given account on Aave",
+        "type": 1,
+        "prototype": "aaveLTV",
+        "method": "function getUserAccountData(address user) external view returns (uint256 totalCollateralBase, uint256 totalDebtBase, uint256 availableBorrowsBase, uint256 currentLiquidationThreshold, uint256 ltv, uint256 healthFactor)",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.user",
+            "type": "address",
+            "description": "The wallet address to fetch Aave account data for",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "condition",
+            "type": "logic_operator",
+            "description": "Logic operator used for the comparison: <, >, <=, >=, ==, ...",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "comparisonValue",
+            "type": "float",
+            "description": "The value to compare to",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "output": {
+          "maxLTV": "float",
+          "currentLTV": "float"
+        },
+        "examples": [
+          {
+            "name": "AAVE LTV for wallet address",
+            "description": "Fetches the maximum and current LTV for the given wallet address on Aave",
+            "externalVariableDescription": "AAVE LTV data",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 8453
+              },
+              {
+                "key": "abiParams.user",
+                "value": "0x9332D0cE5D45184515e0EA85bf9f4af09Cbf10Af"
+              }
+            ]
+          }
+        ],
+        "blockId": 2,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.png"
+      },
+      "HEALTH_FACTOR": {
+        "name": "Health Factor",
+        "description": "Get the health factor for a given account on Aave",
+        "type": 1,
+        "prototype": "aaveHealthFactor",
+        "method": "function getUserAccountData(address user) external view returns (uint256 totalCollateralBase, uint256 totalDebtBase, uint256 availableBorrowsBase, uint256 currentLiquidationThreshold, uint256 ltv, uint256 healthFactor)",
+        "parameters": [
+          {
+            "key": "chainId",
+            "type": "chainId",
+            "description": "Chain ID of the network",
+            "mandatory": true,
+            "category": 0
+          },
+          {
+            "key": "abiParams.user",
+            "type": "address",
+            "description": "The wallet address to fetch Aave account data for",
+            "mandatory": true,
+            "category": 0
+          },
+        ] as Parameter[],
+        "output": {
+          "healthFactor": "float"
+        },
+        "examples": [
+          {
+            "name": "AAVE Health Factor for wallet address",
+            "description": "Fetches the health factor for the given wallet address on Aave",
+            "externalVariableDescription": "AAVE health factor",
+            "parameters": [
+              {
+                "key": "chainId",
+                "value": 8453
+              },
+              {
+                "key": "abiParams.user",
+                "value": "0x9332D0cE5D45184515e0EA85bf9f4af09Cbf10Af"
+              }
+            ]
+          }
+        ],
+        "blockId": 3,
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/aave.png"
       }
     },
     "MOONWELL": {
