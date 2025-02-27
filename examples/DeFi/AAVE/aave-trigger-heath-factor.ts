@@ -12,7 +12,7 @@ import {
   
   dotenv.config();
   
-  async function aave_trigger_ltv_slack() {
+  async function aave_trigger_heath_factor_slack() {
     // Check for required environment variables
     if (!process.env.API_URL || !process.env.AUTH_TOKEN || !process.env.SLACK_WEBHOOK) {
       console.error("Missing API_URL, AUTH_TOKEN, or SLACK_WEBHOOK in environment.");
@@ -24,30 +24,30 @@ import {
     apiServices.setAuth(process.env.AUTH_TOKEN);
   
     // -------- AAVE LTV trigger --------
-    const aaveLTVTrigger = new Trigger(TRIGGERS.LENDING.AAVE.LTV);
+    const aaveHeathFactorTrigger = new Trigger(TRIGGERS.LENDING.AAVE.HEALTH_FACTOR);
     // Set the chain ID (using Aave on Base in this example)
-    aaveLTVTrigger.setChainId(CHAINS.ETHEREUM);
+    aaveHeathFactorTrigger.setChainId(CHAINS.ETHEREUM);
     // Set the wallet address to fetch account data for
-    aaveLTVTrigger.setParams("abiParams.user", "0x9332D0cE5D45184515e0EA85bf9f4af09Cbf10Af");
-    aaveLTVTrigger.setCondition('gte');
-    aaveLTVTrigger.setComparisonValue(10);
+    aaveHeathFactorTrigger.setParams("abiParams.user", "0x9332D0cE5D45184515e0EA85bf9f4af09Cbf10Af");
+    aaveHeathFactorTrigger.setCondition('gte');
+    aaveHeathFactorTrigger.setComparisonValue(1);
   
     // -------- Slack Message Action --------
     const slackMessageAction = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
     // Set the webhook and message; here you could include trigger output details if needed.
     slackMessageAction.setParams("webhook", process.env.SLACK_WEBHOOK);
-    slackMessageAction.setParams("message", "AAVE LTV trigger fired for wallet 0x9332D0cE5D45184515e0EA85bf9f4af09Cbf10Af on Ethereum");
+    slackMessageAction.setParams("message", "AAVE Health Factor trigger fired for wallet 0x9332D0cE5D45184515e0EA85bf9f4af09Cbf10Af on Ethereum");
   
     // -------- Connect Trigger to Action --------
     const edge = new Edge({
-      source: aaveLTVTrigger,
+      source: aaveHeathFactorTrigger,
       target: slackMessageAction,
     });
   
     // Create the workflow with the trigger and action
     const workflow = new Workflow(
-      "AAVE LTV Trigger and Slack Notification",
-      [aaveLTVTrigger, slackMessageAction],
+      "AAVE Health Factor Trigger and Slack Notification",
+      [aaveHeathFactorTrigger, slackMessageAction],
       [edge]
     );
   
@@ -71,4 +71,4 @@ import {
     console.log("Workflow state after running: " + workflow.getState());
   }
   
-  aave_trigger_ltv_slack();
+  aave_trigger_heath_factor_slack();
