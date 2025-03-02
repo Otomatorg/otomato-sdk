@@ -17,6 +17,9 @@ class RPCServices {
     if (env.INFURA_HTTPS_PROVIDER) {
       this.rpcUrls[CHAINS.ETHEREUM] = env.INFURA_HTTPS_PROVIDER;
     }
+    if (env.ABSTRACT_HTTPS_PROVIDER) {
+      this.rpcUrls[CHAINS.ABSTRACT] = env.ABSTRACT_HTTPS_PROVIDER;
+    }
   }
 
   // Function to get the RPC URL for a specific chainId
