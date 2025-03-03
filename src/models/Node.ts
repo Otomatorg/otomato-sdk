@@ -95,6 +95,10 @@ export abstract class Node {
     return this.ref;
   }
 
+  setRef(ref: string): void {
+    this.ref = ref;
+  }
+
   getParentInfo(): ParentInfo | undefined {
     return this.parentInfo;
   }

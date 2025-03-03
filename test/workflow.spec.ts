@@ -1076,3 +1076,59 @@ describe('Workflow Class - Complex Condition Tree', () => {
     });
   });
 });
+
+describe('Workflow Class - validateInternalVariables', () => {
+  it('should detect invalid node references in parameters', () => {
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setRef('1');
+
+    const action = new Action(ACTIONS.CORE.SWAP.SWAP);
+    action.setRef('2');
+    action.setParams('tokenIn', '{{nodeMap.3.output.amount}}');
+
+    const workflow = new Workflow('Test Workflow', [trigger, action]);
+    const invalidRefs = workflow.validateInternalVariables();
+
+    expect(invalidRefs).to.have.lengthOf(1);
+    expect(invalidRefs).to.deep.include.members([
+      {
+        nodeRef: '2',
+        nodeType: 'action',
+        parameterKey: 'tokenIn',
+        parameterValue: '{{nodeMap.3.output.amount}}',
+        referencedNodeRef: '3'
+      }
+    ]);
+  });
+
+  it('should not report valid node references', () => {
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setRef('1');
+
+    const action1 = new Action(ACTIONS.CORE.SWAP.SWAP);
+    action1.setRef('2');
+
+    const action2 = new Action(ACTIONS.CORE.SWAP.SWAP);
+    action2.setRef('3');
+    action2.setParams('tokenIn', '{{nodeMap.1.output.amount}}');
+
+    const workflow = new Workflow('Test Workflow', [trigger, action1, action2]);
+    const invalidRefs = workflow.validateInternalVariables();
+
+    expect(invalidRefs).to.have.lengthOf(0);
+  });
+
+  it('should handle parameters without node references', () => {
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setRef('1');
+
+    const action = new Action(ACTIONS.CORE.SWAP.SWAP);
+    action.setRef('2');
+    action.setParams('tokenIn', '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9');
+
+    const workflow = new Workflow('Test Workflow', [trigger, action]);
+    const invalidRefs = workflow.validateInternalVariables();
+
+    expect(invalidRefs).to.have.lengthOf(0);
+  });
+});

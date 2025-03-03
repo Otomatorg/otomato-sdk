@@ -510,6 +510,70 @@ export class Workflow {
     return getEndNodePositions(this);
   }
 
+
+  /**
+   * Validates all internal variable references in node parameters.
+   * An internal variable reference is a string that starts with "nodeMap." followed by a node ref.
+   * Example: "nodeMap.1.output.amount" references node with ref "1"
+   * 
+   * @returns Array of invalid parameter references with their node and parameter info
+   */
+  validateInternalVariables(): Array<{
+    nodeRef: string;
+    nodeType: string;
+    parameterKey: string;
+    parameterValue: string;
+    referencedNodeRef: string;
+  }> {
+    const invalidReferences: Array<{
+      nodeRef: string;
+      nodeType: string;
+      parameterKey: string;
+      parameterValue: string;
+      referencedNodeRef: string;
+    }> = [];
+
+    // Helper function to check if a value contains an internal variable reference
+    const checkValue = (value: any, nodeRef: string, nodeType: string, paramKey: string) => {
+      if (typeof value === 'string' && value.includes('nodeMap.')) {
+        // Extract the referenced node ref from the variable
+        // Example: from "nodeMap.1.output.amount" extract "1"
+        const match = value.match(/nodeMap\.(\d+)/);
+        if (match) {
+          const referencedNodeRef = match[1];
+          // Check if the referenced node exists in the workflow
+          const referencedNode = this.getNode(referencedNodeRef);
+          if (!referencedNode) {
+            invalidReferences.push({
+              nodeRef,
+              nodeType,
+              parameterKey: paramKey,
+              parameterValue: value,
+              referencedNodeRef
+            });
+          }
+        }
+      } else if (typeof value === 'object' && value !== null) {
+        // Recursively check nested objects and arrays
+        Object.entries(value).forEach(([key, val]) => {
+          checkValue(val, nodeRef, nodeType, `${paramKey}.${key}`);
+        });
+      }
+    };
+
+    // Go through all nodes and their parameters
+    this.nodes.forEach(node => {
+      const parameters = node.getParameters();
+      if (parameters) {
+        Object.entries(parameters).forEach(([key, value]) => {
+          checkValue(value, node.getRef(), node.class, key);
+        });
+      }
+    });
+
+    return invalidReferences;
+  }
+
   static async fromJSON(json: any): Promise<Workflow> {
     const workflow = new Workflow(json.name);
     workflow.id = json.id || null;
