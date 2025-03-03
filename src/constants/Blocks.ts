@@ -3598,6 +3598,7 @@ export const ACTIONS = {
     "TELEGRAM": {
       "description": "Telegram is a cloud-based mobile and desktop messaging app with a focus on security and speed.",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/telegram.jpeg",
+      "comingSoon": true,
       "SEND_MESSAGE": {
         "name": "Send message",
         "type": 0,
