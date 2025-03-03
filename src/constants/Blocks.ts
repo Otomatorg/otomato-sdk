@@ -3383,7 +3383,7 @@ export const ACTIONS = {
     },
     "MATHEMATICS": {
       "description": "Perform basic mathematical operations between two numbers",
-      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/mathematics.png",
+      "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/mathematics.svg",
       "MATHEMATICS": {
         "name": "Mathematics",
         "type": 6,
