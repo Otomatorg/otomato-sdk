@@ -4,6 +4,7 @@ import { Trigger } from '../src/models/Trigger.js';
 import { Action } from '../src/models/Action.js';
 import { TRIGGERS, ACTIONS, getTokenFromSymbol, CHAINS, Edge } from '../src/index.js';
 import { Note } from '../src/models/Note.js';
+import { WORKFLOW_LOOPING_TYPES } from '../src/constants/WorkflowSettings.js';
 
 describe('Workflow Class - fromJSON', () => {
   it('should correctly instantiate a Workflow from a JSON object', async () => {
@@ -487,7 +488,8 @@ describe('Workflow Class', () => {
       nodes: [trigger.toJSON(), action1.toJSON(), action2.toJSON()],
       edges: [],
       notes: [], // Ensure notes are empty initially
-      state: 'inactive'
+      state: 'inactive',
+      settings: null // Add settings field
     });
   });
 
@@ -1130,5 +1132,100 @@ describe('Workflow Class - validateInternalVariables', () => {
     const invalidRefs = workflow.validateInternalVariables();
 
     expect(invalidRefs).to.have.lengthOf(0);
+  });
+});
+
+describe('Workflow Class - setSettings', () => {
+  it('should set valid polling settings', () => {
+    const workflow = new Workflow('Test Workflow');
+    const pollingSettings = {
+      loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
+      period: 3000
+    };
+    
+    workflow.setSettings(pollingSettings);
+    expect(workflow.settings).to.deep.equal(pollingSettings);
+  });
+
+  it('should set valid subscription settings', () => {
+    const workflow = new Workflow('Test Workflow');
+    const subscriptionSettings = {
+      loopingType: WORKFLOW_LOOPING_TYPES.SUBSCRIPTION,
+      timeout: 60000,
+      limit: 20
+    };
+    
+    workflow.setSettings(subscriptionSettings);
+    expect(workflow.settings).to.deep.equal(subscriptionSettings);
+  });
+
+  it('should throw error when polling period is not positive', () => {
+    const workflow = new Workflow('Test Workflow');
+    const invalidSettings = {
+      loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
+      period: -1
+    };
+    
+    expect(() => workflow.setSettings(invalidSettings))
+      .to.throw('Polling settings must include a positive period value');
+  });
+
+  it('should throw error when subscription timeout is not positive', () => {
+    const workflow = new Workflow('Test Workflow');
+    const invalidSettings = {
+      loopingType: WORKFLOW_LOOPING_TYPES.SUBSCRIPTION,
+      timeout: -1,
+      limit: 20
+    };
+    
+    expect(() => workflow.setSettings(invalidSettings))
+      .to.throw('Subscription settings must include a positive timeout value');
+  });
+
+  it('should throw error when subscription limit is not positive', () => {
+    const workflow = new Workflow('Test Workflow');
+    const invalidSettings = {
+      loopingType: WORKFLOW_LOOPING_TYPES.SUBSCRIPTION,
+      timeout: 60000,
+      limit: 0
+    };
+    
+    expect(() => workflow.setSettings(invalidSettings))
+      .to.throw('Subscription settings must include a positive limit value');
+  });
+
+  it('should throw error when settings is null', () => {
+    const workflow = new Workflow('Test Workflow');
+    expect(() => workflow.setSettings(null))
+      .to.throw('Settings cannot be null');
+  });
+
+  it('should persist settings in toJSON output', () => {
+    const workflow = new Workflow('Test Workflow');
+    const pollingSettings = {
+      loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
+      period: 3000
+    };
+    
+    workflow.setSettings(pollingSettings);
+    const json = workflow.toJSON();
+    expect(json.settings).to.deep.equal(pollingSettings);
+  });
+
+  it('should load settings from JSON in fromJSON', async () => {
+    const json = {
+      name: 'Test Workflow',
+      nodes: [],
+      edges: [],
+      notes: [],
+      settings: {
+        loopingType: WORKFLOW_LOOPING_TYPES.SUBSCRIPTION,
+        timeout: 60000,
+        limit: 20
+      }
+    };
+    
+    const workflow = await Workflow.fromJSON(json);
+    expect(workflow.settings).to.deep.equal(json.settings);
   });
 });

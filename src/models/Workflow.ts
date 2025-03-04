@@ -6,6 +6,8 @@ import { SessionKeyPermission } from './SessionKeyPermission.js';
 import { Note } from './Note.js';
 import { getEndNodePositions, positionWorkflowNodes } from '../utils/WorkflowNodePositioner.js';
 import { ACTIONS } from '../constants/Blocks.js';
+import { WorkflowSettings } from '../constants/WorkflowSettings.js';
+import { WORKFLOW_LOOPING_TYPES } from '../constants/WorkflowSettings.js';
 
 export type WorkflowState = 'inactive' | 'active' | 'failed' | 'completed' | 'waiting';
 
@@ -20,17 +22,41 @@ export class Workflow {
   executionId: string | null = null;
   agentId: string | null = null;
   notes: Note[] = [];
+  settings: WorkflowSettings | null = null;
 
-  constructor(name: string = '', nodes: Node[] = [], edges: Edge[] = []) {
+  constructor(name: string = '', nodes: Node[] = [], edges: Edge[] = [], settings: WorkflowSettings | null = null) {
     this.name = name;
     this.nodes = nodes;
     this.edges = edges;
     this.state = 'inactive';
+    this.settings = settings;
     positionWorkflowNodes(this);
   }
 
   setName(name: string): void {
     this.name = name;
+  }
+
+  setSettings(settings: WorkflowSettings | null): void {
+    if (!settings) {
+      throw new Error('Settings cannot be null');
+    }
+
+    // Validate settings based on loopingType
+    if (settings.loopingType === WORKFLOW_LOOPING_TYPES.POLLING) {
+      if (typeof settings.period !== 'number' || settings.period <= 0) {
+        throw new Error('Polling settings must include a positive period value');
+      }
+    } else if (settings.loopingType === WORKFLOW_LOOPING_TYPES.SUBSCRIPTION) {
+      if (typeof settings.timeout !== 'number' || settings.timeout <= 0) {
+        throw new Error('Subscription settings must include a positive timeout value');
+      }
+      if (typeof settings.limit !== 'number' || settings.limit <= 0) {
+        throw new Error('Subscription settings must include a positive limit value');
+      }
+    }
+    
+    this.settings = settings;
   }
 
   addNode(node: Node): void {
@@ -351,6 +377,7 @@ export class Workflow {
       nodes: this.nodes.map(node => node.toJSON()),
       edges: this.edges.map(edge => edge.toJSON()),
       notes: this.getNotes(),
+      settings: this.settings,
     };
   }
 
@@ -581,6 +608,7 @@ export class Workflow {
     workflow.dateCreated = json.dateCreated || null;
     workflow.executionId = json.executionId || null;
     workflow.dateModified = json.dateModified || null;
+    workflow.settings = json.settings || null;
 
     // Convert nodes from JSON
     workflow.nodes = await Promise.all(json.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
