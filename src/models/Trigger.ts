@@ -103,6 +103,7 @@ export const findTriggerByBlockId = (blockId: number): { parentInfo: ParentInfo;
               name: service,
               description: (TRIGGERS as any)[category][service].description,
               image: (TRIGGERS as any)[category][service].image,
+              functionName: triggerKey
             },
             block: (TRIGGERS as any)[category][service][triggerKey],
           };

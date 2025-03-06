@@ -12,6 +12,7 @@ export interface ParentInfo {
   name: string;
   description: string;
   image: string;
+  functionName?: string;
 }
 
 export type NodeState = 'inactive' | 'active' | 'failed' | 'completed';
