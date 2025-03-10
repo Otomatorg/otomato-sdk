@@ -47,6 +47,9 @@ export class Workflow {
       if (typeof settings.period !== 'number' || settings.period <= 0) {
         throw new Error('Polling settings must include a positive period value');
       }
+      if (typeof settings.limit !== 'number' || settings.limit <= 0) {
+        throw new Error('Polling settings must include a positive limit value');
+      }
     } else if (settings.loopingType === WORKFLOW_LOOPING_TYPES.SUBSCRIPTION) {
       if (typeof settings.timeout !== 'number' || settings.timeout <= 0) {
         throw new Error('Subscription settings must include a positive timeout value');

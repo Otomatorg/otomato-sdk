@@ -1140,7 +1140,8 @@ describe('Workflow Class - setSettings', () => {
     const workflow = new Workflow('Test Workflow');
     const pollingSettings = {
       loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
-      period: 3000
+      period: 3000,
+      limit: 10
     };
     
     workflow.setSettings(pollingSettings);
@@ -1163,11 +1164,24 @@ describe('Workflow Class - setSettings', () => {
     const workflow = new Workflow('Test Workflow');
     const invalidSettings = {
       loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
-      period: -1
+      period: -1,
+      limit: 10
     };
     
     expect(() => workflow.setSettings(invalidSettings))
       .to.throw('Polling settings must include a positive period value');
+  });
+
+  it('should throw error when polling limit is not positive', () => {
+    const workflow = new Workflow('Test Workflow');
+    const invalidSettings = {
+      loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
+      period: 3000,
+      limit: 0
+    };
+    
+    expect(() => workflow.setSettings(invalidSettings))
+      .to.throw('Polling settings must include a positive limit value');
   });
 
   it('should throw error when subscription timeout is not positive', () => {
@@ -1204,7 +1218,8 @@ describe('Workflow Class - setSettings', () => {
     const workflow = new Workflow('Test Workflow');
     const pollingSettings = {
       loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
-      period: 3000
+      period: 3000,
+      limit: 10
     };
     
     workflow.setSettings(pollingSettings);

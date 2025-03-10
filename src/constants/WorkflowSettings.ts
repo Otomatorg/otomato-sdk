@@ -8,6 +8,7 @@ export type WorkflowLoopingType = typeof WORKFLOW_LOOPING_TYPES[keyof typeof WOR
 export interface PollingSettings {
   loopingType: typeof WORKFLOW_LOOPING_TYPES.POLLING;
   period: number;
+  limit: number;
 }
 
 export interface SubscriptionSettings {
