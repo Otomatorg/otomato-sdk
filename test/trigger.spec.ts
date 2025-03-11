@@ -182,6 +182,47 @@ describe('Trigger Class', () => {
     expect(trigger.toJSON()).to.deep.equal(json);
   });
 
+  it('should correctly handle a comparison value of 0 in fromJSON', async () => {
+    const json = {
+      "id": "5c87bcd2-8771-417f-aab6-c23998caa9ae",
+      "ref": "n-2",
+      "blockId": 10,
+      "type": "trigger",
+      "state": "inactive",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "parameters": {
+        "chainId": 34443,
+        "currency": "USD",
+        "condition": "eq",
+        "comparisonValue": 0,
+        "contractAddress": "0x4200000000000000000000000000000000000006"
+      },
+      frontendHelpers: {}
+    };
+
+    const trigger = await Trigger.fromJSON(json);
+
+    // Verify that comparisonValue of 0 is preserved, not converted to null
+    expect(trigger.getParameters().comparisonValue).to.equal(0);
+    expect(trigger.getParameters().comparisonValue).to.not.be.null;
+    
+    // Verify the rest of the properties are also correctly set
+    expect(trigger.id).to.equal("5c87bcd2-8771-417f-aab6-c23998caa9ae");
+    expect(trigger.getRef()).to.equal("n-2");
+    expect(trigger.blockId).to.equal(10);
+    expect(trigger.getParameters().chainId).to.equal(34443);
+    expect(trigger.getParameters().currency).to.equal("USD");
+    expect(trigger.getParameters().condition).to.equal("eq");
+    expect(trigger.getParameters().contractAddress).to.equal("0x4200000000000000000000000000000000000006");
+    
+    // Verify the JSON serialization also preserves the 0 value
+    expect(trigger.toJSON().parameters.comparisonValue).to.equal(0);
+    expect(trigger.toJSON().parameters.comparisonValue).to.not.be.null;
+  });
+
 });
 
 describe('findBlockByPrototype', () => {

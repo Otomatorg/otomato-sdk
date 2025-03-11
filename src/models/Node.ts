@@ -139,7 +139,7 @@ export abstract class Node {
       // Validate the value type
       if (validateType(param.type, value)) {
         this.parameters[key].value = value;
-      } else if (!value || value === "") {
+      } else if (value === undefined || value === null || value === "") {
         this.parameters[key].value = null;
       } else {
         throw new Error(`Invalid type for parameter ${key}. Expected ${param.type}.`);

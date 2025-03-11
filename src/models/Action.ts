@@ -26,7 +26,7 @@ export class Action extends Node {
     });
 
     for (const [key, value] of Object.entries(json.parameters)) {
-      if (!value) {
+      if (value === undefined || value === null) {
         continue;
       }
 
@@ -43,7 +43,7 @@ export class Action extends Node {
             const enrichedParameter = enriched.block.parameters.find((param: Parameter) => param.key === `abiParams.${abiKey}`);
             const paramType = enrichedParameter ? enrichedParameter.type : null;
 
-            if (!abiParameters[abiKey] || !paramType)
+            if (abiParameters[abiKey] === undefined || abiParameters[abiKey] === null || paramType === null)
               continue;
 
             if (typeIsNumber(paramType) && typeof abiParameters[abiKey] === 'string' && abiParameters[abiKey].endsWith('n')) {
