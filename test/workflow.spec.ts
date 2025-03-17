@@ -1208,12 +1208,6 @@ describe('Workflow Class - setSettings', () => {
       .to.throw('Subscription settings must include a positive limit value');
   });
 
-  it('should throw error when settings is null', () => {
-    const workflow = new Workflow('Test Workflow');
-    expect(() => workflow.setSettings(null))
-      .to.throw('Settings cannot be null');
-  });
-
   it('should persist settings in toJSON output', () => {
     const workflow = new Workflow('Test Workflow');
     const pollingSettings = {

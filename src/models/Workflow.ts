@@ -39,7 +39,8 @@ export class Workflow {
 
   setSettings(settings: WorkflowSettings | null): void {
     if (!settings) {
-      throw new Error('Settings cannot be null');
+      this.settings = null;
+      return;
     }
 
     // Validate settings based on loopingType
