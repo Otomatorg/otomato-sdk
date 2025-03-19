@@ -5,6 +5,7 @@ export * from './constants/version.js';
 export * from './constants/tokens.js';
 export * from './constants/WorkflowTemplates.js';
 export * from './constants/logicOperators.js';
+export * from './constants/WorkflowSettings.js';
 
 // Exporting models
 export * from './models/Action.js';
