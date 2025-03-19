@@ -1,8 +1,8 @@
 import { apiServices } from '../services/ApiService.js';
 
-export async function renderEnum(blockId: number, renderEnumData: string, env: any) {
+export async function renderEnum(blockId: number, renderEnumData: string, env: any, page?: number, limit?: number) {
 
-  const response = await apiServices.get(`blocks/${blockId}/renderEnumData?page=1&limit=3`);
+  const response = await apiServices.get(`blocks/${blockId}/renderEnumData?page=${page || 1}&limit=${limit || 50}`);
 
   const enumParser = await Function(`"use strict"; return (${renderEnumData})`)()
 
