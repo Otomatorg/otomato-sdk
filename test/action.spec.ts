@@ -141,7 +141,7 @@ describe('Action Class', () => {
     expect(action.toJSON()).to.deep.equal(json);
   });
   
-it('should accept any type of value for parameter with type "any"', () => {
+  it('should accept any type of value for parameter with type "any"', () => {
      // Clone the SLACK.SEND_MESSAGE action but set message parameter type to 'any'
      const slackActionConfig = { ...ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE };
      
