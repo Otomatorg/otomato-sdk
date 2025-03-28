@@ -140,65 +140,153 @@ describe('Action Class', () => {
     expect(action.getParameters().abi.parameters.amount).to.equal(1000);
     expect(action.toJSON()).to.deep.equal(json);
   });
-
-  it('should accept any type of value for parameter with type "any"', () => {
-    // Clone the SLACK.SEND_MESSAGE action but set message parameter type to 'any'
+  
+it('should accept any type of value for parameter with type "any"', () => {
+     // Clone the SLACK.SEND_MESSAGE action but set message parameter type to 'any'
+     const slackActionConfig = { ...ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE };
+     
+     // Create a modified parameters array with 'message' parameter having type 'any'
+     const modifiedParams = slackActionConfig.parameters.map(param => {
+       if (param.key === 'message') {
+         return { ...param, type: 'any' };
+       }
+       return param;
+     });
+     
+     // Create a slack action with the modified parameters
+     const anyAction = new Action({
+       ...slackActionConfig,
+       parameters: modifiedParams
+     });
+ 
+     // Test with a string value (normal for message)
+     anyAction.setParams('message', 'string value');
+     expect(anyAction.getParameters().message).to.equal('string value');
+ 
+     // Test with a number value
+     anyAction.setParams('message', 42);
+     expect(anyAction.getParameters().message).to.equal(42);
+ 
+     // Test with a boolean value
+     anyAction.setParams('message', true);
+     expect(anyAction.getParameters().message).to.equal(true);
+ 
+     // Test with a BigInt value
+     anyAction.setParams('message', BigInt(123456));
+     expect(anyAction.getParameters().message).to.equal(BigInt(123456));
+ 
+     // Test with an array
+     const testArray = [1, 2, 3];
+     anyAction.setParams('message', testArray);
+     expect(anyAction.getParameters().message).to.deep.equal(testArray);
+ 
+     // Test with an object
+     const testObject = { key1: 'value1', key2: 42 };
+     anyAction.setParams('message', testObject);
+     expect(anyAction.getParameters().message).to.deep.equal(testObject);
+ 
+     // Test with a JSON-like structure
+     const jsonData = { 
+       items: [1, 2, 3], 
+       config: { 
+         enabled: true, 
+         name: 'test' 
+       }
+     };
+     anyAction.setParams('message', jsonData);
+     expect(anyAction.getParameters().message).to.deep.equal(jsonData);
+ 
+     // Test with null
+     anyAction.setParams('message', null);
+     expect(anyAction.getParameters().message).to.be.null;
+   });
+  
+  
+  it('should accept any type of value for "anyData" parameter with type "any"', () => {
+    // Create an action with an 'anyData' parameter of type 'any'
     const slackActionConfig = { ...ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE };
     
-    // Create a modified parameters array with 'message' parameter having type 'any'
-    const modifiedParams = slackActionConfig.parameters.map(param => {
-      if (param.key === 'message') {
-        return { ...param, type: 'any' };
+    // Add a new anyData parameter with type 'any'
+    const modifiedParams = [
+      ...slackActionConfig.parameters,
+      { 
+        key: 'anyData', 
+        type: 'any', 
+        description: 'Any data that can be any type', 
+        value: null, 
+        category: 0 
       }
-      return param;
-    });
+    ];
     
-    // Create a slack action with the modified parameters
-    const anyAction = new Action({
+    // Create an action with the anyData parameter
+    const anyDataAction = new Action({
       ...slackActionConfig,
       parameters: modifiedParams
     });
 
-    // Test with a string value (normal for message)
-    anyAction.setParams('message', 'string value');
-    expect(anyAction.getParameters().message).to.equal('string value');
+    // Test with a string value
+    anyDataAction.setParams('anyData', 'agent info');
+    expect(anyDataAction.getParameters().anyData).to.equal('agent info');
 
     // Test with a number value
-    anyAction.setParams('message', 42);
-    expect(anyAction.getParameters().message).to.equal(42);
+    anyDataAction.setParams('anyData', 42);
+    expect(anyDataAction.getParameters().anyData).to.equal(42);
 
     // Test with a boolean value
-    anyAction.setParams('message', true);
-    expect(anyAction.getParameters().message).to.equal(true);
+    anyDataAction.setParams('anyData', true);
+    expect(anyDataAction.getParameters().anyData).to.equal(true);
 
-    // Test with a BigInt value
-    anyAction.setParams('message', BigInt(123456));
-    expect(anyAction.getParameters().message).to.equal(BigInt(123456));
-
-    // Test with an array
-    const testArray = [1, 2, 3];
-    anyAction.setParams('message', testArray);
-    expect(anyAction.getParameters().message).to.deep.equal(testArray);
-
-    // Test with an object
-    const testObject = { key1: 'value1', key2: 42 };
-    anyAction.setParams('message', testObject);
-    expect(anyAction.getParameters().message).to.deep.equal(testObject);
-
-    // Test with a JSON-like structure
-    const jsonData = { 
-      items: [1, 2, 3], 
-      config: { 
-        enabled: true, 
-        name: 'test' 
-      }
+    // Test with a complex object (simulating AI agent data)
+    const agentConfig = {
+      name: 'Trading Agent',
+      version: '1.0.3',
+      capabilities: ['market-analysis', 'trade-execution', 'risk-management'],
+      settings: {
+        riskTolerance: 'medium',
+        maxTradeSize: 10000,
+        allowedAssets: ['BTC', 'ETH', 'SOL'],
+        preferredExchanges: ['Binance', 'Coinbase']
+      },
+      performanceMetrics: {
+        winRate: 0.68,
+        profitFactor: 2.3,
+        sharpeRatio: 1.95
+      },
+      activeStatus: true
     };
-    anyAction.setParams('message', jsonData);
-    expect(anyAction.getParameters().message).to.deep.equal(jsonData);
+    
+    anyDataAction.setParams('anyData', agentConfig);
+    expect(anyDataAction.getParameters().anyData).to.deep.equal(agentConfig);
+
+    // Test with a nested array structure (simulating trading signals)
+    const tradingSignals = [
+      { 
+        asset: 'BTC', 
+        direction: 'buy', 
+        confidence: 0.85, 
+        indicators: [
+          { name: 'RSI', value: 32, interpretation: 'oversold' },
+          { name: 'MACD', value: 0.0023, interpretation: 'bullish' }
+        ]
+      },
+      { 
+        asset: 'ETH', 
+        direction: 'sell', 
+        confidence: 0.72, 
+        indicators: [
+          { name: 'RSI', value: 76, interpretation: 'overbought' },
+          { name: 'MACD', value: -0.0015, interpretation: 'bearish' }
+        ]
+      }
+    ];
+    
+    anyDataAction.setParams('anyData', tradingSignals);
+    expect(anyDataAction.getParameters().anyData).to.deep.equal(tradingSignals);
 
     // Test with null
-    anyAction.setParams('message', null);
-    expect(anyAction.getParameters().message).to.be.null;
+    anyDataAction.setParams('anyData', null);
+    expect(anyDataAction.getParameters().anyData).to.be.null;
   });
+
 
 });

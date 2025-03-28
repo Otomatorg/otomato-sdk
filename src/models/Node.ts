@@ -109,6 +109,9 @@ export abstract class Node {
   }
 
   protected setParameter(key: string, value: any): void {
+    if (key === 'agentData') {
+      return;
+    }
     if (key in this.parameters) {
       const param = this.parameters[key];
       try {
@@ -150,6 +153,9 @@ export abstract class Node {
   }
 
   getParameter(key: string): any {
+    if (key === 'agentData') {
+      return;
+    }
     if (key in this.parameters) {
       return this.parameters[key].value;
     } else {
