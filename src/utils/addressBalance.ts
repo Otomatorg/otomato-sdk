@@ -81,6 +81,17 @@ const chainTokenProtocolMap: ChainTokenProtocolMap = {
       { protocol: PROTOCOLS.MORPHO, token: '0x9aB2d181E4b87ba57D5eD564D3eF652C4E710707' }, // Ionic Ecosystem WETH 2
       { protocol: PROTOCOLS.MORPHO, token: '0xF540D790413FCFAedAC93518Ae99EdDacE82cb78' }, // 9Summits WETH Core
     ],
+    // CBBTC on Base
+    '0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf': [
+      { protocol: PROTOCOLS.AAVE, token: '0xBdb9300b7CDE636d9cD4AFF00f6F009fFBBc8EE6' },
+      { protocol: PROTOCOLS.IONIC, token: '0x1De166df671AE6DB4C4C98903df88E8007593748' },
+      { protocol: PROTOCOLS.MOONWELL, token: '0xF877ACaFA28c19b96727966690b2f44d35aD5976' },
+      { protocol: PROTOCOLS.IRONCLAD, token: '0x58254000eE8127288387b04ce70292B56098D55C' },
+      { protocol: PROTOCOLS.WALLET, token: '0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf' },
+      { protocol: PROTOCOLS.MORPHO, token: '0x5a47C803488FE2BB0A0EAaf346b420e4dF22F3C7' }, // Seamless cbBTC Vault
+      { protocol: PROTOCOLS.MORPHO, token: '0x543257eF2161176D7C8cD90BA65C2d4CaEF5a796' }, // Moonwell Frontier cbBTC
+      { protocol: PROTOCOLS.MORPHO, token: '0x6770216aC60F634483Ec073cBABC4011c94307Cb' }, // Gauntlet cbBTC Core
+    ],
   },
   34443: {
     // USDC on Mode
