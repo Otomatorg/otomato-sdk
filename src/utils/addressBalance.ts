@@ -9,6 +9,7 @@ export const PROTOCOLS = {
   IONIC: 'IONIC',
   MOONWELL: 'MOONWELL',
   IRONCLAD: 'IRONCLAD',
+  MORPHO: 'MORPHO',
   WALLET: 'WALLET',
 } as const;
 export type Protocol = typeof PROTOCOLS[keyof typeof PROTOCOLS];
@@ -48,6 +49,19 @@ const chainTokenProtocolMap: ChainTokenProtocolMap = {
       { protocol: PROTOCOLS.IONIC, token: '0xa900A17a49Bc4D442bA7F72c39FA2108865671f0' },
       { protocol: PROTOCOLS.MOONWELL, token: '0xEdc817A28E8B93B03976FBd4a3dDBc9f7D176c22' },
       { protocol: PROTOCOLS.WALLET, token: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913' },
+      { protocol: PROTOCOLS.MORPHO, token: '0x7BfA7C4f149E7415b73bdeDfe609237e29CBF34A' }, // Spark USDC Vault
+      { protocol: PROTOCOLS.MORPHO, token: '0xc1256Ae5FF1cf2719D4937adb3bbCCab2E00A2Ca' }, // Moonwell Flagship USDC
+      { protocol: PROTOCOLS.MORPHO, token: '0x616a4E1db48e22028f6bbf20444Cd3b8e3273738' }, // Seamless USDC Vault
+      { protocol: PROTOCOLS.MORPHO, token: '0xc0c5689e6f4D256E861F65465b691aeEcC0dEb12' }, // Gauntlet USDC Core
+      { protocol: PROTOCOLS.MORPHO, token: '0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61' }, // Gauntlet USDC Prime
+      { protocol: PROTOCOLS.MORPHO, token: '0xcdDCDd18A16ED441F6CB10c3909e5e7ec2B9e8f3' }, // Apostro Resolv USDC
+      { protocol: PROTOCOLS.MORPHO, token: '0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183' }, // Steakhouse USDC
+      { protocol: PROTOCOLS.MORPHO, token: '0x23479229e52Ab6aaD312D0B03DF9F33B46753B5e' }, // Ionic Ecosystem USDC
+      { protocol: PROTOCOLS.MORPHO, token: '0x12AFDeFb2237a5963e7BAb3e2D46ad0eee70406e' }, // Re7 USDC
+      { protocol: PROTOCOLS.MORPHO, token: '0xB7890CEE6CF4792cdCC13489D36D9d42726ab863' }, // Universal USDC
+      { protocol: PROTOCOLS.MORPHO, token: '0x0FaBfEAcedf47e890c50C8120177fff69C6a1d9B' }, // Pyth USDC
+      { protocol: PROTOCOLS.MORPHO, token: '0xdB90A4e973B7663ce0Ccc32B6FbD37ffb19BfA83' }, // Degen USDC
+      { protocol: PROTOCOLS.MORPHO, token: '0xCd347c1e7d600a9A3e403497562eDd0A7Bc3Ef21' }, // Ionic Ecosystem USDC2
     ],
     // WETH on Base
     '0x4200000000000000000000000000000000000006': [
@@ -56,6 +70,16 @@ const chainTokenProtocolMap: ChainTokenProtocolMap = {
       { protocol: PROTOCOLS.IONIC, token: '0x49420311B518f3d0c94e897592014de53831cfA3' },
       { protocol: PROTOCOLS.MOONWELL, token: '0x628ff693426583D9a7FB391E54366292F509D457' },
       { protocol: PROTOCOLS.WALLET, token: '0x4200000000000000000000000000000000000006' },
+      { protocol: PROTOCOLS.MORPHO, token: '0xa0E430870c4604CcfC7B38Ca7845B1FF653D0ff1' }, // Moonwell Flagship WETH
+      { protocol: PROTOCOLS.MORPHO, token: '0x27D8c7273fd3fcC6956a0B370cE5Fd4A7fc65c18' }, // Seamless WETH Vault
+      { protocol: PROTOCOLS.MORPHO, token: '0x6b13c060F13Af1fdB319F52315BbbF3fb1D88844' }, // Gauntlet WETH Core
+      { protocol: PROTOCOLS.MORPHO, token: '0x5496b42ad0deCebFab0db944D83260e60D54f667' }, // 9Summits WETH Core 1.1
+      { protocol: PROTOCOLS.MORPHO, token: '0xA2Cac0023a4797b4729Db94783405189a4203AFc' }, // Re7 WETH
+      { protocol: PROTOCOLS.MORPHO, token: '0x5A32099837D89E3a794a44fb131CBbAD41f87a8C' }, // Ionic Ecosystem WETH
+      { protocol: PROTOCOLS.MORPHO, token: '0x80D9964fEb4A507dD697b4437Fc5b25b618CE446' }, // Pyth ETH
+      { protocol: PROTOCOLS.MORPHO, token: '0xbEEf050a7485865A7a8d8Ca0CC5f7536b7a3443e' }, // Steakhouse ETH
+      { protocol: PROTOCOLS.MORPHO, token: '0x9aB2d181E4b87ba57D5eD564D3eF652C4E710707' }, // Ionic Ecosystem WETH 2
+      { protocol: PROTOCOLS.MORPHO, token: '0xF540D790413FCFAedAC93518Ae99EdDacE82cb78' }, // 9Summits WETH Core
     ],
   },
   34443: {
@@ -79,6 +103,7 @@ const chainTokenProtocolMap: ChainTokenProtocolMap = {
     ],
   },
 };
+
 
 // -------------- PARAMS & RESULT --------------
 export interface GetUserProtocolBalancesParams {
@@ -201,6 +226,7 @@ export async function getUserProtocolBalances(
     'function balanceOf(address) view returns (uint256)',
     'function decimals() view returns (uint8)',
     'function symbol() view returns (string)',
+    'function convertToAssets(uint256) view returns (uint256)',
   ];
 
   const results: ProtocolBalanceResult[] = [];
@@ -235,15 +261,21 @@ export async function getUserProtocolBalances(
     };
 
     // Now do your conversion
-    const underlyingBalance = await getBalanceInUnderlying(
-      protocol,
-      chainId,
-      address,
-      token,
-      balanceObj,
-      underlyingDecimals,
-      provider
-    );
+    let underlyingBalance;
+    
+    if (protocol == PROTOCOLS.MORPHO) {
+      underlyingBalance = ethers.formatUnits(await contract.convertToAssets(rawBalance), underlyingDecimals);
+    } else {
+      underlyingBalance = await getBalanceInUnderlying(
+        protocol,
+        chainId,
+        address,
+        token,
+        balanceObj,
+        underlyingDecimals,
+        provider
+      );
+    }
 
     results.push({
       protocol,
