@@ -141,4 +141,90 @@ describe('Action Class', () => {
     expect(action.toJSON()).to.deep.equal(json);
   });
 
+  it('should accept any type of value for "anyData" parameter with type "any"', () => {
+    // Create an action with an 'anyData' parameter of type 'any'
+    const slackActionConfig = { ...ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE };
+    
+    // Add a new anyData parameter with type 'any'
+    const modifiedParams = [
+      ...slackActionConfig.parameters,
+      { 
+        key: 'anyData', 
+        type: 'any', 
+        description: 'Any data that can be any type', 
+        value: null, 
+        category: 0 
+      }
+    ];
+    
+    // Create an action with the anyData parameter
+    const anyDataAction = new Action({
+      ...slackActionConfig,
+      parameters: modifiedParams
+    });
+
+    // Test with a string value
+    anyDataAction.setParams('anyData', 'agent info');
+    expect(anyDataAction.getParameters().anyData).to.equal('agent info');
+
+    // Test with a number value
+    anyDataAction.setParams('anyData', 42);
+    expect(anyDataAction.getParameters().anyData).to.equal(42);
+
+    // Test with a boolean value
+    anyDataAction.setParams('anyData', true);
+    expect(anyDataAction.getParameters().anyData).to.equal(true);
+
+    // Test with a complex object (simulating AI agent data)
+    const agentConfig = {
+      name: 'Trading Agent',
+      version: '1.0.3',
+      capabilities: ['market-analysis', 'trade-execution', 'risk-management'],
+      settings: {
+        riskTolerance: 'medium',
+        maxTradeSize: 10000,
+        allowedAssets: ['BTC', 'ETH', 'SOL'],
+        preferredExchanges: ['Binance', 'Coinbase']
+      },
+      performanceMetrics: {
+        winRate: 0.68,
+        profitFactor: 2.3,
+        sharpeRatio: 1.95
+      },
+      activeStatus: true
+    };
+    
+    anyDataAction.setParams('anyData', agentConfig);
+    expect(anyDataAction.getParameters().anyData).to.deep.equal(agentConfig);
+
+    // Test with a nested array structure (simulating trading signals)
+    const tradingSignals = [
+      { 
+        asset: 'BTC', 
+        direction: 'buy', 
+        confidence: 0.85, 
+        indicators: [
+          { name: 'RSI', value: 32, interpretation: 'oversold' },
+          { name: 'MACD', value: 0.0023, interpretation: 'bullish' }
+        ]
+      },
+      { 
+        asset: 'ETH', 
+        direction: 'sell', 
+        confidence: 0.72, 
+        indicators: [
+          { name: 'RSI', value: 76, interpretation: 'overbought' },
+          { name: 'MACD', value: -0.0015, interpretation: 'bearish' }
+        ]
+      }
+    ];
+    
+    anyDataAction.setParams('anyData', tradingSignals);
+    expect(anyDataAction.getParameters().anyData).to.deep.equal(tradingSignals);
+
+    // Test with null
+    anyDataAction.setParams('anyData', null);
+    expect(anyDataAction.getParameters().anyData).to.be.null;
+  });
+
 });
