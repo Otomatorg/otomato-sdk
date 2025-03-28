@@ -141,4 +141,64 @@ describe('Action Class', () => {
     expect(action.toJSON()).to.deep.equal(json);
   });
 
+  it('should accept any type of value for parameter with type "any"', () => {
+    // Clone the SLACK.SEND_MESSAGE action but set message parameter type to 'any'
+    const slackActionConfig = { ...ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE };
+    
+    // Create a modified parameters array with 'message' parameter having type 'any'
+    const modifiedParams = slackActionConfig.parameters.map(param => {
+      if (param.key === 'message') {
+        return { ...param, type: 'any' };
+      }
+      return param;
+    });
+    
+    // Create a slack action with the modified parameters
+    const anyAction = new Action({
+      ...slackActionConfig,
+      parameters: modifiedParams
+    });
+
+    // Test with a string value (normal for message)
+    anyAction.setParams('message', 'string value');
+    expect(anyAction.getParameters().message).to.equal('string value');
+
+    // Test with a number value
+    anyAction.setParams('message', 42);
+    expect(anyAction.getParameters().message).to.equal(42);
+
+    // Test with a boolean value
+    anyAction.setParams('message', true);
+    expect(anyAction.getParameters().message).to.equal(true);
+
+    // Test with a BigInt value
+    anyAction.setParams('message', BigInt(123456));
+    expect(anyAction.getParameters().message).to.equal(BigInt(123456));
+
+    // Test with an array
+    const testArray = [1, 2, 3];
+    anyAction.setParams('message', testArray);
+    expect(anyAction.getParameters().message).to.deep.equal(testArray);
+
+    // Test with an object
+    const testObject = { key1: 'value1', key2: 42 };
+    anyAction.setParams('message', testObject);
+    expect(anyAction.getParameters().message).to.deep.equal(testObject);
+
+    // Test with a JSON-like structure
+    const jsonData = { 
+      items: [1, 2, 3], 
+      config: { 
+        enabled: true, 
+        name: 'test' 
+      }
+    };
+    anyAction.setParams('message', jsonData);
+    expect(anyAction.getParameters().message).to.deep.equal(jsonData);
+
+    // Test with null
+    anyAction.setParams('message', null);
+    expect(anyAction.getParameters().message).to.be.null;
+  });
+
 });
