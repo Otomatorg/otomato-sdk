@@ -616,6 +616,120 @@ export const TOKENS: Tokens = {
       equivalentERC20: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
       image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png"
     },
+  ],
+  42161: [ // Arbitrum
+      {
+        contractAddress: "0x17fc002b466eec40dae837fc4be5c67993ddbd6f",
+        name: "FRAX",
+        symbol: "FRAX",
+        decimals: 18,
+        image: "https://static.debank.com/image/project/logo_url/frax/0bbd098aba20703a84601865177e6d73.png"
+      },
+      {
+        contractAddress: "0xf97f4df75117a78c1a5a0dbb814af92458539fb4",
+        name: "ChainLink",
+        symbol: "LINK",
+        decimals: 18,
+        image: "https://arbiscan.io/token/images/chainlink_32.png?v=1"
+      },
+      {
+        contractAddress: "0x912ce59144191c1204e64559fe8253a0e49e6548",
+        name: "Arbitrum",
+        symbol: "ARB",
+        decimals: 18,
+        image: "https://static.debank.com/image/project/logo_url/arb_arbitrum/854f629937ce94bebeb2cd38fb336de7.png"
+      },
+      {
+        contractAddress: "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1",
+        name: "Dai Stablecoin",
+        symbol: "DAI",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/39807/small/dai.png?1724126571"
+      },
+      {
+        contractAddress: "0xec70dcb4a1efa46b8f2d97c310c9c4790ba5ffa8",
+        name: "Rocket Pool ETH",
+        symbol: "rETH",
+        decimals: 18,
+        image: "https://assets.coingecko.com/coins/images/20764/small/reth.png?1696520159"
+      },
+      {
+        contractAddress: "0xba5ddd1f9d7f570dc94a51479a000e3bce967196",
+        name: "Aave Token",
+        symbol: "AAVE",
+        decimals: 18,
+        image: "https://static.debank.com/image/eth_token/logo_url/0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9/7baf403c819f679dc1c6571d9d978f21.png"
+      },
+      {
+        contractAddress: "0x7dff72693f6a4149b17e7c6314655f6a9f7c8b33",
+        name: "Gho Token",
+        symbol: "GHO",
+        decimals: 18,
+        image: "https://static.debank.com/image/eth_token/logo_url/0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f/1fd570eeab44b1c7afad2e55b5545c42.png"
+      },
+      {
+        contractAddress: "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
+        name: "Bridged USDC",
+        symbol: "USDC.e",
+        decimals: 6,
+        image: "https://static.debank.com/image/arb_token/logo_url/0xaf88d065e77c8cc2239327c5edb3a432268e5831/fffcd27b9efff5a86ab942084c05924d.png"
+      },
+      {
+        contractAddress: "0x93b346b6bc2548da6a1e7d98e9a421b42541425b",
+        name: "LUSD Stablecoin",
+        symbol: "LUSD",
+        decimals: 18,
+        image: "https://s2.coinmarketcap.com/static/img/coins/64x64/9566.png"
+      },
+      {
+        contractAddress: "0x2416092f143378750bb29b79ed961ab195cceea5",
+        name: "Renzo Restaked ETH",
+        symbol: "ezETH",
+        decimals: 18,
+        image: "https://static.debank.com/image/eth_token/logo_url/0xbf5495efe5db9ce00f80364c8b423567e58d2110/e4cac3df2fe7caa7122de22911e72a41.png"
+      },
+      {
+        contractAddress: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        name: "Wrapped ETH",
+        symbol: "WETH",
+        decimals: 18,
+        image: "https://static.debank.com/image/arb_token/logo_url/0x82af49447d8a07e3bd95bd0d56f35241523fbab1/61844453e63cf81301f845d7864236f6.png"
+      },
+      {
+        contractAddress: "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+        name: "USD Coin",
+        symbol: "USDC",
+        decimals: 6,
+        image: "https://static.debank.com/image/eth_token/logo_url/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/fffcd27b9efff5a86ab942084c05924d.png"
+      },
+      {
+        contractAddress: "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f",
+        name: "Wrapped BTC",
+        symbol: "WBTC",
+        decimals: 8,
+        image: "https://static.debank.com/image/arb_token/logo_url/0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f/d3c52e7c7449afa8bd4fad1c93f50d93.png"
+      },
+      {
+        contractAddress: "0x35751007a407ca6feffe80b3cb397736d2cf4dbe",
+        name: "Wrapped eETH",
+        symbol: "weETH",
+        decimals: 18,
+        image: "https://static.debank.com/image/eth_token/logo_url/0xcd5fe23c85820f7b72d0926fc9b05b43e359b7ee/6c02f6b3bcd264d433c3676100ad8da6.png"
+      },
+      {
+        contractAddress: "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
+        name: "USDT",
+        symbol: "USDT",
+        decimals: 6,
+        image: "https://static.debank.com/image/coin/logo_url/usdt/23af7472292cb41dc39b3f1146ead0fe.png"
+      },
+      {
+        contractAddress: "0x5979d7b546e38e414f7e9822514be443a4800529",
+        name: "Wrapped liquid staked Ether 2.0",
+        symbol: "wstETH",
+        decimals: 18,
+        image: "https://static.debank.com/image/project/logo_url/lido/081388ebc44fa042561749bd5338d49e.png"
+      }
   ]
 };
 
