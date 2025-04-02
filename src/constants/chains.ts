@@ -4,4 +4,5 @@ export const CHAINS = {
   MODE: 34443,
   BASE: 8453,
   ABSTRACT: 2741,
+  ARBITRUM: 42161,
 };
