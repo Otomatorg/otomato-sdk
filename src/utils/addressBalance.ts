@@ -113,6 +113,20 @@ const chainTokenProtocolMap: ChainTokenProtocolMap = {
       { protocol: PROTOCOLS.WALLET, token: '0xf0f161fda2712db8b566946122a5af183995e2ed' },
     ],
   },
+  42161: {
+    // USDC on Arbitrum
+    '0xaf88d065e77c8cc2239327c5edb3a432268e5831': [
+      { protocol: PROTOCOLS.AAVE, token: '0x724dc807b04555b71ed48a6896b6F41593b8C637' },
+      { protocol: PROTOCOLS.COMPOUND, token: '0x9c4ec768c28520B50860ea7a15bd7213a9fF58bf' },
+      { protocol: PROTOCOLS.WALLET, token: '0xaf88d065e77c8cc2239327c5edb3a432268e5831' },
+    ],
+    // WETH on Arbitrum
+    '0x82af49447d8a07e3bd95bd0d56f35241523fbab1': [
+      { protocol: PROTOCOLS.AAVE, token: '0xe50fA9b3c56FfB159cB0FCA61F5c9D750e8128c8' },
+      { protocol: PROTOCOLS.COMPOUND, token: '0x6f7D514bbD4aFf3BcD1140B7344b32f063dEe486' },
+      { protocol: PROTOCOLS.WALLET, token: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1' },
+    ],
+  },
 };
 
 
