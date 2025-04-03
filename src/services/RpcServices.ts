@@ -23,6 +23,9 @@ class RPCServices {
     if (env.ARBITRUM_HTTPS_PROVIDER) {
       this.rpcUrls[CHAINS.ARBITRUM] = env.ARBITRUM_HTTPS_PROVIDER;
     }
+    if (env.OASIS_HTTPS_PROVIDER) {
+      this.rpcUrls[CHAINS.OASIS] = env.OASIS_HTTPS_PROVIDER;
+    }
   }
 
   // Function to get the RPC URL for a specific chainId

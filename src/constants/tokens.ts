@@ -730,6 +730,29 @@ export const TOKENS: Tokens = {
         decimals: 18,
         image: "https://static.debank.com/image/project/logo_url/lido/081388ebc44fa042561749bd5338d49e.png"
       }
+  ],
+  23294: [
+    {
+      contractAddress: "0xB6dc6C8b71e88642cEAD3be1025565A9eE74d1C6",
+      name: "Wrapped ETH",
+      symbol: "WETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/61844453e63cf81301f845d7864236f6.png"
+    },
+    {
+      contractAddress: "0x8Bc2B030b299964eEfb5e1e0b36991352E56D2D3",
+      name: "Wrapped ROSE",
+      symbol: "wROSE",
+      decimals: 18,
+      image: null
+    },
+    {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "ROSE",
+      symbol: "ROSE",
+      decimals: 18,
+      image: null
+    }
   ]
 };
 
