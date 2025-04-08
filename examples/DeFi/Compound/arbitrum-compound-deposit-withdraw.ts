@@ -18,7 +18,7 @@ async function arbitrum_compound_deposit_withdraw() {
   const compoundSupplyTrigger = new Trigger(TRIGGERS.LENDING.COMPOUND.LENDING_RATE);
   compoundSupplyTrigger.setChainId(CHAINS.ARBITRUM);
   compoundSupplyTrigger.setParams(
-    "abiParams.asset",
+    "token",
     getTokenFromSymbol(CHAINS.ARBITRUM, "USDC").contractAddress
   );
   compoundSupplyTrigger.setParams(
