@@ -5,4 +5,5 @@ export const CHAINS = {
   BASE: 8453,
   ABSTRACT: 2741,
   ARBITRUM: 42161,
+  OASIS: 23294,
 };
