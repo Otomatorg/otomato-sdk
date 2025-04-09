@@ -751,7 +751,7 @@ export const TOKENS: Tokens = {
       name: "ROSE",
       symbol: "ROSE",
       nativeCurrency: true,
-      equivalentERC20: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      equivalentERC20: "0x8Bc2B030b299964eEfb5e1e0b36991352E56D2D3",
       decimals: 18,
       image: null
     }
