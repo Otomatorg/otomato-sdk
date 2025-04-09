@@ -20,7 +20,7 @@ async function moonwell_impact_on_rate() {
   );
   predictImpactOnLendingRateTrigger.setParams(
     "amount",
-    -1000
+    1000
   );
 
   predictImpactOnLendingRateTrigger.setParams(
