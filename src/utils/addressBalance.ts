@@ -243,8 +243,7 @@ export async function getUserProtocolBalances(
   }
 
   // Setup provider from rpcServices
-  // const rpcUrl = rpcServices.getRPC(chainId);
-  const rpcUrl = 'https://base-mainnet.g.alchemy.com/v2/JEyP4L6h_OZPWZWgd-KgYzfBfQdKQY3D';
+  const rpcUrl = rpcServices.getRPC(chainId);
   const provider = new ethers.JsonRpcProvider(rpcUrl);
 
   // Minimal read ABI
