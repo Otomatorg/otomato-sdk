@@ -16,7 +16,7 @@ async function compound_withdraw_trigger_and_withdraw_action() {
   );
   compoundWithdrawTrigger.setChainId(CHAINS.BASE);
   compoundWithdrawTrigger.setCondition("gt");
-  compoundWithdrawTrigger.setComparisonValue(-100);
+  compoundWithdrawTrigger.setComparisonValue(0); // putting 0 as comparison value so that the workflow is triggered instantly
   compoundWithdrawTrigger.setParams("token", getTokenFromSymbol(CHAINS.BASE, "WETH").contractAddress);
 
   // -------- Withdraw Compound --------
