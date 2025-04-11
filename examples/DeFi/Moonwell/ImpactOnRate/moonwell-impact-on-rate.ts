@@ -29,7 +29,7 @@ async function moonwell_impact_on_rate() {
   );
   predictImpactOnLendingRateTrigger.setParams(
     "comparisonValue",
-    -100
+    0 // putting 0 as comparison value so that the workflow is triggered instantly
   );
 
   // -------- Wait 1 second --------

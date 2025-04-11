@@ -27,7 +27,7 @@ async function arbitrum_compound_deposit_withdraw() {
   );
   compoundSupplyTrigger.setParams(
     "comparisonValue",
-    -100
+    0 // putting 0 as comparison value so that the workflow is triggered instantly
   );
 
   // -------- Compound Supply --------

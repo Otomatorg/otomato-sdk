@@ -26,7 +26,7 @@ async function arbitrum_aave() {
   );
   aaveSupplyTrigger.setParams(
     "comparisonValue",
-    -100
+    0 // putting 0 as comparison value so that the workflow is triggered instantly
   );
 
   // -------- Aave Supply --------

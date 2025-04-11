@@ -23,8 +23,7 @@ async function morpho_vault_impact_on_rate() {
     1000000
   );
   morphoImpactOnRate.setCondition("gt");
-  morphoImpactOnRate.setComparisonValue(1);
-
+  morphoImpactOnRate.setComparisonValue(0); // putting 0 as comparison value so that the workflow is triggered instantly
 
   //  -------- Wait 1 second --------
   const wait1Second = new Action(ACTIONS.CORE.DELAY.WAIT_FOR);
