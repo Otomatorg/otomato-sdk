@@ -22,11 +22,6 @@ async function uniswap_v3() {
       '104758'
   );
   uniswapInRangeTrigger.setParams(
-      'abiParams.account',
-      '0x5a395ae92f10f082380a6254e5aa904cf60b5be2'
-  );
-
-  uniswapInRangeTrigger.setParams(
       'condition',
       'eq'
   );
