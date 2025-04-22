@@ -256,7 +256,8 @@ export async function getUserProtocolBalances(
 
   const results: ProtocolBalanceResult[] = [];
 
-  for (const { protocol, token } of addressesToCheck) {
+  await Promise.allSettled(addressesToCheck.map(async ({ protocol, token }) => {
+    
     const contract = new ethers.Contract(token, readABI, provider);
 
     const [rawBalanceBN, decimals, symbol] = await Promise.all([
@@ -308,7 +309,7 @@ export async function getUserProtocolBalances(
       wrapperBalance: displayValue,    // raw wrapper token balance
       underlyingBalance,               // computed by getBalanceInUnderlying
     });
-  }
+  }));
 
   return results;
 }
