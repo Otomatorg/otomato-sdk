@@ -472,6 +472,7 @@ export class Workflow {
       this.nodes = await Promise.all(response.nodes.map(async (nodeData: any) => await Node.fromJSON(nodeData)));
       this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
       this.notes = response.notes.map((noteData: any) => Note.fromJSON(noteData));
+      this.settings = response.settings;
       positionWorkflowNodes(this);
       return this;
     } catch (error: any) {
