@@ -6,7 +6,7 @@ dotenv.config();
 const withdrawAmount = '115792089237316195423570985008687907853269984665640564039457584007913129639935n';
 
 
-async function arbitrum_compound_deposit_withdraw() {
+async function arbitrum_compound_aave_withdraw() {
 
   if (!process.env.API_URL || !process.env.AUTH_TOKEN)
     return;
@@ -30,17 +30,16 @@ async function arbitrum_compound_deposit_withdraw() {
     0 // putting 0 as comparison value so that the workflow is triggered instantly
   );
 
-  // -------- Compound Supply --------
-  const compoundSupplyAction = new Action(ACTIONS.LENDING.COMPOUND.DEPOSIT);
-  compoundSupplyAction.setChainId(CHAINS.ARBITRUM);
-  compoundSupplyAction.setParams(
-      "abiParams.amount",
-      0.00001
-  );
-  compoundSupplyAction.setParams(
-      "abiParams.asset",
-      getTokenFromSymbol(CHAINS.ARBITRUM, "USDC").contractAddress
-  );
+  // Split
+  const split = new Action(ACTIONS.CORE.SPLIT.SPLIT);
+
+  // -------- Aave Withdraw --------
+  const aaveWithdrawAction = new Action(ACTIONS.LENDING.AAVE.WITHDRAW);
+  aaveWithdrawAction.setChainId(CHAINS.ARBITRUM);
+  aaveWithdrawAction.setParams("abiParams.asset", getTokenFromSymbol(CHAINS.ARBITRUM, "USDC").contractAddress);
+  aaveWithdrawAction.setParams("abiParams.amount", withdrawAmount);
+  aaveWithdrawAction.setParams("abiParams.to", '0x8e379aD0090f45a53A08007536cE2fa0a3F9F93d');
+  aaveWithdrawAction.setPosition(0, 300);
 
   // -------- Withdraw Compound --------
   const compoundWithdrawAction = new Action(ACTIONS.LENDING.COMPOUND.WITHDRAW);
@@ -59,27 +58,31 @@ async function arbitrum_compound_deposit_withdraw() {
     "Compound Deposit and Withdraw",
     [
       compoundSupplyTrigger,
-      compoundSupplyAction,
+      split,
+      aaveWithdrawAction,
       compoundWithdrawAction,
     ],
     [new Edge({
       source: compoundSupplyTrigger,
-      target: compoundSupplyAction,
+      target: split,
     }), new Edge({
-      source: compoundSupplyAction,
+      source: split,
+      target: aaveWithdrawAction,
+    }), new Edge({
+      source: split,
       target: compoundWithdrawAction,
     })]
   );
 
   const creationResult = await workflow.create();
 
-  console.log("Compound Deposit and Withdraw before: " + workflow.getState());
+  console.log("Compound and Aave Withdraw before: " + workflow.getState());
 
   console.log("Workflow ID: " + workflow.id);
 
   const runResult = await workflow.run();
 
-  console.log("Compound Deposit and Withdraw after: " + workflow.getState());
+  console.log("Compound and Aave Withdraw after: " + workflow.getState());
 }
 
-arbitrum_compound_deposit_withdraw();
+arbitrum_compound_aave_withdraw();

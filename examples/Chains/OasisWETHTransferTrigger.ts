@@ -16,7 +16,7 @@ async function oasis_weth_transfer() {
   transferTrigger.setChainId(CHAINS.OASIS);
   transferTrigger.setParams(
     "contractAddress",
-    getTokenFromSymbol(CHAINS.OASIS, "wROSE").contractAddress
+    getTokenFromSymbol(CHAINS.OASIS, "ROSE").contractAddress
   );
 
   // -------- Send Slack Message --------
