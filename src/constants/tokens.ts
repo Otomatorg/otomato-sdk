@@ -260,35 +260,35 @@ export const TOKENS: Tokens = {
       name: "Wrapped liquid staked Ether 2.0",
       symbol: "wstETH",
       decimals: 18,
-      image: "https://basescan.org/token/images/wsteth3_32.png"
+      image: "https://static.debank.com/image/project/logo_url/lido/081388ebc44fa042561749bd5338d49e.png"
     },
     {
       contractAddress: "0x4200000000000000000000000000000000000006",
       name: "Wrapped Ether",
       symbol: "WETH",
       decimals: 18,
-      image: "https://basescan.org/token/images/weth_28.png"
+      image: "https://assets.coingecko.com/coins/images/39950/small/WETH.PNG?1724902237"
     },
     {
       contractAddress: "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
       name: "USDe",
       symbol: "USDe",
       decimals: 18,
-      image: "https://basescan.org/token/images/ethenausde_32.png"
+      image: "https://static.debank.com/image/project/logo_url/ethena/bb8bd15480078225e9eca0f9b52415d4.png"
     },
     {
       contractAddress: "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf",
       name: "Coinbase Wrapped BTC",
       symbol: "cbBTC",
       decimals: 8,
-      image: "https://basescan.org/token/images/cbbtc_32.png"
+      image: "https://assets.coingecko.com/coins/images/40143/standard/cbbtc.webp?1726136727"
     },
     {
       contractAddress: "0x940181a94a35a4569e4529a3cdfb74e38fd98631",
       name: "Aerodrome",
       symbol: "AERO",
       decimals: 18,
-      image: "https://basescan.org/token/images/aerodrome_32.png"
+      image: "https://static.debank.com/image/base_token/logo_url/0x940181a94a35a4569e4529a3cdfb74e38fd98631/bb455b8557be5d08ad67f4314f899e15.png"
     },
     {
       contractAddress: "0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22",
@@ -442,14 +442,14 @@ export const TOKENS: Tokens = {
       name: "LBTC",
       symbol: "LBTC",
       decimals: 8,
-      image: "https://basescan.org/token/images/lombardlbtc_32.png"
+      image: "https://assets.coingecko.com/coins/images/39969/standard/LBTC_Logo.png?1724959872"
     },
     {
       contractAddress: "0x7fcd174e80f264448ebee8c88a7c4476aaf58ea6",
       name: "wsuperOETHb",
       symbol: "wsuperOETHb",
       decimals: 18,
-      image: "https://basescan.org/token/images/originwsuperoethb_32.png"
+      image: "https://assets.coingecko.com/coins/images/39829/standard/Wrapped_Super_OETH.png?1724208632"
     },
     {
       contractAddress: "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed",
@@ -639,7 +639,7 @@ export const TOKENS: Tokens = {
       name: "ChainLink",
       symbol: "LINK",
       decimals: 18,
-      image: "https://arbiscan.io/token/images/chainlink_32.png?v=1"
+      image: "https://static.debank.com/image/arb_token/logo_url/0xf97f4df75117a78c1a5a0dbb814af92458539fb4/69425617db0ef93a7c21c4f9b81c7ca5.png"
     },
     {
       contractAddress: "0x912ce59144191c1204e64559fe8253a0e49e6548",
@@ -753,7 +753,7 @@ export const TOKENS: Tokens = {
       name: "Wrapped ROSE",
       symbol: "wROSE",
       decimals: 18,
-      image: null
+      image: "https://assets.coingecko.com/coins/images/13162/standard/200x200_%28Rounded%29.png?1743579893"
     },
     {
       contractAddress: "0x0000000000000000000000000000000000000000",
@@ -762,7 +762,7 @@ export const TOKENS: Tokens = {
       nativeCurrency: true,
       equivalentERC20: "0x8Bc2B030b299964eEfb5e1e0b36991352E56D2D3",
       decimals: 18,
-      image: null
+      image: "https://assets.coingecko.com/coins/images/13162/standard/200x200_%28Rounded%29.png?1743579893"
     }
   ]
 };
