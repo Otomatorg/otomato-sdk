@@ -590,7 +590,14 @@ export const TOKENS: Tokens = {
       symbol: "JTRSY",
       decimals: 18,
       image: "https://cdn.morpho.org/assets/logos/jtrsy.svg"
-    }
+    },
+    {
+      contractAddress: "0x6bb7a212910682dcfdbd5bcbb3e28fb4e8da10ee",
+      name: "Gho Token",
+      symbol: "GHO",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f/1fd570eeab44b1c7afad2e55b5545c42.png"
+    },
   ],
   2741: [
     {
