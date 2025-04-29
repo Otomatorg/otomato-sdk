@@ -263,6 +263,15 @@ export const TOKENS: Tokens = {
       image: "https://static.debank.com/image/project/logo_url/lido/081388ebc44fa042561749bd5338d49e.png"
     },
     {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "ETH",
+      symbol: "ETH",
+      decimals: 18,
+      nativeCurrency: true,
+      equivalentERC20: "0x4200000000000000000000000000000000000006",
+      image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png"
+    },
+    {
       contractAddress: "0x4200000000000000000000000000000000000006",
       name: "Wrapped Ether",
       symbol: "WETH",
