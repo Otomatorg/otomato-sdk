@@ -1,4 +1,4 @@
-export const SDK_VERSION = '2.0.111';
+export const SDK_VERSION = '2.0.112';
 
 export function compareVersions(v1: string, v2: string): number {
     // Split the version strings into parts
