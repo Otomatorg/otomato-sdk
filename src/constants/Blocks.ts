@@ -4007,8 +4007,8 @@ export const TRIGGERS = {
     "POLYMARKET": {
       "description": "Decentralized prediction market protocol",
       "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/polymarket.png",
+      "comingSoon": true,
       "OUTCOME_PRICE": {
-        "comingSoon": true,
         "name": "Market Outcome Price",
         "description": "Monitor the price of a specific outcome in a Polymarket prediction market",
         "type": 3,
@@ -4076,7 +4076,8 @@ export const TRIGGERS = {
           }
         ],
         "blockId": 42,
-        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/polymarket.png"
+        "image": "https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/polymarket.png",
+        "comingSoon": true
       }
     }
   },
