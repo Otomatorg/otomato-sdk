@@ -754,6 +754,27 @@ export const TOKENS: Tokens = {
       symbol: "wstETH",
       decimals: 18,
       image: "https://static.debank.com/image/project/logo_url/lido/081388ebc44fa042561749bd5338d49e.png"
+    },
+    {
+      contractAddress: "0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a",
+      name: "GMX",
+      symbol: "GMX",
+      decimals: 18,
+      image: "https://static.debank.com/image/project/logo_url/arb_gmx/1a57f390512f4fe108c2b7155dc1fb6d.png"
+    },
+    {
+      contractAddress: "0x57F5E098CaD7A3D1Eed53991D4d66C45C9AF7812",
+      name: "Wrapped Mountain Protocol USD",
+      symbol: "wUSDM",
+      decimals: 18,
+      image: "https://assets.coingecko.com/coins/images/31719/small/usdm.png?1696530540"
+    },
+    {
+      contractAddress: "0x4186BFC76E2E237523CBC30FD220FE055156b41F",
+      name: "KelpDao Restaked ETH",
+      symbol: "rsETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/blast_token/logo_url/0xe7903b1f75c534dd8159b313d92cdcfbc62cb3cd/570bd8c5a7c151124d71d35ccbfaaefb.png"
     }
   ],
   23294: [
