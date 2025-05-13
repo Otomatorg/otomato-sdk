@@ -26,6 +26,21 @@ class RPCServices {
     if (env.OASIS_HTTPS_PROVIDER) {
       this.rpcUrls[CHAINS.OASIS] = env.OASIS_HTTPS_PROVIDER;
     }
+    if (env.AVALANCHE_HTTPS_PROVIDER) {
+      this.rpcUrls[CHAINS.AVALANCHE] = env.AVALANCHE_HTTPS_PROVIDER;
+    }
+    if (env.SONIC_HTTPS_PROVIDER) {
+      this.rpcUrls[CHAINS.SONIC] = env.SONIC_HTTPS_PROVIDER;
+    }
+    if (env.OPTIMISM_HTTPS_PROVIDER) {
+      this.rpcUrls[CHAINS.OPTIMISM] = env.OPTIMISM_HTTPS_PROVIDER;
+    }
+    if (env.POLYGON_HTTPS_PROVIDER) {
+      this.rpcUrls[CHAINS.POLYGON] = env.POLYGON_HTTPS_PROVIDER;
+    }
+    if (env.BINANCE_HTTPS_PROVIDER) {
+      this.rpcUrls[CHAINS.BINANCE] = env.BINANCE_HTTPS_PROVIDER;
+    }
   }
 
   // Function to get the RPC URL for a specific chainId
