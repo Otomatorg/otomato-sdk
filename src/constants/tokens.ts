@@ -54,6 +54,272 @@ export const TOKENS: Tokens = {
       decimals: 18,
       image: "https://static.debank.com/image/project/logo_url/lido/081388ebc44fa042561749bd5338d49e.png"
     },
+    {
+      contractAddress: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      name: "WBTC",
+      symbol: "WBTC",
+      decimals: 8,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/d3c52e7c7449afa8bd4fad1c93f50d93.png"
+    },
+    {
+      contractAddress: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      name: "DAI",
+      symbol: "DAI",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x6b175474e89094c44da98b954eedeac495271d0f/549c4205dbb199f1b8b03af783f35e71.png"
+    },
+    {
+      contractAddress: "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+      name: "LINK",
+      symbol: "LINK",
+      decimals: 18,
+      image: "https://static.debank.com/image/mada_token/logo_url/0xf390830df829cf22c53c8840554b98eafc5dcbc2/69425617db0ef93a7c21c4f9b81c7ca5.png"
+    },
+    {
+      contractAddress: "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
+      name: "AAVE",
+      symbol: "AAVE",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9/7baf403c819f679dc1c6571d9d978f21.png"
+    },
+    {
+      contractAddress: "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704",
+      name: "cbETH",
+      symbol: "cbETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xbe9895146f7af43049ca1c1ae358b0541ea49704/1f287272a7d8439af0f6b281ebf0143e.png"
+    },
+    {
+      contractAddress: "0xae78736Cd615f374D3085123A210448E74Fc6393",
+      name: "rETH",
+      symbol: "rETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/arb_token/logo_url/0xec70dcb4a1efa46b8f2d97c310c9c4790ba5ffa8/6c8aa3f550d300ce84e06f95c496af69.png"
+    },
+    {
+      contractAddress: "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
+      name: "LUSD",
+      symbol: "LUSD",
+      decimals: 18,
+      image: "https://static.debank.com/image/op_token/logo_url/0xc40f949f8a4e094d1b49a23ea9241d289b7b2819/56935bcdcac2e13a87ed36fb11c0fb52.png"
+    },
+    {
+      contractAddress: "0xD533a949740bb3306d119CC777fa900bA034cd52",
+      name: "CRV",
+      symbol: "CRV",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xd533a949740bb3306d119cc777fa900ba034cd52/38f4cbac8fb4ac70c384a65ae0cca337.png"
+    },
+    {
+      contractAddress: "0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2",
+      name: "MKR",
+      symbol: "MKR",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2/1d0390168de63ca803e8db7990e4f6ec.png"
+    },
+    {
+      contractAddress: "0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F",
+      name: "SNX",
+      symbol: "SNX",
+      decimals: 18,
+      image: "https://etherscan.io/token/images/synthetix_32.svg"
+    },
+    {
+      contractAddress: "0xba100000625a3754423978a60c9317c58a424e3D",
+      name: "BAL",
+      symbol: "BAL",
+      decimals: 18,
+      image: "https://static.debank.com/image/bsc_token/logo_url/0xd4ed60d8368a92b5f1ca33af61ef2a94714b2d46/cb8f7f37cfe1ad827dc5977d841a1294.png"
+    },
+    {
+      contractAddress: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      name: "UNI",
+      symbol: "UNI",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984/fcee0c46fc9864f48ce6a40ed1cdd135.png"
+    },
+    {
+      contractAddress: "0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32",
+      name: "LDO",
+      symbol: "LDO",
+      decimals: 18,
+      image: "https://etherscan.io/token/images/ldo.svg"
+    },
+    {
+      contractAddress: "0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72",
+      name: "ENS",
+      symbol: "ENS",
+      decimals: 18,
+      image: "https://etherscan.io/token/images/ens.svg"
+    },
+    {
+      contractAddress: "0x111111111117dC0aa78b770fA6A738034120C302",
+      name: "1INCH",
+      symbol: "1INCH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x111111111117dc0aa78b770fa6a738034120c302/2441b15b32406dc7d163ba4c1c6981d3.png"
+    },
+    {
+      contractAddress: "0x853d955aCEf822Db058eb8505911ED77F175b99e",
+      name: "FRAX",
+      symbol: "FRAX",
+      decimals: 18,
+      image: "https://static.debank.com/image/project/logo_url/frax/0bbd098aba20703a84601865177e6d73.png"
+    },
+    {
+      contractAddress: "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f",
+      name: "GHO",
+      symbol: "GHO",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f/1fd570eeab44b1c7afad2e55b5545c42.png"
+    },
+    {
+      contractAddress: "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
+      name: "RPL",
+      symbol: "RPL",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xd33526068d116ce69f19a9ee46f0bd304f21a51f/0dac0c5e1dd543fb62581f0756e0b11f.png"
+    },
+    {
+      contractAddress: "0x83F20F44975D03b1b09e64809B757c47f942BEeA",
+      name: "sDAI",
+      symbol: "sDAI",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x83f20f44975d03b1b09e64809b757c47f942beea/78e145e5bbff293bf3332ac746085b80.png"
+    },
+    {
+      contractAddress: "0xAf5191B0De278C7286d6C7CC6ab6BB8A73bA2Cd6",
+      name: "STG",
+      symbol: "STG",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xaf5191b0de278c7286d6c7cc6ab6bb8a73ba2cd6/55886c6280173254776780fd8340cca7.png"
+    },
+    {
+      contractAddress: "0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202",
+      name: "KNC",
+      symbol: "KNC",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xdefa4e8a7bcba345f687a2f1456f5edd9ce97202/1d25e188deb06e642ea6f4f4f8eb0a0c.png"
+    },
+    {
+      contractAddress: "0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0",
+      name: "FXS",
+      symbol: "FXS",
+      decimals: 18,
+      image: "https://etherscan.io/token/images/fraxfxs_new_32.png"
+    },
+    {
+      contractAddress: "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
+      name: "Curve.Fi USD Stablecoin",
+      symbol: "crvUSD",
+      decimals: 18,
+      image: "https://etherscan.io/token/images/crvusd_32.png?v=2"
+    },
+    {
+      contractAddress: "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
+      name: "PYUSD",
+      symbol: "PYUSD",
+      decimals: 6,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x6c3ea9036406852006290770bedfcaba0e23a0e8/8af98a6a2c36c107eeb4b349fddb51b0.png"
+    },
+    {
+      contractAddress: "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee",
+      name: "weETH",
+      symbol: "weETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xcd5fe23c85820f7b72d0926fc9b05b43e359b7ee/6c02f6b3bcd264d433c3676100ad8da6.png"
+    },
+    {
+      contractAddress: "0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38",
+      name: "Staked ETH",
+      symbol: "osETH",
+      decimals: 18,
+      image: "https://etherscan.io/token/images/stakewise_32.png"
+    },
+    {
+      contractAddress: "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+      name: "USDe",
+      symbol: "USDe",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x4c9edd5852cd905f086c759e8383e09bff1e68b3/1228d6e73f70f37ec1f6fe02a3bbe6ff.png"
+    },
+    {
+      contractAddress: "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b",
+      name: "ETHx",
+      symbol: "ETHx",
+      decimals: 18,
+      image: "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png"
+    },
+    {
+      contractAddress: "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497",
+      name: "sUSDe",
+      symbol: "sUSDe",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x9d39a5de30e57443bff2a8307a4256c8797a3497/966083165927dd3c1e6b67ff4bd17060.png"
+    },
+    {
+      contractAddress: "0x18084fbA666a33d37592fA2633fD49a74DD93a88",
+      name: "tBTC v2",
+      symbol: "tBTC",
+      decimals: 18,
+      image: "https://etherscan.io/token/images/threshold_32.png?v=28"
+    },
+    {
+      contractAddress: "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+      name: "Coinbase Wrapped BTC",
+      symbol: "cbBTC",
+      decimals: 8,
+      image: "https://static.debank.com/image/base_token/logo_url/0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf/a4ae837a6ca2fc45f07a74898cc4ba45.png"
+    },
+    {
+      contractAddress: "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+      name: "USDS",
+      symbol: "USDS",
+      decimals: 18,
+      image: "https://etherscan.io/token/images/skyusds_32.svg"
+    },
+    {
+      contractAddress: "0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7",
+      name: "rsETH",
+      symbol: "rsETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xa1290d69c65a6fe4df752f95823fae25cb99e5a7/9b29efed86aff5a64f238d6d30032f40.png"
+    },
+    {
+      contractAddress: "0x8236a87084f8B84306f72007F36F2618A5634494",
+      name: "LBTC",
+      symbol: "LBTC",
+      decimals: 8,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x8236a87084f8b84306f72007f36f2618a5634494/e63f839c2285bae18b83e42853bc0cf2.png"
+    },
+    {
+      contractAddress: "0x657e8C867D8B37dCC18fA4Caead9C45EB088C642",
+      name: "ether.fi BTC",
+      symbol: "eBTC",
+      decimals: 8,
+      image: "https://etherscan.io/token/images/eBTC_32.png"
+    },
+    {
+      contractAddress: "0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD",
+      name: "RLUSD",
+      symbol: "RLUSD",
+      decimals: 18,
+      image: "https://assets.debank.com/static/media/default.99a115ad939329c9a25b45d3cdecf56f.svg"
+    },
+    {
+      contractAddress: "0x50D2C7992b802Eef16c04FeADAB310f31866a545",
+      name: "PT Ethereal eUSDE 29MAY2025",
+      symbol: "PT-eUSDE-29MAY2025",
+      decimals: 18,
+      image: ""
+    },
+    {
+      contractAddress: "0x3b3fB9C57858EF816833dC91565EFcd85D96f634",
+      name: "PT-sUSDE-31JUL2025",
+      symbol: "PT-sUSDE-31JUL2025",
+      decimals: 18,
+      image: ""
+    }
   ],
   34443: [
     {
@@ -290,7 +556,7 @@ export const TOKENS: Tokens = {
       name: "Coinbase Wrapped BTC",
       symbol: "cbBTC",
       decimals: 8,
-      image: "https://assets.coingecko.com/coins/images/40143/standard/cbbtc.webp?1726136727"
+      image: "https://static.debank.com/image/base_token/logo_url/0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf/a4ae837a6ca2fc45f07a74898cc4ba45.png"
     },
     {
       contractAddress: "0x940181a94a35a4569e4529a3cdfb74e38fd98631",
@@ -756,6 +1022,7 @@ export const TOKENS: Tokens = {
       image: "https://static.debank.com/image/project/logo_url/lido/081388ebc44fa042561749bd5338d49e.png"
     }
   ],
+  // Oasis
   23294: [
     {
       contractAddress: "0xB6dc6C8b71e88642cEAD3be1025565A9eE74d1C6",
@@ -772,6 +1039,13 @@ export const TOKENS: Tokens = {
       image: "https://assets.coingecko.com/coins/images/13162/standard/200x200_%28Rounded%29.png?1743579893"
     },
     {
+      contractAddress: "0xed57966f1566de1a90042d07403021ea52ad4724",
+      name: "stROSE",
+      symbol: "stROSE",
+      decimals: 18,
+      image: "https://resources.accumulated.finance/tokens/23294/0xed57966f1566de1a90042d07403021ea52ad4724.png"
+    },
+    {
       contractAddress: "0x0000000000000000000000000000000000000000",
       name: "ROSE",
       symbol: "ROSE",
@@ -779,6 +1053,486 @@ export const TOKENS: Tokens = {
       equivalentERC20: "0x8Bc2B030b299964eEfb5e1e0b36991352E56D2D3",
       decimals: 18,
       image: "https://assets.coingecko.com/coins/images/13162/standard/200x200_%28Rounded%29.png?1743579893"
+    }
+  ],
+  // Optimism
+  10: [
+    {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "Ethereum",
+      symbol: "ETH",
+      nativeCurrency: true,
+      equivalentERC20: "0x4200000000000000000000000000000000000006",
+      decimals: 0,
+      image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png"
+    },
+    {
+      contractAddress: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+      name: "Dai Stablecoin",
+      symbol: "DAI",
+      decimals: 18,
+      image: "https://assets.coingecko.com/coins/images/39807/small/dai.png?1724126571"
+    },
+    {
+      contractAddress: "0x350a791Bfc2C21F9Ed5d10980Dad2e2638ffa7f6",
+      name: "ChainLink Token",
+      symbol: "LINK",
+      decimals: 18,
+      image: "https://static.debank.com/image/arb_token/logo_url/0xf97f4df75117a78c1a5a0dbb814af92458539fb4/69425617db0ef93a7c21c4f9b81c7ca5.png"
+    },
+    {
+      contractAddress: "0x68f180fcCe6836688e9084f035309E29Bf0A2095",
+      name: "Wrapped BTC",
+      symbol: "WBTC",
+      decimals: 8,
+      image: "https://static.debank.com/image/arb_token/logo_url/0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f/d3c52e7c7449afa8bd4fad1c93f50d93.png"
+    },
+    {
+      contractAddress: "0x4200000000000000000000000000000000000006",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png"
+    },
+    {
+      contractAddress: "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+      name: "Tether USD",
+      symbol: "USDT",
+      decimals: 6,
+      image: "https://static.debank.com/image/coin/logo_url/usdt/23af7472292cb41dc39b3f1146ead0fe.png"
+    },
+    {
+      contractAddress: "0x76FB31fb4af56892A25e32cFC43De717950c9278",
+      name: "Aave Token",
+      symbol: "AAVE",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9/7baf403c819f679dc1c6571d9d978f21.png"
+    },
+    {
+      contractAddress: "0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9",
+      name: "Synth sUSD",
+      symbol: "sUSD",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x57ab1ec28d129707052df4df418d58a2d46d5f51/c699f829018dea55b6b49da32bc9a90d.png"
+    },
+    {
+      contractAddress: "0x4200000000000000000000000000000000000042",
+      name: "Optimism",
+      symbol: "OP",
+      decimals: 18,
+      image: "https://static.debank.com/image/op_token/logo_url/0x4200000000000000000000000000000000000042/029a56df18f88f4123120fdcb6bea40b.png"
+    },
+    {
+      contractAddress: "0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb",
+      name: "Wrapped liquid staked Ether 2.0",
+      symbol: "wstETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/project/logo_url/lido/081388ebc44fa042561749bd5338d49e.png"
+    },
+    {
+      contractAddress: "0xc40F949F8a4e094D1b49a23ea9241D289B7b2819",
+      name: "LUSD Stablecoin",
+      symbol: "LUSD",
+      decimals: 18,
+      image: "https://static.debank.com/image/op_token/logo_url/0xc40f949f8a4e094d1b49a23ea9241d289b7b2819/56935bcdcac2e13a87ed36fb11c0fb52.png"
+    },
+    {
+      contractAddress: "0xdFA46478F9e5EA86d57387849598dbFB2e964b02",
+      name: "Mai Stablecoin",
+      symbol: "MAI",
+      decimals: 18,
+      image: "https://static.debank.com/image/project/logo_url/avax_mai/cb30de2ca105456fbb279ef6297cf1dd.png"
+    },
+    {
+      contractAddress: "0x9Bcef72be871e61ED4fBbc7630889beE758eb81D",
+      name: "Rocket Pool ETH",
+      symbol: "rETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/op_token/logo_url/0x9bcef72be871e61ed4fbbc7630889bee758eb81d/0a56aa87c04449332f88702b2bd5f45c.png"
+    },
+    {
+      contractAddress: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+      name: "USD Coin",
+      symbol: "USDC",
+      decimals: 6,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/fffcd27b9efff5a86ab942084c05924d.png"
+    },
+    {
+      contractAddress: "0x7f5c764cbc14f9669b88837ca1490cca17c31607",
+      name: "USD Coin (Bridged from Ethereum)",
+      symbol: "USDC.e",
+      decimals: 6,
+      image: "https://static.debank.com/image/avax_token/logo_url/0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664/c1503ade9d53497fe93ca9f2723c56a1.png"
+    }
+  ],
+  // Binance
+  56: [
+    {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "BNB",
+      symbol: "BNB",
+      nativeCurrency: true,
+      equivalentERC20: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      decimals: 0,
+      image: "https://static.debank.com/image/coin/logo_url/bnb/9784283a36f23a58982fc964574ea530.png"
+    },
+    {
+      contractAddress: "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+      name: "PancakeSwap Token",
+      symbol: "Cake",
+      decimals: 18,
+      image: "https://static.debank.com/image/bsc_token/logo_url/0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82/9003539eb61139bd494b7412b785d482.png"
+    },
+    {
+      contractAddress: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      name: "Wrapped BNB",
+      symbol: "WBNB",
+      decimals: 18,
+      image: "https://static.debank.com/image/coin/logo_url/bnb/9784283a36f23a58982fc964574ea530.png"
+    },
+    {
+      contractAddress: "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+      name: "Bitcoin BEP2",
+      symbol: "BTCB",
+      decimals: 18,
+      image: "https://static.debank.com/image/bsc_token/logo_url/0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c/6f9302fa889419e4ce8745931d2e19bf.png"
+    },
+    {
+      contractAddress: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+      name: "Binance-Peg Ethereum Token",
+      symbol: "ETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/coin/logo_url/eth/6443cdccced33e204d90cb723c632917.png"
+    },
+    {
+      contractAddress: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+      name: "USD Coin",
+      symbol: "USDC",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/fffcd27b9efff5a86ab942084c05924d.png"
+    },
+    {
+      contractAddress: "0x55d398326f99059fF775485246999027B3197955",
+      name: "Tether USD",
+      symbol: "USDT",
+      decimals: 18,
+      image: "https://static.debank.com/image/coin/logo_url/usdt/23af7472292cb41dc39b3f1146ead0fe.png"
+    },
+    {
+      contractAddress: "0xc5f0f7b66764F6ec8C8Dff7BA683102295E16409",
+      name: "First Digital USD",
+      symbol: "FDUSD",
+      decimals: 18,
+      image: "https://static.debank.com/image/bsc_token/logo_url/0xc5f0f7b66764f6ec8c8dff7ba683102295e16409/9c61b134f82d8780005895d8fb6b19ab.png"
+    },
+    {
+      contractAddress: "0x26c5e01524d2E6280A48F2c50fF6De7e52E9611C",
+      name: "Wrapped liquid staked Ether 2.0",
+      symbol: "wstETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/manta_token/logo_url/0x2fe3ad97a60eb7c79a976fc18bb5ffd07dd94ba5/2386b46c224a2d3566d418ea7de38471.png"
+    }
+  ],
+  // Polygon
+  137: [
+    {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "MATIC",
+      symbol: "MATIC",
+      nativeCurrency: true,
+      equivalentERC20: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+      decimals: 0,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0/20aac20baa9069bd39342edd8c5cc801.png"
+    },
+    {
+      contractAddress: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+      name: "Dai Stablecoin",
+      symbol: "DAI",
+      decimals: 18,
+      image: "https://static.debank.com/image/matic_token/logo_url/0x8f3cf7ad23cd3cadbd9735aff958023239c6a063/b13487f4a2e0c43d8dc9e98194a2dd39.png"
+    },
+    {
+      contractAddress: "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39",
+      name: "ChainLink Token",
+      symbol: "LINK",
+      decimals: 18,
+      image: "https://static.debank.com/image/matic_token/logo_url/0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39/cef6e0d1f77e59becae308dad59a5377.png"
+    },
+    {
+      contractAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+      name: "USD Coin",
+      symbol: "USDC.e",
+      decimals: 6,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/fffcd27b9efff5a86ab942084c05924d.png"
+    },
+    {
+      contractAddress: "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
+      name: "Wrapped Bitcoin",
+      symbol: "WBTC",
+      decimals: 8,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/d3c52e7c7449afa8bd4fad1c93f50d93.png"
+    },
+    {
+      contractAddress: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/matic_token/logo_url/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619/fcbac4ac4814f10386e7b892c3fc0adc.png"
+    },
+    {
+      contractAddress: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      name: "Tether USD",
+      symbol: "USDT",
+      decimals: 6,
+      image: "https://static.debank.com/image/matic_token/logo_url/0xc2132d05d31c914a87c6611c10748aeb04b58e8f/3a2803ff6129961e8fa48f8b66d06735.png"
+    },
+    {
+      contractAddress: "0xD6DF932A45C0f255f85145f286eA0b292B21C90B",
+      name: "Aave Token",
+      symbol: "AAVE",
+      decimals: 18,
+      image: "https://static.debank.com/image/matic_token/logo_url/0xd6df932a45c0f255f85145f286ea0b292b21c90b/9ac673ff449bb7b8fbc8b8119caf4a1f.png"
+    },
+    {
+      contractAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+      name: "Wrapped MATIC",
+      symbol: "WPOL",
+      decimals: 18,
+      image: "https://static.debank.com/image/matic_token/logo_url/0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270/8c043b86aa8131c15ecf578ce6bf2615.png"
+    },
+    {
+      contractAddress: "0x172370d5Cd63279eFa6d502DAB29171933a610AF",
+      name: "Curve DAO Token",
+      symbol: "CRV",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xd533a949740bb3306d119cc777fa900ba034cd52/38f4cbac8fb4ac70c384a65ae0cca337.png"
+    },
+    {
+      contractAddress: "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a",
+      name: "SushiToken",
+      symbol: "SUSHI",
+      decimals: 18,
+      image: "https://static.debank.com/image/matic_token/logo_url/0x0b3f868e0be5597d5db7feb59e1cadbb0fdda50a/141f2667ca2ae482227a988afebeeccd.png"
+    },
+    {
+      contractAddress: "0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7",
+      name: "Aavegotchi",
+      symbol: "GHST",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x3f382dbd960e3a9bbceae22651e88158d2791550/68ed965e1498018afc8b8b91e4d43e96.png"
+    },
+    {
+      contractAddress: "0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3",
+      name: "Balancer",
+      symbol: "BAL",
+      decimals: 18,
+      image: "https://static.debank.com/image/matic_token/logo_url/0x9a71012b13ca4d3d0cdc72a177df3ef03b0e76a3/92087d366bfe2d2ef1f9108b962cad8e.png"
+    },
+    {
+      contractAddress: "0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369",
+      name: "DefiPulse Index",
+      symbol: "DPI",
+      decimals: 18,
+      image: "https://static.debank.com/image/matic_token/logo_url/0x85955046df4668e1dd369d2de9f3aeb98dd2a369/23c2068d205b6d3d72739c1f9a421366.png"
+    },
+    {
+      contractAddress: "0xE111178A87A3BFf0c8d18DECBa5798827539Ae99",
+      name: "STASIS EURO",
+      symbol: "EURS",
+      decimals: 2,
+      image: "https://polygonscan.com/token/images/statiseuro_28.png"
+    },
+    {
+      contractAddress: "0x4e3Decbb3645551B8A19f0eA1678079FCB33fB4c",
+      name: "Jarvis Euro",
+      symbol: "jEUR",
+      decimals: 18,
+      image: "https://static.debank.com/image/matic_token/logo_url/0x4e3decbb3645551b8a19f0ea1678079fcb33fb4c/c3551ad2d3425983e66bff80d1818573.png"
+    },
+    {
+      contractAddress: "0xE0B52e49357Fd4DAf2c15e02058DCE6BC0057db4",
+      name: "agEUR",
+      symbol: "agEUR",
+      decimals: 18,
+      image: "https://polygonscan.com/token/images/ageurpoly_32.png"
+    },
+    {
+      contractAddress: "0xa3Fa99A148fA48D14Ed51d610c367C61876997F1",
+      name: "Mai Stablecoin",
+      symbol: "miMATIC",
+      decimals: 18,
+      image: "https://static.debank.com/image/matic_token/logo_url/0xa3fa99a148fa48d14ed51d610c367c61876997f1/be77e8e47016b1e9d3f01b7edc9b8d4f.png"
+    },
+    {
+      contractAddress: "0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4",
+      name: "Staked MATIC",
+      symbol: "stMATIC",
+      decimals: 18,
+      image: "https://static.debank.com/image/matic_token/logo_url/0x3a58a54c066fdc0f2d55fc9c89f0415c92ebf3c4/2d5ff76341cf16ae829fcf7711dedd6d.png"
+    },
+    {
+      contractAddress: "0xfa68FB4628DFF1028CFEc22b4162FCcd0d45efb6",
+      name: "Liquid Staking Matic",
+      symbol: "MaticX",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xf03a7eb46d01d9ecaa104558c732cf82f6b6b645/49c8b7e2665db48c5cecdc06abe1787c.png"
+    },
+    {
+      contractAddress: "0x03b54A6e9a984069379fae1a4fC4dBAE93B3bCCD",
+      name: "Wrapped liquid staked Ether 2.0",
+      symbol: "wstETH",
+      decimals: 18,
+      image: "https://polygonscan.com/token/images/wsteth_32.png"
+    },
+    {
+      contractAddress: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+      name: "USD Coin",
+      symbol: "USDC",
+      decimals: 6,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/fffcd27b9efff5a86ab942084c05924d.png"
+    }
+  ],
+  // Sonic
+  146: [
+    {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "SONIC",
+      symbol: "SONIC",
+      nativeCurrency: true,
+      equivalentERC20: "0x039e2fB66102314Ce7b64Ce5Ce3E5183bc94aD38",
+      decimals: 0,
+      image: "https://static.debank.com/image/sonic_token/logo_url/sonic/17d88e82ee2f7243922c0f2d3de580ce.png"
+    },
+    {
+      contractAddress: "0x50c42dEAcD8Fc9773493ED674b675bE577f2634b",
+      name: "Wrapped ETH",
+      symbol: "WETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/sonic_token/logo_url/0x50c42deacd8fc9773493ed674b675be577f2634b/639320e04981204eca87cf9afb5f5c89.png"
+    },
+    {
+      contractAddress: "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+      name: "Bridged USDC (Sonic Labs)",
+      symbol: "USDC.e",
+      decimals: 6,
+      image: "https://static.debank.com/image/arb_token/logo_url/0xaf88d065e77c8cc2239327c5edb3a432268e5831/fffcd27b9efff5a86ab942084c05924d.png"
+    },
+    {
+      contractAddress: "0x039e2fB66102314Ce7b64Ce5Ce3E5183bc94aD38",
+      name: "Wrapped Sonic",
+      symbol: "wS",
+      decimals: 18,
+      image: "https://static.debank.com/image/sonic_token/logo_url/0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38/c4faf4a1f3192ee5dc3184879182d7e3.png"
+    },
+    {
+      contractAddress: "0xE5DA20F15420aD15DE0fa650600aFc998bbE3955",
+      name: "Beets Staked Sonic",
+      symbol: "stS",
+      decimals: 18,
+      image: "https://sonicscan.org/token/images/sts_32.png"
+    }
+  ],
+  // Avalanche
+  43114: [
+    {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "AVAX",
+      symbol: "AVAX",
+      nativeCurrency: true,
+      equivalentERC20: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+      decimals: 0,
+      image: "https://static.debank.com/image/project/logo_url/avax_wavax/e195cdd89f44bf3d0c65d38ce2c6c662.png"
+    },
+    {
+      contractAddress: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+      name: "Wrapped AVAX",
+      symbol: "WAVAX",
+      decimals: 18,
+      image: "https://static.debank.com/image/project/logo_url/avax_wavax/e195cdd89f44bf3d0c65d38ce2c6c662.png"
+    },
+    {
+      contractAddress: "0xd586E7F844cEa2F87f50152665BCbc2C279D8d70",
+      name: "Dai Stablecoin",
+      symbol: "DAI.e",
+      decimals: 18,
+      image: "https://static.debank.com/image/avax_token/logo_url/0xd586e7f844cea2f87f50152665bcbc2c279d8d70/549c4205dbb199f1b8b03af783f35e71.png"
+    },
+    {
+      contractAddress: "0x5947BB275c521040051D82396192181b413227A3",
+      name: "ChainLink Token",
+      symbol: "LINK.e",
+      decimals: 18,
+      image: "https://static.debank.com/image/avax_token/logo_url/0x5947bb275c521040051d82396192181b413227a3/69425617db0ef93a7c21c4f9b81c7ca5.png"
+    },
+    {
+      contractAddress: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+      name: "USD Coin",
+      symbol: "USDC",
+      decimals: 6,
+      image: "https://static.debank.com/image/arb_token/logo_url/0xaf88d065e77c8cc2239327c5edb3a432268e5831/fffcd27b9efff5a86ab942084c05924d.png"
+    },
+    {
+      contractAddress: "0x50b7545627a5162F82A992c33b87aDc75187B218",
+      name: "Wrapped Bitcoin",
+      symbol: "WBTC.e",
+      decimals: 8,
+      image: "https://static.debank.com/image/avax_token/logo_url/0x50b7545627a5162f82a992c33b87adc75187b218/07408c936022cc58f94eeeda4095dd3a.png"
+    },
+    {
+      contractAddress: "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
+      name: "Wrapped Ether",
+      symbol: "WETH.e",
+      decimals: 18,
+      image: "https://static.debank.com/image/avax_token/logo_url/0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab/61844453e63cf81301f845d7864236f6.png"
+    },
+    {
+      contractAddress: "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7",
+      name: "Tether USD",
+      symbol: "USDt",
+      decimals: 6,
+      image: "https://static.debank.com/image/coin/logo_url/usdt/23af7472292cb41dc39b3f1146ead0fe.png"
+    },
+    {
+      contractAddress: "0x63a72806098Bd3D9520cC43356dD78afe5D386D9",
+      name: "Aave Token",
+      symbol: "AAVE.e",
+      decimals: 18,
+      image: "https://static.debank.com/image/avax_token/logo_url/0x63a72806098bd3d9520cc43356dd78afe5d386d9/9ac673ff449bb7b8fbc8b8119caf4a1f.png"
+    },
+    {
+      contractAddress: "0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE",
+      name: "Staked AVAX",
+      symbol: "sAVAX",
+      decimals: 18,
+      image: "https://static.debank.com/image/project/logo_url/avax_wavax/e195cdd89f44bf3d0c65d38ce2c6c662.png"
+    },
+    {
+      contractAddress: "0xD24C2Ad096400B6FBcd2ad8B24E7acBc21A1da64",
+      name: "Frax",
+      symbol: "FRAX",
+      decimals: 18,
+      image: "https://static.debank.com/image/project/logo_url/frax/0bbd098aba20703a84601865177e6d73.png"
+    },
+    {
+      contractAddress: "0x5c49b268c9841AFF1Cc3B0a418ff5c3442eE3F3b",
+      name: "Mai Stablecoin",
+      symbol: "MAI",
+      decimals: 18,
+      image: "https://static.debank.com/image/project/logo_url/avax_mai/cb30de2ca105456fbb279ef6297cf1dd.png"
+    },
+    {
+      contractAddress: "0x152b9d0FdC40C096757F570A51E494bd4b943E50",
+      name: "Bitcoin",
+      symbol: "BTC.b",
+      decimals: 8,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599/d3c52e7c7449afa8bd4fad1c93f50d93.png"
+    },
+    {
+      contractAddress: "0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a",
+      name: "Axelar USD",
+      symbol: "AUSD",
+      decimals: 6,
+      image: ""
     }
   ]
 };
