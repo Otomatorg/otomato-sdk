@@ -202,11 +202,6 @@ const dailyYieldEmail = async () => {
     •   Ironclad: {{external.functions.ironcladLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}%
     •   Moonwell: {{external.functions.moonwellLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}%
 
-📍 On Mode
-    •   IONIC: {{external.functions.ionicLendingRate(34443,0xd988097fb8612cc24eeC14542bC03424c656005f)}}%
-    •   Ironclad: {{external.functions.ironcladLendingRate(34443,0xd988097fb8612cc24eeC14542bC03424c656005f)}}%
-
-
 ------------------      ETH     ------------------------
 
 📍 On Base
@@ -215,10 +210,6 @@ const dailyYieldEmail = async () => {
     •   Compound: {{external.functions.compoundLendingRate(8453,0x4200000000000000000000000000000000000006,0)}}%
     •   Ironclad: {{external.functions.ironcladLendingRate(8453,0x4200000000000000000000000000000000000006)}}%
     •   Moonwell: {{external.functions.moonwellLendingRate(8453,0x4200000000000000000000000000000000000006)}}%
-
-📍 On Mode
-    •   IONIC: {{external.functions.ionicLendingRate(34443,0x4200000000000000000000000000000000000006)}}%
-    •   Ironclad: {{external.functions.ironcladLendingRate(34443,0x4200000000000000000000000000000000000006)}}%
 
 The gas price on Ethereum is currently {{external.functions.mainnetGasPrice(,)}} gwei.
 
