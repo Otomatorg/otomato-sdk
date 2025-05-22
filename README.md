@@ -1,64 +1,224 @@
 # Otomato SDK
 
-The Otomato SDK empowers users to automate any crypto related behavior. With its suite of intuitive automation tools, Otomato allows users to seamlessly respond to market dynamics while abstracting all the complexity.
+The Otomato SDK empowers users to automate crypto-related behaviors. It provides intuitive tools to respond to market dynamics by abstracting complexities.
 
 ## Table of Contents
 
-- [Features](#features)
-- [Installation](#installation)
 - [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Setting Up Environment Variables](#setting-up-environment-variables)
+  - [Simple ETH Price Monitor Example](#simple-eth-price-monitor-example)
+  - [Running the First Example](#running-the-first-example)
   - [Authentication](#authentication)
-  - [Creating a Workflow](#creating-a-workflow)
-  - [Running a Workflow](#running-a-workflow)
-- [Core Concepts](#core-concepts)
-  - [Workflow](#workflow)
-  - [Node](#node)
-  - [Trigger](#trigger)
-  - [Action](#action)
-  - [Edge](#edge)
-- [Examples](#examples)
-  - [Swap and Deposit Workflow](#swap-and-deposit-workflow)
-  - [ETH Price Monitoring with Split Conditions](#eth-price-monitoring-with-split-conditions)
-- [API Reference](#api-reference)
+- [Going Further](#going-further)
+  - [Core Concepts](#core-concepts)
+    - [Workflow](#workflow)
+    - [Node](#node)
+    - [Trigger](#trigger)
+    - [Action](#action)
+    - [Edge](#edge)
+  - [Examples](#examples)
+    - [Swap and Deposit Workflow](#swap-and-deposit-workflow)
+    - [ETH Price Monitoring with Split Conditions](#eth-price-monitoring-with-split-conditions)
+  - [API Reference](#api-reference)
+  - [Features](#features)
 - [Contributing](#contributing)
 - [License](#license)
 
-## Features
+## Getting Started
 
-- **Automate Web3 Actions**: Create automated workflows to interact with smart contracts, perform token swaps, send notifications, and more.
-- **Smart Account Integration**: Utilize Smart Accounts (ERC-4337) for secure and efficient automation.
-- **Building Block System**: Combine triggers and actions to build complex strategies without writing low-level code.
-- **Session Key Permissions**: Maintain control over your assets with explicit action authorizations.
-- **Extensible Architecture**: Easily add new triggers, actions, and services.
-
-## Installation
+### Installation
 
 ```bash
 npm install otomato-sdk
+```
 
-## Getting Started
+### Setting Up Environment Variables
+
+For the first example, set the following environment variables:
+*   `API_URL`: Should be set to `https://api.otomato.xyz/api`.
+*   `AUTH_TOKEN`: Obtain this by following the [Authentication](#authentication) instructions.
+
+Alternatively, you can replace these placeholder values directly in the example code.
+
+### Simple ETH Price Monitor Example
+
+This minimal example monitors the ETH price and sends an email notification if it drops below $2500.
+
+```js
+import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices } from 'otomato-sdk';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+async function simpleEthPriceMonitor() {
+  const API_URL = process.env.API_URL || "https://api.otomato.xyz/api";
+  const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS || "your-email@example.com"; // Replace with your email or set as ENV var
+  const AUTH_TOKEN = process.env.AUTH_TOKEN;
+
+  if (!AUTH_TOKEN) {
+    console.error("Error: AUTH_TOKEN is not set. Please set it as an environment variable or directly in the code.");
+    return;
+  }
+  if (EMAIL_ADDRESS === "your-email@example.com") {
+    console.warn("Warning: EMAIL_ADDRESS is set to the default. Replace with your email to receive notifications.");
+  }
+  apiServices.setUrl(API_URL);
+  apiServices.setAuth(AUTH_TOKEN);
+
+  const priceTrigger = new Trigger(TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY);
+  priceTrigger.setChainId(CHAINS.BASE); // Using Base network
+  priceTrigger.setComparisonValue(2500);
+  priceTrigger.setCondition("lte");
+  priceTrigger.setParams("currency", "USD");
+  priceTrigger.setContractAddress(getTokenFromSymbol(CHAINS.BASE, "WETH").contractAddress); // Using WETH on Base as an example
+
+  const emailAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+  emailAction.setParams("to", EMAIL_ADDRESS);
+  emailAction.setParams("subject", "ETH Price Alert");
+  emailAction.setParams("body", `ETH price is now below $2500. Current value: ${priceTrigger.getOutputVariableName('price')}`);
+
+  const workflow = new Workflow("Simple ETH Price Monitor", [priceTrigger, emailAction], [new Edge({ source: priceTrigger, target: emailAction })]);
+
+  try {
+    const { success: createSuccess, error: createError } = await workflow.create();
+    if (!createSuccess) {
+      console.error(`Error creating workflow: ${createError}`);
+      return;
+    }
+    console.log(`Workflow "${workflow.name}" created with ID: ${workflow.id}. Current state: ${workflow.getState()}`);
+
+    const { success: runSuccess, error: runError } = await workflow.run();
+    if (!runSuccess) {
+      console.error(`Error running workflow: ${runError}`);
+      return;
+    }
+    console.log(`Workflow "${workflow.name}" is now running. Current state: ${workflow.getState()}`);
+  } catch (error) {
+    console.error(`An unexpected error occurred: ${error}`);
+  }
+}
+
+simpleEthPriceMonitor();
+```
+
+### Running the First Example
+
+1.  **Install the SDK**:
+    If you haven't already, install the SDK using npm:
+    ```bash
+    npm install otomato-sdk
+    ```
+2.  **Set Environment Variables (Recommended)**:
+    Create a `.env` file in your project's root directory:
+    ```
+    API_URL=https://api.otomato.xyz/api
+    AUTH_TOKEN=your-auth-token
+    EMAIL_ADDRESS=your-email@example.com
+    ```
+    Replace `your-auth-token` and `your-email@example.com` with your actual credentials.
+    Alternatively, modify these values directly in the `simple_eth_price_monitor.js` file.
+3.  **Save the code**:
+    Save the example code as `simple_eth_price_monitor.js` in your project.
+4.  **Install dependencies**:
+    If using a `.env` file, install `dotenv`. The SDK itself is already handled by step 1.
+    ```bash
+    npm install dotenv
+    ```
+5.  **Run the script**:
+    Execute the script using Node.js:
+    ```bash
+    node simple_eth_price_monitor.js
+    ```
 
 ### Authentication
 
-Before interacting with the Otomato SDK, you need to authenticate your account.
+Before interacting with the Otomato SDK, you need to authenticate your account. The primary way to do this is by obtaining an `AUTH_TOKEN`.
 
-```js
-import { apiServices, CHAINS } from 'otomato-sdk';
+**How to get an `AUTH_TOKEN`:**
 
-async function authenticate() {
-  const address = 'YOUR_WALLET_ADDRESS';
-  const chainId = CHAINS.ETHEREUM;
-  const accessCode = 'YOUR_ACCESS_CODE';
+1.  **Programmatically**:
+    This method involves generating a login payload, signing it with your wallet, and then exchanging the signature for an `AUTH_TOKEN`.
+    ```js
+    import { apiServices, CHAINS } from 'otomato-sdk'; // Ensure CHAINS is imported if used
 
-  const loginPayload = await apiServices.generateLoginPayload(address, chainId, accessCode, ownerWalletAddress);
-  const signature = 'SIGNATURE_OF_LOGIN_PAYLOAD';
-  const { token } = await apiServices.getToken(loginPayload, signature);
+    // Example: (Replace with your actual wallet address, access code, owner address, and signing function)
+    async function getAuthToken(walletAddress, accessCode, ownerAddress, signFunction) {
+      try {
+        // Ensure chainId is defined, e.g., CHAINS.ETHEREUM or your specific chain
+        const chainId = CHAINS.ETHEREUM; 
+        const loginPayload = await apiServices.generateLoginPayload(walletAddress, chainId, accessCode, ownerAddress);
+        
+        // The signFunction needs to be implemented by you, using your preferred wallet library (ethers.js, web3.js, etc.)
+        // It takes the JSON string of loginPayload and returns a signature.
+        // Example: const signature = await ethersSigner.signMessage(JSON.stringify(loginPayload));
+        const signature = await signFunction(JSON.stringify(loginPayload));
 
-  apiServices.setAuth(token);
-}
-```
+        const { token } = await apiServices.getToken(loginPayload, signature);
+        apiServices.setAuth(token); // Sets token for subsequent SDK use
+        console.log("Authentication successful. AUTH_TOKEN:", token);
+        return token;
+      } catch (error) {
+        console.error("Programmatic authentication failed:", error);
+        throw error;
+      }
+    }
 
-### Creating a workflow
+    // --- How to use getAuthToken (Example Placeholder) ---
+    // This is a conceptual guide. You'll need to integrate with your specific wallet setup.
+    //
+    // import { Wallet } from 'ethers'; // Example using ethers.js
+    //
+    // async function mySignFunction(payloadString) {
+    //   const privateKey = "YOUR_PRIVATE_KEY"; // Keep private keys secure!
+    //   const wallet = new Wallet(privateKey);
+    //   return await wallet.signMessage(payloadString);
+    // }
+    //
+    // const MY_WALLET_ADDRESS = "0xYourWalletAddress";
+    // const MY_ACCESS_CODE = "YourAccessCode"; // If applicable
+    // const MY_OWNER_WALLET_ADDRESS = "0xOwnerWalletAddress"; // If applicable
+    //
+    // getAuthToken(MY_WALLET_ADDRESS, MY_ACCESS_CODE, MY_OWNER_WALLET_ADDRESS, mySignFunction)
+    //   .then(token => {
+    //     // Use the token for your Otomato SDK operations
+    //   })
+    //   .catch(error => console.error("Failed to get AUTH_TOKEN:", error));
+    ```
+
+2.  **Through the Web App**:
+    You can obtain a token by visiting `[Your Web App URL Here - e.g., https://app.otomato.xyz/settings/api-keys]`.
+    Sign in with your wallet, and you'll typically find the token in your account settings or a dedicated API keys section.
+
+Remember to keep your `AUTH_TOKEN` secure. Do not commit it directly into version control, especially if hardcoded. Using environment variables (as shown in the first example) is a good practice.
+
+## Going Further
+
+### Core Concepts
+
+A brief overview of the main components in the Otomato SDK:
+
+### Workflow
+
+A Workflow is the top-level container for your automation logic. It consists of Nodes (Triggers and Actions) connected by Edges, defining the sequence of operations. Key properties include `id`, `name`, `nodes`, `edges`, and `state`.
+
+### Node
+A Node is a fundamental building block in a Workflow, representing either a Trigger or an Action. It has an `id`, a `blockId` (type of node), `parameters` for configuration, and `position` (for UI).
+
+### Trigger
+A Trigger is a special type of Node that starts a Workflow when specific conditions are met (e.g., price movement, new transaction). Methods like `setCondition()` and `setComparisonValue()` configure its behavior for polling-based triggers.
+
+### Action
+An Action is a Node that performs a task within a Workflow (e.g., swap tokens, send a notification, interact with a smart contract). Use `setParams()` to configure action-specific parameters.
+
+### Edge
+An Edge connects two Nodes (a source and a target), defining the direction of flow and dependencies within a Workflow. It can optionally have a `label` and a `value` for conditional branching.
+
+For more details on properties and methods, refer to the [API Reference](#api-reference) or specific examples.
+
+### Examples
+
+#### Creating a workflow
 
 A Workflow is a collection of Nodes (Triggers and Actions) connected by Edges.
 
@@ -88,7 +248,7 @@ const edge = new Edge({ source: priceTrigger, target: swapAction });
 const workflow = new Workflow('Swap on Price Trigger', [priceTrigger, swapAction], [edge]);
 ```
 
-### Running a Workflow
+#### Running a Workflow
 
 ```js
 // Publish the Workflow
@@ -106,57 +266,6 @@ if (creationResult.success) {
   console.error('Error creating workflow:', creationResult.error);
 }
 ```
-
-## Core concepts
-
-### Workflow
-
-A Workflow is a container for nodes (triggers and actions) and the edges that connect them.
-
-**Properties**:
-	•	`id`: Unique identifier.
-	•	`name`: Name of the workflow.
-	•	`nodes`: Array of Node instances.
-	•	`edges`: Array of Edge instances.
-	•	`state`: Current state (inactive, active, failed, completed, waiting).
-
-### node
-
-Node is an abstract class representing either a Trigger or an Action.
-
-**Properties**:
-	•	`id`: Unique identifier.
-	•	`blockId`: Identifier for the block type.
-	•	`parameters`: Key-value pairs for node configuration.
-	•	`position`: Coordinates for UI placement.
-
-### Trigger
-
-A Trigger initiates the workflow based on certain conditions.
-
-**Methods**:
-	•	`setCondition(value)`: Sets the logical condition (lt, gt, etc.). This works only for polling based triggers.
-	•	`setComparisonValue(value)`: Sets the value to compare against. This works only for polling based triggers.
-
-### Action
-
-An Action performs operations like swapping tokens, sending notifications, etc.
-
-**Methods**:
-	•	`setParams(key, value)`: Sets parameters specific to the action.
-
-### Edges
-
-An Edge connects two nodes, defining the workflow’s execution path.
-
-**Properties**:
-	•	`source`: Source Node.
-	•	`target`: Target Node.
-	•	`label`: Optional label for the edge.
-	•	`value`: Optional value for conditional edges.
-
-
-## Examples
 
 ### Swap and Deposit Workflow
 
@@ -235,96 +344,9 @@ const edge3 = new Edge({ source: conditionTrue, target: slackAction, label: 'tru
 const workflow = new Workflow('ETH Price Monitoring', [ethPriceTrigger, splitAction, conditionTrue, slackAction], [edge1, edge2, edge3]);
 ```
 
-### Simple ETH Price monitor
+### API Reference
 
-We provide a simple example that monitors ETH price and sends an email notification when it drops below $2500. This example doesn't require any environment variables, just replace the authentication token and your email address.
-
-```js
-import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices } from '../../src/index.js';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-async function simple_eth_price_monitor() {
-
-  const API_URL = "https://api.otomato.xyz/api"
-  const EMAIL_ADDRESS = "your-email@gmail.com"
-  const AUTH_TOKEN = "your-auth-token"
-
-  if (!API_URL || !AUTH_TOKEN)
-    return;
-
-  apiServices.setUrl(API_URL);
-  apiServices.setAuth(AUTH_TOKEN); 
-
-  // -------- Eth price trigger --------
-  const balanceTrigger = new Trigger(TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY);
-  balanceTrigger.setChainId(CHAINS.BASE);
-  balanceTrigger.setComparisonValue(2500);
-  balanceTrigger.setCondition("lte");
-  balanceTrigger.setParams("currency", "USD");
-  balanceTrigger.setContractAddress(
-    getTokenFromSymbol(CHAINS.BASE, "WETH").contractAddress
-  );
-
-  // -------- Send email --------
-  const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
-  notificationAction.setParams("body", "The ETH price is now below 2500$. You're losing money by holding it.");
-  notificationAction.setParams("subject", "ETH price below 2500$");
-  notificationAction.setParams("to", EMAIL_ADDRESS);
-
-  const workflow = new Workflow(
-    "Simple ETH Price Monitor",
-    [
-      balanceTrigger,
-      notificationAction
-    ],
-    [new Edge({
-      source: balanceTrigger,
-      target: notificationAction,
-    })]
-  );
-
-  const creationResult = await workflow.create();
-
-  console.log("Simple ETH Price Monitor before: " + workflow.getState());
-
-  console.log("Workflow ID: " + workflow.id);
-
-  const runResult = await workflow.run();
-
-  console.log("Simple ETH Price Monitor after: " + workflow.getState());
-}
-
-simple_eth_price_monitor();
-```
-
-### Running Examples
-
-1. First, build the SDK:
-   ```bash
-   npm install
-   npm run build
-   ```
-
-2. Then, you can run any example in the dist/examples directory:
-   ```bash
-   node dist/examples/GettingStarted/simpleEthPriceMonitor.js
-   ```
-
-### Getting an Authentication Token
-
-1. **Programmatically**:
-   ```js
-   ```
-
-2. **Through the Web App**:
-   You can obtain a token by visiting [https://...]. 
-   Sign in with your wallet, and you'll receive a token that can be used in your applications.
-
-Remember to keep your authentication token secure and don't share it publicly.
-
-## API Reference
+This section provides a high-level overview of key classes and their primary methods. For exhaustive details, consult the full API documentation (if available separately) or examine the SDK's source code.
 
 ### Workflow Class
 
@@ -355,6 +377,23 @@ Remember to keep your authentication token secure and don't share it publicly.
 - **Methods**:
   - `toJSON()`: Serializes the edge.
   - `delete()`: Deletes the edge.
+
+### Features
+
+- **Automate Web3 Operations**: Build workflows for smart contract interactions, token swaps, notifications, etc.
+- **Smart Account Ready**: Designed for secure automation with Smart Accounts (ERC-4337).
+- **Modular Design**: Use triggers and actions as building blocks for complex strategies.
+- **Controlled Permissions**: Leverage session keys for fine-grained control over asset interactions.
+- **Extensible**: Add custom triggers, actions, and services.
+
+## Contributing
+
+We welcome contributions to enhance the Otomato SDK! Please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch.
+3. Make your changes, including clear comments and tests (if applicable).
+4. Submit a pull request for review.
 
 ## License
 
