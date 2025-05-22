@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-async function oasis_weth_transfer() {
+async function oasis_weth_balance() {
+  const EMAIL_ADDRESS = "your-email@gmail.com"
 
   if (!process.env.API_URL || !process.env.AUTH_TOKEN)
     return;
@@ -31,21 +32,21 @@ async function oasis_weth_transfer() {
     0
   );
 
-  // -------- Send Slack Message --------
-  const slackMessage = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
-  slackMessage.setParams('webhook', process.env.SLACK_WEBHOOK);
-  slackMessage.setParams('message', `Oasis WETH Balance of ${wallet} is ${balanceTrigger.getOutputVariableName('balance')} (balance)`);
-
+  // -------- Send email --------
+  const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+  notificationAction.setParams("body", "The Oasis WETH balance of " + wallet + " is " + balanceTrigger.getOutputVariableName('balance'));
+  notificationAction.setParams("subject", "Oasis WETH Balance");
+  notificationAction.setParams("to", EMAIL_ADDRESS);
 
   const workflow = new Workflow(
     "Oasis WETH Balance",
     [
       balanceTrigger,
-      slackMessage
+      notificationAction
     ],
     [new Edge({
       source: balanceTrigger,
-      target: slackMessage,
+      target: notificationAction,
     })]
   );
 
@@ -60,4 +61,4 @@ async function oasis_weth_transfer() {
   console.log("Oasis WETH Balance after: " + workflow.getState());
 }
 
-oasis_weth_transfer();
+oasis_weth_balance();

@@ -235,6 +235,95 @@ const edge3 = new Edge({ source: conditionTrue, target: slackAction, label: 'tru
 const workflow = new Workflow('ETH Price Monitoring', [ethPriceTrigger, splitAction, conditionTrue, slackAction], [edge1, edge2, edge3]);
 ```
 
+### Simple ETH Price monitor
+
+We provide a simple example that monitors ETH price and sends an email notification when it drops below $2500. This example doesn't require any environment variables, just replace the authentication token and your email address.
+
+```js
+import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices } from '../../src/index.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+async function simple_eth_price_monitor() {
+
+  const API_URL = "https://api.otomato.xyz/api"
+  const EMAIL_ADDRESS = "your-email@gmail.com"
+  const AUTH_TOKEN = "your-auth-token"
+
+  if (!API_URL || !AUTH_TOKEN)
+    return;
+
+  apiServices.setUrl(API_URL);
+  apiServices.setAuth(AUTH_TOKEN); 
+
+  // -------- Eth price trigger --------
+  const balanceTrigger = new Trigger(TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY);
+  balanceTrigger.setChainId(CHAINS.BASE);
+  balanceTrigger.setComparisonValue(2500);
+  balanceTrigger.setCondition("lte");
+  balanceTrigger.setParams("currency", "USD");
+  balanceTrigger.setContractAddress(
+    getTokenFromSymbol(CHAINS.BASE, "WETH").contractAddress
+  );
+
+  // -------- Send email --------
+  const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+  notificationAction.setParams("body", "The ETH price is now below 2500$. You're losing money by holding it.");
+  notificationAction.setParams("subject", "ETH price below 2500$");
+  notificationAction.setParams("to", EMAIL_ADDRESS);
+
+  const workflow = new Workflow(
+    "Simple ETH Price Monitor",
+    [
+      balanceTrigger,
+      notificationAction
+    ],
+    [new Edge({
+      source: balanceTrigger,
+      target: notificationAction,
+    })]
+  );
+
+  const creationResult = await workflow.create();
+
+  console.log("Simple ETH Price Monitor before: " + workflow.getState());
+
+  console.log("Workflow ID: " + workflow.id);
+
+  const runResult = await workflow.run();
+
+  console.log("Simple ETH Price Monitor after: " + workflow.getState());
+}
+
+simple_eth_price_monitor();
+```
+
+### Running Examples
+
+1. First, build the SDK:
+   ```bash
+   npm install
+   npm run build
+   ```
+
+2. Then, you can run any example in the dist/examples directory:
+   ```bash
+   node dist/examples/GettingStarted/simpleEthPriceMonitor.js
+   ```
+
+### Getting an Authentication Token
+
+1. **Programmatically**:
+   ```js
+   ```
+
+2. **Through the Web App**:
+   You can obtain a token by visiting [https://...]. 
+   Sign in with your wallet, and you'll receive a token that can be used in your applications.
+
+Remember to keep your authentication token secure and don't share it publicly.
+
 ## API Reference
 
 ### Workflow Class
