@@ -133,12 +133,16 @@ simpleEthPriceMonitor();
 
 ### Authentication
 
-Before interacting with the Otomato SDK, you need to authenticate your account. The primary way to do this is by obtaining an `AUTH_TOKEN`.
+Before interacting with the Otomato SDK, you need to authenticate your account. This is done by obtaining an `AUTH_TOKEN`.
 
 **How to get an `AUTH_TOKEN`:**
 
-1.  **Programmatically**:
-    This method involves generating a login payload, signing it with your wallet, and then exchanging the signature for an `AUTH_TOKEN`.
+1.  **Through the Web App (recommended and fastest way)**:
+    This is the primary and recommended method. You can obtain a token by visiting `[Your Web App URL Here - e.g., https://app.otomato.xyz/settings/api-keys]`.
+    Sign in with your wallet, and you'll typically find the token in your account settings or a dedicated API keys section.
+
+2.  **Programmatically (non-recommended)**:
+    This method involves generating a login payload, signing it with your wallet, and then exchanging the signature for an `AUTH_TOKEN`. This is a secondary method and generally not recommended for most users.
     ```js
     import { apiServices, CHAINS } from 'otomato-sdk'; // Ensure CHAINS is imported if used
 
@@ -185,10 +189,6 @@ Before interacting with the Otomato SDK, you need to authenticate your account. 
     //   })
     //   .catch(error => console.error("Failed to get AUTH_TOKEN:", error));
     ```
-
-2.  **Through the Web App**:
-    You can obtain a token by visiting `[Your Web App URL Here - e.g., https://app.otomato.xyz/settings/api-keys]`.
-    Sign in with your wallet, and you'll typically find the token in your account settings or a dedicated API keys section.
 
 Remember to keep your `AUTH_TOKEN` secure. Do not commit it directly into version control, especially if hardcoded. Using environment variables (as shown in the first example) is a good practice.
 
