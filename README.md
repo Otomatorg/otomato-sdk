@@ -35,6 +35,7 @@ The Otomato SDK empowers users to automate any crypto related behavior. With its
 
 ```bash
 npm install otomato-sdk
+```
 
 ## Getting Started
 
