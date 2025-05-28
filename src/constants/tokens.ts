@@ -1163,7 +1163,42 @@ export const TOKENS: Tokens = {
       symbol: "USDC.e",
       decimals: 6,
       image: "https://static.debank.com/image/avax_token/logo_url/0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664/c1503ade9d53497fe93ca9f2723c56a1.png"
-    }
+    },
+    {
+      contractAddress: "0xadDb6A0412DE1BA0F936DCaeb8Aaa24578dcF3B2",
+      name: "Coinbase Wrapped Staked ETH",
+      symbol: "cbETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xbe9895146f7af43049ca1c1ae358b0541ea49704/1f287272a7d8439af0f6b281ebf0143e.png"
+    },
+    {
+      contractAddress: "0x5A7fACB970D094B6C7FF1df0eA68D99E6e73CBFF",
+      name: "weETH",
+      symbol: "weETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xcd5fe23c85820f7b72d0926fc9b05b43e359b7ee/6c02f6b3bcd264d433c3676100ad8da6.png"
+    },
+    {
+      contractAddress: "0x9560e827aF36c94D2Ac33a39bCE1Fe78631088Db",
+      name: "VelodromeV2",
+      symbol: "VELO",
+      decimals: 18,
+      image: "https://static.debank.com/image/op_token/logo_url/0x9560e827af36c94d2ac33a39bce1fe78631088db/433c39cc788f0e5e31cb00dddd8b3c53.png"
+    },
+    {
+      contractAddress: "0x87eEE96D50Fb761AD85B1c982d28A042169d61b1",
+      name: "Wrapped rsETH",
+      symbol: "wrsETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xa1290d69c65a6fe4df752f95823fae25cb99e5a7/9b29efed86aff5a64f238d6d30032f40.png"
+    },
+    {
+      contractAddress: "0x01bFF41798a0BcF287b996046Ca68b395DbC1071",
+      name: "USDT0",
+      symbol: "USDT0",
+      decimals: 6,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xdac17f958d2ee523a2206206994597c13d831ec7/464c0de678334b8fe87327e527bc476d.png"
+    },
   ],
   // Binance
   56: [
