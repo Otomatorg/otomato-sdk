@@ -1,9 +1,9 @@
-import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices } from '../../src/index.js';
+import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices } from '../../../src/index.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-async function oasis_wrose_transfer() {
+async function somnia_usdc_transfer() {
   const EMAIL_ADDRESS = "your-email@gmail.com"
 
   if (!process.env.API_URL || !process.env.AUTH_TOKEN)
@@ -14,20 +14,20 @@ async function oasis_wrose_transfer() {
 
   // -------- Transfer trigger --------
   const transferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
-  transferTrigger.setChainId(CHAINS.OASIS);
+  transferTrigger.setChainId(CHAINS.SOMNIA);
   transferTrigger.setParams(
     "contractAddress",
-    getTokenFromSymbol(CHAINS.OASIS, "wROSE").contractAddress
+    getTokenFromSymbol(CHAINS.SOMNIA, "USDC").contractAddress
   );
 
   // -------- Send email --------
   const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
-  notificationAction.setParams("body", "The Oasis wROSE transfer occurred from " + transferTrigger.getOutputVariableName('from') + " to " + transferTrigger.getOutputVariableName('to') + " with value " + transferTrigger.getOutputVariableName('value'));
-  notificationAction.setParams("subject", "Oasis wROSE Transfer");
+  notificationAction.setParams("body", "The Somnia USDC transfer occurred from " + transferTrigger.getOutputVariableName('from') + " to " + transferTrigger.getOutputVariableName('to') + " with value " + transferTrigger.getOutputVariableName('value'));
+  notificationAction.setParams("subject", "Somnia USDC Transfer");
   notificationAction.setParams("to", EMAIL_ADDRESS);
 
   const workflow = new Workflow(
-    "Oasis wROSE Transfer",
+    "Somnia USDC Transfer",
     [
       transferTrigger,
       notificationAction
@@ -40,13 +40,13 @@ async function oasis_wrose_transfer() {
 
   const creationResult = await workflow.create();
 
-  console.log("Oasis wROSE Transfer before: " + workflow.getState());
+  console.log("Somnia USDC Transfer before: " + workflow.getState());
 
   console.log("Workflow ID: " + workflow.id);
 
   const runResult = await workflow.run();
 
-  console.log("Oasis wROSE Transfer after: " + workflow.getState());
+  console.log("Somnia USDC Transfer after: " + workflow.getState());
 }
 
-oasis_wrose_transfer();
+somnia_usdc_transfer();

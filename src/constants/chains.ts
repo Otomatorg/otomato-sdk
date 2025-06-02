@@ -11,4 +11,5 @@ export const CHAINS = {
   OPTIMISM: 10,
   POLYGON: 137,
   BINANCE: 56,
+  SOMNIA: 50312,
 };

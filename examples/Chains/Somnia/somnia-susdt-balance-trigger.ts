@@ -1,9 +1,9 @@
-import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices } from '../../src/index.js';
+import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices } from '../../../src/index.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-async function oasis_weth_balance() {
+async function somnia_susdt_balance() {
   const EMAIL_ADDRESS = "your-email@gmail.com"
 
   if (!process.env.API_URL || !process.env.AUTH_TOKEN)
@@ -14,13 +14,13 @@ async function oasis_weth_balance() {
 
   // -------- Balance trigger --------
   const balanceTrigger = new Trigger(TRIGGERS.TOKENS.BALANCE.BALANCE);
-  balanceTrigger.setChainId(CHAINS.OASIS);
+  balanceTrigger.setChainId(CHAINS.SOMNIA);
   balanceTrigger.setParams(
     "contractAddress",
-    getTokenFromSymbol(CHAINS.OASIS, "WETH").contractAddress
+    getTokenFromSymbol(CHAINS.SOMNIA, "sUDT").contractAddress
   );
 
-  const wallet = '0xEaFB04B5d4fB753c32DBb2eC32B3bF7CdC7f5144'
+  const wallet = '0xd688AaeD4D623FAE7947D4d9cA8D3a011e8790C9'
   balanceTrigger.setParams(
     "abiParams.account",
     wallet
@@ -34,12 +34,12 @@ async function oasis_weth_balance() {
 
   // -------- Send email --------
   const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
-  notificationAction.setParams("body", "The Oasis WETH balance of " + wallet + " is " + balanceTrigger.getOutputVariableName('balance'));
-  notificationAction.setParams("subject", "Oasis WETH Balance");
+  notificationAction.setParams("body", "The Somnia sUDT balance of " + wallet + " is " + balanceTrigger.getOutputVariableName('balance'));
+  notificationAction.setParams("subject", "Somnia sUDT Balance");
   notificationAction.setParams("to", EMAIL_ADDRESS);
 
   const workflow = new Workflow(
-    "Oasis WETH Balance",
+    "Somnia sUDT Balance",
     [
       balanceTrigger,
       notificationAction
@@ -52,13 +52,13 @@ async function oasis_weth_balance() {
 
   const creationResult = await workflow.create();
 
-  console.log("Oasis WETH Balance before: " + workflow.getState());
+  console.log("Somnia sUDT Balance before: " + workflow.getState());
 
   console.log("Workflow ID: " + workflow.id);
 
   const runResult = await workflow.run();
 
-  console.log("Oasis WETH Balance after: " + workflow.getState());
+  console.log("Somnia sUDT Balance after: " + workflow.getState());
 }
 
-oasis_weth_balance();
+somnia_susdt_balance();
