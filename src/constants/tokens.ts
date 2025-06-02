@@ -1569,6 +1569,22 @@ export const TOKENS: Tokens = {
       decimals: 6,
       image: ""
     }
+  ],
+  50312: [
+    {
+      contractAddress: "0x0ED782B8079529f7385c3eDA9fAf1EaA0DbC6a17",
+      name: "USD Coin",
+      symbol: "USDC",
+      decimals: 6,
+      image: ""
+    },
+    {
+      contractAddress: "0x65296738D4E5edB1515e40287B6FDf8320E6eE04",
+      name: "sUDT",
+      symbol: "sUDT",
+      decimals: 18,
+      image: ""
+    }
   ]
 };
 

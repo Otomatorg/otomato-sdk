@@ -41,6 +41,9 @@ class RPCServices {
     if (env.BINANCE_HTTPS_PROVIDER) {
       this.rpcUrls[CHAINS.BINANCE] = env.BINANCE_HTTPS_PROVIDER;
     }
+    if (env.SOMNIA_HTTPS_PROVIDER) {
+      this.rpcUrls[CHAINS.SOMNIA] = env.SOMNIA_HTTPS_PROVIDER;
+    }
   }
 
   // Function to get the RPC URL for a specific chainId

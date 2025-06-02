@@ -1,4 +1,4 @@
-import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices, convertToTokenUnits, convertToTokenUnitsFromSymbol } from '../../src/index.js';
+import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices, convertToTokenUnits, convertToTokenUnitsFromSymbol } from '../../../src/index.js';
 import dotenv from 'dotenv';
 
 // Load environment variables from the .env file
