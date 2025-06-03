@@ -1053,7 +1053,14 @@ export const TOKENS: Tokens = {
       equivalentERC20: "0x8Bc2B030b299964eEfb5e1e0b36991352E56D2D3",
       decimals: 18,
       image: "https://assets.coingecko.com/coins/images/13162/standard/200x200_%28Rounded%29.png?1743579893"
-    }
+    },
+    {
+      contractAddress: "0xDD629E5241CbC5919847783e6C96B2De4754e438",
+      name: "Midas US Treasury Bill Token",
+      symbol: "mTBILL",
+      decimals: 18,
+      image: "https://cdn.morpho.org/assets/logos/mtbill.svg"
+    },
   ],
   // Optimism
   10: [
