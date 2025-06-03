@@ -1061,6 +1061,13 @@ export const TOKENS: Tokens = {
       decimals: 18,
       image: "https://cdn.morpho.org/assets/logos/mtbill.svg"
     },
+    {
+      contractAddress: "0xDD629E5241CbC5919847783e6C96B2De4754e438",
+      name: "Midas US Treasury Bill Token",
+      symbol: "wstRose",
+      decimals: 18,
+      image: "https://cdn.morpho.org/assets/logos/mtbill.svg"
+    },
   ],
   // Optimism
   10: [
