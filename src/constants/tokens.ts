@@ -1057,17 +1057,17 @@ export const TOKENS: Tokens = {
     {
       contractAddress: "0xDD629E5241CbC5919847783e6C96B2De4754e438",
       name: "Midas US Treasury Bill Token",
-      symbol: "mTBILL",
+      symbol: "mTBill",
       decimals: 18,
-      image: "https://cdn.morpho.org/assets/logos/mtbill.svg"
+      image: "https://assets.oasis.io/explorer-tokens/mtBILL.svg"
     },
     {
-      contractAddress: "0xDD629E5241CbC5919847783e6C96B2De4754e438",
-      name: "Midas US Treasury Bill Token",
-      symbol: "wstRose",
+      contractAddress: "0x3cAbbe76Ea8B4e7a2c0a69812CBe671800379eC8",
+      name: "wstROSE",
+      symbol: "wstROSE",
       decimals: 18,
-      image: "https://cdn.morpho.org/assets/logos/mtbill.svg"
-    },
+      image: "https://assets.oasis.io/explorer-tokens/wstROSE.svg"
+    }
   ],
   // Optimism
   10: [
