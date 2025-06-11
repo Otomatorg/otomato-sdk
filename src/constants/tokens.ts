@@ -1598,6 +1598,13 @@ export const TOKENS: Tokens = {
       symbol: "sUDT",
       decimals: 18,
       image: ""
+    },
+    {
+      contractAddress: "0x68D13B424831dB31e26cAF3D98619eb047B53447",
+      name: "WSTT",
+      symbol: "WSTT",
+      decimals: 18,
+      image: ""
     }
   ]
 };
