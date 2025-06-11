@@ -1594,8 +1594,8 @@ export const TOKENS: Tokens = {
     },
     {
       contractAddress: "0x65296738D4E5edB1515e40287B6FDf8320E6eE04",
-      name: "sUDT",
-      symbol: "sUDT",
+      name: "sUSDT",
+      symbol: "sUSDT",
       decimals: 18,
       image: ""
     }

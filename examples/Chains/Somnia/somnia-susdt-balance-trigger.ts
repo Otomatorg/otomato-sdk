@@ -4,7 +4,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 async function somnia_susdt_balance() {
-  const EMAIL_ADDRESS = "your-email@gmail.com"
+  
+  const EMAIL_ADDRESS = "your-email@gmail.com";
 
   if (!process.env.API_URL || !process.env.AUTH_TOKEN)
     return;
@@ -17,7 +18,7 @@ async function somnia_susdt_balance() {
   balanceTrigger.setChainId(CHAINS.SOMNIA);
   balanceTrigger.setParams(
     "contractAddress",
-    getTokenFromSymbol(CHAINS.SOMNIA, "sUDT").contractAddress
+    getTokenFromSymbol(CHAINS.SOMNIA, "sUSDT").contractAddress
   );
 
   const wallet = '0xd688AaeD4D623FAE7947D4d9cA8D3a011e8790C9'
@@ -34,12 +35,12 @@ async function somnia_susdt_balance() {
 
   // -------- Send email --------
   const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
-  notificationAction.setParams("body", "The Somnia sUDT balance of " + wallet + " is " + balanceTrigger.getOutputVariableName('balance'));
-  notificationAction.setParams("subject", "Somnia sUDT Balance");
+  notificationAction.setParams("body", "The Somnia sUSDT balance of " + wallet + " is " + balanceTrigger.getOutputVariableName('balance'));
+  notificationAction.setParams("subject", "Somnia sUSDT Balance");
   notificationAction.setParams("to", EMAIL_ADDRESS);
 
   const workflow = new Workflow(
-    "Somnia sUDT Balance",
+    "Somnia sUSDT Balance",
     [
       balanceTrigger,
       notificationAction
@@ -52,13 +53,13 @@ async function somnia_susdt_balance() {
 
   const creationResult = await workflow.create();
 
-  console.log("Somnia sUDT Balance before: " + workflow.getState());
+  console.log("Somnia sUSDT Balance before: " + workflow.getState());
 
   console.log("Workflow ID: " + workflow.id);
 
   const runResult = await workflow.run();
 
-  console.log("Somnia sUDT Balance after: " + workflow.getState());
+  console.log("Somnia sUSDT Balance after: " + workflow.getState());
 }
 
 somnia_susdt_balance();
