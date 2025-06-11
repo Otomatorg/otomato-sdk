@@ -223,6 +223,22 @@ describe('Trigger Class', () => {
     expect(trigger.toJSON().parameters.comparisonValue).to.not.be.null;
   });
 
+  it('should support setting comparison value to a string variable', () => {
+    const balanceTrigger = new Trigger(TRIGGERS.TOKENS.BALANCE.BALANCE);
+    balanceTrigger.setChainId(CHAINS.ETHEREUM);
+    balanceTrigger.setParams("account", DEFAULT_ADDRESS);
+    balanceTrigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    balanceTrigger.setCondition("gte");
+    balanceTrigger.setComparisonValue('{{history.0.value}}');
+
+    const params = balanceTrigger.getParameters();
+    expect(params.chainId).to.equal(CHAINS.ETHEREUM);
+    expect(params.abi.parameters.account).to.equal(DEFAULT_ADDRESS);
+    expect(params.contractAddress).to.equal(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+    expect(balanceTrigger.toJSON().parameters.condition).to.equal("gte");
+    expect(balanceTrigger.toJSON().parameters.comparisonValue).to.equal('{{history.0.value}}');
+  });
+
 });
 
 describe('findBlockByPrototype', () => {

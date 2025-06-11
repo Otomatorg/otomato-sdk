@@ -6,7 +6,8 @@ export const WORKFLOW_TEMPLATES_TAGS = {
     TRADING: 'Trading',
     ON_CHAIN_MONITORING: 'On-chain monitoring',
     YIELD: 'Yield',
-    NOTIFICATIONS: 'notifications'
+    NOTIFICATIONS: 'notifications',
+    ABSTRACT: 'Abstract'
 };
 
 const createModeTransferNotificationWorkflow = () => {
@@ -222,6 +223,33 @@ See you tomorrow!`);
     return new Workflow('Daily yield updates', [trigger, notificationAction], [edge]);
 }
 
+const abstractGetNotifiedOnNewFlashBadge = async () => {
+    const trigger = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ABSTRACT_FLASH_BADGE);
+    trigger.setCondition('neq');
+    trigger.setComparisonValue('{{history.0.value}}');
+
+    const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    telegramAction.setParams('message', 'A new flash badge is available on Abstract');
+
+    const edge = new Edge({ source: trigger, target: telegramAction });
+
+    return new Workflow('Get notified when a new flash badge is available on Abstract', [trigger, telegramAction], [edge]);
+}
+
+const abstractGetNotifiedWhenStreamerIsLive = async () => {
+    const trigger = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE);
+    trigger.setParams('streamer', 'pudgyHolder');
+    trigger.setCondition('eq');
+    trigger.setComparisonValue("true");
+
+    const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    telegramAction.setParams('message', 'PudgyHolder is live!\n https://portal.abs.xyz/stream/pudgyholder');
+
+    const edge = new Edge({ source: trigger, target: telegramAction });
+
+    return new Workflow('Get notified when a given streamer goes live', [trigger, telegramAction], [edge]);
+}
+
 export const WORKFLOW_TEMPLATES = [
     {
         'name': 'Get Notified When Ethereum Gas is Below 6 Gwei',
@@ -313,6 +341,28 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
         createWorkflow: createAAVEBorrowingRateNotificationWorkflow
+    },
+    {
+        'name': 'New Abstract flash badge',
+        'description': 'Notify me when a new flash badge is available on Abstract',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
+        'image': [
+            TRIGGERS.SOCIALS.ABSTRACT.ABSTRACT_FLASH_BADGE.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        createWorkflow: abstractGetNotifiedOnNewFlashBadge
+    },
+    {
+        'name': 'Get notified when a given streamer goes live',
+        'description': 'Notify me when a given streamer goes live',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
+        'image': [
+            TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        createWorkflow: abstractGetNotifiedWhenStreamerIsLive
     },
     /*{
         'name': 'Buy ETH when the market sentiment is extremely fearful',

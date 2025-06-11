@@ -28,7 +28,7 @@ export class Trigger extends Node {
     this.setParameter('condition', value);
   }
 
-  setComparisonValue(value: number): void {
+  setComparisonValue(value: number | string): void {
     if (this.notAPollingTrigger()) {
       throw new Error('Comparison value setting is not applicable for subscription based triggers.');
     }
@@ -63,7 +63,7 @@ export class Trigger extends Node {
           trigger.setCondition(value as string);
           break;
         case 'comparisonValue':
-          trigger.setComparisonValue(value as number);
+          trigger.setComparisonValue(value as number | string);
           break;
         case 'abi':
           const abiParameters = (value as { parameters: { [key: string]: any } }).parameters;
