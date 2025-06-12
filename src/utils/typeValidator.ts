@@ -43,6 +43,8 @@ export function validateType(expectedType: string, value: any): boolean {
         case 'addresses_array':
             // Ensure value is an array, and each element is a valid address
             return Array.isArray(value) && value.every(isAddress);
+        case 'arrays_array':
+            return Array.isArray(value) && value.every(Array.isArray);
         case 'condition_groups':
             return Array.isArray(value) && value.every(isValidConditionGroup);
         case 'and_or':
