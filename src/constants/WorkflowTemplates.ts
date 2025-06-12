@@ -345,8 +345,8 @@ export const WORKFLOW_TEMPLATES = [
     {
         'name': 'New Abstract flash badge',
         'description': 'Notify me when a new flash badge is available on Abstract',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/abstract-flash-badge-noti.webp',
         'image': [
             TRIGGERS.SOCIALS.ABSTRACT.ABSTRACT_FLASH_BADGE.image,
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
@@ -356,8 +356,8 @@ export const WORKFLOW_TEMPLATES = [
     {
         'name': 'Get notified when a given streamer goes live',
         'description': 'Notify me when a given streamer goes live',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/abstract-streamer-live-noti.webp',
         'image': [
             TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE.image,
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
