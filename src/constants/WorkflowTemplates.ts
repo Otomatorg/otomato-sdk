@@ -238,12 +238,12 @@ const abstractGetNotifiedOnNewFlashBadge = async () => {
 
 const abstractGetNotifiedWhenStreamerIsLive = async () => {
     const trigger = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE);
-    trigger.setParams('streamer', 'pudgyHolder');
+    trigger.setParams('streamer', 'pudgyholder');
     trigger.setCondition('eq');
     trigger.setComparisonValue("true");
 
     const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-    telegramAction.setParams('message', 'PudgyHolder is live!\n https://portal.abs.xyz/stream/pudgyholder');
+    telegramAction.setParams('message', `${trigger.getParameterVariableName('streamer')} is live!\n https://portal.abs.xyz/stream/${trigger.getParameterVariableName('streamer')}`);
 
     const edge = new Edge({ source: trigger, target: telegramAction });
 
