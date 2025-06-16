@@ -12,7 +12,7 @@ async function supply_cap() {
   apiServices.setUrl(process.env.API_URL);
   apiServices.setAuth(process.env.AUTH_TOKEN); 
 
-  // -------- Asset price movement trigger --------
+  // -------- Hyperlend supply cap trigger --------
   const supplyCapTrigger = new Trigger(TRIGGERS.LENDING.HYPERLEND.SUPPLY_CAP);
   supplyCapTrigger.setChainId(CHAINS.HYPERLIQUID);
   supplyCapTrigger.setParams("abiParams.asset", getTokenFromSymbol(CHAINS.HYPERLIQUID, 'wHYPE').contractAddress);

@@ -12,7 +12,7 @@ async function borrow_cap() {
   apiServices.setUrl(process.env.API_URL);
   apiServices.setAuth(process.env.AUTH_TOKEN); 
 
-  // -------- Asset price movement trigger --------
+  // -------- Hyperlend borrow cap trigger --------
   const borrowCapTrigger = new Trigger(TRIGGERS.LENDING.HYPERLEND.BORROW_CAP);
   borrowCapTrigger.setChainId(CHAINS.HYPERLIQUID);
   borrowCapTrigger.setParams("abiParams.asset", getTokenFromSymbol(CHAINS.HYPERLIQUID, 'wHYPE').contractAddress);

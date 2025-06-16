@@ -12,7 +12,7 @@ async function suppliable_assets() {
   apiServices.setUrl(process.env.API_URL);
   apiServices.setAuth(process.env.AUTH_TOKEN); 
 
-  // -------- Asset price movement trigger --------
+  // -------- Hyperlend suppliable assets trigger --------
   const suppliableAssetsTrigger = new Trigger(TRIGGERS.LENDING.HYPERLEND.SUPPLIABLE_ASSETS);
   suppliableAssetsTrigger.setChainId(CHAINS.HYPERLIQUID);
   suppliableAssetsTrigger.setParams("abiParams.asset", getTokenFromSymbol(CHAINS.HYPERLIQUID, 'wHYPE').contractAddress);
