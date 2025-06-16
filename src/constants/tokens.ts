@@ -1606,6 +1606,166 @@ export const TOKENS: Tokens = {
       decimals: 18,
       image: ""
     }
+  ],
+  130: [
+    {
+        contractAddress: "0x0000000000000000000000000000000000000000",
+        name: "Ethereum",
+        symbol: "ETH",
+        decimals: 18,
+        image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png",
+        nativeCurrency: true,
+        equivalentERC20: "0x4200000000000000000000000000000000000006"
+      
+    },
+    {
+        contractAddress: "0x4200000000000000000000000000000000000006",
+        name: "Wrapped Ether",
+        symbol: "WETH",
+        decimals: 18,
+        image: "https://static.debank.com/image/eth_token/logo_url/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/61844453e63cf81301f845d7864236f6.png"
+    }
+  ],
+  324: [
+    {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "Ethereum",
+      symbol: "ETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png",
+      nativeCurrency: true,
+      equivalentERC20: "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91"
+    },
+    {
+      contractAddress: "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/61844453e63cf81301f845d7864236f6.png"
+    }
+  ],
+  5000: [
+      {
+      contractAddress: "0xdEAddEaDdeadDEadDEADDEAddEADDEAddead1111",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/61844453e63cf81301f845d7864236f6.png"
+    }
+  ],
+  59144: [
+    {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "Ethereum",
+      symbol: "ETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png",
+      nativeCurrency: true,
+      equivalentERC20: "0xe5D7C2a44FfDDf6b295A15c148167daaAf5Cf34f"
+    },
+    {
+      contractAddress: "0xe5D7C2a44FfDDf6b295A15c148167daaAf5Cf34f",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/61844453e63cf81301f845d7864236f6.png"
+    }
+  ],
+  534352: [
+    {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "Ethereum",
+      symbol: "ETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/chain/logo_url/eth/42ba589cd077e7bdd97db6480b0ff61d.png",
+      nativeCurrency: true,
+      equivalentERC20: "0x5300000000000000000000000000000000000004"
+    },
+    {
+      contractAddress: "0x5300000000000000000000000000000000000004",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/61844453e63cf81301f845d7864236f6.png"
+    }
+  ],
+  250: [
+    {
+      contractAddress: "0x74b23882a30290451A17c44f4F05243b6b58C76d",
+      name: "Ethereum",
+      symbol: "ETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2/61844453e63cf81301f845d7864236f6.png",
+      nativeCurrency: false,
+      equivalentERC20: "0x9E73F99EE061C8807F69f9c6CCc44ea3d8c373ee"
+    },
+    {
+      contractAddress: "0x9E73F99EE061C8807F69f9c6CCc44ea3d8c373ee",
+      name: "Frax Ether",
+      symbol: "frxETH",
+      decimals: 18,
+      image: null
+    }
+  ],
+  252: [
+    {
+      contractAddress: "0xFC00000000000000000000000000000000000006",
+      name: "Frax Ether",
+      symbol: "frxETH",
+      decimals: 18,
+      image: null,
+    }
+  ],
+  999: [
+    {
+      contractAddress: "0x5555555555555555555555555555555555555555",
+      name: "wHYPE",
+      symbol: "wHYPE",
+      decimals: 18,
+      image: "https://static.debank.com/image/hyper_token/logo_url/hyper/0b3e288cfe418e9ce69eef4c96374583.png"
+    },
+    {
+      contractAddress: "0x94e8396e0869c9F2200760aF0621aFd240E1CF38",
+      name: "Wrapped Staked HYPE",
+      symbol: "wstHYPE",
+      decimals: 18,
+      image: "https://static.debank.com/image/hyper_token/logo_url/0x5555555555555555555555555555555555555555/752e760ec0b1a17b81c7535e09e76ef8.png"
+    },
+    {
+      contractAddress: "0x9FDBdA0A5e284c32744D2f17Ee5c74B284993463",
+      name: "Universal Bitcoin",
+      symbol: "UBTC",
+      decimals: 8,
+      image: "https://static.debank.com/image/hyper_token/logo_url/0x9fdbda0a5e284c32744d2f17ee5c74b284993463/0e625d069e829a7e3aa6ef5ea569ae59.png"
+    },
+    {
+      contractAddress: "0xBe6727B535545C67d5cAa73dEa54865B92CF7907",
+      name: "Universal Ethereum",
+      symbol: "UETH",
+      decimals: 18,
+      image: "https://static.debank.com/image/hyper_token/logo_url/0xbe6727b535545c67d5caa73dea54865b92cf7907/c3d23de18dc7c3c3c77208c886e8e392.png"
+    },
+    {
+      contractAddress: "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
+      name: "USDe",
+      symbol: "USDe",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x4c9edd5852cd905f086c759e8383e09bff1e68b3/1228d6e73f70f37ec1f6fe02a3bbe6ff.png"
+    },
+    {
+      contractAddress: "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+      name: "Tether USD",
+      symbol: "USDT0",
+      decimals: 6,
+      image: "https://static.debank.com/image/coin/logo_url/usdt/23af7472292cb41dc39b3f1146ead0fe.png"
+    },
+    {
+      contractAddress: "0x211Cc4DD073734dA055fbF44a2b4667d5E5fE5d2",
+      name: "Staked USDe",
+      symbol: "sUSDe",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x4c9edd5852cd905f086c759e8383e09bff1e68b3/1228d6e73f70f37ec1f6fe02a3bbe6ff.png"
+    }
   ]
 };
 
