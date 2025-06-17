@@ -44,8 +44,8 @@ class RPCServices {
     if (env.SOMNIA_HTTPS_PROVIDER) {
       this.rpcUrls[CHAINS.SOMNIA] = env.SOMNIA_HTTPS_PROVIDER;
     }
-    if (env.HYPERLIQUID_HTTPS_PROVIDER) {
-      this.rpcUrls[CHAINS.HYPERLIQUID] = env.HYPERLIQUID_HTTPS_PROVIDER;
+    if (env.HYPER_EVM_HTTPS_PROVIDER) {
+      this.rpcUrls[CHAINS.HYPER_EVM] = env.HYPER_EVM_HTTPS_PROVIDER;
     }
   }
 
