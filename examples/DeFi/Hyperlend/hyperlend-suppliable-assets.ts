@@ -14,8 +14,8 @@ async function suppliable_assets() {
 
   // -------- Hyperlend suppliable assets trigger --------
   const suppliableAssetsTrigger = new Trigger(TRIGGERS.LENDING.HYPERLEND.SUPPLIABLE_ASSETS);
-  suppliableAssetsTrigger.setChainId(CHAINS.HYPERLIQUID);
-  suppliableAssetsTrigger.setParams("abiParams.asset", getTokenFromSymbol(CHAINS.HYPERLIQUID, 'wHYPE').contractAddress);
+  suppliableAssetsTrigger.setChainId(CHAINS.HYPER_EVM);
+  suppliableAssetsTrigger.setParams("abiParams.asset", getTokenFromSymbol(CHAINS.HYPER_EVM, 'wHYPE').contractAddress);
   suppliableAssetsTrigger.setCondition("gt");
   // compare with value
   suppliableAssetsTrigger.setComparisonValue(50000);

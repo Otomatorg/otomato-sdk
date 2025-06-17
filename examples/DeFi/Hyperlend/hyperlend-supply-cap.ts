@@ -14,8 +14,8 @@ async function supply_cap() {
 
   // -------- Hyperlend supply cap trigger --------
   const supplyCapTrigger = new Trigger(TRIGGERS.LENDING.HYPERLEND.SUPPLY_CAP);
-  supplyCapTrigger.setChainId(CHAINS.HYPERLIQUID);
-  supplyCapTrigger.setParams("abiParams.asset", getTokenFromSymbol(CHAINS.HYPERLIQUID, 'wHYPE').contractAddress);
+  supplyCapTrigger.setChainId(CHAINS.HYPER_EVM);
+  supplyCapTrigger.setParams("abiParams.asset", getTokenFromSymbol(CHAINS.HYPER_EVM, 'wHYPE').contractAddress);
   supplyCapTrigger.setCondition("gt");
   // compare with value
   supplyCapTrigger.setComparisonValue(5000000);

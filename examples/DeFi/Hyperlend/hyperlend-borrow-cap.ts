@@ -14,8 +14,8 @@ async function borrow_cap() {
 
   // -------- Hyperlend borrow cap trigger --------
   const borrowCapTrigger = new Trigger(TRIGGERS.LENDING.HYPERLEND.BORROW_CAP);
-  borrowCapTrigger.setChainId(CHAINS.HYPERLIQUID);
-  borrowCapTrigger.setParams("abiParams.asset", getTokenFromSymbol(CHAINS.HYPERLIQUID, 'wHYPE').contractAddress);
+  borrowCapTrigger.setChainId(CHAINS.HYPER_EVM);
+  borrowCapTrigger.setParams("abiParams.asset", getTokenFromSymbol(CHAINS.HYPER_EVM, 'wHYPE').contractAddress);
   borrowCapTrigger.setCondition("gt");
   // compare with value
   borrowCapTrigger.setComparisonValue(2500000);
