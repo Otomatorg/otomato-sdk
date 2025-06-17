@@ -20,7 +20,7 @@ async function abstract_new_app() {
 
   // -------- Send email --------
   const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
-  notificationAction.setParams("body", "The abstract new app is " + abstractNewAppTrigger.getOutputVariableName('abstractNewApp'));
+  notificationAction.setParams("body", "The abstract new apps:" + abstractNewAppTrigger.getOutputVariableName('newApps'));
   notificationAction.setParams("subject", "Abstract new app");
   notificationAction.setParams("to", EMAIL_ADDRESS);
 

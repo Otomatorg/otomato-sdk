@@ -20,7 +20,7 @@ async function abstract_users_new_badge() {
 
   // -------- Send email --------
   const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
-  notificationAction.setParams("body", "The abstract users new badge is " + abstractUsersNewBadgeTrigger.getOutputVariableName('newBadges'));
+  notificationAction.setParams("body", "The abstract users new badges: " + abstractUsersNewBadgeTrigger.getOutputVariableName('newBadges'));
   notificationAction.setParams("subject", "Abstract users new badge");
   notificationAction.setParams("to", EMAIL_ADDRESS);
 
