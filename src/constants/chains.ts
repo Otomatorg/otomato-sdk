@@ -12,5 +12,5 @@ export const CHAINS = {
   POLYGON: 137,
   BINANCE: 56,
   SOMNIA: 50312,
-  HYPERLIQUID: 999,
+  HYPER_EVM: 999,
 };
