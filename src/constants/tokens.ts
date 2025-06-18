@@ -574,10 +574,10 @@ export const TOKENS: Tokens = {
     },
     {
       contractAddress: "0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A",
-      name: "Wrapped Ethereum",
+      name: "Wrapped eETH",
       symbol: "weETH",
       decimals: 18,
-      image: "https://assets.coingecko.com/coins/images/39950/small/WETH.PNG?1724902237"
+      image: "https://assets.coingecko.com/coins/images/33033/small/weETH.png?1701438396"
     },
     {
       contractAddress: "0xCfA3Ef56d303AE4fAabA0592388F19d7C3399FB4",
