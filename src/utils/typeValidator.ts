@@ -36,6 +36,7 @@ export function validateType(expectedType: string, value: any): boolean {
             return typeof value === 'string' && isValidEmail(value);
         case 'string':
         case 'paragraph':
+        case 'render_enum':
             return typeof value === 'string';
         case 'logic_operator':
             const validOperators = new Set(['gte', 'gt', 'lte', 'lt', 'eq', 'neq']);
