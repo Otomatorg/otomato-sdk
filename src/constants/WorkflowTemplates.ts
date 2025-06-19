@@ -389,6 +389,24 @@ const createUSDCReceiveNotificationWorkflow = async () => {
       limit: 30,
     });
     return workflow;
+const createEthereumFoundationTransferNotificationWorkflow = () => {
+    const ethTransferTrigger = new Trigger(TRIGGERS.TOKENS.NATIVE_TRANSFER.ETH_TRANSFER);
+    ethTransferTrigger.setChainId(CHAINS.ETHEREUM);
+    ethTransferTrigger.setParams('wallet', '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe');
+    ethTransferTrigger.setParams('threshold', 0.004);
+    ethTransferTrigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+    notificationAction.setParams(
+      "body",
+      `The Ethereum foundation has sold ${ethTransferTrigger.getOutputVariableName('amount')} ETH`
+    );
+    notificationAction.setParams("subject", "Ethereum foundation sells ETH");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: ethTransferTrigger, target: notificationAction });
+
+    return new Workflow('Ethereum Foundation transfer notification', [ethTransferTrigger, notificationAction], [edge]);
 }
 
 export const WORKFLOW_TEMPLATES = [
@@ -547,6 +565,17 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
         ],
         createWorkflow: abstractGetNotifiedWhenStreamerIsLive
+    },
+    {
+        name: 'When the Ethereum foundation sells ETH, notify me',
+        description: 'Notify me when the Ethereum foundation (0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe) sells ETH',
+        tags: [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.TRADING],
+        thumbnail: 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer-monitoring.png',
+        image: [
+            TRIGGERS.TOKENS.NATIVE_TRANSFER.ETH_TRANSFER.image,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        ],
+        createWorkflow: createEthereumFoundationTransferNotificationWorkflow
     },
     /*{
         'name': 'Buy ETH when the market sentiment is extremely fearful',
