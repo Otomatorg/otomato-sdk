@@ -256,9 +256,9 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Receive an email alert when Ethereum gas prices fall below 6 gwei.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/gasMonitoring.jpg',
-        'image': [
+        'blockUsed': [
             TRIGGERS.TECHNICAL.GAS.GAS_API,
-            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.id
         ],
         createWorkflow: gasMonitoring
     },
@@ -267,9 +267,9 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Receive an email every day with a recap from all the money market yields for ETH and USDC & the current gas price.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
-        'image': [
-            TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
-            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        'blockUsed': [
+            TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.id,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.id
         ],
         createWorkflow: dailyYieldEmail
     },
@@ -278,9 +278,9 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Automatically trade cbBTC daily based on the Fear & Greed Index—buy when low, sell when high.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dcaFearAndGreed.png',
-        'image': [
-            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
-            ACTIONS.CORE.SWAP.SWAP.image
+        'blockUsed': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.id,
+            ACTIONS.CORE.SWAP.SWAP.id
         ],
         createWorkflow: createDCAFearAndGreed
     },
@@ -289,11 +289,11 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 45. The idle funds are generating yield on AAVE.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.YIELD],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fearAndGreed2.png',
-        'image': [
-            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
-            ACTIONS.LENDING.AAVE.WITHDRAW.image,
-            ACTIONS.CORE.SWAP.SWAP.image,
-            ACTIONS.LENDING.AAVE.SUPPLY.image
+        'blockUsed': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.id,
+            ACTIONS.LENDING.AAVE.WITHDRAW.id,
+            ACTIONS.CORE.SWAP.SWAP.id,
+            ACTIONS.LENDING.AAVE.SUPPLY.id
         ],
         createWorkflow: createETHFearAndGreedCapitalEfficientBuy
     },
@@ -302,10 +302,10 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Buy sUSDE when the yield is above 20%',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/buySusde.jpg',
-        'image': [
-            TRIGGERS.YIELD.ETHENA.SUSDE_YIELD.image,
-            ACTIONS.SWAP.ODOS.SWAP.image,
-            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        'blockUsed': [
+            TRIGGERS.YIELD.ETHENA.SUSDE_YIELD.id,
+            ACTIONS.SWAP.ODOS.SWAP.id,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.id
         ],
         createWorkflow: createSUsdeYieldBuy
     },*/
@@ -314,9 +314,9 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Notify me when the sUSDe yield becomes negative',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
-        'image': [
-            TRIGGERS.YIELD.ETHENA.SUSDE_YIELD.image,
-            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        'blockUsed': [
+            TRIGGERS.YIELD.ETHENA.SUSDE_YIELD.id,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.id
         ],
         createWorkflow: createSusdeYieldNotification
     },
@@ -325,9 +325,9 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Receive notifications when a top $MODE holder (0x74B8....C6B4) transfers $MODE',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer-monitoring.png',
-        'image': [
-            TRIGGERS.TOKENS.TRANSFER.TRANSFER.image,
-            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        'blockUsed': [
+            TRIGGERS.TOKENS.TRANSFER.TRANSFER.id,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.id
         ],
         createWorkflow: createModeTransferNotificationWorkflow
     },
@@ -336,9 +336,9 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Notify me when the USDC borrowing rate on Base is above 5%',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.YIELD],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
-        'image': [
-            TRIGGERS.TOKENS.TRANSFER.TRANSFER.image,
-            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        'blockUsed': [
+            TRIGGERS.LENDING.AAVE.BORROWING_RATES.id,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.id
         ],
         createWorkflow: createAAVEBorrowingRateNotificationWorkflow
     },
@@ -347,9 +347,9 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Notify me when a new flash badge is available on Abstract',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/abstract-flash-badge-noti.webp',
-        'image': [
-            TRIGGERS.SOCIALS.ABSTRACT.ABSTRACT_FLASH_BADGE.image,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        'blockUsed': [
+            TRIGGERS.SOCIALS.ABSTRACT.ABSTRACT_FLASH_BADGE.id,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.id
         ],
         createWorkflow: abstractGetNotifiedOnNewFlashBadge
     },
@@ -358,9 +358,9 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Notify me when a given streamer goes live',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/abstract-streamer-live-noti.webp',
-        'image': [
-            TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE.image,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        'blockUsed': [
+            TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE.id,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.id
         ],
         createWorkflow: abstractGetNotifiedWhenStreamerIsLive
     },
@@ -369,9 +369,9 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 30',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/fear_and_greed.jpg',
-        'image': [
-            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
-            ACTIONS.SWAP.ODOS.SWAP.image
+        'blockUsed': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.id,
+            ACTIONS.SWAP.ODOS.SWAP.id
         ],
         createWorkflow: createETHFearAndGreedBuy
     },*/
@@ -381,9 +381,9 @@ export const WORKFLOW_TEMPLATES = [
         'description': 'Buy 100$ of each token that vitalik.eth buys using Odos',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.TRADING],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/copyTrading.png',
-        'image': [
-            TRIGGERS.DEXES.ODOS.SWAP.image,
-            ACTIONS.CORE.SWAP.SWAP.image,
+        'blockUsed': [
+            TRIGGERS.DEXES.ODOS.SWAP.id,
+            ACTIONS.CORE.SWAP.SWAP.id,
         ],
         createWorkflow: copyTradeVitalikOdos
     },*/
