@@ -5,7 +5,7 @@ dotenv.config();
 
 async function web3_mail() {
 
-  const PROTECTED_DATA = "0x6c465e6ac393540635af870a18eb45eff7f85262"
+  const PROTECTED_DATA = "YOUR_PROTECTED_DATA_ADDRESS"
 
   if (!process.env.API_URL || !process.env.AUTH_TOKEN)
     return;
