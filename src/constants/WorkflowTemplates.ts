@@ -50,7 +50,7 @@ const createETHFearAndGreedBuy = async () => {
 
 const createDCAFearAndGreed = async () => {
     // created with examples/UseCases/FearAndGreedDCA
-    return Workflow.fromJSON({"id":null,"name":"Fear and Greed Workflow","state":"inactive","dateCreated":null,"dateModified":null,"executionId":null,"agentId":null,"nodes":[{"id":null,"ref":"1","blockId":18,"type":"trigger","state":"inactive","parameters":{"period":86400000,"timeout":null,"limit":30},"frontendHelpers":{},"position":{"x":400,"y":120}},{"id":null,"ref":"2","blockId":100015,"type":"action","state":"inactive","parameters":{"branchesAmount":2},"frontendHelpers":{},"position":{"x":400,"y":240}},{"id":null,"ref":"3","blockId":100016,"type":"action","state":"inactive","parameters":{"logic":"or","groups":[{"logic":"and","checks":[{"value1":"{{external.functions.btcFearAndGreed()}}","condition":"gt","value2":"80"}]}]},"frontendHelpers":{},"position":{"x":150,"y":360}},{"id":null,"ref":"4","blockId":100013,"type":"action","state":"inactive","parameters":{"chainId":8453,"tokenIn":"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf","tokenOut":"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913","amount":0.0001,"slippage":0.1},"frontendHelpers":{"output":{"amountIn":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenIn}}","chainId":"{{parameters.chainId}}"}},"amountOut":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenOut}}","chainId":"{{parameters.chainId}}"}}}},"position":{"x":150,"y":480}},{"id":null,"ref":"5","blockId":100016,"type":"action","state":"inactive","parameters":{"logic":"or","groups":[{"logic":"and","checks":[{"value1":"{{external.functions.btcFearAndGreed()}}","condition":"lt","value2":"20"}]}]},"frontendHelpers":{},"position":{"x":650,"y":360}},{"id":null,"ref":"6","blockId":100013,"type":"action","state":"inactive","parameters":{"chainId":8453,"tokenIn":"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913","tokenOut":"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf","amount":10,"slippage":0.3},"frontendHelpers":{"output":{"amountIn":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenIn}}","chainId":"{{parameters.chainId}}"}},"amountOut":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenOut}}","chainId":"{{parameters.chainId}}"}}}},"position":{"x":650,"y":480}}],"edges":[{"id":null,"source":"1","target":"2"},{"id":null,"source":"2","target":"3"},{"id":null,"source":"3","target":"4","label":"true","value":"true"},{"id":null,"source":"2","target":"5"},{"id":null,"source":"5","target":"6","label":"true","value":"true"}],"notes":[]});
+    return Workflow.fromJSON({"id":null,"name":"Daily Fear & Greed-Based cbBTC Trading","state":"inactive","dateCreated":null,"dateModified":null,"executionId":null,"agentId":null,"nodes":[{"id":null,"ref":"1","blockId":18,"type":"trigger","state":"inactive","parameters":{"period":86400000,"timeout":null,"limit":30},"frontendHelpers":{},"position":{"x":400,"y":120}},{"id":null,"ref":"2","blockId":100015,"type":"action","state":"inactive","parameters":{"branchesAmount":2},"frontendHelpers":{},"position":{"x":400,"y":240}},{"id":null,"ref":"3","blockId":100016,"type":"action","state":"inactive","parameters":{"logic":"or","groups":[{"logic":"and","checks":[{"value1":"{{external.functions.btcFearAndGreed()}}","condition":"gt","value2":"80"}]}]},"frontendHelpers":{},"position":{"x":150,"y":360}},{"id":null,"ref":"4","blockId":100013,"type":"action","state":"inactive","parameters":{"chainId":8453,"tokenIn":"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf","tokenOut":"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913","amount":0.0001,"slippage":0.1},"frontendHelpers":{"output":{"amountIn":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenIn}}","chainId":"{{parameters.chainId}}"}},"amountOut":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenOut}}","chainId":"{{parameters.chainId}}"}}}},"position":{"x":150,"y":480}},{"id":null,"ref":"5","blockId":100016,"type":"action","state":"inactive","parameters":{"logic":"or","groups":[{"logic":"and","checks":[{"value1":"{{external.functions.btcFearAndGreed()}}","condition":"lt","value2":"20"}]}]},"frontendHelpers":{},"position":{"x":650,"y":360}},{"id":null,"ref":"6","blockId":100013,"type":"action","state":"inactive","parameters":{"chainId":8453,"tokenIn":"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913","tokenOut":"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf","amount":10,"slippage":0.3},"frontendHelpers":{"output":{"amountIn":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenIn}}","chainId":"{{parameters.chainId}}"}},"amountOut":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenOut}}","chainId":"{{parameters.chainId}}"}}}},"position":{"x":650,"y":480}}],"edges":[{"id":null,"source":"1","target":"2"},{"id":null,"source":"2","target":"3"},{"id":null,"source":"3","target":"4","label":"true","value":"true"},{"id":null,"source":"2","target":"5"},{"id":null,"source":"5","target":"6","label":"true","value":"true"}],"notes":[]});
 }
 
 const createETHFearAndGreedCapitalEfficientBuy = async () => {
@@ -86,7 +86,7 @@ const createETHFearAndGreedCapitalEfficientBuy = async () => {
     const edge2 = new Edge({ source: ionicWithdraw, target: odosAction });
     const edge3 = new Edge({ source: odosAction, target: ionicDeposit });
 
-    return new Workflow('Fear and greed buy ETH (capital efficient)', [trigger, odosAction, ionicWithdraw, ionicDeposit], [edge1, edge2, edge3]);
+    return new Workflow('Buy ETH when the market sentiment is extremely fearful - capital efficient', [trigger, odosAction, ionicWithdraw, ionicDeposit], [edge1, edge2, edge3]);
 }
 
 const createSUsdeYieldBuy = async () => {
@@ -184,7 +184,7 @@ const gasMonitoring = async () => {
 
     const edge = new Edge({ source: trigger, target: notificationAction });
 
-    return new Workflow('Get notified when the gas price on Ethereum drops below 6 gwei', [trigger, notificationAction], [edge]);
+    return new Workflow('Get Notified When Ethereum Gas drops below 6 Gwei', [trigger, notificationAction], [edge]);
 }
 
 const dailyYieldEmail = async () => {
@@ -252,13 +252,17 @@ const abstractGetNotifiedWhenStreamerIsLive = async () => {
 
 export const WORKFLOW_TEMPLATES = [
     {
-        'name': 'Get Notified When Ethereum Gas is Below 6 Gwei',
+        'name': 'Get Notified When Ethereum Gas drops below 6 Gwei',
         'description': 'Receive an email alert when Ethereum gas prices fall below 6 gwei.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/gasMonitoring.jpg',
         'image': [
-            TRIGGERS.TECHNICAL.GAS.GAS_API,
+            TRIGGERS.TECHNICAL.GAS.GAS_API.image,
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        ],
+        'blockIDs': [
+            TRIGGERS.TECHNICAL.GAS.GAS_API.blockId,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
         ],
         createWorkflow: gasMonitoring
     },
@@ -271,6 +275,10 @@ export const WORKFLOW_TEMPLATES = [
             TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
+        'blockIDs': [
+            TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.blockId,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
+        ],
         createWorkflow: dailyYieldEmail
     },
     {
@@ -281,6 +289,10 @@ export const WORKFLOW_TEMPLATES = [
         'image': [
             TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
             ACTIONS.CORE.SWAP.SWAP.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.blockId,
+            ACTIONS.CORE.SWAP.SWAP.blockId
         ],
         createWorkflow: createDCAFearAndGreed
     },
@@ -295,6 +307,12 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.CORE.SWAP.SWAP.image,
             ACTIONS.LENDING.AAVE.SUPPLY.image
         ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.blockId,
+            ACTIONS.LENDING.AAVE.WITHDRAW.blockId,
+            ACTIONS.CORE.SWAP.SWAP.blockId,
+            ACTIONS.LENDING.AAVE.SUPPLY.blockId
+        ],
         createWorkflow: createETHFearAndGreedCapitalEfficientBuy
     },
     /*{
@@ -307,6 +325,11 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.SWAP.ODOS.SWAP.image,
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
+        'blockIDs': [
+            TRIGGERS.YIELD.ETHENA.SUSDE_YIELD.blockId,
+            ACTIONS.SWAP.ODOS.SWAP.blockId,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
+        ],
         createWorkflow: createSUsdeYieldBuy
     },*/
     {
@@ -317,6 +340,10 @@ export const WORKFLOW_TEMPLATES = [
         'image': [
             TRIGGERS.YIELD.ETHENA.SUSDE_YIELD.image,
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        ],
+        'blockIDs': [
+            TRIGGERS.YIELD.ETHENA.SUSDE_YIELD.blockId,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
         ],
         createWorkflow: createSusdeYieldNotification
     },
@@ -329,6 +356,10 @@ export const WORKFLOW_TEMPLATES = [
             TRIGGERS.TOKENS.TRANSFER.TRANSFER.image,
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
+        'blockIDs': [
+            TRIGGERS.TOKENS.TRANSFER.TRANSFER.blockId,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
+        ],
         createWorkflow: createModeTransferNotificationWorkflow
     },
     {
@@ -337,19 +368,27 @@ export const WORKFLOW_TEMPLATES = [
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.YIELD],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/shortEna.jpg',
         'image': [
-            TRIGGERS.TOKENS.TRANSFER.TRANSFER.image,
+            TRIGGERS.LENDING.AAVE.BORROWING_RATES.image,
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        ],
+        'blockIDs': [
+            TRIGGERS.LENDING.AAVE.BORROWING_RATES.blockId,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
         ],
         createWorkflow: createAAVEBorrowingRateNotificationWorkflow
     },
     {
-        'name': 'New Abstract flash badge',
+        'name': 'Get notified when a new flash badge is available on Abstract',
         'description': 'Notify me when a new flash badge is available on Abstract',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/abstract-flash-badge-noti.webp',
         'image': [
             TRIGGERS.SOCIALS.ABSTRACT.ABSTRACT_FLASH_BADGE.image,
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.ABSTRACT.ABSTRACT_FLASH_BADGE.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
         ],
         createWorkflow: abstractGetNotifiedOnNewFlashBadge
     },
@@ -362,6 +401,10 @@ export const WORKFLOW_TEMPLATES = [
             TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE.image,
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
         ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
         createWorkflow: abstractGetNotifiedWhenStreamerIsLive
     },
     /*{
@@ -372,6 +415,10 @@ export const WORKFLOW_TEMPLATES = [
         'image': [
             TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
             ACTIONS.SWAP.ODOS.SWAP.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.blockId,
+            ACTIONS.SWAP.ODOS.SWAP.blockId
         ],
         createWorkflow: createETHFearAndGreedBuy
     },*/
@@ -384,6 +431,10 @@ export const WORKFLOW_TEMPLATES = [
         'image': [
             TRIGGERS.DEXES.ODOS.SWAP.image,
             ACTIONS.CORE.SWAP.SWAP.image,
+        ],
+        'blockIDs': [
+            TRIGGERS.DEXES.ODOS.SWAP.blockId,
+            ACTIONS.CORE.SWAP.SWAP.blockId,
         ],
         createWorkflow: copyTradeVitalikOdos
     },*/
