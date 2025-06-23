@@ -873,6 +873,13 @@ export const TOKENS: Tokens = {
       decimals: 18,
       image: "https://static.debank.com/image/eth_token/logo_url/0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f/1fd570eeab44b1c7afad2e55b5545c42.png"
     },
+    {
+      contractAddress: "0x820C137fa70C8691f0e44Dc420a5e53c168921Dc",
+      name: "USDS Stablecoin",
+      symbol: "USDS",
+      decimals: 18,
+      image: "https://basescan.org/token/images/skyusds_32.svg"
+    }
   ],
   2741: [
     {
