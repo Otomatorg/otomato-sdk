@@ -407,6 +407,112 @@ const createEthereumFoundationTransferNotificationWorkflow = () => {
     const edge = new Edge({ source: ethTransferTrigger, target: notificationAction });
 
     return new Workflow('Ethereum Foundation transfer notification', [ethTransferTrigger, notificationAction], [edge]);
+// notify me when I can unstake my stakestone
+const createStakestoneUnstakeNotificationWorkflow = async () => {
+    const trigger = new Trigger(TRIGGERS.YIELD.STAKESTONE.LATEST_ROUND_ID);
+    trigger.setParams('chainId', CHAINS.ETHEREUM);
+    trigger.setCondition('gte');
+    trigger.setComparisonValue('{{history.0.value}}');
+    trigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    notificationAction.setParams("message", "You can now unstake your Stakestone position!");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    return new Workflow('Get notified when you can unstake your Stakestone position', [trigger, notificationAction], [edge]);
+}
+
+// notify me when a given uniswap position is out of range [looping enabled - 5 times]
+const createUniswapPositionOutOfRangeNotificationWorkflow = async () => {
+    const trigger = new Trigger(TRIGGERS.DEXES.UNISWAP.IS_IN_RANGE);
+    trigger.setParams('chainId', CHAINS.ETHEREUM);
+    // trigger.setParams('abiParams.tokenId', '');
+    trigger.setCondition('eq');
+    trigger.setParams('comparisonValue', false);
+    trigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    notificationAction.setParams("message", "Your Uniswap position is out of range!");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    const workflow = new Workflow('Get notified when a given uniswap position is out of range', [trigger, notificationAction], [edge]);
+    workflow.setSettings({
+      loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
+      period: 600000,
+      limit: 5,
+    });
+    return workflow;
+}
+
+// notify me when Hyperlend raise their deposit cap for stHype [looping enabled - 10 times]
+const createHyperLendDepositCapNotificationWorkflow = async () => {
+    const trigger = new Trigger(TRIGGERS.LENDING.HYPERLEND.SUPPLY_CAP);
+    trigger.setParams('chainId', CHAINS.HYPER_EVM);
+    trigger.setParams('asset', getTokenFromSymbol(CHAINS.HYPER_EVM, 'stHype').contractAddress);
+    trigger.setCondition('gt');
+    trigger.setComparisonValue('{{history.0.value}}');
+    trigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    notificationAction.setParams("message", "Hyperlend has raised their deposit cap for stHype!");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    const workflow = new Workflow('Get notified when Hyperlend raise their deposit cap for stHype', [trigger, notificationAction], [edge]);
+    workflow.setSettings({
+      loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
+      period: 600000,
+      limit: 10,
+    });
+    return workflow;
+}
+
+// Save all the current yields for USDC on base (AAVE, Compound, Moonwell & top 5 USDC morpho vault) every hour [repeat 100 times, every hour]
+
+// notify me when there are more than 50 ETH in available liquidity for instant withdrawal on Stakestone
+const createStakestoneInstantWithdrawalNotificationWorkflow = async () => {
+    const trigger = new Trigger(TRIGGERS.YIELD.STAKESTONE.STAKESTONE_VAULT_LIQUIDITY);
+    trigger.setParams('chainId', CHAINS.ETHEREUM);
+    trigger.setCondition('gt');
+    trigger.setComparisonValue('50');
+    trigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    notificationAction.setParams("message", "There are more than 50 ETH in available liquidity for instant withdrawal on Stakestone!");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    return new Workflow('Get notified when there are more than 50 ETH in available liquidity for instant withdrawal on Stakestone', [trigger, notificationAction], [edge]);
+}
+
+// notify me when I receive USDC [looping enabled - 30 times]
+const createUSDCReceiveNotificationWorkflow = async () => {
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setParams('chainId', CHAINS.BASE);
+    trigger.setParams('contractAddress', getTokenFromSymbol(CHAINS.BASE, 'USDC').contractAddress);
+    // TODO: add smart account address
+    trigger.setParams('abiParams.to', '{{smartAccountAddress}}');
+    trigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    notificationAction.setParams("message", "You received USDC!");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    const workflow = new Workflow('Get notified when I receive USDC', [trigger, notificationAction], [edge]);
+    workflow.setSettings({
+      loopingType: WORKFLOW_LOOPING_TYPES.SUBSCRIPTION,
+      timeout: 600000,
+      limit: 30,
+    });
+    return workflow;
 }
 
 export const WORKFLOW_TEMPLATES = [
