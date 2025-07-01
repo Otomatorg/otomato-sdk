@@ -256,6 +256,7 @@ const abstractGetNotifiedWhenStreamerIsLive = async () => {
 const createStakestoneUnstakeNotificationWorkflow = async () => {
     const trigger = new Trigger(TRIGGERS.YIELD.STAKESTONE.LATEST_ROUND_ID);
     trigger.setParams('chainId', CHAINS.ETHEREUM);
+    trigger.setParams('contractAddress', "0x8f88ae3798e8ff3d0e0de7465a0863c9bbb577f0");
     trigger.setCondition('gte');
     trigger.setComparisonValue('{{history.0.value}}');
     trigger.setPosition(400, 120);
