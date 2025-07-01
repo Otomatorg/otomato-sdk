@@ -297,7 +297,7 @@ const createUniswapPositionOutOfRangeNotificationWorkflow = async () => {
 const createHyperLendDepositCapNotificationWorkflow = async () => {
     const trigger = new Trigger(TRIGGERS.LENDING.HYPERLEND.SUPPLY_CAP);
     trigger.setParams('chainId', CHAINS.HYPER_EVM);
-    trigger.setParams('asset', getTokenFromSymbol(CHAINS.HYPER_EVM, 'stHype').contractAddress);
+    trigger.setParams('asset', getTokenFromSymbol(CHAINS.HYPER_EVM, 'wstHYPE').contractAddress);
     trigger.setCondition('gt');
     trigger.setComparisonValue('{{history.0.value}}');
     trigger.setPosition(400, 120);
