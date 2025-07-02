@@ -347,7 +347,7 @@ const createUSDCYieldsNotificationWorkflow = async () => {
 
     const edge = new Edge({ source: trigger, target: notificationAction });
 
-    return new Workflow('Save all the current yields for USDC on base (AAVE, Compound, Moonwell & top 5 USDC morpho vault) every hour', [trigger, notificationAction], [edge]);
+    return new Workflow('Save all the current yields for USDC on base (AAVE, Compound, Moonwell, Spark USDC Vault, Moonwell Flagship USDC, Seamless USDC Vault, Steakhouse USDC, Gauntlet USDC Prime) every hour', [trigger, notificationAction], [edge]);
 }
 
 // notify me when there are more than 50 ETH in available liquidity for instant withdrawal on Stakestone
@@ -656,8 +656,8 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createUSDCReceiveNotificationWorkflow
     },
     {
-      'name': 'Save all the current yields for USDC on base (AAVE, Compound, Moonwell & top 5 USDC morpho vault) every hour',
-      'description': 'Save all the current yields for USDC on base (AAVE, Compound, Moonwell & top 5 USDC morpho vault) every hour',
+      'name': 'Save all the current yields for USDC on base (AAVE, Compound, Moonwell, Spark USDC Vault, Moonwell Flagship USDC, Seamless USDC Vault, Steakhouse USDC, Gauntlet USDC Prime) every hour',
+      'description': 'Save all the current yields for USDC on base (AAVE, Compound, Moonwell, Spark USDC Vault, Moonwell Flagship USDC, Seamless USDC Vault, Steakhouse USDC, Gauntlet USDC Prime) every hour',
       'tags': [WORKFLOW_TEMPLATES_TAGS.YIELD, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
       'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
       'image': [
