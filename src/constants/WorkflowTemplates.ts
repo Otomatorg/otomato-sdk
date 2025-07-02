@@ -319,6 +319,36 @@ const createHyperLendDepositCapNotificationWorkflow = async () => {
 }
 
 // Save all the current yields for USDC on base (AAVE, Compound, Moonwell & top 5 USDC morpho vault) every hour [repeat 100 times, every hour]
+const createUSDCYieldsNotificationWorkflow = async () => {
+    const trigger = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
+    trigger.setParams('period', 3600000);
+    trigger.setParams('limit', 100);
+    trigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.OTHERS.GSHEET.GSHEET);
+    notificationAction.setParams("data", [
+        ["aave", "moonwell", "compound", "Spark USDC Vault", "Moonwell Flagship USDC", "Seamless USDC Vault", "Steakhouse USDC", "Gauntlet USDC Prime"],
+        [
+            "{{external.functions.aaveLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,,)}}",
+            "{{external.functions.moonwellLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,,)}}",
+            "{{external.functions.compoundLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,,,)}}",
+            "{{external.functions.morphoLendingRate(8453,0x7BfA7C4f149E7415b73bdeDfe609237e29CBF34A)}}",
+            "{{external.functions.morphoLendingRate(8453,0xc1256Ae5FF1cf2719D4937adb3bbCCab2E00A2Ca)}}",
+            "{{external.functions.morphoLendingRate(8453,0x616a4E1db48e22028f6bbf20444Cd3b8e3273738)}}",
+            "{{external.functions.morphoLendingRate(8453,0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183)}}",
+            "{{external.functions.morphoLendingRate(8453,0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61)}}"
+        ]
+    ]);
+    // notificationAction.setParams("mode", "append");
+    // notificationAction.setParams("role", "writer");
+    // notificationAction.setParams("sheetId", "0");
+    // notificationAction.setParams("spreadsheetId", "1NxqGqgtUQkojBOl9g7CBkbqc7bB6mBkZxHWMPsu1uQY");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    return new Workflow('Save all the current yields for USDC on base (AAVE, Compound, Moonwell & top 5 USDC morpho vault) every hour', [trigger, notificationAction], [edge]);
+}
 
 // notify me when there are more than 50 ETH in available liquidity for instant withdrawal on Stakestone
 const createStakestoneInstantWithdrawalNotificationWorkflow = async () => {
@@ -624,5 +654,20 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
         ],
         createWorkflow: createUSDCReceiveNotificationWorkflow
-    }  
+    },
+    {
+      'name': 'Save all the current yields for USDC on base (AAVE, Compound, Moonwell & top 5 USDC morpho vault) every hour',
+      'description': 'Save all the current yields for USDC on base (AAVE, Compound, Moonwell & top 5 USDC morpho vault) every hour',
+      'tags': [WORKFLOW_TEMPLATES_TAGS.YIELD, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+      'image': [
+          TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
+          ACTIONS.OTHERS.GSHEET.GSHEET.image
+      ],
+      'blockIDs': [
+          TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.blockId,
+          ACTIONS.OTHERS.GSHEET.GSHEET.blockId
+      ],
+      createWorkflow: createUSDCYieldsNotificationWorkflow
+  },
 ];
