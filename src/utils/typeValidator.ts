@@ -38,6 +38,8 @@ export function validateType(expectedType: string, value: any): boolean {
         case 'paragraph':
         case 'render_enum':
             return typeof value === 'string';
+        case 'json':
+            return (typeof value === 'string' && isValidJson(value)) || (typeof value === 'object' && value !== null);
         case 'logic_operator':
             const validOperators = new Set(['gte', 'gt', 'lte', 'lt', 'eq', 'neq']);
             return typeof value === 'string' && validOperators.has(value);
@@ -200,6 +202,15 @@ export function isValidPhoneNumber(value: string): boolean {
 
 export function isValidEmail(value: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+export function isValidJson(value: string): boolean {
+    try {
+        JSON.parse(value);
+        return true;
+    } catch (_) {
+        return false;
+    }
 }
 
 
