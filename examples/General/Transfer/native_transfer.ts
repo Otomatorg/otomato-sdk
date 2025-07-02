@@ -15,10 +15,10 @@ async function asset_price_movement() {
   const wallet = "0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe"
 
   // -------- Asset price movement trigger --------
-  const ethTransferTrigger = new Trigger(TRIGGERS.TOKENS.NATIVE_TRANSFER.ETH_TRANSFER);
+  const ethTransferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.NATIVE_TRANSFER);
   ethTransferTrigger.setChainId(CHAINS.ETHEREUM);
   ethTransferTrigger.setParams("wallet", wallet);
-  ethTransferTrigger.setParams("threshold", 0.004);
+  ethTransferTrigger.setParams("threshold", 0);
 
   // -------- Send email --------
   const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
