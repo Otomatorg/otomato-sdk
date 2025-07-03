@@ -1,4 +1,4 @@
-import { Workflow, Trigger, Action, Edge, TRIGGERS, ACTIONS, CHAINS, getTokenFromSymbol, convertToTokenUnitsFromSymbol, convertToTokenUnits } from '../index.js';
+import { Workflow, Trigger, Action, Edge, TRIGGERS, ACTIONS, CHAINS, getTokenFromSymbol, convertToTokenUnitsFromSymbol, convertToTokenUnits, WORKFLOW_LOOPING_TYPES } from '../index.js';
 
 export const WORKFLOW_TEMPLATES_TAGS = {
     NFTS: 'NFTs',
@@ -7,7 +7,9 @@ export const WORKFLOW_TEMPLATES_TAGS = {
     ON_CHAIN_MONITORING: 'On-chain monitoring',
     YIELD: 'Yield',
     NOTIFICATIONS: 'notifications',
-    ABSTRACT: 'Abstract'
+    ABSTRACT: 'Abstract',
+    DEXES: 'Dexes',
+    LENDING: 'Lending'
 };
 
 const createModeTransferNotificationWorkflow = () => {
@@ -250,9 +252,147 @@ const abstractGetNotifiedWhenStreamerIsLive = async () => {
     return new Workflow('Get notified when a given streamer goes live', [trigger, telegramAction], [edge]);
 }
 
+// notify me when I can unstake my stakestone
+const createStakestoneUnstakeNotificationWorkflow = async () => {
+    const trigger = new Trigger(TRIGGERS.YIELD.STAKESTONE.LATEST_ROUND_ID);
+    trigger.setParams('chainId', CHAINS.ETHEREUM);
+    trigger.setParams('contractAddress', "0x8f88ae3798e8ff3d0e0de7465a0863c9bbb577f0");
+    trigger.setCondition('neq');
+    trigger.setComparisonValue('{{history.0.value}}');
+    trigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    notificationAction.setParams("message", "You can now unstake your Stakestone position!");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    return new Workflow('Get notified when you can unstake your Stakestone position', [trigger, notificationAction], [edge]);
+}
+
+// notify me when a given uniswap position is out of range [looping enabled - 5 times]
+const createUniswapPositionOutOfRangeNotificationWorkflow = async () => {
+    const trigger = new Trigger(TRIGGERS.DEXES.UNISWAP.IS_IN_RANGE);
+    trigger.setParams('chainId', CHAINS.ETHEREUM);
+    trigger.setCondition('eq');
+    trigger.setParams('comparisonValue', false);
+    trigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    notificationAction.setParams("message", "Your Uniswap position is out of range! You can obtain your position Id at https://app.uniswap.org/positions");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    const workflow = new Workflow('Get notified when a given uniswap position is out of range', [trigger, notificationAction], [edge]);
+    workflow.setSettings({
+      loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
+      period: 600000,
+      limit: 5,
+    });
+    return workflow;
+}
+
+// notify me when Hyperlend raise their deposit cap for stHype [looping enabled - 10 times]
+const createHyperLendDepositCapNotificationWorkflow = async () => {
+    const trigger = new Trigger(TRIGGERS.LENDING.HYPERLEND.SUPPLY_CAP);
+    trigger.setParams('chainId', CHAINS.HYPER_EVM);
+    trigger.setParams('asset', getTokenFromSymbol(CHAINS.HYPER_EVM, 'wstHYPE').contractAddress);
+    trigger.setCondition('gt');
+    trigger.setComparisonValue('{{history.0.value}}');
+    trigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    notificationAction.setParams("message", "Hyperlend has raised their deposit cap for stHype!");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    const workflow = new Workflow('Get notified when Hyperlend raise their deposit cap for stHype', [trigger, notificationAction], [edge]);
+    workflow.setSettings({
+      loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
+      period: 600000,
+      limit: 10,
+    });
+    return workflow;
+}
+
+// Save all the current yields for USDC on base (AAVE, Compound, Moonwell & top 5 USDC morpho vault) every hour [repeat 100 times, every hour]
+const createUSDCYieldsStorageWorkflow = async () => {
+    const trigger = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
+    trigger.setParams('period', 3600000);
+    trigger.setParams('limit', 100);
+    trigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.OTHERS.GSHEET.GSHEET);
+    notificationAction.setParams("data", [
+        ["aave", "moonwell", "compound", "Spark USDC Vault", "Moonwell Flagship USDC", "Seamless USDC Vault", "Steakhouse USDC", "Gauntlet USDC Prime"],
+        [
+            "{{external.functions.aaveLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,,)}}",
+            "{{external.functions.moonwellLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,,)}}",
+            "{{external.functions.compoundLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,,,)}}",
+            "{{external.functions.morphoLendingRate(8453,0x7BfA7C4f149E7415b73bdeDfe609237e29CBF34A)}}",
+            "{{external.functions.morphoLendingRate(8453,0xc1256Ae5FF1cf2719D4937adb3bbCCab2E00A2Ca)}}",
+            "{{external.functions.morphoLendingRate(8453,0x616a4E1db48e22028f6bbf20444Cd3b8e3273738)}}",
+            "{{external.functions.morphoLendingRate(8453,0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183)}}",
+            "{{external.functions.morphoLendingRate(8453,0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61)}}"
+        ]
+    ]);
+    // notificationAction.setParams("mode", "append");
+    // notificationAction.setParams("role", "writer");
+    // notificationAction.setParams("sheetId", "0");
+    // notificationAction.setParams("spreadsheetId", "1NxqGqgtUQkojBOl9g7CBkbqc7bB6mBkZxHWMPsu1uQY");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    return new Workflow('Save all the current yields for USDC on base (AAVE, Compound, Moonwell, Spark USDC Vault, Moonwell Flagship USDC, Seamless USDC Vault, Steakhouse USDC, Gauntlet USDC Prime) every hour', [trigger, notificationAction], [edge]);
+}
+
+// notify me when there are more than 50 ETH in available liquidity for instant withdrawal on Stakestone
+const createStakestoneInstantWithdrawalNotificationWorkflow = async () => {
+    const trigger = new Trigger(TRIGGERS.YIELD.STAKESTONE.STAKESTONE_VAULT_LIQUIDITY);
+    trigger.setParams('chainId', CHAINS.ETHEREUM);
+    trigger.setCondition('gt');
+    trigger.setComparisonValue('50');
+    trigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    notificationAction.setParams("message", "There are more than 50 ETH in available liquidity for instant withdrawal on Stakestone!");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    return new Workflow('Get notified when there are more than 50 ETH in available liquidity for instant withdrawal on Stakestone', [trigger, notificationAction], [edge]);
+}
+
+// notify me when I receive USDC [looping enabled - 30 times]
+const createUSDCReceiveNotificationWorkflow = async () => {
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setParams('chainId', CHAINS.BASE);
+    trigger.setParams('contractAddress', getTokenFromSymbol(CHAINS.BASE, 'USDC').contractAddress);
+    // TODO: add smart account address
+    trigger.setParams('abiParams.to', '{{smartAccountAddress}}');
+    trigger.setPosition(400, 120);
+
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    notificationAction.setParams("message", "You received USDC!");
+    notificationAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: notificationAction });
+
+    const workflow = new Workflow('Get notified when I receive USDC', [trigger, notificationAction], [edge]);
+    workflow.setSettings({
+      loopingType: WORKFLOW_LOOPING_TYPES.SUBSCRIPTION,
+      timeout: 31536000000,
+      limit: 30,
+    });
+    return workflow;
+}
+
 const createEthereumFoundationTransferNotificationWorkflow = () => {
     const ethTransferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.NATIVE_TRANSFER);
-    ethTransferTrigger.setChainId(CHAINS.BASE);
+    ethTransferTrigger.setChainId(CHAINS.ETHEREUM);
     ethTransferTrigger.setParams('wallet', '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe');
     ethTransferTrigger.setParams('threshold', 0.004);
     ethTransferTrigger.setPosition(400, 120);
@@ -473,5 +613,95 @@ export const WORKFLOW_TEMPLATES = [
         ],
         createWorkflow: copyTradeVitalikOdos
     },*/
-    
+
+    {
+        'name': 'Get notified when you can unstake your Stakestone position',
+        'description': 'Notify me when you can unstake your Stakestone position',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.YIELD, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'image': [
+            TRIGGERS.YIELD.STAKESTONE.STAKESTONE_VAULT_LIQUIDITY.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        'blockIDs': [
+            TRIGGERS.YIELD.STAKESTONE.STAKESTONE_VAULT_LIQUIDITY.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: createStakestoneUnstakeNotificationWorkflow
+    },
+    {
+        'name': 'Get notified when a given uniswap position is out of range',
+        'description': 'Notify me when a given uniswap position is out of range. Get your tokenId from https://app.uniswap.org/positions',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.DEXES, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'image': [
+            TRIGGERS.DEXES.UNISWAP.IS_IN_RANGE.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        'blockIDs': [
+            TRIGGERS.DEXES.UNISWAP.IS_IN_RANGE.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: createUniswapPositionOutOfRangeNotificationWorkflow
+    },
+    {
+        'name': 'Get notified when Hyperlend raise their deposit cap for stHype',
+        'description': 'Notify me when Hyperlend raise their deposit cap for stHype',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.LENDING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'image': [
+            TRIGGERS.LENDING.HYPERLEND.SUPPLY_CAP.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        'blockIDs': [
+            TRIGGERS.LENDING.HYPERLEND.SUPPLY_CAP.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: createHyperLendDepositCapNotificationWorkflow
+    },
+    {
+        'name': 'Get notified when there are more than 50 ETH in available liquidity for instant withdrawal on Stakestone',
+        'description': 'Notify me when there are more than 50 ETH in available liquidity for instant withdrawal on Stakestone',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.YIELD, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'image': [
+            TRIGGERS.YIELD.STAKESTONE.STAKESTONE_VAULT_LIQUIDITY.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        'blockIDs': [
+            TRIGGERS.YIELD.STAKESTONE.STAKESTONE_VAULT_LIQUIDITY.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: createStakestoneInstantWithdrawalNotificationWorkflow
+    },
+    {
+        'name': 'Get notified when I receive USDC',
+        'description': 'Notify me when I receive USDC',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'image': [
+            TRIGGERS.TOKENS.TRANSFER.TRANSFER.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        'blockIDs': [
+            TRIGGERS.TOKENS.TRANSFER.TRANSFER.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: createUSDCReceiveNotificationWorkflow
+    },
+    {
+      'name': 'Save all the current yields for USDC on base (AAVE, Compound, Moonwell, Spark USDC Vault, Moonwell Flagship USDC, Seamless USDC Vault, Steakhouse USDC, Gauntlet USDC Prime) every hour',
+      'description': 'Save all the current yields for USDC on base (AAVE, Compound, Moonwell, Spark USDC Vault, Moonwell Flagship USDC, Seamless USDC Vault, Steakhouse USDC, Gauntlet USDC Prime) every hour',
+      'tags': [WORKFLOW_TEMPLATES_TAGS.YIELD, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+      'image': [
+          TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
+          ACTIONS.OTHERS.GSHEET.GSHEET.image
+      ],
+      'blockIDs': [
+          TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.blockId,
+          ACTIONS.OTHERS.GSHEET.GSHEET.blockId
+      ],
+      createWorkflow: createUSDCYieldsStorageWorkflow
+  },
 ];
