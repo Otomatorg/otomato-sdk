@@ -150,5 +150,3 @@ export function formatNonZeroDecimals(value: number, nonZeroDecimals: number = 2
 
     return sign + result;
 }
-
-console.log(formatNonZeroDecimals(0.0000000000000001)) // 0.0000000000000001
