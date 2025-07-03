@@ -257,7 +257,7 @@ const createStakestoneUnstakeNotificationWorkflow = async () => {
     const trigger = new Trigger(TRIGGERS.YIELD.STAKESTONE.LATEST_ROUND_ID);
     trigger.setParams('chainId', CHAINS.ETHEREUM);
     trigger.setParams('contractAddress', "0x8f88ae3798e8ff3d0e0de7465a0863c9bbb577f0");
-    trigger.setCondition('gte');
+    trigger.setCondition('neq');
     trigger.setComparisonValue('{{history.0.value}}');
     trigger.setPosition(400, 120);
 
@@ -274,7 +274,6 @@ const createStakestoneUnstakeNotificationWorkflow = async () => {
 const createUniswapPositionOutOfRangeNotificationWorkflow = async () => {
     const trigger = new Trigger(TRIGGERS.DEXES.UNISWAP.IS_IN_RANGE);
     trigger.setParams('chainId', CHAINS.ETHEREUM);
-    // trigger.setParams('abiParams.tokenId', '');
     trigger.setCondition('eq');
     trigger.setParams('comparisonValue', false);
     trigger.setPosition(400, 120);
@@ -319,7 +318,7 @@ const createHyperLendDepositCapNotificationWorkflow = async () => {
 }
 
 // Save all the current yields for USDC on base (AAVE, Compound, Moonwell & top 5 USDC morpho vault) every hour [repeat 100 times, every hour]
-const createUSDCYieldsNotificationWorkflow = async () => {
+const createUSDCYieldsStorageWorkflow = async () => {
     const trigger = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
     trigger.setParams('period', 3600000);
     trigger.setParams('limit', 100);
@@ -632,7 +631,7 @@ export const WORKFLOW_TEMPLATES = [
     },
     {
         'name': 'Get notified when a given uniswap position is out of range',
-        'description': 'Notify me when a given uniswap position is out of range',
+        'description': 'Notify me when a given uniswap position is out of range. Get your tokenId from https://app.uniswap.org/positions',
         'tags': [WORKFLOW_TEMPLATES_TAGS.DEXES, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
         'image': [
@@ -703,6 +702,6 @@ export const WORKFLOW_TEMPLATES = [
           TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.blockId,
           ACTIONS.OTHERS.GSHEET.GSHEET.blockId
       ],
-      createWorkflow: createUSDCYieldsNotificationWorkflow
+      createWorkflow: createUSDCYieldsStorageWorkflow
   },
 ];
