@@ -85,3 +85,70 @@ export function getComputeERC20Variable(amount: string, chainId: any, contractAd
     // Construct the computeERC20Amount formula
     return `{{computeERC20Amount(${formattedAmount}, ${chainId}, '${formattedContractAddress}')}}`;
 }
+
+/**
+ * Formats a number to a string with a specified number of non-zero decimal digits.
+ * If the number is less than 1 and starts with zeros after the decimal point,
+ * it will show decimals until the first N non-zero digits are reached.
+ * Otherwise, it will show up to N decimal digits.
+ * 
+ * @param value - The number to format.
+ * @param nonZeroDecimals - The number of non-zero decimal digits to show (default is 2).
+ * @returns string - The formatted number as a string.
+ */
+export function formatNonZeroDecimals(value: number, nonZeroDecimals: number = 2): string {
+    if (value === 0) {
+        return "0";
+    }
+
+    const sign = value < 0 ? "-" : "";
+    const absValue = Math.abs(value);
+    
+    // Convert to string, handling scientific notation
+    let str = absValue.toString();
+    
+    // Handle scientific notation
+    if (str.includes('e')) {
+        const [mantissa, exponent] = str.split('e');
+        const exp = parseInt(exponent);
+        
+        if (exp < 0) {
+            // Convert scientific notation to decimal
+            const decimalPlaces = Math.abs(exp) + mantissa.replace('.', '').length - 1;
+            str = absValue.toFixed(decimalPlaces);
+        }
+    }
+
+    const decimalIndex = str.indexOf('.');
+    
+    if (decimalIndex === -1) {
+        return sign + str;
+    }
+
+    const integerPart = str.substring(0, decimalIndex);
+    const decimalPart = str.substring(decimalIndex + 1);
+    
+    let nonZeroCount = 0;
+    let result = integerPart + ".";
+    
+    for (let i = 0; i < decimalPart.length; i++) {
+        result += decimalPart[i];
+        
+        if (decimalPart[i] !== '0') {
+            nonZeroCount++;
+            if (nonZeroCount === nonZeroDecimals) {
+                break;
+            }
+        }
+    }
+
+    // Remove trailing zeros and decimal point if needed
+    result = result.replace(/\.?0+$/, '');
+    if (result.endsWith('.')) {
+        result = result.slice(0, -1);
+    }
+
+    return sign + result;
+}
+
+console.log(formatNonZeroDecimals(0.0000000000000001)) // 0.0000000000000001

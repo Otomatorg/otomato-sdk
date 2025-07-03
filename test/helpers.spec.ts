@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { convertToTokenUnits, getTokenFromSymbol, CHAINS, convertTokenUnitsFromSymbol, convertTokenUnitsFromAddress } from '../src/index.js';
+import { convertToTokenUnits, getTokenFromSymbol, CHAINS, convertTokenUnitsFromSymbol, convertTokenUnitsFromAddress, formatNonZeroDecimals } from '../src/index.js';
 
 describe('convertToTokenUnits', () => {
   it('should return 10^6 for 1 USDC', async () => {
@@ -130,5 +130,83 @@ describe('convertTokenUnitsFromAddress', () => {
   it('should handle very small fractions correctly', async () => {
     const result = await convertTokenUnitsFromAddress(BigInt(1), CHAINS.ETHEREUM, ethContractAddr);
     expect(result).to.equal(1e-18);
+  });
+});
+
+describe('formatNonZeroDecimals', () => {
+  it('should format numbers with default 2 non-zero decimals', () => {
+    const input = 0.31231231244124;
+    const expected = '0.31';
+    const actual = formatNonZeroDecimals(input);
+    expect(actual).to.equal(expected);
+  });
+
+  it('should handle very small numbers', () => {
+    const input = 0.00000000012;
+    const expected = '0.00000000012';
+    const actual = formatNonZeroDecimals(input);
+    expect(actual).to.equal(expected);
+  });
+
+  it('should handle extremely small numbers', () => {
+    const input = 0.00000000000001;
+    const expected = '0.00000000000001';
+    const actual = formatNonZeroDecimals(input);
+    expect(actual).to.equal(expected);
+  });
+
+  it('should handle numbers with many trailing zeros', () => {
+    const input = 1.000000000000010000;
+    const expected = '1.00000000000001';
+    const actual = formatNonZeroDecimals(input);
+    expect(actual).to.equal(expected);
+  });
+
+  it('should handle numbers with non-zero digits after zeros', () => {
+    const input = 2.00002000000000;
+    const expected = '2.00002';
+    const actual = formatNonZeroDecimals(input);
+    expect(actual).to.equal(expected);
+  });
+
+  it('should handle numbers in exponential notation (small)', () => {
+    const input = 1.2e-10;
+    const expected = '0.00000000012';
+    const actual = formatNonZeroDecimals(input);
+    expect(actual).to.equal(expected);
+  });
+
+  it('should handle numbers in exponential notation (very small)', () => {
+    const input = 1e-14;
+    const expected = '0.00000000000001';
+    const actual = formatNonZeroDecimals(input);
+    expect(actual).to.equal(expected);
+  });
+
+  it('should format integer numbers as string', () => {
+    const input = 42;
+    const expected = '42';
+    const actual = formatNonZeroDecimals(input);
+    expect(actual).to.equal(expected);
+  });
+
+  it('should format negative numbers correctly', () => {
+    const input = -0.0034005;
+    const expected = '-0.0034';
+    const actual = formatNonZeroDecimals(input);
+    expect(actual).to.equal(expected);
+  });
+
+  it('should allow custom nonZeroDecimals parameter', () => {
+    const input = 0.123456789;
+    const expected = '0.12345';
+    const actual = formatNonZeroDecimals(input, 5);
+    expect(actual).to.equal(expected);
+  });
+
+  it('should return string representation for Infinity and NaN', () => {
+    expect(formatNonZeroDecimals(Infinity)).to.equal('Infinity');
+    expect(formatNonZeroDecimals(-Infinity)).to.equal('-Infinity');
+    expect(formatNonZeroDecimals(NaN)).to.equal('NaN');
   });
 });
