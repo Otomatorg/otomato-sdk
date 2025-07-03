@@ -10,8 +10,10 @@ import {
     xSpacing,
     ySpacing,
     ROOT_X,
-    ROOT_Y
+    ROOT_Y,
+    TRIGGER_X_SPACING as ACTUAL_TRIGGER_X_SPACING // Import to use the constant if needed, or use literal
 } from '../src/utils/WorkflowNodePositioner';
+import { TRIGGERS, ACTIONS } from '../src/index.js'; // Added import
 
 // Dummy implementations for testing purposes.
 class DummyNode {
@@ -635,4 +637,145 @@ describe('Flow: Condition -> Split(3) -> Delay Demo', () => {
     const avgX9 = childrenOf9.reduce((acc, n) => acc + n.position!.x, 0) / childrenOf9.length;
     expect(avgX9).to.be.closeTo(node9X, 50, `The average x of node "9"'s children (${avgX9}) should be close to node "9"'s x (${node9X}).`);
   });
+});
+
+describe('Multiple Trigger Positioning', () => {
+    it('should position two triggers symmetrically around ROOT_X and their common child at ROOT_X', () => {
+        const trigger1 = new DummyNode('1'); // Trigger 1
+        const trigger2 = new DummyNode('2'); // Trigger 2
+        const action1 = new DummyNode('3'); // Action 1 (common child)
+
+        const edges = [
+            new DummyEdge(trigger1, action1),
+            new DummyEdge(trigger2, action1)
+        ];
+        // Ensure nodes are passed in sorted order of ref for predictability if internal lists don't re-sort fully
+        const workflow = new DummyWorkflow([trigger1, trigger2, action1], edges);
+
+        positionWorkflowNodes(workflow as any);
+
+        // const TRIGGER_X_SPACING = 363;
+
+        // Triggers are in layer 0
+        expect(trigger1.position!.y).to.equal(ROOT_Y);
+        expect(trigger2.position!.y).to.equal(ROOT_Y);
+
+        // Trigger X positions
+        const expectedT1_X = ROOT_X - ACTUAL_TRIGGER_X_SPACING / 2;
+        const expectedT2_X = ROOT_X + ACTUAL_TRIGGER_X_SPACING / 2;
+        expect(trigger1.position!.x).to.equal(expectedT1_X);
+        expect(trigger2.position!.x).to.equal(expectedT2_X);
+
+        // Common child action1 is in layer 1
+        expect(action1.position!.y).to.equal(ROOT_Y + ySpacing);
+        // Common child action1 should be centered at ROOT_X due to parent centering
+        expect(action1.position!.x).to.equal(ROOT_X);
+    });
+
+    it('should position three triggers symmetrically around ROOT_X and their common child at ROOT_X', () => {
+        const trigger1 = new DummyNode('1');
+        const trigger2 = new DummyNode('2');
+        const trigger3 = new DummyNode('3');
+        const action1 = new DummyNode('4');
+
+        const edges = [
+            new DummyEdge(trigger1, action1),
+            new DummyEdge(trigger2, action1),
+            new DummyEdge(trigger3, action1)
+        ];
+        // Nodes are already in order of ref: 1, 2, 3, 4.
+        // The positioner sorts starting nodes by ref: "1", "2", "3".
+        const workflow = new DummyWorkflow([trigger1, trigger2, trigger3, action1], edges);
+
+        positionWorkflowNodes(workflow as any);
+
+        // const TRIGGER_X_SPACING = 363;
+
+        // Triggers are in layer 0
+        expect(trigger1.position!.y).to.equal(ROOT_Y);
+        expect(trigger2.position!.y).to.equal(ROOT_Y);
+        expect(trigger3.position!.y).to.equal(ROOT_Y);
+
+        // Trigger X positions for three triggers
+        // Node "1" is ROOT_X - ACTUAL_TRIGGER_X_SPACING
+        // Node "2" is ROOT_X
+        // Node "3" is ROOT_X + ACTUAL_TRIGGER_X_SPACING
+        expect(trigger1.position!.x).to.equal(ROOT_X - ACTUAL_TRIGGER_X_SPACING);
+        expect(trigger2.position!.x).to.equal(ROOT_X);
+        expect(trigger3.position!.x).to.equal(ROOT_X + ACTUAL_TRIGGER_X_SPACING);
+
+        // Common child action1 is in layer 1
+        expect(action1.position!.y).to.equal(ROOT_Y + ySpacing);
+        // Common child action1 should be centered at ROOT_X
+        expect(action1.position!.x).to.equal(ROOT_X);
+    });
+
+    it('should position two triggers symmetrically, each with their own child', () => {
+        const trigger1 = new DummyNode('1');
+        const trigger2 = new DummyNode('2');
+        const action1 = new DummyNode('3'); // Child of trigger1
+        const action2 = new DummyNode('4'); // Child of trigger2
+
+        const edges = [
+            new DummyEdge(trigger1, action1),
+            new DummyEdge(trigger2, action2)
+        ];
+        const workflow = new DummyWorkflow([trigger1, trigger2, action1, action2], edges);
+        positionWorkflowNodes(workflow as any);
+
+        // const TRIGGER_X_SPACING = 363;
+
+        // Triggers
+        expect(trigger1.position!.y).to.equal(ROOT_Y);
+        expect(trigger2.position!.y).to.equal(ROOT_Y);
+        expect(trigger1.position!.x).to.equal(ROOT_X - ACTUAL_TRIGGER_X_SPACING / 2);
+        expect(trigger2.position!.x).to.equal(ROOT_X + ACTUAL_TRIGGER_X_SPACING / 2);
+
+        // Children
+        expect(action1.position!.y).to.equal(ROOT_Y + ySpacing);
+        expect(action2.position!.y).to.equal(ROOT_Y + ySpacing);
+
+        // After all positioning, including parent centering:
+        expect(action1.position!.x).to.equal(trigger1.position!.x);
+        expect(action2.position!.x).to.equal(trigger2.position!.x);
+    });
+});
+
+describe('Example Workflow: Multiple Triggers (abstract_streamer_live_multiple_triggers)', () => {
+    it('should correctly position nodes from the example workflow', async () => {
+        const { abstract_streamer_live_multiple_triggers } = await import('../examples/Core/create-workflow-with-multiple-triggers.js');
+        const workflowInstance = await abstract_streamer_live_multiple_triggers();
+
+        const allNodes = workflowInstance.nodes;
+        // Find starting trigger nodes (class 'trigger' and no parents)
+        const triggerNodes = allNodes.filter(n => {
+            const parents = getParents(n as any, workflowInstance.edges as any); // Cast to any for DummyNode compatibility if type mismatch
+            return n.class === 'trigger' && parents.length === 0;
+        });
+
+        expect(triggerNodes.length).to.equal(2, "Should find two starting trigger nodes in the example");
+
+        // Sort them by their actual numeric reference to determine left/right
+        // The refs are strings but should represent numbers.
+        triggerNodes.sort((a, b) => Number(a.getRef()) - Number(b.getRef()));
+
+        const identifiedTrigger1 = triggerNodes[0]; // Left-most (smaller ref)
+        const identifiedTrigger2 = triggerNodes[1]; // Right-most (larger ref)
+
+        const notificationActionNode = allNodes.find(n => n.blockId === ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId);
+        expect(notificationActionNode, "Notification Action not found").to.exist;
+
+        // Use the imported constant if available, otherwise the literal value
+        const effectiveTriggerXSpacing = ACTUAL_TRIGGER_X_SPACING || 363;
+
+        // Check Y positions
+        expect(identifiedTrigger1!.position!.y).to.equal(ROOT_Y);
+        expect(identifiedTrigger2!.position!.y).to.equal(ROOT_Y);
+        expect(notificationActionNode!.position!.y).to.equal(ROOT_Y + ySpacing);
+
+        // Check X positions
+        expect(identifiedTrigger1!.position!.x).to.equal(ROOT_X - effectiveTriggerXSpacing / 2);
+        expect(identifiedTrigger2!.position!.x).to.equal(ROOT_X + effectiveTriggerXSpacing / 2);
+        expect(notificationActionNode!.position!.x).to.equal(ROOT_X);
+    });
 });

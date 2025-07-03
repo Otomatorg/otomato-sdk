@@ -8,6 +8,7 @@ export const xSpacing = 500;
 export const ySpacing = 120;
 export const ROOT_X = 400;
 export const ROOT_Y = 120;
+export const TRIGGER_X_SPACING = 363;
 
 /**
  * Helper: Returns a group key for a node based on its primary parent.
@@ -79,75 +80,135 @@ export function positionWorkflowNodes(workflow: Workflow): void {
     const sortedLayers = Array.from(layers.keys()).sort((a, b) => a - b);
     for (const layer of sortedLayers) {
       const nodesInLayer = layers.get(layer)!;
-      // Group nodes by primary parent.
-      const groups: Map<string, Node[]> = new Map();
-      for (const node of nodesInLayer) {
-        const groupKey = getGroupKey(node, workflow.edges);
-        if (!groups.has(groupKey)) {
-          groups.set(groupKey, []);
-        }
-        groups.get(groupKey)!.push(node);
-      }
-
       // Determine the Y position for this layer.
       const yPos = (layer * ySpacing) + ROOT_Y;
 
-      // Build group info objects.
-      interface GroupInfo {
-        groupKey: string;
-        nodes: Node[];
-        desiredCenter: number;
-        desiredLeft: number;
-        width: number; // (groupSize - 1) * xSpacing
-        newLeft?: number;
-      }
-      const groupInfos: GroupInfo[] = [];
-      // Sort group keys numerically.
-      const sortedGroupKeys = Array.from(groups.keys()).sort((a, b) => Number(a) - Number(b));
-      for (const key of sortedGroupKeys) {
-        const groupNodes = groups.get(key)!;
-        groupNodes.sort((a, b) => Number(a.getRef()) - Number(b.getRef()));
-        let desiredCenter: number;
-        if (key === "none") {
-          desiredCenter = ROOT_X;
+        // Special handling for layer 0 (triggers)
+        if (layer === 0) {
+          const startingNodes = nodesInLayer.filter(node => getParents(node, workflow.edges).length === 0);
+          startingNodes.sort((a, b) => Number(a.getRef()) - Number(b.getRef())); // Consistent ordering
+          const numStartingNodes = startingNodes.length;
+          let totalWidth = 0; // Initialize totalWidth
+
+          if (numStartingNodes > 0) {
+            totalWidth = (numStartingNodes - 1) * TRIGGER_X_SPACING; // Assign value to totalWidth
+            let currentX = ROOT_X - totalWidth / 2;
+            for (let i = 0; i < numStartingNodes; i++) {
+              startingNodes[i].setPosition(currentX, yPos);
+              currentX += TRIGGER_X_SPACING;
+            }
+        }
+          // Handle non-starting nodes in layer 0 if any (should be rare for triggers)
+          const otherNodesInLayer0 = nodesInLayer.filter(node => getParents(node, workflow.edges).length > 0);
+          if (otherNodesInLayer0.length > 0) {
+            // Fallback to default group positioning for these nodes
+            // This part reuses the existing grouping logic but only for these specific nodes.
+            const groups: Map<string, Node[]> = new Map();
+            for (const node of otherNodesInLayer0) {
+              const groupKey = getGroupKey(node, workflow.edges);
+              if (!groups.has(groupKey)) {
+                groups.set(groupKey, []);
+              }
+              groups.get(groupKey)!.push(node);
+            }
+            // Simplified group processing for these non-starting nodes in layer 0
+            // Calculate currentXOffset based on whether startingNodes were present or not
+            const startingNodesOffset = numStartingNodes > 0 ? totalWidth / 2 + TRIGGER_X_SPACING : 0;
+            let currentXOffset = ROOT_X + startingNodesOffset;
+            // If there were no starting nodes, and we only have otherNodesInLayer0,
+            // they should probably start near ROOT_X, not offset by totalWidth/2.
+            // If startingNodes were there, offset by totalWidth/2 + some spacing.
+            // If numStartingNodes is 0, totalWidth is 0, so currentXOffset starts at ROOT_X.
+            // If numStartingNodes > 0, currentXOffset starts at ROOT_X + totalWidth/2 + TRIGGER_X_SPACING
+            // (using TRIGGER_X_SPACING as a gap, or xSpacing could be used too)
+
+            if (numStartingNodes > 0) {
+                 currentXOffset = ROOT_X + totalWidth / 2 + xSpacing; // Place them after triggers with xSpacing
+            } else {
+                 currentXOffset = ROOT_X; // If no triggers, start these at ROOT_X
+            }
+
+            const sortedGroupKeys = Array.from(groups.keys()).sort((a, b) => Number(a) - Number(b));
+            for (const key of sortedGroupKeys) {
+                const groupNodes = groups.get(key)!;
+                groupNodes.sort((a, b) => Number(a.getRef()) - Number(b.getRef()));
+                for (let i = 0; i < groupNodes.length; i++) {
+                    groupNodes[i].setPosition(currentXOffset + i * xSpacing, yPos);
+                }
+                currentXOffset += groupNodes.length * xSpacing + xSpacing; // Add spacing between groups
+            }
+        }
         } else {
-          const parent = workflow.nodes.find(n => n.getRef() === key);
-          desiredCenter = parent && parent.position ? parent.position.x : ROOT_X;
-        }
-        const groupSize = groupNodes.length;
-        const width = (groupSize - 1) * xSpacing;
-        const desiredLeft = desiredCenter - width / 2;
-        groupInfos.push({
-          groupKey: key,
-          nodes: groupNodes,
-          desiredCenter,
-          desiredLeft,
-          width
-        });
-      }
-      // Adjust groups so that adjacent groups do not overlap.
-      // We require that the left edge of a group is at least xSpacing to the right of the previous group's right edge.
-      groupInfos.sort((a, b) => a.desiredLeft - b.desiredLeft);
-      let prevRight = -Infinity;
-      for (const group of groupInfos) {
-        let newLeft = group.desiredLeft;
-        if (newLeft < prevRight + xSpacing) {
-          newLeft = prevRight + xSpacing;
-        }
-        group.newLeft = newLeft;
-        prevRight = newLeft + group.width;
-      }
-      // Now assign positions for nodes in each group using the new left.
-      for (const group of groupInfos) {
-        const { nodes, newLeft } = group;
-        for (let i = 0; i < nodes.length; i++) {
-          const nodeX = newLeft! + i * xSpacing;
-          nodes[i].setPosition(nodeX, yPos);
+          // Original logic for layers other than 0
+          // Group nodes by primary parent.
+          const groups: Map<string, Node[]> = new Map();
+          for (const node of nodesInLayer) {
+            const groupKey = getGroupKey(node, workflow.edges);
+            if (!groups.has(groupKey)) {
+              groups.set(groupKey, []);
+            }
+            groups.get(groupKey)!.push(node);
+          }
+
+          // Build group info objects.
+          interface GroupInfo {
+            groupKey: string;
+            nodes: Node[];
+            desiredCenter: number;
+            desiredLeft: number;
+            width: number; // (groupSize - 1) * xSpacing
+            newLeft?: number;
+          }
+          const groupInfos: GroupInfo[] = [];
+          // Sort group keys numerically.
+          const sortedGroupKeys = Array.from(groups.keys()).sort((a, b) => Number(a) - Number(b));
+          for (const key of sortedGroupKeys) {
+            const groupNodes = groups.get(key)!;
+            groupNodes.sort((a, b) => Number(a.getRef()) - Number(b.getRef()));
+            let desiredCenter: number;
+            if (key === "none") { // Should not happen for layer > 0 if graph is connected
+              desiredCenter = ROOT_X;
+            } else {
+              const parent = workflow.nodes.find(n => n.getRef() === key);
+              desiredCenter = parent && parent.position ? parent.position.x : ROOT_X;
+            }
+            const groupSize = groupNodes.length;
+            const width = (groupSize - 1) * xSpacing;
+            const desiredLeft = desiredCenter - width / 2;
+            groupInfos.push({
+              groupKey: key,
+              nodes: groupNodes,
+              desiredCenter,
+              desiredLeft,
+              width
+            });
+          }
+          // Adjust groups so that adjacent groups do not overlap.
+          // We require that the left edge of a group is at least xSpacing to the right of the previous group's right edge.
+          groupInfos.sort((a, b) => a.desiredLeft - b.desiredLeft);
+          let prevRight = -Infinity;
+          for (const group of groupInfos) {
+            let newLeft = group.desiredLeft;
+            if (newLeft < prevRight + xSpacing) {
+              newLeft = prevRight + xSpacing;
+            }
+            group.newLeft = newLeft;
+            prevRight = newLeft + group.width;
+          }
+          // Now assign positions for nodes in each group using the new left.
+          for (const group of groupInfos) {
+            const { nodes, newLeft } = group;
+            for (let i = 0; i < nodes.length; i++) {
+              const nodeX = newLeft! + i * xSpacing;
+              nodes[i].setPosition(nodeX, yPos);
+            }
         }
       }
     }
 
     // Step 3: Resolve overlaps within each group in each layer.
+      // This step might need adjustment if TRIGGER_X_SPACING causes issues with xSpacing based overlap.
+      // For now, we assume xSpacing is the minimum desired gap after initial placement.
     layers.forEach((nodes, layer) => {
       const groups: Map<string, Node[]> = new Map();
       for (const node of nodes) {
