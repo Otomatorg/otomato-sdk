@@ -279,7 +279,7 @@ const createUniswapPositionOutOfRangeNotificationWorkflow = async () => {
     trigger.setPosition(400, 120);
 
     const notificationAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-    notificationAction.setParams("message", "Your Uniswap position is out of range!");
+    notificationAction.setParams("message", "Your Uniswap position is out of range! You can obtain your position Id at https://app.uniswap.org/positions");
     notificationAction.setPosition(400, 240);
 
     const edge = new Edge({ source: trigger, target: notificationAction });
