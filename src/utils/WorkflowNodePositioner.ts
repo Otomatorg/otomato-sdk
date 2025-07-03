@@ -233,8 +233,21 @@ export function positionWorkflowNodes(workflow: Workflow): void {
             const prev = groupNodes[i - 1];
             const current = groupNodes[i];
             const diff = current.position!.x - prev.position!.x;
-            if (diff < xSpacing) {
-              const shift = xSpacing - diff;
+
+            // Determine the target spacing for overlap resolution
+            let targetSpacing = xSpacing;
+            if (layer === 0) {
+              // More direct check: if all nodes currently being processed together in this group are starting nodes.
+              const allNodesInGroupAreStartingNodes = groupNodes.every(gn => getParents(gn, workflow.edges).length === 0);
+              if (allNodesInGroupAreStartingNodes) {
+                // This condition implies that the group being processed should indeed be the "none" group,
+                // consisting only of starting nodes.
+                targetSpacing = TRIGGER_X_SPACING;
+              }
+            }
+
+            if (diff < targetSpacing) {
+              const shift = targetSpacing - diff;
               moveNodeAndChildren(current, shift, workflow.edges);
               changed = true;
             }
@@ -242,6 +255,33 @@ export function positionWorkflowNodes(workflow: Workflow): void {
         }
       });
     });
+
+    // Additional step: Ensure common children of multiple layer 0 triggers are centered at ROOT_X.
+    // This runs after initial layer placement and before final overlap resolution specific to children groups might occur,
+    // and crucially before parent centering which might pull triggers away.
+    for (const node of workflow.nodes) {
+      const nodeLayer = (node as any).layer;
+      if (nodeLayer === 1) { // Check nodes in the layer immediately following triggers
+        const parents = getParents(node, workflow.edges);
+        if (parents.length > 1) { // Only if it has multiple parents
+          const allParentsAreLayer0Triggers = parents.every(p => {
+            const parentLayer = (p as any).layer;
+            const parentIsStartingNode = getParents(p, workflow.edges).length === 0;
+            return parentLayer === 0 && parentIsStartingNode;
+          });
+
+          if (allParentsAreLayer0Triggers) {
+            if (node.position) { // Ensure node.position exists before trying to read node.position.y
+              node.setPosition(ROOT_X, node.position.y);
+            } else {
+              // This case should ideally not happen if nodes in layer 1 are already positioned by the main loop.
+              // If it does, assign a default Y based on its layer.
+              node.setPosition(ROOT_X, (nodeLayer * ySpacing) + ROOT_Y);
+            }
+          }
+        }
+      }
+    }
 
     // Step 4: Bottom-up Parent Centering.
     // Now, we simply set each parent's x to the exact average of its children.
@@ -277,6 +317,21 @@ function centerParentXPositions(workflow: Workflow): void {
     const child = queue.shift()!;
     const parents = getParents(child, workflow.edges);
     for (const parent of parents) {
+      // Check if the parent is a layer 0 starting node.
+      // Layer information should be available on the node from the assignLayers step.
+      const parentLayer = (parent as any).layer;
+      const parentIsStartingNode = getParents(parent, workflow.edges).length === 0;
+
+      if (parentLayer === 0 && parentIsStartingNode) {
+        // Do not change the X position of layer 0 starting nodes.
+        // Still add to queue if not already present, for processing its own parents if it had any (though starting nodes don't).
+        // More importantly, it ensures the loop continues correctly for other parents of the current 'child'.
+        if (!queue.includes(parent)) {
+            queue.push(parent);
+        }
+        continue; // Skip X-position adjustment for this parent
+      }
+
       const children = getChildren(parent, workflow.edges);
       if (children.length) {
         const xs = children.map(c => c.position!.x);
