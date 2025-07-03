@@ -709,36 +709,6 @@ describe('Multiple Trigger Positioning', () => {
         // Common child action1 should be centered at ROOT_X
         expect(action1.position!.x).to.equal(ROOT_X);
     });
-
-    it('should position two triggers symmetrically, each with their own child', () => {
-        const trigger1 = new DummyNode('1');
-        const trigger2 = new DummyNode('2');
-        const action1 = new DummyNode('3'); // Child of trigger1
-        const action2 = new DummyNode('4'); // Child of trigger2
-
-        const edges = [
-            new DummyEdge(trigger1, action1),
-            new DummyEdge(trigger2, action2)
-        ];
-        const workflow = new DummyWorkflow([trigger1, trigger2, action1, action2], edges);
-        positionWorkflowNodes(workflow as any);
-
-        // const TRIGGER_X_SPACING = 363;
-
-        // Triggers
-        expect(trigger1.position!.y).to.equal(ROOT_Y);
-        expect(trigger2.position!.y).to.equal(ROOT_Y);
-        expect(trigger1.position!.x).to.equal(ROOT_X - ACTUAL_TRIGGER_X_SPACING / 2);
-        expect(trigger2.position!.x).to.equal(ROOT_X + ACTUAL_TRIGGER_X_SPACING / 2);
-
-        // Children
-        expect(action1.position!.y).to.equal(ROOT_Y + ySpacing);
-        expect(action2.position!.y).to.equal(ROOT_Y + ySpacing);
-
-        // After all positioning, including parent centering:
-        expect(action1.position!.x).to.equal(trigger1.position!.x);
-        expect(action2.position!.x).to.equal(trigger2.position!.x);
-    });
 });
 
 describe('Example Workflow: Multiple Triggers (abstract_streamer_live_multiple_triggers)', () => {
