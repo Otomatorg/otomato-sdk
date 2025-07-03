@@ -385,7 +385,7 @@ const createUSDCReceiveNotificationWorkflow = async () => {
     const workflow = new Workflow('Get notified when I receive USDC', [trigger, notificationAction], [edge]);
     workflow.setSettings({
       loopingType: WORKFLOW_LOOPING_TYPES.SUBSCRIPTION,
-      timeout: 600000,
+      timeout: 31536000000,
       limit: 30,
     });
     return workflow;
