@@ -105,4 +105,39 @@ describe('external variables construction from object', () => {
         expect(variable).to.equal('{{external.functions.priceMovementAgainstCurrency(34443,,USD,,0xf0F161fDA2712DB8b566946122a5af183995e2eD)}}');
     });
 
+    it('should create price movement against currency and automatically fill default values if not provided', () => {
+        const variable = getExternalVariableFromParameters(
+            TRIGGERS.TOKENS.BALANCE.BALANCE.prototype,
+            [
+                {key: 'chainId', value: CHAINS.BASE},
+                {key: 'contractAddress', value: getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress},
+                {key: 'account', value: "0x123"},
+            ]
+        );
+
+        expect(variable).to.equal('{{external.functions.erc20Balance(8453,0x123,0xf0F161fDA2712DB8b566946122a5af183995e2eD,,)}}');
+    });
+
+    it('should throw an error if the block definition is not found', () => {
+        expect(() => getExternalVariableFromParameters(
+            'not-a-real-block-definition',
+            []
+        )).to.throw('Block definition not found for prototype: not-a-real-block-definition');
+    });
+
+    it('should throw an error if some parameters are missing', () => {
+        expect(() => getExternalVariableFromParameters(
+            TRIGGERS.TOKENS.BALANCE.BALANCE.prototype,
+            [
+                {key: 'chainId', value: CHAINS.BASE},
+                {key: 'account', value: CHAINS.BASE},
+            ]
+        )).to.throw('Parameter contractAddress is required');
+        expect(() => getExternalVariableFromParameters(
+            TRIGGERS.TOKENS.BALANCE.BALANCE.prototype,
+            [
+                {key: 'chainId', value: CHAINS.BASE},
+            ]
+        )).to.throw('Parameter abiParams.account is required');
+    });
 });
