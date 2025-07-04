@@ -12,6 +12,7 @@ export function getExternalVariable(prototype: String, args: Array<any>) {
  * - For each parameter definition (in order), it finds a matching user parameter by key.
  * - If not found, uses the parameter's default `value` if it exists, otherwise an empty placeholder.
  * - Removes any trailing empty placeholders, but preserves empty placeholders in the middle.
+ * - Validates that required parameters are provided.
  */
 export function getExternalVariableFromParameters(
   prototype: string,
@@ -21,15 +22,29 @@ export function getExternalVariableFromParameters(
   const block = findBlockByPrototype(prototype);
   if (!block) {
     // If we can't find the block definition, just call with user-supplied parameters
-    return `{{external.functions.${prototype}(${parameters.map((p) => p.value).join(",")})}}`;
+    throw new Error(`Block definition not found for prototype: ${prototype}`);
   }
 
   // 2. Grab the ordered list of parameter definitions
-  const blockParams: Array<{ key: string; value?: any }> = block.parameters || [];
+  const blockParams: Array<{ key: string; value?: any; required?: boolean }> = block.parameters || [];
 
-  // 3. Build an array of final values in the same order as blockParams
+  // 3. Validate required parameters
+  const requiredParams = blockParams.filter(param => param.required !== false);
+  for (const requiredParam of requiredParams) {
+    // Skip condition and comparisonValue as they are non-mandatory
+    if (requiredParam.key === 'condition' || requiredParam.key === 'comparisonValue') {
+      continue;
+    }
+    
+    const userParam = parameters.find((up) => up.key === requiredParam.key || `abiParams.${up.key}` === requiredParam.key);
+    if (!userParam && requiredParam.value == null) {
+      throw new Error(`Parameter ${requiredParam.key} is required`);
+    }
+  }
+
+  // 4. Build an array of final values in the same order as blockParams
   const finalValues: string[] = blockParams.map((bp) => {
-    // Step 3a.Find a matching user parameter by exact key or "abiParams.{key}"
+    // Step 4a. Find a matching user parameter by exact key or "abiParams.{key}"
     const userParam = parameters.find((up) => up.key === bp.key || `abiParams.${up.key}` === bp.key);
 
     if (userParam) {
