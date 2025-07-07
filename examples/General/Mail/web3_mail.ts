@@ -1,4 +1,4 @@
-import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices } from '../../../src/index.js';
+/*import { ACTIONS, Action, TRIGGERS, Trigger, Workflow, CHAINS, getTokenFromSymbol, Edge, apiServices } from '../../../src/index.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -50,4 +50,4 @@ async function web3_mail() {
   console.log("ETH Price Monitor on Base using Web3Mail after: " + workflow.getState());
 }
 
-web3_mail();
+web3_mail();*/
