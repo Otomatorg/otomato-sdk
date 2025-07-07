@@ -8,7 +8,7 @@ export const xSpacing = 500;
 export const ySpacing = 120;
 export const ROOT_X = 400;
 export const ROOT_Y = 120;
-export const TRIGGER_X_SPACING = 363;
+export const TRIGGER_X_SPACING = 427;
 
 /**
  * Helper: Returns a group key for a node based on its primary parent.
