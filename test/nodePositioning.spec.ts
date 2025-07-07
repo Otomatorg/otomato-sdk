@@ -654,7 +654,7 @@ describe('Multiple Trigger Positioning', () => {
 
         positionWorkflowNodes(workflow as any);
 
-        // const TRIGGER_X_SPACING = 363;
+        // const TRIGGER_X_SPACING = 427;
 
         // Triggers are in layer 0
         expect(trigger1.position!.y).to.equal(ROOT_Y);
@@ -689,7 +689,7 @@ describe('Multiple Trigger Positioning', () => {
 
         positionWorkflowNodes(workflow as any);
 
-        // const TRIGGER_X_SPACING = 363;
+        // const TRIGGER_X_SPACING = 427;
 
         // Triggers are in layer 0
         expect(trigger1.position!.y).to.equal(ROOT_Y);
@@ -736,7 +736,7 @@ describe('Example Workflow: Multiple Triggers (abstract_streamer_live_multiple_t
         expect(notificationActionNode, "Notification Action not found").to.exist;
 
         // Use the imported constant if available, otherwise the literal value
-        const effectiveTriggerXSpacing = ACTUAL_TRIGGER_X_SPACING || 363;
+        const effectiveTriggerXSpacing = ACTUAL_TRIGGER_X_SPACING || 427;
 
         // Check Y positions
         expect(identifiedTrigger1!.position!.y).to.equal(ROOT_Y);
