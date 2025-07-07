@@ -38,7 +38,7 @@ export function validateType(expectedType: string, value: any): boolean {
         case 'paragraph':
         case 'render_enum':
             return typeof value === 'string';
-        case 'json':
+        case 'render_json':
             return (typeof value === 'string' && isValidJson(value)) || (typeof value === 'object' && value !== null);
         case 'logic_operator':
             const validOperators = new Set(['gte', 'gt', 'lte', 'lt', 'eq', 'neq']);
