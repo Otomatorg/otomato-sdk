@@ -618,7 +618,7 @@ export const WORKFLOW_TEMPLATES = [
         'name': 'Get notified when you can unstake your Stakestone position',
         'description': 'Notify me when you can unstake your Stakestone position',
         'tags': [WORKFLOW_TEMPLATES_TAGS.YIELD, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/stakestone_unstake_ready_notification.webp',
         'image': [
             TRIGGERS.YIELD.STAKESTONE.STAKESTONE_VAULT_LIQUIDITY.image,
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
@@ -633,7 +633,7 @@ export const WORKFLOW_TEMPLATES = [
         'name': 'Get notified when a given uniswap position is out of range',
         'description': 'Notify me when a given uniswap position is out of range. Get your tokenId from https://app.uniswap.org/positions',
         'tags': [WORKFLOW_TEMPLATES_TAGS.DEXES, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/uniswap_template.webp',
         'image': [
             TRIGGERS.DEXES.UNISWAP.IS_IN_RANGE.image,
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
@@ -648,7 +648,7 @@ export const WORKFLOW_TEMPLATES = [
         'name': 'Get notified when Hyperlend raise their deposit cap for stHype',
         'description': 'Notify me when Hyperlend raise their deposit cap for stHype',
         'tags': [WORKFLOW_TEMPLATES_TAGS.LENDING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperlend_cap_rise.webp',
         'image': [
             TRIGGERS.LENDING.HYPERLEND.SUPPLY_CAP.image,
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
@@ -663,7 +663,7 @@ export const WORKFLOW_TEMPLATES = [
         'name': 'Get notified when there are more than 50 ETH in available liquidity for instant withdrawal on Stakestone',
         'description': 'Notify me when there are more than 50 ETH in available liquidity for instant withdrawal on Stakestone',
         'tags': [WORKFLOW_TEMPLATES_TAGS.YIELD, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/more_than_50_liq_berastone.webp',
         'image': [
             TRIGGERS.YIELD.STAKESTONE.STAKESTONE_VAULT_LIQUIDITY.image,
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
@@ -678,7 +678,7 @@ export const WORKFLOW_TEMPLATES = [
         'name': 'Get notified when I receive USDC',
         'description': 'Notify me when I receive USDC',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/notify_me_when_receiving_usdc.webp',
         'image': [
             TRIGGERS.TOKENS.TRANSFER.TRANSFER.image,
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
