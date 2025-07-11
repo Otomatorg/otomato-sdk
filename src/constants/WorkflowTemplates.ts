@@ -338,10 +338,7 @@ const createUSDCYieldsStorageWorkflow = async () => {
             "{{external.functions.morphoLendingRate(8453,0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61)}}"
         ]
     ]);
-    // notificationAction.setParams("mode", "append");
-    // notificationAction.setParams("role", "writer");
-    // notificationAction.setParams("sheetId", "0");
-    // notificationAction.setParams("spreadsheetId", "1NxqGqgtUQkojBOl9g7CBkbqc7bB6mBkZxHWMPsu1uQY");
+    notificationAction.setParams("mode", "append");
     notificationAction.setPosition(400, 240);
 
     const edge = new Edge({ source: trigger, target: notificationAction });
