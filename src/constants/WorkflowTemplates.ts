@@ -407,37 +407,37 @@ const createEthereumFoundationTransferNotificationWorkflow = () => {
     return new Workflow('Ethereum Foundation transfer notification', [ethTransferTrigger, notificationAction], [edge]);
 }
 
-const createHyperliquidBTCSpotNPerpsThresholdNotificationWorkflow = () => {
-    const trigger = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
-    trigger.setParams('period', 3600000); // 1 hour
-    trigger.setParams('limit', 10000);
-    trigger.setPosition(400, 120);
+// const createHyperliquidBTCSpotNPerpsThresholdNotificationWorkflow = () => {
+//     const trigger = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
+//     trigger.setParams('period', 3600000); // 1 hour
+//     trigger.setParams('limit', 10000);
+//     trigger.setPosition(400, 120);
 
-    const mathAction = new Action(ACTIONS.CORE.MATHEMATICS.MATHEMATICS);
-    mathAction.setParams('operator', '/');
-    mathAction.setParams('number1', '{{external.functions.hyperliquidSpotPrice(999,UBTC,,)}}');
-    mathAction.setParams('number2', '{{external.functions.hyperliquidPerpsPrice(999,BTC,,)}}');
-    mathAction.setPosition(400, 240);
+//     const mathAction = new Action(ACTIONS.CORE.MATHEMATICS.MATHEMATICS);
+//     mathAction.setParams('operator', '/');
+//     mathAction.setParams('number1', '{{external.functions.hyperliquidSpotPrice(999,UBTC,,)}}');
+//     mathAction.setParams('number2', '{{external.functions.hyperliquidPerpsPrice(999,BTC,,)}}');
+//     mathAction.setPosition(400, 240);
 
-    const condition = new Action(ACTIONS.CORE.CONDITION.IF);
-    condition.setParams('logic', LOGIC_OPERATORS.OR);
-    const group = new ConditionGroup(LOGIC_OPERATORS.OR);
-    group.addConditionCheck(mathAction.getOutputVariableName('resultAsFloat'), 'gt', '1.0015');
-    group.addConditionCheck(mathAction.getOutputVariableName('resultAsFloat'), 'lt', '0.9985');
-    condition.setParams('groups', [group]);
-    condition.setPosition(400, 360);
+//     const condition = new Action(ACTIONS.CORE.CONDITION.IF);
+//     condition.setParams('logic', LOGIC_OPERATORS.OR);
+//     const group = new ConditionGroup(LOGIC_OPERATORS.OR);
+//     group.addConditionCheck(mathAction.getOutputVariableName('resultAsFloat'), 'gt', '1.0015');
+//     group.addConditionCheck(mathAction.getOutputVariableName('resultAsFloat'), 'lt', '0.9985');
+//     condition.setParams('groups', [group]);
+//     condition.setPosition(400, 360);
 
-    const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-    telegramAction.setParams('message', 'The difference between BTC spot and perpetual prices exceeds 0.15%.');
-    telegramAction.setPosition(400, 480);
+//     const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+//     telegramAction.setParams('message', 'The difference between BTC spot and perpetual prices exceeds 0.15%.');
+//     telegramAction.setPosition(400, 480);
 
-    const edge = new Edge({ source: trigger, target: mathAction });
-    const edge2 = new Edge({ source: mathAction, target: condition });
-    const edge3 = new Edge({ source: condition, target: telegramAction });
+//     const edge = new Edge({ source: trigger, target: mathAction });
+//     const edge2 = new Edge({ source: mathAction, target: condition });
+//     const edge3 = new Edge({ source: condition, target: telegramAction });
 
-    return new Workflow('Get notified when the difference between BTC spot and perpetual prices exceeds 0.15%', [trigger, mathAction, condition, telegramAction], [edge, edge2, edge3]);
-    // return new Workflow('Get notified when the difference between BTC spot and perpetual prices exceeds 15%', [trigger, mathAction], [edge]);
-}
+//     return new Workflow('Get notified when the difference between BTC spot and perpetual prices exceeds 0.15%', [trigger, mathAction, condition, telegramAction], [edge, edge2, edge3]);
+//     // return new Workflow('Get notified when the difference between BTC spot and perpetual prices exceeds 15%', [trigger, mathAction], [edge]);
+// }
 
 export const WORKFLOW_TEMPLATES = [
     {
@@ -733,24 +733,24 @@ export const WORKFLOW_TEMPLATES = [
         ],
         createWorkflow: createUSDCYieldsStorageWorkflow
     },
-    {
-        'name': 'Get notified when the difference between BTC spot and perpetual prices exceeds 0.15%',
-        'description': 'Get notified when the difference between BTC spot and perpetual prices exceeds 0.15%',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.DEXES, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
-        'image': [
-            TRIGGERS.DEXES.HYPERLIQUID.SPOT_PRICE.image,
-            TRIGGERS.DEXES.HYPERLIQUID.PERPS_PRICE.image,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
-        ],
-        'blockIDs': [
-            TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.blockId,
-            ACTIONS.CORE.MATHEMATICS.MATHEMATICS.blockId,
-            TRIGGERS.DEXES.HYPERLIQUID.SPOT_PRICE.blockId,
-            TRIGGERS.DEXES.HYPERLIQUID.PERPS_PRICE.blockId,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+    // {
+    //     'name': 'Get notified when the difference between BTC spot and perpetual prices exceeds 0.15%',
+    //     'description': 'Get notified when the difference between BTC spot and perpetual prices exceeds 0.15%',
+    //     'tags': [WORKFLOW_TEMPLATES_TAGS.DEXES, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+    //     'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+    //     'image': [
+    //         TRIGGERS.DEXES.HYPERLIQUID.SPOT_PRICE.image,
+    //         TRIGGERS.DEXES.HYPERLIQUID.PERPS_PRICE.image,
+    //         ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+    //     ],
+    //     'blockIDs': [
+    //         TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.blockId,
+    //         ACTIONS.CORE.MATHEMATICS.MATHEMATICS.blockId,
+    //         TRIGGERS.DEXES.HYPERLIQUID.SPOT_PRICE.blockId,
+    //         TRIGGERS.DEXES.HYPERLIQUID.PERPS_PRICE.blockId,
+    //         ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
 
-        ],
-        createWorkflow: createHyperliquidBTCSpotNPerpsThresholdNotificationWorkflow
-    },
+    //     ],
+    //     createWorkflow: createHyperliquidBTCSpotNPerpsThresholdNotificationWorkflow
+    // },
 ];
