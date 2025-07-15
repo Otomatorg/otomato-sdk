@@ -116,6 +116,9 @@ export class Workflow {
    * - If `nodeAfter` is not specified, we create only one edge:
    *      nodeBefore->nodeToInsert (with `edgeLabelBefore`, `edgeValueBefore`)
    *
+   * SPECIAL CASE: If `nodeBefore` is a trigger and there are other triggers in the workflow,
+   * the new node will be connected to ALL triggers in the workflow, not just `nodeBefore`.
+   *
    * @param nodeToInsert      The node to insert
    * @param nodeBefore        The existing node that precedes `nodeToInsert`
    * @param nodeAfter         (Optional) The existing node that should follow `nodeToInsert`
@@ -136,6 +139,55 @@ export class Workflow {
     // Ensure nodeBefore exists in the workflow
     if (!this.nodes.includes(nodeBefore)) {
       throw new Error('The nodeBefore must exist in the workflow.');
+    }
+
+    // SPECIAL CASE: If nodeBefore is a trigger, check if there are other triggers
+    if (nodeBefore.class === 'trigger') {
+      const allTriggers = this.nodes.filter(node => node.class === 'trigger');
+      
+      // If there are multiple triggers, connect the new node to all triggers
+      if (allTriggers.length > 1) {
+        this.addNode(nodeToInsert);
+        
+        // Find all targets that triggers currently connect to
+        const triggerTargets = new Set<Node>();
+        allTriggers.forEach(trigger => {
+          const outgoingEdges = this.edges.filter(edge => edge.source === trigger);
+          outgoingEdges.forEach(edge => {
+            triggerTargets.add(edge.target);
+          });
+        });
+        
+        // Remove all existing edges from triggers to their targets
+        this.edges = this.edges.filter(edge => 
+          !(edge.source.class === 'trigger' && triggerTargets.has(edge.target))
+        );
+        
+        // Create edges from all triggers to the new node
+        const newEdges: Edge[] = [];
+        allTriggers.forEach(trigger => {
+          newEdges.push(new Edge({
+            source: trigger,
+            target: nodeToInsert,
+            label: edgeLabelBefore ?? undefined,
+            value: edgeValueBefore ?? undefined
+          }));
+        });
+        
+        // Create edges from the new node to all original targets
+        triggerTargets.forEach(target => {
+          newEdges.push(new Edge({
+            source: nodeToInsert,
+            target: target,
+            label: edgeLabelAfter ?? undefined,
+            value: edgeValueAfter ?? undefined
+          }));
+        });
+        
+        this.addEdges(newEdges);
+        positionWorkflowNodes(this);
+        return;
+      }
     }
 
     // CASE A: If no nodeAfter => we create a single edge from nodeBefore to nodeToInsert

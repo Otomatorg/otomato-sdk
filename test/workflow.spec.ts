@@ -801,6 +801,134 @@ describe('Workflow Class - Node Modifications', () => {
   });
 });
 
+describe('Workflow Class - Multiple Triggers Insert Node', () => {
+  it('should connect new node to all triggers when inserting after a trigger', () => {
+    // Create two triggers
+    const trigger1 = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger1.setChainId(CHAINS.ETHEREUM);
+    trigger1.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+
+    const trigger2 = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger2.setChainId(CHAINS.ETHEREUM);
+    trigger2.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+
+    // Create an action
+    const action = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+    action.setParams("webhook", "https://webhook.url");
+    action.setParams("message", "Test message");
+
+    // Create workflow with two triggers and one action
+    const workflow = new Workflow("Test Workflow", [trigger1, trigger2, action]);
+
+    // Create edges from both triggers to the action
+    const edge1 = new Edge({ source: trigger1, target: action });
+    const edge2 = new Edge({ source: trigger2, target: action });
+    workflow.addEdges([edge1, edge2]);
+
+    // Verify initial state: 2 triggers, 1 action, 2 edges
+    expect(workflow.nodes).to.have.lengthOf(3);
+    expect(workflow.edges).to.have.lengthOf(2);
+
+    // Insert a new node after trigger1
+    const newAction = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
+    workflow.insertNode(newAction, trigger1);
+
+    // Verify the new node is connected to both triggers
+    expect(workflow.nodes).to.have.lengthOf(4);
+    expect(workflow.edges).to.have.lengthOf(3);
+
+    // Check that both triggers connect to the new node
+    const edgesToNewNode = workflow.edges.filter(edge => edge.target === newAction);
+    expect(edgesToNewNode).to.have.lengthOf(2);
+
+    const triggerRefs = edgesToNewNode.map(edge => edge.source.getRef());
+    expect(triggerRefs).to.include(trigger1.getRef());
+    expect(triggerRefs).to.include(trigger2.getRef());
+
+    // Check that the new node connects to the original action
+    const edgesFromNewNode = workflow.edges.filter(edge => edge.source === newAction);
+    expect(edgesFromNewNode).to.have.lengthOf(1);
+    expect(edgesFromNewNode[0].target).to.equal(action);
+  });
+
+  it('should not connect to all triggers when there is only one trigger', () => {
+    // Create one trigger
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setChainId(CHAINS.ETHEREUM);
+    trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+
+    // Create an action
+    const action = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+    action.setParams("webhook", "https://webhook.url");
+    action.setParams("message", "Test message");
+
+    // Create workflow with one trigger and one action
+    const workflow = new Workflow("Test Workflow", [trigger, action]);
+
+    // Create edge from trigger to action
+    const edge = new Edge({ source: trigger, target: action });
+    workflow.addEdge(edge);
+
+    // Verify initial state: 1 trigger, 1 action, 1 edge
+    expect(workflow.nodes).to.have.lengthOf(2);
+    expect(workflow.edges).to.have.lengthOf(1);
+
+    // Insert a new node after trigger
+    const newAction = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
+    workflow.insertNode(newAction, trigger);
+
+    // Verify normal behavior: only one edge from trigger to new node
+    expect(workflow.nodes).to.have.lengthOf(3);
+    expect(workflow.edges).to.have.lengthOf(2);
+
+    // Check that only the trigger connects to the new node
+    const edgesToNewNode = workflow.edges.filter(edge => edge.target === newAction);
+    expect(edgesToNewNode).to.have.lengthOf(1);
+    expect(edgesToNewNode[0].source).to.equal(trigger);
+  });
+
+  it('should not connect to all triggers when nodeBefore is not a trigger', () => {
+    // Create one trigger
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setChainId(CHAINS.ETHEREUM);
+    trigger.setContractAddress(getTokenFromSymbol(CHAINS.ETHEREUM, 'USDC').contractAddress);
+
+    // Create two actions
+    const action1 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+    action1.setParams("webhook", "https://webhook.url");
+    action1.setParams("message", "Test message");
+
+    const action2 = new Action(ACTIONS.NOTIFICATIONS.SLACK.SEND_MESSAGE);
+    action2.setParams("webhook", "https://webhook.url");
+    action2.setParams("message", "Test message 2");
+
+    // Create workflow with one trigger and two actions
+    const workflow = new Workflow("Test Workflow", [trigger, action1, action2]);
+
+    // Create edges: trigger -> action1 -> action2
+    const edge1 = new Edge({ source: trigger, target: action1 });
+    const edge2 = new Edge({ source: action1, target: action2 });
+    workflow.addEdges([edge1, edge2]);
+
+    // Verify initial state: 1 trigger, 2 actions, 2 edges
+    expect(workflow.nodes).to.have.lengthOf(3);
+    expect(workflow.edges).to.have.lengthOf(2);
+
+    // Insert a new node after action1 (not a trigger)
+    const newAction = new Action(ACTIONS.CORE.EMPTYBLOCK.EMPTYBLOCK);
+    workflow.insertNode(newAction, action1);
+
+    // Verify normal behavior: only one edge from action1 to new node
+    expect(workflow.nodes).to.have.lengthOf(4);
+    expect(workflow.edges).to.have.lengthOf(3);
+
+    // Check that only action1 connects to the new node
+    const edgesToNewNode = workflow.edges.filter(edge => edge.target === newAction);
+    expect(edgesToNewNode).to.have.lengthOf(1);
+    expect(edgesToNewNode[0].source).to.equal(action1);
+  });
+});
+
 describe('Empty block management', () => {
   it('should create a workflow with an empty block', () => {
     const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
