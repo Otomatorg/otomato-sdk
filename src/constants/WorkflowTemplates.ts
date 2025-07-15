@@ -13,21 +13,21 @@ export const WORKFLOW_TEMPLATES_TAGS = {
 };
 
 const createModeTransferNotificationWorkflow = () => {
-    const modeTransferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    const cbBTCTransferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
 
-    modeTransferTrigger.setChainId(CHAINS.MODE);
-    modeTransferTrigger.setContractAddress(getTokenFromSymbol(CHAINS.MODE, 'MODE').contractAddress);
-    modeTransferTrigger.setParams('from', '0x74B847b308BD89Ef15639E6e4a2544E4b8b8C6B4');
-    modeTransferTrigger.setPosition(400, 120);
+    cbBTCTransferTrigger.setChainId(CHAINS.BASE);
+    cbBTCTransferTrigger.setContractAddress(getTokenFromSymbol(CHAINS.BASE, 'cbBTC').contractAddress);
+    cbBTCTransferTrigger.setParams('from', '0xbbbbbbbbbb9cc5e90e3b3af64bdaf62c37eeffcb');
+    cbBTCTransferTrigger.setPosition(400, 120);
 
     const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
-    notificationAction.setParams("body", "0x74B8....C6B4 transferred $MODE");
-    notificationAction.setParams("subject", "$MODE transfer alert");
+    notificationAction.setParams("body", "0xbbbb....ffcb transferred cbBTC");
+    notificationAction.setParams("subject", "cbBTC transfer alert");
     notificationAction.setPosition(400, 240);
 
-    const edge = new Edge({ source: modeTransferTrigger, target: notificationAction });
+    const edge = new Edge({ source: cbBTCTransferTrigger, target: notificationAction });
 
-    return new Workflow('MODE transfer notification', [modeTransferTrigger, notificationAction], [edge]);
+    return new Workflow('cbBTC transfer notification', [cbBTCTransferTrigger, notificationAction], [edge]);
 }
 
 const createETHFearAndGreedBuy = async () => {
@@ -532,8 +532,8 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createSusdeYieldNotification
     },
     {
-        'name': 'MODE transfer notification',
-        'description': 'Receive notifications when a top $MODE holder (0x74B8....C6B4) transfers $MODE',
+        'name': 'cbBTC transfer notification',
+        'description': 'Receive notifications when a top cbBTC holder (0xbbbb....ffcb) transfers cbBTC',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer-monitoring.png',
         'image': [
