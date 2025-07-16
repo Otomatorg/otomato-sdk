@@ -5,4 +5,5 @@ export interface Parameter {
   category: number;
   value?: any;
   mandatory?: boolean;
+  hideInUI?: boolean;
 }
