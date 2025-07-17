@@ -44,6 +44,7 @@ describe('Trigger Class', () => {
       id: null,
       type: 'trigger',
       state: "inactive",
+      isOptional: null,
       parameters: {
         chainId: CHAINS.ETHEREUM,
         abi: {
@@ -109,6 +110,7 @@ describe('Trigger Class', () => {
       "blockId": 10,
       "type": "trigger",
       "state": "inactive",
+      "isOptional": null,
       "position": {
         "x": 0,
         "y": 0
@@ -144,6 +146,7 @@ describe('Trigger Class', () => {
       "blockId": 1,
       "type": "trigger",
       "state": "inactive",
+      "isOptional": null,
       "parameters": {
         "chainId": 1,
         "abi": {
