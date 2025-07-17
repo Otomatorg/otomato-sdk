@@ -256,33 +256,6 @@ export function positionWorkflowNodes(workflow: Workflow): void {
       });
     });
 
-    // Additional step: Ensure common children of multiple layer 0 triggers are centered at ROOT_X.
-    // This runs after initial layer placement and before final overlap resolution specific to children groups might occur,
-    // and crucially before parent centering which might pull triggers away.
-    for (const node of workflow.nodes) {
-      const nodeLayer = (node as any).layer;
-      if (nodeLayer === 1) { // Check nodes in the layer immediately following triggers
-        const parents = getParents(node, workflow.edges);
-        if (parents.length > 1) { // Only if it has multiple parents
-          const allParentsAreLayer0Triggers = parents.every(p => {
-            const parentLayer = (p as any).layer;
-            const parentIsStartingNode = getParents(p, workflow.edges).length === 0;
-            return parentLayer === 0 && parentIsStartingNode;
-          });
-
-          if (allParentsAreLayer0Triggers) {
-            if (node.position) { // Ensure node.position exists before trying to read node.position.y
-              node.setPosition(ROOT_X, node.position.y);
-            } else {
-              // This case should ideally not happen if nodes in layer 1 are already positioned by the main loop.
-              // If it does, assign a default Y based on its layer.
-              node.setPosition(ROOT_X, (nodeLayer * ySpacing) + ROOT_Y);
-            }
-          }
-        }
-      }
-    }
-
     // Step 4: Bottom-up Parent Centering.
     // Now, we simply set each parent's x to the exact average of its children.
     centerParentXPositions(workflow);
@@ -296,6 +269,45 @@ export function positionWorkflowNodes(workflow: Workflow): void {
         return Number(a.getRef()) - Number(b.getRef());
       });
     });
+
+    // FINAL STEP: Center nodes in the main action stack only when there are multiple triggers
+    const triggers = workflow.nodes.filter(n => (n as any).layer === 0 && getParents(n, workflow.edges).length === 0);
+    
+    // Only apply centering if there are multiple triggers
+    if (triggers.length > 1) {
+      const triggerRefs = new Set(triggers.map(t => t.getRef()));
+      const triggerXs = triggers.map(t => t.position!.x);
+      const triggerCenter = triggerXs.reduce((a, b) => a + b, 0) / triggerXs.length;
+
+      function getAllAncestors(node: Node, edges: Edge[], visited = new Set<string>()): Set<string> {
+        const parents = getParents(node, edges);
+        for (const parent of parents) {
+          if (!visited.has(parent.getRef())) {
+            visited.add(parent.getRef());
+            getAllAncestors(parent, edges, visited);
+          }
+        }
+        return visited;
+      }
+
+      // Helper: is a node a descendant of all triggers?
+      function isDescendantOfAllTriggers(node: Node): boolean {
+        const ancestors = getAllAncestors(node, workflow.edges);
+        return Array.from(triggerRefs).every(ref => ancestors.has(ref));
+      }
+
+      for (const node of workflow.nodes) {
+        if ((node as any).layer === 0) continue; // skip triggers
+        if (!isDescendantOfAllTriggers(node)) continue;
+        // Check all non-trigger ancestors
+        const ancestors = Array.from(getAllAncestors(node, workflow.edges))
+          .map(ref => workflow.nodes.find(n => n.getRef() === ref))
+          .filter(n => n && (n as any).layer !== 0) as Node[];
+        if (ancestors.every(isDescendantOfAllTriggers)) {
+          node.setPosition(triggerCenter, node.position?.y ?? 0);
+        }
+      }
+    }
 
   } catch (e) {
     console.error(e);

@@ -13,7 +13,7 @@ import {
     ROOT_Y,
     TRIGGER_X_SPACING as ACTUAL_TRIGGER_X_SPACING // Import to use the constant if needed, or use literal
 } from '../src/utils/WorkflowNodePositioner';
-import { TRIGGERS, ACTIONS } from '../src/index.js'; // Added import
+import { TRIGGERS, ACTIONS, Trigger, Action, Edge, Workflow, getTokenFromSymbol, CHAINS } from '../src/index.js'; // Added import
 
 // Dummy implementations for testing purposes.
 class DummyNode {
@@ -748,4 +748,96 @@ describe('Example Workflow: Multiple Triggers (abstract_streamer_live_multiple_t
         expect(identifiedTrigger2!.position!.x).to.equal(ROOT_X + effectiveTriggerXSpacing / 2);
         expect(notificationActionNode!.position!.x).to.equal(ROOT_X);
     });
+});
+
+describe('Workflow Insert Node Positioning Test', () => {
+  it('should center actions at the middle of triggers after inserting nodes', () => {
+    // Create three triggers
+    const trigger1 = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE);
+    trigger1.setParams("streamer", "pudgyholder");
+    trigger1.setParams("condition", "eq");
+    trigger1.setParams("comparisonValue", true);
+
+    const trigger2 = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE);
+    trigger2.setParams("streamer", "cryptokale");
+    trigger2.setParams("condition", "eq");
+    trigger2.setParams("comparisonValue", true);
+
+    const trigger3 = new Trigger(TRIGGERS.LENDING.AAVE.LENDING_RATE);
+    trigger3.setChainId(CHAINS.ETHEREUM);
+    trigger3.setParams(
+      "abiParams.asset",
+      getTokenFromSymbol(CHAINS.ETHEREUM, "USDC").contractAddress
+    );
+    trigger3.setParams("condition", "gt");
+    trigger3.setParams("comparisonValue", 0);
+
+    // Create one action
+    const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+    notificationAction.setParams("body", "workflow triggered");
+    notificationAction.setParams("subject", "workflow triggered");
+    notificationAction.setParams("to", "test@example.com");
+
+    // Create edges from triggers to action
+    const edge1 = new Edge({ source: trigger1, target: notificationAction });
+    const edge2 = new Edge({ source: trigger2, target: notificationAction });
+    const edge3 = new Edge({ source: trigger3, target: notificationAction });
+
+    // Create workflow
+    const workflow = new Workflow(
+      "test workflow with insert",
+      [trigger1, trigger2, trigger3, notificationAction],
+      [edge1, edge2, edge3]
+    );
+
+    // Verify initial positioning
+    const triggers = workflow.nodes.filter(n => n.class === 'trigger');
+    const actions = workflow.nodes.filter(n => n.class === 'action');
+    
+    // Calculate the center of triggers
+    const triggerXs = triggers.map(t => t.position!.x);
+    const triggerCenter = (Math.min(...triggerXs) + Math.max(...triggerXs)) / 2;
+    
+    // All actions should be centered at the middle of the triggers
+    actions.forEach(action => {
+      expect(action.position!.x).to.equal(triggerCenter, 
+        `Action ${action.getRef()} should be centered at x=${triggerCenter} but is at x=${action.position!.x}`);
+    });
+
+    // Create intermediate actions
+    const intermediateAction1 = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+    intermediateAction1.setParams("body", "intermediate 1");
+    intermediateAction1.setParams("subject", "intermediate 1");
+    intermediateAction1.setParams("to", "test@example.com");
+
+    const intermediateAction2 = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+    intermediateAction2.setParams("body", "intermediate 2");
+    intermediateAction2.setParams("subject", "intermediate 2");
+    intermediateAction2.setParams("to", "test@example.com");
+
+    const intermediateAction3 = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
+    intermediateAction3.setParams("body", "intermediate 3");
+    intermediateAction3.setParams("subject", "intermediate 3");
+    intermediateAction3.setParams("to", "test@example.com");
+
+    // Insert nodes
+    workflow.insertNode(intermediateAction1, trigger1, notificationAction);
+    workflow.insertNode(intermediateAction2, trigger2, notificationAction);
+    workflow.insertNode(intermediateAction3, trigger3, notificationAction);
+
+    // Verify final positioning after insert
+    const allActions = workflow.nodes.filter(n => n.class === 'action');
+    
+    // All actions should still be centered at the middle of the triggers
+    allActions.forEach(action => {
+      expect(action.position!.x).to.equal(triggerCenter, 
+        `Action ${action.getRef()} should be centered at x=${triggerCenter} but is at x=${action.position!.x}`);
+    });
+
+    // Verify that actions are properly layered vertically
+    const actionYs = allActions.map(a => a.position!.y);
+    const uniqueYs = [...new Set(actionYs)].sort((a, b) => a - b);
+    expect(uniqueYs.length).to.equal(allActions.length, 
+      "Each action should be on a different vertical layer");
+  });
 });
