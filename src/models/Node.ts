@@ -34,9 +34,10 @@ export abstract class Node {
   image: string;
   parentInfo?: ParentInfo;
   state: NodeState;
+  isOptional: boolean | null = null;
   frontendHelpers: Record<string, any>; // New field for frontendHelpers
 
-  constructor(node: { blockId: number; name: string; description: string; parameters: Parameter[], output?: { [key: string]: string }, ref?: string, position?: Position, class: string; image: string; parentInfo?: ParentInfo, state?: NodeState, frontendHelpers?: Record<string, any> }) {
+  constructor(node: { blockId: number; name: string; description: string; parameters: Parameter[], output?: { [key: string]: string }, ref?: string, position?: Position, class: string; image: string; parentInfo?: ParentInfo, state?: NodeState, frontendHelpers?: Record<string, any>, isOptional?: boolean }) {
     this.id = null;
     this.blockId = node.blockId;
     this.name = node.name;
@@ -48,6 +49,7 @@ export abstract class Node {
     this.class = node.class;
     this.parentInfo = node.parentInfo;
     this.state = node.state || 'inactive';
+    this.isOptional = node.isOptional || null;
     this.frontendHelpers = node.frontendHelpers || {};
 
     if (node.ref) {
@@ -98,6 +100,10 @@ export abstract class Node {
 
   setRef(ref: string): void {
     this.ref = ref;
+  }
+
+  setIsOptional(isOptional: boolean): void {
+    this.isOptional = isOptional;
   }
 
   getParentInfo(): ParentInfo | undefined {
@@ -222,6 +228,7 @@ export abstract class Node {
       blockId: this.blockId,
       type: this.class,
       state: this.state,
+      isOptional: this.isOptional,
       parameters: {
         ...this.getParameters(),
       },

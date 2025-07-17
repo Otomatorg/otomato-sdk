@@ -23,8 +23,10 @@ export async function abstract_streamer_live_multiple_triggers() {
   abstractSwapTrigger.setParams("streamer", "pudgyholder");
   abstractSwapTrigger.setParams("condition", "eq");
   abstractSwapTrigger.setParams("comparisonValue", true); // Changed "true" to true
+  abstractSwapTrigger.setIsOptional(true);
   // -------- Second Trigger - AAVE Lending Rate --------
   const aaveTrigger = new Trigger(TRIGGERS.LENDING.AAVE.LENDING_RATE);
+  aaveTrigger.setIsOptional(true);
   aaveTrigger.setChainId(CHAINS.ETHEREUM);
   aaveTrigger.setParams(
     "abiParams.asset",

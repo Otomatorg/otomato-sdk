@@ -39,6 +39,7 @@ describe('Action Class', () => {
       type: 'action',
       id: null,
       state: 'inactive',
+      isOptional: null,
       parameters: {
         chainId: CHAINS.ETHEREUM,
         abi: {
@@ -89,6 +90,7 @@ describe('Action Class', () => {
       "blockId": 100002,
       "type": "action",
       "state": "inactive",
+      "isOptional": null,
       "position": {
         "x": 0,
         "y": -10
@@ -118,6 +120,7 @@ describe('Action Class', () => {
       "blockId": ACTIONS.LENDING.COMPOUND.DEPOSIT.blockId,
       "type": "action",
       "state": "inactive",
+      "isOptional": null,
       "parameters": {
         "abi": {
           "parameters": {

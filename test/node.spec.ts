@@ -110,6 +110,7 @@ describe('Node Class', () => {
       state: 'inactive',
       ref: node.getRef(),
       type: 'action',
+      isOptional: null,
       parameters: {
         abi: {
           parameters: {
@@ -144,6 +145,7 @@ describe('Node Class', () => {
       id: null,
       state: 'inactive',
       ref: node.getRef(),
+      isOptional: null,
       parameters: {
         abi: {
           parameters: {
