@@ -434,6 +434,162 @@ const createHyperliquidBTCSpotNPerpsThresholdNotificationWorkflow = () => {
     return new Workflow('Get notified when the difference between BTC spot and perpetual prices exceeds 0.15%', [trigger, mathAction, condition, telegramAction], [edge, edge2, edge3]);
 }
 
+const createDefillamaRaiseNotificationWorkflow = () => {
+    const trigger = new Trigger(TRIGGERS.SOCIALS.DEFILLAMA.ON_NEW_RAISE);
+    trigger.setPosition(400, 120);
+
+    const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    telegramAction.setParams('message', `New raise detected on Defillama: ${trigger.getOutputVariableName('newRaises')}`);
+    telegramAction.setPosition(400, 360);
+
+    const edge1 = new Edge({ source: trigger, target: telegramAction });
+
+    const workflow = new Workflow(
+        'Get notified when a new raise is detected on Defillama',
+        [trigger, telegramAction],
+        [edge1]
+    );
+
+    return workflow;
+};
+
+const createTokenMovementNotificationWorkflow = () => {
+    const trigger = new Trigger(TRIGGERS.TOKENS.BALANCE.BALANCE_MOVEMENT);
+    trigger.setParams('walletAddress', '{{smartAccountAddress}}');
+    trigger.setPosition(400, 120);
+
+    const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    telegramAction.setParams('message', trigger.getOutputVariableName('balanceChanges'));
+    telegramAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: telegramAction });
+
+    const workflow = new Workflow(
+      'Token Movement Notification',
+      [trigger, telegramAction],
+      [edge]
+    );
+
+    return workflow;
+};
+
+const createTwitterAiNotificationWorkflow = (username: {display: string, tag: string}, prompt: string) => {
+    return () => {
+        const trigger = new Trigger(TRIGGERS.SOCIALS.X.X_POST_TRIGGER);
+        trigger.setParams('username', username.tag);
+        trigger.setPosition(400, 120);
+
+        const aiAction = new Action(ACTIONS.AI.AI.AI);
+        aiAction.setParams('prompt', `this tweet ${prompt}`);
+        aiAction.setParams('context', trigger.getOutputVariableName('tweetContent'));
+        aiAction.setPosition(400, 240);
+        
+        const ifAction = new Action(ACTIONS.CORE.CONDITION.IF);
+        ifAction.setParams('logic', LOGIC_OPERATORS.OR);
+        const group = new ConditionGroup(LOGIC_OPERATORS.OR);
+        group.addConditionCheck(aiAction.getOutputVariableName('result'), 'eq', 'true');
+        ifAction.setParams('groups', [group]);
+        ifAction.setPosition(400, 360);
+
+        const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+        telegramAction.setParams('message', `${username.display} tweets ${prompt}`);
+        telegramAction.setPosition(400, 480);
+
+        const edge = new Edge({ source: trigger, target: aiAction });
+        const edge2 = new Edge({ source: aiAction, target: ifAction });
+        const edge3 = new Edge({ source: ifAction, target: telegramAction, label: 'true', value: true});
+
+        const workflow = new Workflow(
+          `Get notified when ${username.display} tweets ${prompt}`,
+          [trigger, aiAction, ifAction, telegramAction],
+          [edge, edge2, edge3]
+        );
+
+        return workflow;
+    }
+}
+
+const createTwitterAiNotificationTemplate = (username: {display: string, tag: string}, prompt: string) => {
+  return {
+    'name': `Get notified when ${username.display} tweets ${prompt}`,
+    'description': `Get notified when ${username.display} tweets ${prompt}`,
+    'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+    'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+    'image': [
+        TRIGGERS.SOCIALS.X.image,
+        ACTIONS.AI.AI.image,
+        ACTIONS.CORE.CONDITION.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.image
+    ],
+    'blockIDs': [
+        TRIGGERS.SOCIALS.X.X_POST_TRIGGER.blockId,
+        ACTIONS.AI.AI.AI.blockId,
+        ACTIONS.CORE.CONDITION.IF.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+    ],
+    createWorkflow: createTwitterAiNotificationWorkflow(username, prompt)
+  }
+}
+
+const twitterAiTemplates = [
+  createTwitterAiNotificationTemplate(
+    {display: 'Hyperliquid', tag: 'HyperliquidX'},
+    'announces a new listing'
+  ),
+  createTwitterAiNotificationTemplate(
+    {display: 'Hyperliquid', tag: 'HyperliquidX'},
+    'mentions season 2, an airdrop, a liquidity mining campaign, or any trading incentives'
+  ),
+  createTwitterAiNotificationTemplate(
+    {display: 'PeterSchiff', tag: 'PeterSchiff'},
+    'is bearish on Bitcoin'
+  ),
+  createTwitterAiNotificationTemplate(
+    {display: 'Aave', tag: 'aave'},
+    'mentions that AAVE has been hacked'
+  ),
+  createTwitterAiNotificationTemplate(
+    {display: 'lookonchain', tag: 'lookonchain'},
+    'mentions that AAVE has been hacked'
+  ),
+  createTwitterAiNotificationTemplate(
+    {display: 'MegaETH', tag: 'megaeth_labs'},
+    'announces mainnet or TGE'
+  ),
+  createTwitterAiNotificationTemplate(
+    {display: 'Somnia', tag: 'Somnia_Network'},
+    'announces mainnet or TGE'
+  ),
+  createTwitterAiNotificationTemplate(
+    {display: 'Monad', tag: 'monad'},
+    'announces mainnet or TGE'
+  ),
+  createTwitterAiNotificationTemplate(
+    {display: 'Binance', tag: 'binance'},
+    'announces a new token listing'
+  ),
+  createTwitterAiNotificationTemplate(
+    {display: 'VitalikButerin', tag: 'VitalikButerin'},
+    'is bullish about Ethereum'
+  ),
+  createTwitterAiNotificationTemplate(
+    {display: 'Aave', tag: 'aave'}, 
+    'announces a major partnership'
+  ),
+  createTwitterAiNotificationTemplate(
+    {display: 'MorphoLabs', tag: 'MorphoLabs'},
+    'announces a major partnership'
+  ),
+  createTwitterAiNotificationTemplate(
+    {display: 'saylor', tag: 'saylor'},
+    'announces that Microstrategy acquired more bitcoin'
+  ),
+  createTwitterAiNotificationTemplate(
+    {display: 'phtevenstrong', tag: 'phtevenstrong'},
+    'is about yield opportunities'
+  ),
+];
+
 export const WORKFLOW_TEMPLATES = [
     {
         'name': 'Get Notified When Ethereum Gas drops below 6 Gwei',
@@ -748,4 +904,35 @@ export const WORKFLOW_TEMPLATES = [
         ],
         createWorkflow: createHyperliquidBTCSpotNPerpsThresholdNotificationWorkflow
     },
+    {
+        'name': 'Get notified when there is a new raise on Defillama',
+        'description': 'Get notified when there is a new raise on Defillama',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'image': [
+            TRIGGERS.SOCIALS.DEFILLAMA.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.DEFILLAMA.ON_NEW_RAISE.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: createDefillamaRaiseNotificationWorkflow
+    },
+    {
+        'name': 'Get notified when there is a new balance change',
+        'description': 'Get notified when there is a new balance change',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'image': [
+            TRIGGERS.TOKENS.BALANCE.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.image
+        ],
+        'blockIDs': [
+            TRIGGERS.TOKENS.BALANCE.BALANCE_MOVEMENT.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: createTokenMovementNotificationWorkflow
+    },
+    ...twitterAiTemplates
 ];
