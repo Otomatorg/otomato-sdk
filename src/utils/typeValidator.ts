@@ -37,6 +37,8 @@ export function validateType(expectedType: string, value: any): boolean {
         case 'string':
         case 'paragraph':
         case 'render_enum':
+        // block specific
+        case 'polymarket':
             return typeof value === 'string';
         case 'render_json':
             return (typeof value === 'string' && isValidJson(value)) || (typeof value === 'object' && value !== null);
