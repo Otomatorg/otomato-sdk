@@ -445,7 +445,7 @@ const createDefillamaRaiseNotificationWorkflow = () => {
     const edge1 = new Edge({ source: trigger, target: telegramAction });
 
     const workflow = new Workflow(
-        'Get notified when a new raise is detected on Defillama',
+        'Get notified when a project announces a new raise',
         [trigger, telegramAction],
         [edge1]
     );
