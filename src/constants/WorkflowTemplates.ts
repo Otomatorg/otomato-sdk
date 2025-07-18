@@ -455,7 +455,7 @@ const createDefillamaRaiseNotificationWorkflow = () => {
 
 const createTokenMovementNotificationWorkflow = () => {
     const trigger = new Trigger(TRIGGERS.TOKENS.BALANCE.BALANCE_MOVEMENT);
-    trigger.setParams('walletAddress', '{{smartAccountAddress}}');
+    // trigger.setParams('walletAddress', '{{smartAccountAddress}}');
     trigger.setPosition(400, 120);
 
     const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
@@ -541,14 +541,6 @@ const twitterAiTemplates = [
     'mentions season 2, an airdrop, a liquidity mining campaign, or any trading incentives'
   ),
   createTwitterAiNotificationTemplate(
-    {display: 'PeterSchiff', tag: 'PeterSchiff'},
-    'is bearish on Bitcoin'
-  ),
-  createTwitterAiNotificationTemplate(
-    {display: 'Aave', tag: 'aave'},
-    'mentions that AAVE has been hacked'
-  ),
-  createTwitterAiNotificationTemplate(
     {display: 'lookonchain', tag: 'lookonchain'},
     'mentions that AAVE has been hacked'
   ),
@@ -589,6 +581,87 @@ const twitterAiTemplates = [
     'is about yield opportunities'
   ),
 ];
+
+const createBuyBitcoinOnPeterSchiffBearishWorkflow = (): Workflow => {
+    const trigger = new Trigger(TRIGGERS.SOCIALS.X.X_POST_TRIGGER);
+    trigger.setParams('username', 'PeterSchiff');
+    trigger.setPosition(400, 120);
+
+    const aiAction = new Action(ACTIONS.AI.AI.AI);
+    aiAction.setParams('prompt', `this tweet mention bearish`);
+    aiAction.setParams('context', trigger.getOutputVariableName('tweetContent'));
+    aiAction.setPosition(400, 240);
+    
+    const ifAction = new Action(ACTIONS.CORE.CONDITION.IF);
+    ifAction.setParams('logic', LOGIC_OPERATORS.OR);
+    const group = new ConditionGroup(LOGIC_OPERATORS.OR);
+    group.addConditionCheck(aiAction.getOutputVariableName('result'), 'eq', 'true');
+    ifAction.setParams('groups', [group]);
+    ifAction.setPosition(400, 360);
+
+    const swapAction = new Action(ACTIONS.CORE.SWAP.SWAP);
+    swapAction.setChainId(CHAINS.BASE);
+    swapAction.setParams('tokenIn', getTokenFromSymbol(8453, 'USDC').contractAddress);
+    swapAction.setParams('tokenOut', getTokenFromSymbol(8453, 'cbBTC').contractAddress);
+    swapAction.setPosition(400, 480);
+
+    const edge = new Edge({ source: trigger, target: aiAction });
+    const edge2 = new Edge({ source: aiAction, target: ifAction });
+    const edge3 = new Edge({ source: ifAction, target: swapAction, label: 'true', value: true});
+
+    const workflow = new Workflow(
+      `Buy cbBTC when PeterSchiff tweets a bearish tweet`,
+      [trigger, aiAction, ifAction, swapAction],
+      [edge, edge2, edge3]
+    );
+
+    return workflow;
+}
+
+const createWithdrawOnAaveHackWorkflow = (): Workflow => {
+    // Trigger 1: AAVE tweets about being hacked
+    const aaveTrigger = new Trigger(TRIGGERS.SOCIALS.X.X_POST_TRIGGER);
+    aaveTrigger.setParams('username', 'aave');
+    aaveTrigger.setPosition(400, 120);
+
+    // Trigger 2: lookonchain tweets about AAVE being hacked
+    const lookonchainTrigger = new Trigger(TRIGGERS.SOCIALS.X.X_POST_TRIGGER);
+    lookonchainTrigger.setParams('username', 'lookonchain');
+    lookonchainTrigger.setPosition(800, 120);
+
+    const aiAction = new Action(ACTIONS.AI.AI.AI);
+    aiAction.setParams('prompt', `this tweet mentions AAVE being hacked or exploit`);
+    aiAction.setParams('context', lookonchainTrigger.getOutputVariableName('tweetContent'));
+    aiAction.setPosition(800, 240);
+
+    // IF condition: either AAVE or lookonchain AI detects hack
+    const ifAction = new Action(ACTIONS.CORE.CONDITION.IF);
+    ifAction.setParams('logic', LOGIC_OPERATORS.OR);
+    const group = new ConditionGroup(LOGIC_OPERATORS.OR);
+    group.addConditionCheck(aiAction.getOutputVariableName('result'), 'eq', 'true');
+    ifAction.setParams('groups', [group]);
+    ifAction.setPosition(600, 360);
+
+    // Withdraw action
+    const withdrawAction = new Action(ACTIONS.LENDING.AAVE.WITHDRAW);
+
+    withdrawAction.setPosition(600, 480);
+
+    // Edges
+    const edge1 = new Edge({ source: aaveTrigger, target: aiAction });
+    const edge2 = new Edge({ source: lookonchainTrigger, target: aiAction });
+    const edge3 = new Edge({ source: aiAction, target: ifAction });
+    const edge5 = new Edge({ source: ifAction, target: withdrawAction, label: 'true', value: true });
+
+    const workflow = new Workflow(
+        `Withdraw liquidity from AAVE if hack is detected via AAVE or lookonchain tweets`,
+        [aaveTrigger, lookonchainTrigger, aiAction, ifAction, withdrawAction],
+        [edge1, edge2, edge3, edge5]
+    );
+
+    return workflow;
+}
+
 
 export const WORKFLOW_TEMPLATES = [
     {
@@ -933,6 +1006,44 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
         ],
         createWorkflow: createTokenMovementNotificationWorkflow
+    },
+    {
+        'name': 'Withdraw liquidity from AAVE if hack is detected via AAVE or lookonchain tweets',
+        'description': 'Withdraw liquidity from AAVE if hack is detected via AAVE or lookonchain tweets',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.LENDING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'image': [
+            TRIGGERS.SOCIALS.X.X_POST_TRIGGER.image,
+            ACTIONS.AI.AI.image,
+            ACTIONS.CORE.CONDITION.image,
+            ACTIONS.LENDING.AAVE.WITHDRAW.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.X.X_POST_TRIGGER.blockId,
+            ACTIONS.AI.AI.AI.blockId,
+            ACTIONS.CORE.CONDITION.IF.blockId,
+            ACTIONS.LENDING.AAVE.WITHDRAW.blockId
+        ],
+        createWorkflow: createWithdrawOnAaveHackWorkflow
+    },
+    {
+        'name': 'Buy cbBTC when PeterSchiff tweets a bearish tweet',
+        'description': 'Buy cbBTC when PeterSchiff tweets a bearish tweet',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'image': [
+            TRIGGERS.SOCIALS.X.X_POST_TRIGGER.image,
+            ACTIONS.AI.AI.image,
+            ACTIONS.CORE.CONDITION.image,
+            ACTIONS.CORE.SWAP.SWAP.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.X.X_POST_TRIGGER.blockId,
+            ACTIONS.AI.AI.AI.blockId,
+            ACTIONS.CORE.CONDITION.IF.blockId,
+            ACTIONS.CORE.SWAP.SWAP.blockId
+        ],
+        createWorkflow: createBuyBitcoinOnPeterSchiffBearishWorkflow
     },
     ...twitterAiTemplates
 ];
