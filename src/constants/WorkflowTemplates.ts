@@ -252,6 +252,49 @@ const abstractGetNotifiedWhenStreamerIsLive = async () => {
     return new Workflow('Get notified when a given streamer goes live', [trigger, telegramAction], [edge]);
 }
 
+const abstractGetNotifiedOnNewAppRelease = async () => {
+    const trigger1 = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ON_NEW_APP_RELEASE);
+    trigger1.setParams('category', 'gaming');
+    trigger1.setCondition('neq');
+    trigger1.setComparisonValue('{{history.0.value}}');
+    trigger1.setIsOptional(true); // that's a OR logic between triggers
+
+    const trigger2 = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ON_NEW_APP_RELEASE);
+    trigger2.setParams('category', 'social');
+    trigger2.setCondition('neq');
+    trigger2.setComparisonValue('{{history.0.value}}');
+    trigger2.setIsOptional(true); // that's a OR logic between triggers
+
+    const trigger3 = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ON_NEW_APP_RELEASE);
+    trigger3.setParams('category', 'trading');
+    trigger3.setCondition('neq');
+    trigger3.setComparisonValue('{{history.0.value}}');
+    trigger3.setIsOptional(true); // that's a OR logic between triggers
+
+    const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    telegramAction.setParams('message', 'A new app is available on Abstract'); // todo: add the app name
+
+    const edge = new Edge({ source: trigger1, target: telegramAction });
+    const edge2 = new Edge({ source: trigger2, target: telegramAction });
+    const edge3 = new Edge({ source: trigger3, target: telegramAction });
+
+    return new Workflow('Get notified when a new app is available on Abstract', [trigger1, trigger2, trigger3, telegramAction], [edge, edge2, edge3]);
+}
+
+const abstractGetNotifiedOnNewUserBadge = async () => {
+    const trigger = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ON_USERS_NEW_BADGE);
+    trigger.setParams('walletAddress', "0xbad61ce35c1a02fc59cb690bcde3631083738f8b");
+    trigger.setCondition('neq');
+    trigger.setComparisonValue('{{history.0.value}}');
+
+    const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+    telegramAction.setParams('message', 'Insider got a new badge!'); // todo: add the badge name
+
+    const edge = new Edge({ source: trigger, target: telegramAction });
+
+    return new Workflow('Get notified when a new badge is available on Abstract', [trigger, telegramAction], [edge]);
+}
+
 // notify me when I can unstake my stakestone
 const createStakestoneUnstakeNotificationWorkflow = async () => {
     const trigger = new Trigger(TRIGGERS.YIELD.STAKESTONE.LATEST_ROUND_ID);
@@ -590,6 +633,36 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
         ],
         createWorkflow: abstractGetNotifiedWhenStreamerIsLive
+    },
+    {
+        'name': 'Get notified when a new app is listed on the abstract portal',
+        'description': 'Notify me when a new app is listed on the abstract portal',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/abstract-new-app-noti.webp',
+        'image': [
+            TRIGGERS.SOCIALS.ABSTRACT.ON_NEW_APP_RELEASE.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.ABSTRACT.ON_NEW_APP_RELEASE.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: abstractGetNotifiedOnNewAppRelease
+    },
+    {
+        'name': 'Get notified when insider gets a new badge',
+        'description': 'Get notified when insider gets a new badge',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/abstract-new-user-badge-noti.webp',
+        'image': [
+            TRIGGERS.SOCIALS.ABSTRACT.ON_USERS_NEW_BADGE.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.ABSTRACT.ON_USERS_NEW_BADGE.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: abstractGetNotifiedOnNewUserBadge
     },
     {
         'name': 'When the Ethereum foundation sells ETH, notify me',
