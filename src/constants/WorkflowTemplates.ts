@@ -241,8 +241,6 @@ const abstractGetNotifiedOnNewFlashBadge = async () => {
 const abstractGetNotifiedWhenStreamerIsLive = async () => {
     const trigger = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE);
     trigger.setParams('streamer', 'pudgyholder');
-    trigger.setCondition('eq');
-    trigger.setComparisonValue("true");
 
     const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
     telegramAction.setParams('message', `${trigger.getParameterVariableName('streamer')} is live!\n https://portal.abs.xyz/stream/${trigger.getParameterVariableName('streamer')}`);
@@ -255,24 +253,18 @@ const abstractGetNotifiedWhenStreamerIsLive = async () => {
 const abstractGetNotifiedOnNewAppRelease = async () => {
     const trigger1 = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ON_NEW_APP_RELEASE);
     trigger1.setParams('category', 'gaming');
-    trigger1.setCondition('neq');
-    trigger1.setComparisonValue('{{history.0.value}}');
     trigger1.setIsOptional(true); // that's a OR logic between triggers
 
     const trigger2 = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ON_NEW_APP_RELEASE);
     trigger2.setParams('category', 'social');
-    trigger2.setCondition('neq');
-    trigger2.setComparisonValue('{{history.0.value}}');
     trigger2.setIsOptional(true); // that's a OR logic between triggers
 
     const trigger3 = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ON_NEW_APP_RELEASE);
     trigger3.setParams('category', 'trading');
-    trigger3.setCondition('neq');
-    trigger3.setComparisonValue('{{history.0.value}}');
     trigger3.setIsOptional(true); // that's a OR logic between triggers
 
     const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-    telegramAction.setParams('message', 'A new app is available on Abstract'); // todo: add the app name
+    telegramAction.setParams('message', `A new app is available on Abstract`);
 
     const edge = new Edge({ source: trigger1, target: telegramAction });
     const edge2 = new Edge({ source: trigger2, target: telegramAction });
@@ -284,11 +276,9 @@ const abstractGetNotifiedOnNewAppRelease = async () => {
 const abstractGetNotifiedOnNewUserBadge = async () => {
     const trigger = new Trigger(TRIGGERS.SOCIALS.ABSTRACT.ON_USERS_NEW_BADGE);
     trigger.setParams('walletAddress', "0xbad61ce35c1a02fc59cb690bcde3631083738f8b");
-    trigger.setCondition('neq');
-    trigger.setComparisonValue('{{history.0.value}}');
 
     const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-    telegramAction.setParams('message', 'Insider got a new badge!'); // todo: add the badge name
+    telegramAction.setParams('message', `Insider got a new badge ${trigger.getOutputVariableName('newBadges')}`);
 
     const edge = new Edge({ source: trigger, target: telegramAction });
 
