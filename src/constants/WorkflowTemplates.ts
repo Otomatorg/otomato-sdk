@@ -473,14 +473,14 @@ const createTokenMovementNotificationWorkflow = () => {
     return workflow;
 };
 
-const createTwitterAiNotificationWorkflow = (username: {display: string, tag: string}, prompt: string) => {
+const createTwitterAiNotificationWorkflow = (username: {display: string, tag: string}, wfData: {prompt: string, notification: string, wfTitle: string}) => {
     return () => {
         const trigger = new Trigger(TRIGGERS.SOCIALS.X.X_POST_TRIGGER);
         trigger.setParams('username', username.tag);
         trigger.setPosition(400, 120);
 
         const aiAction = new Action(ACTIONS.AI.AI.AI);
-        aiAction.setParams('prompt', `this tweet ${prompt}`);
+        aiAction.setParams('prompt', `Return true if ${wfData.prompt}`);
         aiAction.setParams('context', trigger.getOutputVariableName('tweetContent'));
         aiAction.setPosition(400, 240);
         
@@ -492,7 +492,7 @@ const createTwitterAiNotificationWorkflow = (username: {display: string, tag: st
         ifAction.setPosition(400, 360);
 
         const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-        telegramAction.setParams('message', `${username.display} tweets ${prompt}`);
+        telegramAction.setParams('message', wfData.notification);
         telegramAction.setPosition(400, 480);
 
         const edge = new Edge({ source: trigger, target: aiAction });
@@ -500,7 +500,7 @@ const createTwitterAiNotificationWorkflow = (username: {display: string, tag: st
         const edge3 = new Edge({ source: ifAction, target: telegramAction, label: 'true', value: true});
 
         const workflow = new Workflow(
-          `Get notified when ${username.display} tweets ${prompt}`,
+          wfData.wfTitle,
           [trigger, aiAction, ifAction, telegramAction],
           [edge, edge2, edge3]
         );
@@ -509,12 +509,12 @@ const createTwitterAiNotificationWorkflow = (username: {display: string, tag: st
     }
 }
 
-const createTwitterAiNotificationTemplate = (username: {display: string, tag: string}, prompt: string) => {
+const createTwitterAiNotificationTemplate = (username: {display: string, tag: string}, wfData: {prompt: string, notification: string, wfTitle: string, description: string}, thumbnail: string) => {
   return {
-    'name': `Get notified when ${username.display} tweets ${prompt}`,
-    'description': `Get notified when ${username.display} tweets ${prompt}`,
+    'name': wfData.wfTitle,
+    'description': wfData.description,
     'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-    'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+    'thumbnail': thumbnail,
     'image': [
         TRIGGERS.SOCIALS.X.image,
         ACTIONS.AI.AI.image,
@@ -527,58 +527,130 @@ const createTwitterAiNotificationTemplate = (username: {display: string, tag: st
         ACTIONS.CORE.CONDITION.IF.blockId,
         ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
     ],
-    createWorkflow: createTwitterAiNotificationWorkflow(username, prompt)
+    createWorkflow: createTwitterAiNotificationWorkflow(username, wfData)
   }
 }
 
 const twitterAiTemplates = [
   createTwitterAiNotificationTemplate(
     {display: 'Hyperliquid', tag: 'HyperliquidX'},
-    'announces a new listing'
+    {
+      prompt: 'the tweet announces a new listing',
+      notification: 'Hyperliquid just announced a new listing',
+      description: 'Get notified when Hyperliquid announces a new listing',
+      wfTitle: 'Get notified when Hyperliquid announces a new listing via their Twitter',
+    },
+    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg'
   ),
   createTwitterAiNotificationTemplate(
     {display: 'Hyperliquid', tag: 'HyperliquidX'},
-    'mentions season 2, an airdrop, a liquidity mining campaign, or any trading incentives'
+    {
+      prompt: 'the tweet mentions or hints about a season 2, an airdrop, a liquidity mining campaign, points for trading or using the HyperEVM, or any trading incentives in $Hype',
+      notification: 'Hyperliquid announces either a season 2, an airdrop, a liquidity mining or incentives',
+      description: 'Get notified when Hyperliquid announces an aidrop',
+      wfTitle: 'Get notified when Hyperliquid announces a season 2 or something similar (airdrop, liquidity mining, points, incentives)',
+    },
+    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
   ),
   createTwitterAiNotificationTemplate(
     {display: 'lookonchain', tag: 'lookonchain'},
-    'mentions that AAVE has been hacked'
+    {
+      prompt: 'the tweet mentions that AAVE has been hacked',
+      notification: 'lookonchain mentions that AAVE has been hacked',
+      description: 'Get notified when lookonchain mentions that AAVE has been hacked',
+      wfTitle: 'Get notified when lookonchain mentions that AAVE has been hacked',
+    },
+    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg'
   ),
   createTwitterAiNotificationTemplate(
     {display: 'MegaETH', tag: 'megaeth_labs'},
-    'announces mainnet or TGE'
+    {
+      prompt: 'the tweet announces mainnet or TGE',
+      notification: 'MegaETH announces mainnet or TGE',
+      description: 'Get notified when MegaETH announces mainnet or TGE',
+      wfTitle: 'Get notified when MegaETH announces mainnet or TGE',
+    },
+    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg'
   ),
   createTwitterAiNotificationTemplate(
     {display: 'Somnia', tag: 'Somnia_Network'},
-    'announces mainnet or TGE'
+    {
+      prompt: 'the tweet announces mainnet or TGE',
+      notification: 'Somnia announces mainnet or TGE',
+      description: 'Get notified when Somnia announces mainnet or TGE',
+      wfTitle: 'Get notified when Somnia announces mainnet or TGE',
+    },
+    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg'
   ),
   createTwitterAiNotificationTemplate(
     {display: 'Monad', tag: 'monad'},
-    'announces mainnet or TGE'
+    {
+      prompt: 'the tweet announces mainnet or TGE',
+      notification: 'Monad announces mainnet or TGE',
+      description: 'Get notified when Monad announces mainnet or TGE',
+      wfTitle: 'Get notified when Monad announces mainnet or TGE',
+    },
+    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg'
   ),
   createTwitterAiNotificationTemplate(
     {display: 'Binance', tag: 'binance'},
-    'announces a new token listing'
+    {
+      prompt: 'the tweet announces a new token listing',
+      notification: 'Binance announces a new token listing',
+      description: 'Get notified when Binance announces a new token listing',
+      wfTitle: 'Get notified when Binance announces a new token listing',
+    },
+    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg'
   ),
   createTwitterAiNotificationTemplate(
     {display: 'VitalikButerin', tag: 'VitalikButerin'},
-    'is bullish about Ethereum'
+    {
+      prompt: 'the tweet is bullish about Ethereum',
+      notification: 'VitalikButerin is bullish about Ethereum',
+      description: 'Get notified when VitalikButerin is bullish about Ethereum',
+      wfTitle: 'Get notified when VitalikButerin is bullish about Ethereum',
+    },
+    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg'
   ),
   createTwitterAiNotificationTemplate(
     {display: 'Aave', tag: 'aave'}, 
-    'announces a major partnership'
+    {
+      prompt: 'the tweet announces a major partnership',
+      notification: 'Aave announces a major partnership',
+      description: 'Get notified when Aave announces a major partnership',
+      wfTitle: 'Get notified when Aave announces a major partnership',
+    },
+    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg'
   ),
   createTwitterAiNotificationTemplate(
     {display: 'MorphoLabs', tag: 'MorphoLabs'},
-    'announces a major partnership'
+    {
+      prompt: 'the tweet announces a major partnership',
+      notification: 'MorphoLabs announces a major partnership',
+      description: 'Get notified when MorphoLabs announces a major partnership',
+      wfTitle: 'Get notified when MorphoLabs announces a major partnership',
+    },
+    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg'
   ),
   createTwitterAiNotificationTemplate(
     {display: 'saylor', tag: 'saylor'},
-    'announces that Microstrategy acquired more bitcoin'
+    {
+      prompt: 'the tweet announces that Microstrategy acquired more bitcoin',
+      notification: 'saylor announces that Microstrategy acquired more bitcoin',
+      description: 'Get notified when saylor announces that Microstrategy acquired more bitcoin',
+      wfTitle: 'Get notified when saylor announces that Microstrategy acquired more bitcoin',
+    },
+    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg'
   ),
   createTwitterAiNotificationTemplate(
     {display: 'phtevenstrong', tag: 'phtevenstrong'},
-    'is about yield opportunities'
+    {
+      prompt: 'the tweet is about yield opportunities',
+      notification: 'phtevenstrong mentions yield opportunities',
+      description: 'Get notified when phtevenstrong mentions yield opportunities',
+      wfTitle: 'Get notified when phtevenstrong mentions yield opportunities',
+    },
+    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg'
   ),
 ];
 
@@ -588,7 +660,7 @@ const createBuyBitcoinOnPeterSchiffBearishWorkflow = (): Workflow => {
     trigger.setPosition(400, 120);
 
     const aiAction = new Action(ACTIONS.AI.AI.AI);
-    aiAction.setParams('prompt', `this tweet mention bearish`);
+    aiAction.setParams('prompt', `Return true if the tweet is negative, bearish, or critical about Bitcoin in any way.`);
     aiAction.setParams('context', trigger.getOutputVariableName('tweetContent'));
     aiAction.setPosition(400, 240);
     
@@ -630,7 +702,7 @@ const createWithdrawOnAaveHackWorkflow = (): Workflow => {
     lookonchainTrigger.setPosition(800, 120);
 
     const aiAction = new Action(ACTIONS.AI.AI.AI);
-    aiAction.setParams('prompt', `this tweet mentions AAVE being hacked or exploit`);
+    aiAction.setParams('prompt', `Return true if this tweet mentions AAVE being hacked or exploited`);
     aiAction.setParams('context', lookonchainTrigger.getOutputVariableName('tweetContent'));
     aiAction.setPosition(800, 240);
 
@@ -978,8 +1050,8 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createHyperliquidBTCSpotNPerpsThresholdNotificationWorkflow
     },
     {
-        'name': 'Get notified when there is a new raise on Defillama',
-        'description': 'Get notified when there is a new raise on Defillama',
+        'name': 'Get notified when a project announces a new raise',
+        'description': 'Get notified when a project announces raising a new round',
         'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
         'image': [
@@ -993,8 +1065,8 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createDefillamaRaiseNotificationWorkflow
     },
     {
-        'name': 'Get notified when there is a new balance change',
-        'description': 'Get notified when there is a new balance change',
+        'name': 'Receive alerts for wallet activity',
+        'description': 'Get notified when a given wallet receives or sends any token on any chain',
         'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
         'image': [
@@ -1008,8 +1080,8 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createTokenMovementNotificationWorkflow
     },
     {
-        'name': 'Withdraw liquidity from AAVE if hack is detected via AAVE or lookonchain tweets',
-        'description': 'Withdraw liquidity from AAVE if hack is detected via AAVE or lookonchain tweets',
+        'name': 'Instantly withdraw liquidity from AAVE if a hack is detected',
+        'description': 'Instantly withdraw liquidity from AAVE if a hack is announced on Twitter either via AAVE\'s official account or by lookonchain',
         'tags': [WORKFLOW_TEMPLATES_TAGS.LENDING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
         'image': [
