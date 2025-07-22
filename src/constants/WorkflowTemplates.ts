@@ -52,7 +52,7 @@ const createETHFearAndGreedBuy = async () => {
 
 const createDCAFearAndGreed = async () => {
     // created with examples/UseCases/FearAndGreedDCA
-    return Workflow.fromJSON({"id":null,"name":"Daily Fear & Greed-Based cbBTC Trading","state":"inactive","dateCreated":null,"dateModified":null,"executionId":null,"agentId":null,"nodes":[{"id":null,"ref":"1","blockId":18,"type":"trigger","state":"inactive","parameters":{"period":86400000,"timeout":null,"limit":30},"frontendHelpers":{},"position":{"x":400,"y":120}},{"id":null,"ref":"2","blockId":100015,"type":"action","state":"inactive","parameters":{"branchesAmount":2},"frontendHelpers":{},"position":{"x":400,"y":240}},{"id":null,"ref":"3","blockId":100016,"type":"action","state":"inactive","parameters":{"logic":"or","groups":[{"logic":"and","checks":[{"value1":"{{external.functions.btcFearAndGreed()}}","condition":"gt","value2":"80"}]}]},"frontendHelpers":{},"position":{"x":150,"y":360}},{"id":null,"ref":"4","blockId":100013,"type":"action","state":"inactive","parameters":{"chainId":8453,"tokenIn":"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf","tokenOut":"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913","amount":0.0001,"slippage":0.1},"frontendHelpers":{"output":{"amountIn":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenIn}}","chainId":"{{parameters.chainId}}"}},"amountOut":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenOut}}","chainId":"{{parameters.chainId}}"}}}},"position":{"x":150,"y":480}},{"id":null,"ref":"5","blockId":100016,"type":"action","state":"inactive","parameters":{"logic":"or","groups":[{"logic":"and","checks":[{"value1":"{{external.functions.btcFearAndGreed()}}","condition":"lt","value2":"20"}]}]},"frontendHelpers":{},"position":{"x":650,"y":360}},{"id":null,"ref":"6","blockId":100013,"type":"action","state":"inactive","parameters":{"chainId":8453,"tokenIn":"0x833589fcd6edb6e08f4c7c32d4f71b54bda02913","tokenOut":"0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf","amount":10,"slippage":0.3},"frontendHelpers":{"output":{"amountIn":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenIn}}","chainId":"{{parameters.chainId}}"}},"amountOut":{"formatAmount":false,"erc20Token":{"contractAddress":"{{output.tokenOut}}","chainId":"{{parameters.chainId}}"}}}},"position":{"x":650,"y":480}}],"edges":[{"id":null,"source":"1","target":"2"},{"id":null,"source":"2","target":"3"},{"id":null,"source":"3","target":"4","label":"true","value":"true"},{"id":null,"source":"2","target":"5"},{"id":null,"source":"5","target":"6","label":"true","value":"true"}],"notes":[]});
+    return Workflow.fromJSON({ "id": null, "name": "Daily Fear & Greed-Based cbBTC Trading", "state": "inactive", "dateCreated": null, "dateModified": null, "executionId": null, "agentId": null, "nodes": [{ "id": null, "ref": "1", "blockId": 18, "type": "trigger", "state": "inactive", "parameters": { "period": 86400000, "timeout": null, "limit": 30 }, "frontendHelpers": {}, "position": { "x": 400, "y": 120 } }, { "id": null, "ref": "2", "blockId": 100015, "type": "action", "state": "inactive", "parameters": { "branchesAmount": 2 }, "frontendHelpers": {}, "position": { "x": 400, "y": 240 } }, { "id": null, "ref": "3", "blockId": 100016, "type": "action", "state": "inactive", "parameters": { "logic": "or", "groups": [{ "logic": "and", "checks": [{ "value1": "{{external.functions.btcFearAndGreed()}}", "condition": "gt", "value2": "80" }] }] }, "frontendHelpers": {}, "position": { "x": 150, "y": 360 } }, { "id": null, "ref": "4", "blockId": 100013, "type": "action", "state": "inactive", "parameters": { "chainId": 8453, "tokenIn": "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf", "tokenOut": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", "amount": 0.0001, "slippage": 0.1 }, "frontendHelpers": { "output": { "amountIn": { "formatAmount": false, "erc20Token": { "contractAddress": "{{output.tokenIn}}", "chainId": "{{parameters.chainId}}" } }, "amountOut": { "formatAmount": false, "erc20Token": { "contractAddress": "{{output.tokenOut}}", "chainId": "{{parameters.chainId}}" } } } }, "position": { "x": 150, "y": 480 } }, { "id": null, "ref": "5", "blockId": 100016, "type": "action", "state": "inactive", "parameters": { "logic": "or", "groups": [{ "logic": "and", "checks": [{ "value1": "{{external.functions.btcFearAndGreed()}}", "condition": "lt", "value2": "20" }] }] }, "frontendHelpers": {}, "position": { "x": 650, "y": 360 } }, { "id": null, "ref": "6", "blockId": 100013, "type": "action", "state": "inactive", "parameters": { "chainId": 8453, "tokenIn": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", "tokenOut": "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf", "amount": 10, "slippage": 0.3 }, "frontendHelpers": { "output": { "amountIn": { "formatAmount": false, "erc20Token": { "contractAddress": "{{output.tokenIn}}", "chainId": "{{parameters.chainId}}" } }, "amountOut": { "formatAmount": false, "erc20Token": { "contractAddress": "{{output.tokenOut}}", "chainId": "{{parameters.chainId}}" } } } }, "position": { "x": 650, "y": 480 } }], "edges": [{ "id": null, "source": "1", "target": "2" }, { "id": null, "source": "2", "target": "3" }, { "id": null, "source": "3", "target": "4", "label": "true", "value": "true" }, { "id": null, "source": "2", "target": "5" }, { "id": null, "source": "5", "target": "6", "label": "true", "value": "true" }], "notes": [] });
 }
 
 const createETHFearAndGreedCapitalEfficientBuy = async () => {
@@ -319,9 +319,9 @@ const createUniswapPositionOutOfRangeNotificationWorkflow = async () => {
 
     const workflow = new Workflow('Get notified when a given uniswap position is out of range', [trigger, notificationAction], [edge]);
     workflow.setSettings({
-      loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
-      period: 600000,
-      limit: 5,
+        loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
+        period: 600000,
+        limit: 5,
     });
     return workflow;
 }
@@ -343,9 +343,9 @@ const createHyperLendDepositCapNotificationWorkflow = async () => {
 
     const workflow = new Workflow('Get notified when Hyperlend raise their deposit cap for stHype', [trigger, notificationAction], [edge]);
     workflow.setSettings({
-      loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
-      period: 600000,
-      limit: 10,
+        loopingType: WORKFLOW_LOOPING_TYPES.POLLING,
+        period: 600000,
+        limit: 10,
     });
     return workflow;
 }
@@ -413,9 +413,9 @@ const createUSDCReceiveNotificationWorkflow = async () => {
 
     const workflow = new Workflow('Get notified when I receive USDC', [trigger, notificationAction], [edge]);
     workflow.setSettings({
-      loopingType: WORKFLOW_LOOPING_TYPES.SUBSCRIPTION,
-      timeout: 31536000000,
-      limit: 30,
+        loopingType: WORKFLOW_LOOPING_TYPES.SUBSCRIPTION,
+        timeout: 31536000000,
+        limit: 30,
     });
     return workflow;
 }
@@ -498,15 +498,15 @@ const createTokenMovementNotificationWorkflow = () => {
     const edge = new Edge({ source: trigger, target: telegramAction });
 
     const workflow = new Workflow(
-      'Token Movement Notification',
-      [trigger, telegramAction],
-      [edge]
+        'Token Movement Notification',
+        [trigger, telegramAction],
+        [edge]
     );
 
     return workflow;
 };
 
-const createTwitterAiNotificationWorkflow = (username: {display: string, tag: string}, wfData: {prompt: string, notification: string, wfTitle: string}) => {
+const createTwitterAiNotificationWorkflow = (username: { display: string, tag: string }, wfData: { prompt: string, notification: string, wfTitle: string }) => {
     return () => {
         const trigger = new Trigger(TRIGGERS.SOCIALS.X.X_POST_TRIGGER);
         trigger.setParams('username', username.tag);
@@ -516,7 +516,7 @@ const createTwitterAiNotificationWorkflow = (username: {display: string, tag: st
         aiAction.setParams('prompt', `Return true if ${wfData.prompt}`);
         aiAction.setParams('context', trigger.getOutputVariableName('tweetContent'));
         aiAction.setPosition(400, 240);
-        
+
         const ifAction = new Action(ACTIONS.CORE.CONDITION.IF);
         ifAction.setParams('logic', LOGIC_OPERATORS.OR);
         const group = new ConditionGroup(LOGIC_OPERATORS.OR);
@@ -530,162 +530,40 @@ const createTwitterAiNotificationWorkflow = (username: {display: string, tag: st
 
         const edge = new Edge({ source: trigger, target: aiAction });
         const edge2 = new Edge({ source: aiAction, target: ifAction });
-        const edge3 = new Edge({ source: ifAction, target: telegramAction, label: 'true', value: true});
+        const edge3 = new Edge({ source: ifAction, target: telegramAction, label: 'true', value: true });
 
         const workflow = new Workflow(
-          wfData.wfTitle,
-          [trigger, aiAction, ifAction, telegramAction],
-          [edge, edge2, edge3]
+            wfData.wfTitle,
+            [trigger, aiAction, ifAction, telegramAction],
+            [edge, edge2, edge3]
         );
 
         return workflow;
     }
 }
 
-const createTwitterAiNotificationTemplate = (username: {display: string, tag: string}, wfData: {prompt: string, notification: string, wfTitle: string, description: string}, thumbnail: string) => {
-  return {
-    'name': wfData.wfTitle,
-    'description': wfData.description,
-    'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-    'thumbnail': thumbnail,
-    'image': [
-        TRIGGERS.SOCIALS.X.image,
-        ACTIONS.AI.AI.image,
-        ACTIONS.CORE.CONDITION.image,
-        ACTIONS.NOTIFICATIONS.TELEGRAM.image
-    ],
-    'blockIDs': [
-        TRIGGERS.SOCIALS.X.X_POST_TRIGGER.blockId,
-        ACTIONS.AI.AI.AI.blockId,
-        ACTIONS.CORE.CONDITION.IF.blockId,
-        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
-    ],
-    createWorkflow: createTwitterAiNotificationWorkflow(username, wfData)
-  }
+const createTwitterAiNotificationTemplate = (username: { display: string, tag: string }, wfData: { prompt: string, notification: string, wfTitle: string, description: string }, thumbnail: string) => {
+    return {
+        'name': wfData.wfTitle,
+        'description': wfData.description,
+        'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': thumbnail,
+        'image': [
+            TRIGGERS.SOCIALS.X.image,
+            ACTIONS.AI.AI.image,
+            ACTIONS.CORE.CONDITION.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.X.X_POST_TRIGGER.blockId,
+            ACTIONS.AI.AI.AI.blockId,
+            ACTIONS.CORE.CONDITION.IF.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: createTwitterAiNotificationWorkflow(username, wfData)
+    }
 }
 
-const twitterAiTemplates = [
-  createTwitterAiNotificationTemplate(
-    {display: 'Hyperliquid', tag: 'HyperliquidX'},
-    {
-      prompt: 'the tweet announces a new listing',
-      notification: 'Hyperliquid just announced a new listing',
-      description: 'Get notified when Hyperliquid announces a new listing',
-      wfTitle: 'Get notified when Hyperliquid announces a new listing via their Twitter',
-    },
-    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperliquid-template.webp'
-  ),
-  createTwitterAiNotificationTemplate(
-    {display: 'Hyperliquid', tag: 'HyperliquidX'},
-    {
-      prompt: 'the tweet mentions or hints about a season 2, an airdrop, a liquidity mining campaign, points for trading or using the HyperEVM, or any trading incentives in $Hype',
-      notification: 'Hyperliquid announces either a season 2, an airdrop, a liquidity mining or incentives',
-      description: 'Get notified when Hyperliquid announces an aidrop',
-      wfTitle: 'Get notified when Hyperliquid announces a season 2 or something similar (airdrop, liquidity mining, points, incentives)',
-    },
-    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperliquid-template.webp',
-  ),
-  createTwitterAiNotificationTemplate(
-    {display: 'lookonchain', tag: 'lookonchain'},
-    {
-      prompt: 'the tweet mentions that AAVE has been hacked',
-      notification: 'lookonchain mentions that AAVE has been hacked',
-      description: 'Get notified when lookonchain mentions that AAVE has been hacked',
-      wfTitle: 'Get notified when lookonchain mentions that AAVE has been hacked',
-    },
-    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/aave.webp'
-  ),
-  createTwitterAiNotificationTemplate(
-    {display: 'MegaETH', tag: 'megaeth_labs'},
-    {
-      prompt: 'the tweet announces mainnet or TGE',
-      notification: 'MegaETH announces mainnet or TGE',
-      description: 'Get notified when MegaETH announces mainnet or TGE',
-      wfTitle: 'Get notified when MegaETH announces mainnet or TGE',
-    },
-    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/megaeth.webp'
-  ),
-  createTwitterAiNotificationTemplate(
-    {display: 'Somnia', tag: 'Somnia_Network'},
-    {
-      prompt: 'the tweet announces mainnet or TGE',
-      notification: 'Somnia announces mainnet or TGE',
-      description: 'Get notified when Somnia announces mainnet or TGE',
-      wfTitle: 'Get notified when Somnia announces mainnet or TGE',
-    },
-    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/somnia.webp'
-  ),
-  createTwitterAiNotificationTemplate(
-    {display: 'Monad', tag: 'monad'},
-    {
-      prompt: 'the tweet announces mainnet or TGE',
-      notification: 'Monad announces mainnet or TGE',
-      description: 'Get notified when Monad announces mainnet or TGE',
-      wfTitle: 'Get notified when Monad announces mainnet or TGE',
-    },
-    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/monad.webp'
-  ),
-  createTwitterAiNotificationTemplate(
-    {display: 'Binance', tag: 'binance'},
-    {
-      prompt: 'the tweet announces a new token listing',
-      notification: 'Binance announces a new token listing',
-      description: 'Get notified when Binance announces a new token listing',
-      wfTitle: 'Get notified when Binance announces a new token listing',
-    },
-    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/binance.webp'
-  ),
-  createTwitterAiNotificationTemplate(
-    {display: 'VitalikButerin', tag: 'VitalikButerin'},
-    {
-      prompt: 'the tweet is bullish about Ethereum',
-      notification: 'VitalikButerin is bullish about Ethereum',
-      description: 'Get notified when VitalikButerin is bullish about Ethereum',
-      wfTitle: 'Get notified when VitalikButerin is bullish about Ethereum',
-    },
-    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/vitalik.webp'
-  ),
-  createTwitterAiNotificationTemplate(
-    {display: 'Aave', tag: 'aave'}, 
-    {
-      prompt: 'the tweet announces a major partnership',
-      notification: 'Aave announces a major partnership',
-      description: 'Get notified when Aave announces a major partnership',
-      wfTitle: 'Get notified when Aave announces a major partnership',
-    },
-    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/aave.webp'
-  ),
-  createTwitterAiNotificationTemplate(
-    {display: 'MorphoLabs', tag: 'MorphoLabs'},
-    {
-      prompt: 'the tweet announces a major partnership',
-      notification: 'MorphoLabs announces a major partnership',
-      description: 'Get notified when MorphoLabs announces a major partnership',
-      wfTitle: 'Get notified when MorphoLabs announces a major partnership',
-    },
-    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/morpho.webp'
-  ),
-  createTwitterAiNotificationTemplate(
-    {display: 'saylor', tag: 'saylor'},
-    {
-      prompt: 'the tweet announces that Microstrategy acquired more bitcoin',
-      notification: 'saylor announces that Microstrategy acquired more bitcoin',
-      description: 'Get notified when saylor announces that Microstrategy acquired more bitcoin',
-      wfTitle: 'Get notified when saylor announces that Microstrategy acquired more bitcoin',
-    },
-    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/microstrategy.webp'
-  ),
-  createTwitterAiNotificationTemplate(
-    {display: 'phtevenstrong', tag: 'phtevenstrong'},
-    {
-      prompt: 'the tweet is about yield opportunities',
-      notification: 'phtevenstrong mentions yield opportunities',
-      description: 'Get notified when phtevenstrong mentions yield opportunities',
-      wfTitle: 'Get notified when phtevenstrong mentions yield opportunities',
-    },
-    'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/twitter_yield_strat.webp'
-  ),
-];
 
 const createBuyBitcoinOnPeterSchiffBearishWorkflow = (): Workflow => {
     const trigger = new Trigger(TRIGGERS.SOCIALS.X.X_POST_TRIGGER);
@@ -696,7 +574,7 @@ const createBuyBitcoinOnPeterSchiffBearishWorkflow = (): Workflow => {
     aiAction.setParams('prompt', `Return true if the tweet is negative, bearish, or critical about Bitcoin in any way.`);
     aiAction.setParams('context', trigger.getOutputVariableName('tweetContent'));
     aiAction.setPosition(400, 240);
-    
+
     const ifAction = new Action(ACTIONS.CORE.CONDITION.IF);
     ifAction.setParams('logic', LOGIC_OPERATORS.OR);
     const group = new ConditionGroup(LOGIC_OPERATORS.OR);
@@ -712,12 +590,12 @@ const createBuyBitcoinOnPeterSchiffBearishWorkflow = (): Workflow => {
 
     const edge = new Edge({ source: trigger, target: aiAction });
     const edge2 = new Edge({ source: aiAction, target: ifAction });
-    const edge3 = new Edge({ source: ifAction, target: swapAction, label: 'true', value: true});
+    const edge3 = new Edge({ source: ifAction, target: swapAction, label: 'true', value: true });
 
     const workflow = new Workflow(
-      `Buy cbBTC when PeterSchiff tweets a bearish tweet`,
-      [trigger, aiAction, ifAction, swapAction],
-      [edge, edge2, edge3]
+        `Buy cbBTC when PeterSchiff tweets a bearish tweet`,
+        [trigger, aiAction, ifAction, swapAction],
+        [edge, edge2, edge3]
     );
 
     return workflow;
@@ -769,20 +647,105 @@ const createWithdrawOnAaveHackWorkflow = (): Workflow => {
 
 export const WORKFLOW_TEMPLATES = [
     {
-        'name': 'Get Notified When Ethereum Gas drops below 6 Gwei',
-        'description': 'Receive an email alert when Ethereum gas prices fall below 6 gwei.',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/gas.webp',
+        'name': 'Instantly withdraw liquidity from AAVE if a hack is detected',
+        'description': 'Instantly withdraw liquidity from AAVE if a hack is announced on Twitter either via AAVE\'s official account or by lookonchain',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.LENDING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/aave.webp',
         'image': [
-            TRIGGERS.TECHNICAL.GAS.GAS_API.image,
+            TRIGGERS.SOCIALS.X.X_POST_TRIGGER.image,
+            ACTIONS.AI.AI.image,
+            ACTIONS.CORE.CONDITION.image,
+            ACTIONS.LENDING.AAVE.WITHDRAW.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.X.X_POST_TRIGGER.blockId,
+            ACTIONS.AI.AI.AI.blockId,
+            ACTIONS.CORE.CONDITION.IF.blockId,
+            ACTIONS.LENDING.AAVE.WITHDRAW.blockId
+        ],
+        createWorkflow: createWithdrawOnAaveHackWorkflow
+    },
+    {
+        'name': 'Get notified when a given uniswap position is out of range',
+        'description': 'Notify me when a given uniswap position is out of range! https://app.uniswap.org/positions',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.DEXES, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/uniswap_template.webp',
+        'image': [
+            TRIGGERS.DEXES.UNISWAP.IS_IN_RANGE.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        'blockIDs': [
+            TRIGGERS.DEXES.UNISWAP.IS_IN_RANGE.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: createUniswapPositionOutOfRangeNotificationWorkflow
+    },
+    createTwitterAiNotificationTemplate(
+        { display: 'Hyperliquid', tag: 'HyperliquidX' },
+        {
+            prompt: 'the tweet mentions or hints about a season 2, an airdrop, a liquidity mining campaign, points for trading or using the HyperEVM, or any trading incentives in $Hype',
+            notification: 'Hyperliquid announces either a season 2, an airdrop, a liquidity mining or incentives',
+            description: 'Get notified when Hyperliquid announces an aidrop',
+            wfTitle: 'Get notified when Hyperliquid announces a season 2 or something similar (airdrop, liquidity mining, points, incentives)',
+        },
+        'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperliquid_template.webp',
+    ),
+    {
+        'name': 'Get notified when a new flash badge is available on Abstract',
+        'description': 'Notify me when a new flash badge is available on Abstract',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/abstract-flash-badge-noti.webp',
+        'image': [
+            TRIGGERS.SOCIALS.ABSTRACT.ABSTRACT_FLASH_BADGE.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.ABSTRACT.ABSTRACT_FLASH_BADGE.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: abstractGetNotifiedOnNewFlashBadge
+    },
+
+    {
+        'name': 'When the Ethereum foundation sells ETH, notify me',
+        'description': 'Notify me when the Ethereum foundation (0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe) sells ETH',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.TRADING],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer-monitoring.png',
+        'image': [
+            TRIGGERS.TOKENS.TRANSFER.NATIVE_TRANSFER.image,
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
         ],
         'blockIDs': [
-            TRIGGERS.TECHNICAL.GAS.GAS_API.blockId,
+            TRIGGERS.TOKENS.TRANSFER.NATIVE_TRANSFER.blockId,
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
         ],
-        createWorkflow: gasMonitoring
+        createWorkflow: createEthereumFoundationTransferNotificationWorkflow
     },
+    {
+        'name': 'Receive alerts for wallet activity',
+        'description': 'Get notified when a given wallet receives or sends any token on any chain',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer_alert.webp',
+        'image': [
+            TRIGGERS.TOKENS.BALANCE.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.image
+        ],
+        'blockIDs': [
+            TRIGGERS.TOKENS.BALANCE.BALANCE_MOVEMENT.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: createTokenMovementNotificationWorkflow
+    },
+    createTwitterAiNotificationTemplate(
+        { display: 'saylor', tag: 'saylor' },
+        {
+            prompt: 'the tweet announces that Microstrategy acquired more bitcoin',
+            notification: 'saylor announces that Microstrategy acquired more bitcoin',
+            description: 'Get notified when saylor announces that Microstrategy acquired more bitcoin',
+            wfTitle: 'Get notified when saylor announces that Microstrategy acquired more bitcoin',
+        },
+        'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/microstrategy.webp'
+    ),
     {
         'name': 'Daily yield updates',
         'description': 'Receive an email every day with a recap from all the money market yields for ETH and USDC & the current gas price.',
@@ -797,40 +760,6 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
         ],
         createWorkflow: dailyYieldEmail
-    },
-    {
-        'name': 'Daily Fear & Greed-Based cbBTC Trading',
-        'description': 'Automatically trade cbBTC daily based on the Fear & Greed Index—buy when low, sell when high.',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dca_fear_and_greed.webp',
-        'image': [
-            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
-            ACTIONS.CORE.SWAP.SWAP.image
-        ],
-        'blockIDs': [
-            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.blockId,
-            ACTIONS.CORE.SWAP.SWAP.blockId
-        ],
-        createWorkflow: createDCAFearAndGreed
-    },
-    {
-        'name': 'Buy ETH when the market sentiment is extremely fearful - capital efficient',
-        'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 45. The idle funds are generating yield on AAVE.',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.YIELD],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dca_fear_and_greed_eth.webp',
-        'image': [
-            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
-            ACTIONS.LENDING.AAVE.WITHDRAW.image,
-            ACTIONS.CORE.SWAP.SWAP.image,
-            ACTIONS.LENDING.AAVE.SUPPLY.image
-        ],
-        'blockIDs': [
-            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.blockId,
-            ACTIONS.LENDING.AAVE.WITHDRAW.blockId,
-            ACTIONS.CORE.SWAP.SWAP.blockId,
-            ACTIONS.LENDING.AAVE.SUPPLY.blockId
-        ],
-        createWorkflow: createETHFearAndGreedCapitalEfficientBuy
     },
     /*{
         'name': 'Buy sUSDE when the yield is above 20%',
@@ -865,21 +794,6 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createSusdeYieldNotification
     },
     {
-        'name': 'cbBTC transfer notification',
-        'description': 'Receive notifications when a top cbBTC holder (0xbbbb....ffcb) transfers cbBTC',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer_alert.webp',
-        'image': [
-            TRIGGERS.TOKENS.TRANSFER.TRANSFER.image,
-            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
-        ],
-        'blockIDs': [
-            TRIGGERS.TOKENS.TRANSFER.TRANSFER.blockId,
-            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
-        ],
-        createWorkflow: createModeTransferNotificationWorkflow
-    },
-    {
         'name': 'AAVE borrowing rate notification',
         'description': 'Notify me when the USDC borrowing rate on Base is above 5%',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.YIELD],
@@ -893,36 +807,6 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
         ],
         createWorkflow: createAAVEBorrowingRateNotificationWorkflow
-    },
-    {
-        'name': 'Get notified when a new flash badge is available on Abstract',
-        'description': 'Notify me when a new flash badge is available on Abstract',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/abstract-flash-badge-noti.webp',
-        'image': [
-            TRIGGERS.SOCIALS.ABSTRACT.ABSTRACT_FLASH_BADGE.image,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
-        ],
-        'blockIDs': [
-            TRIGGERS.SOCIALS.ABSTRACT.ABSTRACT_FLASH_BADGE.blockId,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
-        ],
-        createWorkflow: abstractGetNotifiedOnNewFlashBadge
-    },
-    {
-        'name': 'Get notified when a given streamer goes live',
-        'description': 'Notify me when a given streamer goes live',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/abstract-streamer-live-noti.webp',
-        'image': [
-            TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE.image,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
-        ],
-        'blockIDs': [
-            TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE.blockId,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
-        ],
-        createWorkflow: abstractGetNotifiedWhenStreamerIsLive
     },
     {
         'name': 'Get notified when a new app is listed on the abstract portal',
@@ -954,21 +838,6 @@ export const WORKFLOW_TEMPLATES = [
         ],
         createWorkflow: abstractGetNotifiedOnNewUserBadge
     },
-    {
-        'name': 'When the Ethereum foundation sells ETH, notify me',
-        'description': 'Notify me when the Ethereum foundation (0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe) sells ETH',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.TRADING],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer-monitoring.png',
-        'image': [
-            TRIGGERS.TOKENS.TRANSFER.NATIVE_TRANSFER.image,
-            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
-        ],
-        'blockIDs': [
-            TRIGGERS.TOKENS.TRANSFER.NATIVE_TRANSFER.blockId,
-            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
-        ],
-        createWorkflow: createEthereumFoundationTransferNotificationWorkflow
-    },
     /*{
         'name': 'Buy ETH when the market sentiment is extremely fearful',
         'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 30',
@@ -984,7 +853,7 @@ export const WORKFLOW_TEMPLATES = [
         ],
         createWorkflow: createETHFearAndGreedBuy
     },*/
-    
+
     /*{
         'name': 'Copy-trade the trades done on Odos by vitalik.eth',
         'description': 'Buy 100$ of each token that vitalik.eth buys using Odos',
@@ -1017,21 +886,6 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createStakestoneUnstakeNotificationWorkflow
     },
     {
-        'name': 'Get notified when a given uniswap position is out of range',
-        'description': 'Notify me when a given uniswap position is out of range! https://app.uniswap.org/positions',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.DEXES, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/uniswap_template.webp',
-        'image': [
-            TRIGGERS.DEXES.UNISWAP.IS_IN_RANGE.image,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
-        ],
-        'blockIDs': [
-            TRIGGERS.DEXES.UNISWAP.IS_IN_RANGE.blockId,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
-        ],
-        createWorkflow: createUniswapPositionOutOfRangeNotificationWorkflow
-    },
-    {
         'name': 'Get notified when Hyperlend raise their deposit cap for stHype',
         'description': 'Notify me when Hyperlend raise their deposit cap for stHype',
         'tags': [WORKFLOW_TEMPLATES_TAGS.LENDING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -1046,7 +900,7 @@ export const WORKFLOW_TEMPLATES = [
         ],
         createWorkflow: createHyperLendDepositCapNotificationWorkflow
     },
-    {
+    /*{
         'name': 'Get notified when there are more than 50 ETH in available liquidity for instant withdrawal on Stakestone',
         'description': 'Notify me when there are more than 50 ETH in available liquidity for instant withdrawal on Stakestone',
         'tags': [WORKFLOW_TEMPLATES_TAGS.YIELD, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -1060,7 +914,7 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
         ],
         createWorkflow: createStakestoneInstantWithdrawalNotificationWorkflow
-    },
+    },*/
     {
         'name': 'Get notified when I receive USDC',
         'description': 'Notify me when I receive USDC',
@@ -1095,7 +949,7 @@ export const WORKFLOW_TEMPLATES = [
         'name': 'Get notified when the difference between BTC spot and perpetual prices exceeds 0.15%',
         'description': 'Get notified when the difference between BTC spot and perpetual prices exceeds 0.15%',
         'tags': [WORKFLOW_TEMPLATES_TAGS.DEXES, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperliquid-template.webp',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperliquid_template.webp',
         'image': [
             TRIGGERS.DEXES.HYPERLIQUID.SPOT_PRICE.image,
             TRIGGERS.DEXES.HYPERLIQUID.PERPS_PRICE.image,
@@ -1127,40 +981,6 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createDefillamaRaiseNotificationWorkflow
     },
     {
-        'name': 'Receive alerts for wallet activity',
-        'description': 'Get notified when a given wallet receives or sends any token on any chain',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer_alert.webp',
-        'image': [
-            TRIGGERS.TOKENS.BALANCE.image,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.image
-        ],
-        'blockIDs': [
-            TRIGGERS.TOKENS.BALANCE.BALANCE_MOVEMENT.blockId,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
-        ],
-        createWorkflow: createTokenMovementNotificationWorkflow
-    },
-    {
-        'name': 'Instantly withdraw liquidity from AAVE if a hack is detected',
-        'description': 'Instantly withdraw liquidity from AAVE if a hack is announced on Twitter either via AAVE\'s official account or by lookonchain',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.LENDING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/aave.webp',
-        'image': [
-            TRIGGERS.SOCIALS.X.X_POST_TRIGGER.image,
-            ACTIONS.AI.AI.image,
-            ACTIONS.CORE.CONDITION.image,
-            ACTIONS.LENDING.AAVE.WITHDRAW.image
-        ],
-        'blockIDs': [
-            TRIGGERS.SOCIALS.X.X_POST_TRIGGER.blockId,
-            ACTIONS.AI.AI.AI.blockId,
-            ACTIONS.CORE.CONDITION.IF.blockId,
-            ACTIONS.LENDING.AAVE.WITHDRAW.blockId
-        ],
-        createWorkflow: createWithdrawOnAaveHackWorkflow
-    },
-    {
         'name': 'Buy cbBTC when PeterSchiff tweets a bearish tweet',
         'description': 'Buy cbBTC when PeterSchiff tweets a bearish tweet',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -1179,5 +999,185 @@ export const WORKFLOW_TEMPLATES = [
         ],
         createWorkflow: createBuyBitcoinOnPeterSchiffBearishWorkflow
     },
-    ...twitterAiTemplates
+    createTwitterAiNotificationTemplate(
+        { display: 'Hyperliquid', tag: 'HyperliquidX' },
+        {
+            prompt: 'the tweet announces a new listing',
+            notification: 'Hyperliquid just announced a new listing',
+            description: 'Get notified when Hyperliquid announces a new listing',
+            wfTitle: 'Get notified when Hyperliquid announces a new listing via their Twitter',
+        },
+        'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperliquid_template.webp'
+    ),
+    createTwitterAiNotificationTemplate(
+        { display: 'lookonchain', tag: 'lookonchain' },
+        {
+            prompt: 'the tweet mentions that AAVE has been hacked',
+            notification: 'lookonchain mentions that AAVE has been hacked',
+            description: 'Get notified when lookonchain mentions that AAVE has been hacked',
+            wfTitle: 'Get notified when lookonchain mentions that AAVE has been hacked',
+        },
+        'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/aave.webp'
+    ),
+    createTwitterAiNotificationTemplate(
+        { display: 'MegaETH', tag: 'megaeth_labs' },
+        {
+            prompt: 'the tweet announces mainnet or TGE',
+            notification: 'MegaETH announces mainnet or TGE',
+            description: 'Get notified when MegaETH announces mainnet or TGE',
+            wfTitle: 'Get notified when MegaETH announces mainnet or TGE',
+        },
+        'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/megaeth.webp'
+    ),
+    createTwitterAiNotificationTemplate(
+        { display: 'Somnia', tag: 'Somnia_Network' },
+        {
+            prompt: 'the tweet announces mainnet or TGE',
+            notification: 'Somnia announces mainnet or TGE',
+            description: 'Get notified when Somnia announces mainnet or TGE',
+            wfTitle: 'Get notified when Somnia announces mainnet or TGE',
+        },
+        'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/somnia.webp'
+    ),
+    createTwitterAiNotificationTemplate(
+        { display: 'Monad', tag: 'monad' },
+        {
+            prompt: 'the tweet announces mainnet or TGE',
+            notification: 'Monad announces mainnet or TGE',
+            description: 'Get notified when Monad announces mainnet or TGE',
+            wfTitle: 'Get notified when Monad announces mainnet or TGE',
+        },
+        'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/monad.webp'
+    ),
+    createTwitterAiNotificationTemplate(
+        { display: 'Binance', tag: 'binance' },
+        {
+            prompt: 'the tweet announces a new token listing',
+            notification: 'Binance announces a new token listing',
+            description: 'Get notified when Binance announces a new token listing',
+            wfTitle: 'Get notified when Binance announces a new token listing',
+        },
+        'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/binance.webp'
+    ),
+    createTwitterAiNotificationTemplate(
+        { display: 'VitalikButerin', tag: 'VitalikButerin' },
+        {
+            prompt: 'the tweet is bullish about Ethereum',
+            notification: 'VitalikButerin is bullish about Ethereum',
+            description: 'Get notified when VitalikButerin is bullish about Ethereum',
+            wfTitle: 'Get notified when VitalikButerin is bullish about Ethereum',
+        },
+        'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/vitalik.webp'
+    ),
+    createTwitterAiNotificationTemplate(
+        { display: 'Aave', tag: 'aave' },
+        {
+            prompt: 'the tweet announces a major partnership',
+            notification: 'Aave announces a major partnership',
+            description: 'Get notified when Aave announces a major partnership',
+            wfTitle: 'Get notified when Aave announces a major partnership',
+        },
+        'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/aave.webp'
+    ),
+    createTwitterAiNotificationTemplate(
+        { display: 'MorphoLabs', tag: 'MorphoLabs' },
+        {
+            prompt: 'the tweet announces a major partnership',
+            notification: 'MorphoLabs announces a major partnership',
+            description: 'Get notified when MorphoLabs announces a major partnership',
+            wfTitle: 'Get notified when MorphoLabs announces a major partnership',
+        },
+        'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/morpho.webp'
+    ),
+    createTwitterAiNotificationTemplate(
+        { display: 'phtevenstrong', tag: 'phtevenstrong' },
+        {
+            prompt: 'the tweet is about yield opportunities',
+            notification: 'phtevenstrong mentions yield opportunities',
+            description: 'Get notified when phtevenstrong mentions yield opportunities',
+            wfTitle: 'Get notified when phtevenstrong mentions yield opportunities',
+        },
+        'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/twitter_yield_strat.webp'
+    ),
+    {
+        'name': 'Daily Fear & Greed-Based cbBTC Trading',
+        'description': 'Automatically trade cbBTC daily based on the Fear & Greed Index—buy when low, sell when high.',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dca_fear_and_greed.webp',
+        'image': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
+            ACTIONS.CORE.SWAP.SWAP.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.blockId,
+            ACTIONS.CORE.SWAP.SWAP.blockId
+        ],
+        createWorkflow: createDCAFearAndGreed
+    },
+    {
+        'name': 'Buy ETH when the market sentiment is extremely fearful - capital efficient',
+        'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 45. The idle funds are generating yield on AAVE.',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.YIELD],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dca_fear_and_greed_eth.webp',
+        'image': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.image,
+            ACTIONS.LENDING.AAVE.WITHDRAW.image,
+            ACTIONS.CORE.SWAP.SWAP.image,
+            ACTIONS.LENDING.AAVE.SUPPLY.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.FEAR_AND_GREED.GET_FEAR_AND_GREED_INDEX.blockId,
+            ACTIONS.LENDING.AAVE.WITHDRAW.blockId,
+            ACTIONS.CORE.SWAP.SWAP.blockId,
+            ACTIONS.LENDING.AAVE.SUPPLY.blockId
+        ],
+        createWorkflow: createETHFearAndGreedCapitalEfficientBuy
+    },
+
+    {
+        'name': 'Get notified when a given streamer goes live',
+        'description': 'Notify me when a given streamer goes live',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/abstract-streamer-live-noti.webp',
+        'image': [
+            TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        'blockIDs': [
+            TRIGGERS.SOCIALS.ABSTRACT.ON_STREAMER_LIVE.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: abstractGetNotifiedWhenStreamerIsLive
+    },
+    {
+        'name': 'Get Notified When Ethereum Gas drops below 6 Gwei',
+        'description': 'Receive an email alert when Ethereum gas prices fall below 6 gwei.',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/gas.webp',
+        'image': [
+            TRIGGERS.TECHNICAL.GAS.GAS_API.image,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        ],
+        'blockIDs': [
+            TRIGGERS.TECHNICAL.GAS.GAS_API.blockId,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
+        ],
+        createWorkflow: gasMonitoring
+    },
+
+    {
+        'name': 'cbBTC transfer notification',
+        'description': 'Receive notifications when a top cbBTC holder (0xbbbb....ffcb) transfers cbBTC',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer_alert.webp',
+        'image': [
+            TRIGGERS.TOKENS.TRANSFER.TRANSFER.image,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
+        ],
+        'blockIDs': [
+            TRIGGERS.TOKENS.TRANSFER.TRANSFER.blockId,
+            ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
+        ],
+        createWorkflow: createModeTransferNotificationWorkflow
+    },
 ];
