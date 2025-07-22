@@ -710,7 +710,7 @@ export const WORKFLOW_TEMPLATES = [
         'name': 'When the Ethereum foundation sells ETH, notify me',
         'description': 'Notify me when the Ethereum foundation (0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe) sells ETH',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.TRADING],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/eth-foundation.webp',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/eth_foundation.webp',
         'image': [
             TRIGGERS.TOKENS.TRANSFER.NATIVE_TRANSFER.image,
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.image
