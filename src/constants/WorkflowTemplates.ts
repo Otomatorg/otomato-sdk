@@ -737,12 +737,12 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createTokenMovementNotificationWorkflow
     },
     createTwitterAiNotificationTemplate(
-        { display: 'saylor', tag: 'saylor' },
+        { display: 'Strategy', tag: 'Strategy' },
         {
             prompt: 'the tweet announces that Microstrategy acquired more bitcoin',
-            notification: 'saylor announces that Microstrategy acquired more bitcoin',
-            description: 'Get notified when saylor announces that Microstrategy acquired more bitcoin',
-            wfTitle: 'Get notified when saylor announces that Microstrategy acquired more bitcoin',
+            notification: 'Strategy announces that Microstrategy acquired more bitcoin',
+            description: 'Get notified when Strategy announces that Microstrategy acquired more bitcoin',
+            wfTitle: 'Get notified when Strategy announces that Microstrategy acquired more bitcoin',
         },
         'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/microstrategy.webp'
     ),
