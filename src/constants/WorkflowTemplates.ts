@@ -264,7 +264,7 @@ const abstractGetNotifiedOnNewAppRelease = async () => {
     trigger3.setIsOptional(true); // that's a OR logic between triggers
 
     const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-    telegramAction.setParams('message', `A new app is available on Abstract`);
+    telegramAction.setParams('message', `A new app is available on Abstract {{json nodeMap.${telegramAction.getRef()}.children.filter(Boolean).0.output.newApps}}`);
 
     const edge = new Edge({ source: trigger1, target: telegramAction });
     const edge2 = new Edge({ source: trigger2, target: telegramAction });
