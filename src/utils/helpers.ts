@@ -150,3 +150,30 @@ export function formatNonZeroDecimals(value: number, nonZeroDecimals: number = 2
 
     return sign + result;
 }
+
+export const getTokenPrice = async (chainId: number, contractAddress: string): Promise<number> => {
+  const tokenPrice = await fetch(`https://api.odos.xyz/pricing/token/${chainId}/${contractAddress}`);
+  const tokenPriceJson = await tokenPrice.json();
+  return tokenPriceJson?.price;
+}
+
+export const getETHAlternativeTokensSymbols = () => {
+  return {
+    1:  "ETH",
+    130:  "ETH",
+    324:  "ETH",
+    8453:  "ETH",
+    5000:  "WETH",
+    137:  "WETH",
+    10:  "ETH",
+    34443:  "ETH",
+    43114:  "WETH.e",
+    59144:  "ETH",
+    534352:  "ETH",
+    42161:  "ETH",
+    146:  "WETH",
+    56:  "ETH",
+    250:  "ETH",
+    252:  "frxETH"
+  }
+}
