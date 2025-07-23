@@ -605,11 +605,13 @@ const createWithdrawOnAaveHackWorkflow = (): Workflow => {
     // Trigger 1: AAVE tweets about being hacked
     const aaveTrigger = new Trigger(TRIGGERS.SOCIALS.X.X_POST_TRIGGER);
     aaveTrigger.setParams('username', 'aave');
+    aaveTrigger.setIsOptional(true);
     aaveTrigger.setPosition(400, 120);
 
     // Trigger 2: lookonchain tweets about AAVE being hacked
     const lookonchainTrigger = new Trigger(TRIGGERS.SOCIALS.X.X_POST_TRIGGER);
     lookonchainTrigger.setParams('username', 'lookonchain');
+    lookonchainTrigger.setIsOptional(true);
     lookonchainTrigger.setPosition(800, 120);
 
     const aiAction = new Action(ACTIONS.AI.AI.AI);
