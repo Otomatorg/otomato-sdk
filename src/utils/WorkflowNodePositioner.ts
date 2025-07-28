@@ -97,7 +97,7 @@ export function positionWorkflowNodes(workflow: Workflow): void {
               startingNodes[i].setPosition(currentX, yPos);
               currentX += TRIGGER_X_SPACING;
             }
-        }
+          }
           // Handle non-starting nodes in layer 0 if any (should be rare for triggers)
           const otherNodesInLayer0 = nodesInLayer.filter(node => getParents(node, workflow.edges).length > 0);
           if (otherNodesInLayer0.length > 0) {
@@ -298,19 +298,178 @@ export function positionWorkflowNodes(workflow: Workflow): void {
 
       for (const node of workflow.nodes) {
         if ((node as any).layer === 0) continue; // skip triggers
-        if (!isDescendantOfAllTriggers(node)) continue;
-        // Check all non-trigger ancestors
-        const ancestors = Array.from(getAllAncestors(node, workflow.edges))
-          .map(ref => workflow.nodes.find(n => n.getRef() === ref))
-          .filter(n => n && (n as any).layer !== 0) as Node[];
-        if (ancestors.every(isDescendantOfAllTriggers)) {
-          node.setPosition(triggerCenter, node.position?.y ?? 0);
+        const isDescendant = isDescendantOfAllTriggers(node);
+        
+        // Additional checks for selective centering
+        const isInFalseBranch = workflow.edges.some(edge => edge.target === node && edge.label === 'false');
+        const isInTrueBranch = workflow.edges.some(edge => edge.target === node && edge.label === 'true');
+        const hasChildren = getChildren(node, workflow.edges).length > 0;
+        const isDirectChildOfTriggers = getParents(node, workflow.edges).some(parent => triggerRefs.has(parent.getRef()));
+        
+        if (isDescendant) {
+          if (isInTrueBranch || isInFalseBranch) {
+            // Handle true/false branches with proper spacing
+            const parents = getParents(node, workflow.edges);
+            const parent = parents[0]; // Assume single parent for branching
+            
+            if (parent && parent.position) {
+              const siblings = getChildren(parent, workflow.edges);
+              const trueBranchNodes = siblings.filter(sibling => 
+                workflow.edges.some(edge => edge.source === parent && edge.target === sibling && edge.label === 'true')
+              );
+              const falseBranchNodes = siblings.filter(sibling => 
+                workflow.edges.some(edge => edge.source === parent && edge.target === sibling && edge.label === 'false')
+              );
+              
+              if (trueBranchNodes.length > 0 && falseBranchNodes.length > 0) {
+                // We have both true and false branches - space them properly
+                const parentX = parent.position.x;
+                
+                if (isInTrueBranch) {
+                  // Position true branch to the left of parent
+                  node.setPosition(parentX - xSpacing / 2, node.position?.y ?? 0);
+                } else if (isInFalseBranch) {
+                  // Position false branch to the right of parent
+                  node.setPosition(parentX + xSpacing / 2, node.position?.y ?? 0);
+                }
+              } else {
+                // Only one branch - center it under parent
+                node.setPosition(parent.position.x, node.position?.y ?? 0);
+              }
+            }
+          } else {
+            // Check if node has a single parent - if so, position under that parent
+            const parents = getParents(node, workflow.edges);
+            if (parents.length === 1) {
+              const parent = parents[0];
+              const parentIsDescendantOfAllTriggers = isDescendantOfAllTriggers(parent);
+              
+              // If parent is also a descendant of all triggers, follow parent (chain positioning)
+              // If parent is a trigger or not descendant of all triggers, center at trigger center
+              if (parentIsDescendantOfAllTriggers && parent.position) {
+                // Single parent that's in the main flow - position under that parent to maintain chain alignment
+                node.setPosition(parent.position.x, node.position?.y ?? 0);
+              } else {
+                // Parent is a trigger or outside main flow - center at trigger center
+                node.setPosition(triggerCenter, node.position?.y ?? 0);
+              }
+            } else {
+              // Multiple parents or direct child of triggers - center at trigger center
+              node.setPosition(triggerCenter, node.position?.y ?? 0);
+            }
+          }
         }
       }
+      
+      // Remove the overlap detection since we're now positioning branches properly from the start
     }
 
   } catch (e) {
     console.error(e);
+  }
+
+  // Step 4: Collision detection and resolution
+  // Detect nodes that are too close together and push them apart
+  resolveCollisions(workflow, xSpacing);
+}
+
+function resolveCollisions(workflow: Workflow, xSpacing: number) {
+  const maxIterations = 10; // Prevent infinite loops
+  let iteration = 0;
+  
+  while (iteration < maxIterations) {
+    let hasCollisions = false;
+    
+    // Group nodes by Y level
+    const nodesByY = new Map<number, Node[]>();
+    workflow.nodes.forEach(node => {
+      if (node.position) {
+        const y = node.position.y;
+        if (!nodesByY.has(y)) {
+          nodesByY.set(y, []);
+        }
+        nodesByY.get(y)!.push(node);
+      }
+    });
+    
+    // Check each Y level for collisions
+    for (const [y, nodesAtLevel] of nodesByY) {
+      if (nodesAtLevel.length < 2) continue;
+      
+      // Filter out triggers - they have their own spacing rules
+      const nonTriggerNodes = nodesAtLevel.filter(node => node.class !== 'trigger');
+      if (nonTriggerNodes.length < 2) continue;
+      
+      // Sort nodes by X position
+      nonTriggerNodes.sort((a, b) => a.position!.x - b.position!.x);
+      
+      // Check adjacent pairs for insufficient spacing
+      for (let i = 0; i < nonTriggerNodes.length - 1; i++) {
+        const leftNode = nonTriggerNodes[i];
+        const rightNode = nonTriggerNodes[i + 1];
+        const distance = rightNode.position!.x - leftNode.position!.x;
+        
+        if (distance < xSpacing) {
+          // Collision detected - push nodes apart equally
+          const deficit = xSpacing - distance;
+          const adjustment = deficit / 2;
+          
+          leftNode.setPosition(leftNode.position!.x - adjustment, leftNode.position!.y);
+          rightNode.setPosition(rightNode.position!.x + adjustment, rightNode.position!.y);
+          
+          hasCollisions = true;
+          
+          // Move children along with their parents to maintain chains
+          moveChildrenRecursively(leftNode, -adjustment, workflow);
+          moveChildrenRecursively(rightNode, adjustment, workflow);
+          
+          // Update parents of moved nodes
+          updateParentsRecursively(leftNode, workflow);
+          updateParentsRecursively(rightNode, workflow);
+        }
+      }
+    }
+    
+    if (!hasCollisions) break;
+    iteration++;
+  }
+}
+
+function updateParentsRecursively(node: Node, workflow: Workflow) {
+  const parents = getParents(node, workflow.edges);
+  
+  for (const parent of parents) {
+    // Don't move triggers - they have their own positioning logic
+    if (parent.class === 'trigger') {
+      continue;
+    }
+    
+    // Get all children of this parent
+    const children = getChildren(parent, workflow.edges);
+    
+    if (children.length > 0) {
+      // Calculate new center position based on children
+      const childrenXs = children.map(child => child.position!.x);
+      const newCenterX = (Math.min(...childrenXs) + Math.max(...childrenXs)) / 2;
+      
+      // Update parent position
+      parent.setPosition(newCenterX, parent.position!.y);
+      
+      // Recursively update this parent's parents
+      updateParentsRecursively(parent, workflow);
+    }
+  }
+}
+
+function moveChildrenRecursively(node: Node, xOffset: number, workflow: Workflow) {
+  const children = getChildren(node, workflow.edges);
+  
+  for (const child of children) {
+    // Move child by the same offset
+    child.setPosition(child.position!.x + xOffset, child.position!.y);
+    
+    // Recursively move this child's children
+    moveChildrenRecursively(child, xOffset, workflow);
   }
 }
 
