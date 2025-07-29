@@ -879,6 +879,34 @@ export const TOKENS: Tokens = {
       symbol: "USDS",
       decimals: 18,
       image: "https://basescan.org/token/images/skyusds_32.svg"
+    },
+    {
+      contractAddress: "0x236aa50979d5f3de3bd1eeb40e81137f22ab794b",
+      name: "Base tBTC v2",
+      symbol: "tBTC",
+      decimals: 18,
+      image: "https://static.debank.com/image/matic_token/logo_url/0x236aa50979d5f3de3bd1eeb40e81137f22ab794b/81d0f366026c3480d25d3c1dfa5b60d3.png"
+    },
+    {
+      contractAddress: "0x0b3e328455c4059eeb9e3f84b5543f74e24e7e1b",
+      name: "Virtual Protocol",
+      symbol: "VIRTUAL",
+      decimals: 18,
+      image: "https://static.debank.com/image/eth_token/logo_url/0x44ff8620b8ca30902395a7bd3f2407e1a091bf73/cbb70834d9442214c846833e47648255.png"
+    },
+    {
+      contractAddress: "0xbaa5cc21fd487b8fcc2f632f3f4e8d37262a0842",
+      name: "Morpho Token",
+      symbol: "MORPHO",
+      decimals: 18,
+      image: "https://static.debank.com/image/base_token/logo_url/0xbaa5cc21fd487b8fcc2f632f3f4e8d37262a0842/c092d2c513136e17883955cdd2c62ff1.png"
+    },
+    {
+      contractAddress: "0xcb585250f852c6c6bf90434ab21a00f02833a4af",
+      name: "Coinbase Wrapped XRP",
+      symbol: "cbXRP",
+      decimals: 6,
+      image: "https://static.debank.com/image/project/logo_url/coinbasewallet/baf3eb82a7f897fe46ba0caf42470342.png"
     }
   ],
   2741: [
@@ -1220,6 +1248,13 @@ export const TOKENS: Tokens = {
       decimals: 6,
       image: "https://static.debank.com/image/eth_token/logo_url/0xdac17f958d2ee523a2206206994597c13d831ec7/464c0de678334b8fe87327e527bc476d.png"
     },
+    {
+      contractAddress: "0x3c8b650257cfb5f272f799f5e2b4e65093a11a05",
+      name: "Velodrome",
+      symbol: "VELO",
+      decimals: 18,
+      image: "https://static.debank.com/image/project/logo_url/op_velodrome/91c9c0f782ba8b2faf88e29b31e724fc.png"
+    }
   ],
   // Binance
   56: [
