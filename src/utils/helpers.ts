@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import { getToken, getTokenFromSymbol } from '../constants/tokens.js';
 import { isAddress, isNumericString } from './typeValidator.js';
+import { CHAINS } from '../constants/chains.js';
 
 export async function convertToTokenUnits(amount: number, chainId: number, contractAddress: string): Promise<ethers.BigNumberish> {
     const token = await getToken(chainId, contractAddress);
@@ -177,3 +178,72 @@ export const getETHAlternativeTokensSymbols = () => {
     252:  "frxETH"
   }
 }
+
+/**
+ * Formats a period in seconds into a human-readable string with days, hours, minutes, and seconds.
+ * @param {number} seconds
+ * @returns {string}
+ */
+export const formatPeriod = (seconds: number): string => {
+  const sec = Number(seconds);
+  if (isNaN(sec) || sec < 0) return '';
+  const days = Math.floor(sec / 86400);
+  const hours = Math.floor((sec % 86400) / 3600);
+  const minutes = Math.floor((sec % 3600) / 60);
+  const remainingSeconds = sec % 60;
+  const parts = [];
+  if (days > 0) parts.push(`${days} day${days > 1 ? 's' : ''}`);
+  if (hours > 0) parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+  if (minutes > 0) parts.push(`${minutes} min${minutes > 1 ? 's' : ''}`);
+  if (remainingSeconds > 0 || parts.length === 0) parts.push(`${remainingSeconds} sec${remainingSeconds !== 1 ? 's' : ''}`);
+  return parts.join(' ');
+};
+
+export const getChainIconUrl = (chainId: number): string => {
+  switch (chainId) {
+    case CHAINS.ETHEREUM:
+      return 'https://otomato-network-images.s3.eu-west-1.amazonaws.com/chain_ethereum.webp';
+    case CHAINS.BASE:
+      return 'https://otomato-network-images.s3.eu-west-1.amazonaws.com/chain_base.webp';
+    case CHAINS.ARBITRUM:
+      return 'https://otomato-network-images.s3.eu-west-1.amazonaws.com/chain_arbitrum.webp';
+    case CHAINS.MODE:
+      return 'https://otomato-network-images.s3.eu-west-1.amazonaws.com/chain_mode.webp';
+    case CHAINS.SOMNIA:
+      return 'https://otomato-network-images.s3.eu-west-1.amazonaws.com/chain_somnia.webp';
+    case CHAINS.HYPER_EVM:
+      return 'https://otomato-network-images.s3.eu-west-1.amazonaws.com/chain_hyper_evm.webp';
+    case CHAINS.OASIS:
+      return 'https://otomato-network-images.s3.eu-west-1.amazonaws.com/chain_oasis.webp';
+    default:
+      throw new Error(`Chain icon not found for chainId: ${chainId}`);
+  }
+};
+
+export const getChainById = (chainId: number): { name: string; chainIcon: string } => {
+  // Find the chain name key by matching the value, skipping 'ALL'
+  const chainEntry = Object.entries(CHAINS).find(
+    ([key, value]) => key !== 'ALL' && value === chainId
+  );
+  if (chainEntry) {
+    // Lowercase, replace underscores with spaces, capitalize first letter
+    let formattedName = chainEntry[0]
+      .toLowerCase()
+      .replace(/_/g, ' ')
+      .replace(/^\w/, c => c.toUpperCase());
+    const chainIcon = getChainIconUrl(chainId);
+
+    if (chainId === 999) {
+      formattedName = 'Hyper EVM';
+    }
+
+    return {
+      name: formattedName,
+      chainIcon: chainIcon
+    };
+  }
+  return {
+    name: 'Unknown',
+    chainIcon: ''
+  };
+};
