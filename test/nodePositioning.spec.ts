@@ -19,7 +19,10 @@ import { TRIGGERS, ACTIONS, Trigger, Action, Edge, Workflow, getTokenFromSymbol,
 // Dummy implementations for testing purposes.
 class DummyNode {
     public position: { x: number; y: number } | null = null;
-    constructor(private ref: string) { }
+    public class: string = 'action'; // Default to action, can be overridden
+    constructor(private ref: string, nodeClass: string = 'action') {
+        this.class = nodeClass;
+    }
     getRef(): string {
         return this.ref;
     }
@@ -642,9 +645,9 @@ describe('Flow: Condition -> Split(3) -> Delay Demo', () => {
 
 describe('Multiple Trigger Positioning', () => {
     it('should position two triggers symmetrically around ROOT_X and their common child at ROOT_X', () => {
-        const trigger1 = new DummyNode('1'); // Trigger 1
-        const trigger2 = new DummyNode('2'); // Trigger 2
-        const action1 = new DummyNode('3'); // Action 1 (common child)
+        const trigger1 = new DummyNode('1', 'trigger'); // Trigger 1
+        const trigger2 = new DummyNode('2', 'trigger'); // Trigger 2
+        const action1 = new DummyNode('3', 'action'); // Action 1 (common child)
 
         const edges = [
             new DummyEdge(trigger1, action1),
@@ -674,10 +677,10 @@ describe('Multiple Trigger Positioning', () => {
     });
 
     it('should position three triggers symmetrically around ROOT_X and their common child at ROOT_X', () => {
-        const trigger1 = new DummyNode('1');
-        const trigger2 = new DummyNode('2');
-        const trigger3 = new DummyNode('3');
-        const action1 = new DummyNode('4');
+        const trigger1 = new DummyNode('1', 'trigger');
+        const trigger2 = new DummyNode('2', 'trigger');
+        const trigger3 = new DummyNode('3', 'trigger');
+        const action1 = new DummyNode('4', 'action');
 
         const edges = [
             new DummyEdge(trigger1, action1),
