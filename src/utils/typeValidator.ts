@@ -52,6 +52,8 @@ export function validateType(expectedType: string, value: any): boolean {
             return Array.isArray(value) && value.every(Array.isArray);
         case 'condition_groups':
             return Array.isArray(value) && value.every(isValidConditionGroup);
+        case 'string_array':
+            return Array.isArray(value) && value.every(element => typeof element === 'string');
         case 'and_or':
             const validLogicOperators = new Set(['and', 'or']);
             return typeof value === 'string' && validLogicOperators.has(value.toLowerCase());
