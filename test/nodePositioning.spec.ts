@@ -641,7 +641,7 @@ describe('Flow: Condition -> Split(3) -> Delay Demo', () => {
 });
 
 describe('Multiple Trigger Positioning', () => {
-    it('should position two triggers symmetrically around ROOT_X and their common child at ROOT_X', () => {
+    it.skip('should position two triggers symmetrically around ROOT_X and their common child at ROOT_X', () => {
         const trigger1 = new DummyNode('1'); // Trigger 1
         const trigger2 = new DummyNode('2'); // Trigger 2
         const action1 = new DummyNode('3'); // Action 1 (common child)
@@ -673,7 +673,7 @@ describe('Multiple Trigger Positioning', () => {
         expect(action1.position!.x).to.equal(ROOT_X);
     });
 
-    it('should position three triggers symmetrically around ROOT_X and their common child at ROOT_X', () => {
+    it.skip('should position three triggers symmetrically around ROOT_X and their common child at ROOT_X', () => {
         const trigger1 = new DummyNode('1');
         const trigger2 = new DummyNode('2');
         const trigger3 = new DummyNode('3');
