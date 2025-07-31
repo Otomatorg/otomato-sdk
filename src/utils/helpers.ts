@@ -199,6 +199,34 @@ export const formatPeriod = (seconds: number): string => {
   return parts.join(' ');
 };
 
+export const formatMilliSecondsToHumanReadable = (milliseconds: number): string => {
+  const seconds = milliseconds / 1000;
+  return formatPeriod(seconds);
+}
+
+/**
+ * Converts a millisecond timestamp to a human-readable date string in the user's local timezone.
+ * If the input is not a valid number, returns an empty string.
+ * @param {number|string} milliseconds - The timestamp in milliseconds.
+ * @returns {string} - The formatted date string in the user's local timezone.
+ */
+export const formatMillisecondsToLocalDate = (milliseconds: number | string): string => {
+  const ms = typeof milliseconds === 'string' ? Number(milliseconds) : milliseconds;
+  if (isNaN(ms) || ms < 0) return '';
+  const date = new Date(ms);
+  // Use toLocaleString to format in user's local timezone
+  return date.toLocaleString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+    timeZoneName: 'short'
+  });
+};
+
 export const getChainIconUrl = (chainId: number): string => {
   switch (chainId) {
     case CHAINS.ETHEREUM:
@@ -246,4 +274,109 @@ export const getChainById = (chainId: number): { name: string; chainIcon: string
     name: 'Unknown',
     chainIcon: ''
   };
+};
+
+/**
+ * Returns HTML for a token display with a smaller font size.
+ * @param chainId - The chain ID.
+ * @param tokenAddress - The token address.
+ * @returns HTML string for the token.
+ */
+export const getTokenHTML = async (chainId: number, tokenAddress: string): Promise<string> => {
+  const token = await getToken(chainId, tokenAddress);
+  return `
+    <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; line-height: 20px; color: #fff;">
+      <div>${token.name}</div>
+      <img src="${token.image}" alt="${token.name}" width="14" height="14" />
+    </div>
+  `
+};
+
+/**
+ * Returns HTML for a chain display with a smaller font size.
+ * @param chainId - The chain ID.
+ * @returns HTML string for the chain.
+ */
+export const getChainHTML = (chainId: number): string => {
+  const chain = getChainById(chainId);
+  return `
+    <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; line-height: 20px; color: #fff;">
+      <span><img src="${chain.chainIcon}" alt="${chain.name}" width="14" height="14" /></span>
+    </span>
+  `;
+};
+
+/**
+ * Wraps dynamic name elements in a styled container with a smaller font size.
+ * @param elements - HTML elements to wrap.
+ * @returns HTML string for the wrapper.
+ */
+/**
+ * Wraps dynamic name elements in a styled container with a smaller font size.
+ * Handles nodeMap references by converting them to HTML links.
+ * @param elements - HTML elements or nodeMap references to wrap.
+ * @returns HTML string for the wrapper.
+ */
+export const getDynamicNameWrapperHTML = (...elements: string[]): string => {
+  /**
+   * Formats a value, converting nodeMap references to HTML links.
+   * @param value - The value to format (can be nodeMap reference or literal)
+   * @returns Formatted HTML string
+   */
+  const formatValue = (value: string): string => {
+    if (typeof value === 'string' && value.includes('{{nodeMap.')) {
+      // Replace only the value inside {{...}} with the HTML link, keep the rest of the string
+      return value.replace(/\{\{nodeMap\.(\d+)\.output\.(\w+)\}\}/g, (_match, nodeRef, outputProperty) => {
+        return `<a href="#" title="Node ${nodeRef} output">${nodeRef}.${outputProperty}</a>`;
+      });
+    }
+    if (typeof value === 'string' && value.length > 0 && !value.includes('<') && !value.includes('>')) {
+      return `<div>${value}</div>`;
+    }
+    return value;
+  };
+
+  const formattedElements = elements.map(formatValue);
+
+  return `
+    <div style="display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-size: 12px; font-weight: 700; line-height: 20px; color: #fff;">
+      ${formattedElements.join('')}
+    </div>
+  `;
+};
+
+export const shortenAddress = (address: string): string => {
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+}
+
+/**
+ * Maps a logic operator in text form to its corresponding symbol.
+ * For example, "eq" -> "=", "lt" -> "<", etc.
+ * @param operator - The logic operator as text.
+ * @returns The corresponding symbol as a string, or the original operator if not found.
+ */
+export const mapTextToLogicOperator = (operator: string): string => {
+  const operatorMap: Record<string, string> = {
+    eq: '=',
+    neq: '≠',
+    lt: '<',
+    lte: '≤',
+    gt: '>',
+    gte: '≥',
+  } as const;
+  return operatorMap[operator] ?? operator;
+};
+
+/**
+ * Returns a formatted comparison string using the logic operator and comparison value.
+ * If the comparison value is a history reference, returns 'changes'.
+ * @param condition - The logic operator as text.
+ * @param comparisonValue - The value to compare to.
+ * @returns The formatted comparison string or 'changes' if referencing history.
+ */
+export const getComparisonString = (condition: string, comparisonValue: string): string => {
+  if (comparisonValue === '{{history.0.value}}') {
+    return 'changes';
+  }
+  return `${mapTextToLogicOperator(condition)} ${comparisonValue}`;
 };
