@@ -301,7 +301,15 @@ export const getChainHTML = (chainId: number): string => {
   const chain = getChainById(chainId);
   return `
     <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; line-height: 20px; color: #fff;">
-      <span><img src="${chain.chainIcon}" alt="${chain.name}" width="14" height="14" /></span>
+      <span>
+        <img 
+          src="${chain.chainIcon}" 
+          alt="${chain.name}" 
+          width="14" 
+          height="14" 
+          style="border-radius: 50%;" 
+        />
+      </span>
     </span>
   `;
 };
