@@ -286,7 +286,7 @@ export const getTokenHTML = async (chainId: number, tokenAddress: string): Promi
   const token = await getToken(chainId, tokenAddress);
   return `
     <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; line-height: 20px; color: #fff;">
-      <div>${token.name}</div>
+      <div>${token.symbol}</div>
       <img src="${token.image}" alt="${token.name}" width="14" height="14" />
     </div>
   `
