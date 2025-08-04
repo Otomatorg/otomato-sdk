@@ -388,3 +388,36 @@ export const getComparisonString = (condition: string, comparisonValue: string):
   }
   return `${mapTextToLogicOperator(condition)} ${comparisonValue}`;
 };
+
+/**
+ * Finds the new elements in an array compared to an old array.
+ * @param oldArray - The old array.
+ * @param newArray - The new array.
+ * @returns The new elements.
+ */
+export const findNewElements = (oldArray: string[], newArray: string[]): string[] => {
+  // Find the first position where arrays start to match
+  let matchStartIndex = -1;
+  
+  for (let i = 0; i < newArray.length; i++) {
+    // Check if from position i, the arrays match
+    let matches = true;
+    for (let j = 0; j < oldArray.length && (i + j) < newArray.length; j++) {
+      if (oldArray[j] !== newArray[i + j]) {
+        matches = false;
+        break;
+      }
+    }
+    
+    if (matches) {
+      matchStartIndex = i;
+      break;
+    }
+  }
+  
+  // Handle different cases
+  if (matchStartIndex === -1) {
+    return newArray; // No match found, entire array is new
+  }
+  return matchStartIndex > 0 ? newArray.slice(0, matchStartIndex) : [];
+}
