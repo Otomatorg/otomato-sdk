@@ -647,7 +647,89 @@ const createWithdrawOnAaveHackWorkflow = (): Workflow => {
     return workflow;
 }
 
+const createMonitorHyperliquidFundingRatesWorkflow = (): Workflow => {
+    const trigger = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
+    trigger.setParams('period', 3600000); // 1 hour
+    trigger.setParams('limit', 2160) // 24 hours a day * 90 days 
+    trigger.setPosition(400, 120);
+
+    const gsheetAction = new Action(ACTIONS.OTHERS.GSHEET.GSHEET);
+    gsheetAction.setParams("data", [
+        [
+            "BTC",
+            "ETH",
+            "BNB",
+            "SOL",
+            "XRP",
+            "ADA",
+            "AVAX",
+            "DOGE",
+            "DOT",
+            "TRX",
+            "LINK",
+            "MATIC",
+            "TON",
+            "ATOM",
+            "LTC",
+            "NEAR",
+            "UNI",
+            "OP",
+            "RNDR",
+            "IMX"
+        ],
+        [
+            "{{external.functions.hyperliquidFunding(BTC,,)}}",
+            "{{external.functions.hyperliquidFunding(ETH,,)}}",
+            "{{external.functions.hyperliquidFunding(BNB,,)}}",
+            "{{external.functions.hyperliquidFunding(SOL,,)}}",
+            "{{external.functions.hyperliquidFunding(XRP,,)}}",
+            "{{external.functions.hyperliquidFunding(ADA,,)}}",
+            "{{external.functions.hyperliquidFunding(AVAX,,)}}",
+            "{{external.functions.hyperliquidFunding(DOGE,,)}}",
+            "{{external.functions.hyperliquidFunding(DOT,,)}}",
+            "{{external.functions.hyperliquidFunding(TRX,,)}}",
+            "{{external.functions.hyperliquidFunding(LINK,,)}}",
+            "{{external.functions.hyperliquidFunding(MATIC,,)}}",
+            "{{external.functions.hyperliquidFunding(TON,,)}}",
+            "{{external.functions.hyperliquidFunding(ATOM,,)}}",
+            "{{external.functions.hyperliquidFunding(LTC,,)}}",
+            "{{external.functions.hyperliquidFunding(NEAR,,)}}",
+            "{{external.functions.hyperliquidFunding(UNI,,)}}",
+            "{{external.functions.hyperliquidFunding(OP,,)}}",
+            "{{external.functions.hyperliquidFunding(RNDR,,)}}",
+            "{{external.functions.hyperliquidFunding(IMX,,)}}"
+        ]
+    ]);
+    gsheetAction.setParams("mode", "append");
+    gsheetAction.setPosition(400, 240);
+
+    const edge = new Edge({ source: trigger, target: gsheetAction });
+
+    const workflow = new Workflow(
+        `Monitor Hyperliquid hourly funding rates for a selection of assets`,
+        [trigger, gsheetAction],
+        [edge]
+    );
+
+    return workflow;
+}
+
 export const WORKFLOW_TEMPLATES = [
+    {
+        'name': 'Monitor Hyperliquid hourly funding rates',
+        'description': 'Monitor Hyperliquid hourly funding rates for a selection of assets and store it in a gsheet.',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.DEXES, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperliquid_funding_rates_template.webp',
+        'image': [
+            TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
+            ACTIONS.OTHERS.GSHEET.GSHEET.image
+        ],
+        'blockIDs': [
+            TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.blockId,
+            ACTIONS.OTHERS.GSHEET.GSHEET.blockId
+        ],
+        createWorkflow: createMonitorHyperliquidFundingRatesWorkflow
+    },
     {
         'name': 'Instantly withdraw liquidity from AAVE if a hack is detected',
         'description': 'Instantly withdraw liquidity from AAVE if a hack is announced on Twitter either via AAVE\'s official account or by lookonchain',
