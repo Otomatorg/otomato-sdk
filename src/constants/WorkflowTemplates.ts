@@ -706,7 +706,7 @@ const createMonitorHyperliquidFundingRatesWorkflow = (): Workflow => {
     const edge = new Edge({ source: trigger, target: gsheetAction });
 
     const workflow = new Workflow(
-        `Monitor Hyperliquid hourly funding rates for a selection of assets`,
+        `Save Hyperliquid hourly funding rates in a Google Sheet`,
         [trigger, gsheetAction],
         [edge]
     );
@@ -716,10 +716,10 @@ const createMonitorHyperliquidFundingRatesWorkflow = (): Workflow => {
 
 export const WORKFLOW_TEMPLATES = [
     {
-        'name': 'Monitor Hyperliquid hourly funding rates',
-        'description': 'Monitor Hyperliquid hourly funding rates for a selection of assets and store it in a gsheet.',
+        'name': 'Save Hyperliquid hourly funding rates in a Google Sheet',
+        'description': 'Save Hyperliquid hourly funding rates for a selection of 20 assets (BTC, ETH, BNB, SOL, XRP, ADA, AVAX, DOGE, etc.) in a Google Sheet.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.DEXES, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperliquid_funding_rates_template.webp',
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/google_sheet_template.webp',
         'image': [
             TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
             ACTIONS.OTHERS.GSHEET.GSHEET.image
