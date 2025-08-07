@@ -1807,6 +1807,62 @@ export const TOKENS: Tokens = {
       symbol: "sUSDe",
       decimals: 18,
       image: "https://static.debank.com/image/eth_token/logo_url/0x4c9edd5852cd905f086c759e8383e09bff1e68b3/1228d6e73f70f37ec1f6fe02a3bbe6ff.png"
+    },
+    {
+      symbol: 'hbUSDT',
+      contractAddress: '0x5e105266db42f78FA814322Bce7f388B4C2e61eb',
+      image: 'https://app.hyperbeat.org/assets/icons/tokens/hbusdt.svg',
+      decimals: 18,
+      name: 'Hyperbeat USDT'
+    },
+    {
+      symbol: 'USR',
+      contractAddress: '0x0aD339d66BF4AeD5ce31c64Bc37B3244b6394A77',
+      image: 'https://app.hyperbeat.org/assets/icons/tokens/usr.svg',
+      decimals: 18,
+      name: 'Resolv USD'
+    },
+    {
+      symbol: 'cmETH',
+      contractAddress: '0xE6829d9a7eE3040e1276Fa75293Bde931859e8fA',
+      image: 'https://app.hyperbeat.org/assets/icons/tokens/cmeth.svg',
+      decimals: 18,
+      name: 'cmETH'
+    },
+    {
+      symbol: 'RLP',
+      contractAddress: '0x0a3d8466F5dE586FA5F6DE117301e2f90bCC5c48',
+      image: 'https://app.hyperbeat.org/assets/icons/tokens/rlp.svg',
+      decimals: 18,
+      name: 'Resolv Liquidity Provider Token'
+    },
+    {
+      symbol: 'PT-hbUSDT-18DEC2025',
+      contractAddress: '0x31A75680dE78BB2787ffe9840DA569DbDf4504f5',
+      image: 'https://app.hyperbeat.org/assets/icons/tokens/pt-hbusdt-18dec2025.svg',
+      decimals: 6,
+      name: 'PT Hyperbeat USDT 18DEC2025'
+    },
+    {
+      symbol: 'hbHYPE',
+      contractAddress: '0x96C6cBB6251Ee1c257b2162ca0f39AA5Fa44B1FB',
+      image: 'https://app.hyperbeat.org/assets/icons/tokens/hbhype.svg',
+      decimals: 18,
+      name: 'Hyperbeat Ultra HYPE'
+    },
+    {
+      symbol: 'rUSDC',
+      contractAddress: '0x9ab96A4668456896d45c301Bc3A15Cee76AA7B8D',
+      image: 'https://app.hyperbeat.org/assets/icons/tokens/rusdc.svg',
+      decimals: 6,
+      name: 'Relend Network USDC'
+    },
+    {
+      symbol: 'kHYPE',
+      contractAddress: '0xfD739d4e423301CE9385c1fb8850539D657C296D',
+      image: 'https://app.hyperbeat.org/assets/icons/tokens/khype.svg',
+      decimals: 18,
+      name: 'Kinetiq Staked HYPE'
     }
   ]
 };
