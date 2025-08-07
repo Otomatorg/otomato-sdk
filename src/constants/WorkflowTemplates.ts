@@ -525,7 +525,7 @@ const createTwitterAiNotificationWorkflow = (username: { display: string, tag: s
         ifAction.setPosition(400, 360);
 
         const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-        telegramAction.setParams('message', wfData.notification);
+        telegramAction.setParams('message', wfData.notification + ' ' + trigger.getOutputVariableName('tweetURL'));
         telegramAction.setPosition(400, 480);
 
         const edge = new Edge({ source: trigger, target: aiAction });
