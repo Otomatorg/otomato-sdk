@@ -421,3 +421,26 @@ export const findNewElements = (oldArray: string[], newArray: string[]): string[
   }
   return matchStartIndex > 0 ? newArray.slice(0, matchStartIndex) : [];
 }
+
+export const createEthersContract = (chainId: number, contractAddress: string, abi: any[], rpcUrl?: string) => {
+
+  let providerUrl; 
+
+  if (rpcUrl) {
+    providerUrl = rpcUrl;
+  } else {
+    const chainName = chainId == 1 ? 'INFURA' : Object.keys(CHAINS).find(key => CHAINS[key as keyof typeof CHAINS] == chainId);
+
+    if (!chainName) {
+      throw new Error(`Unsupported chain ID: ${chainId}`);
+    }
+
+    providerUrl = process.env[`${chainName}_HTTPS_PROVIDER`];
+  }
+
+  if (!providerUrl) throw new Error("No provider url found")
+
+  const provider = new ethers.JsonRpcProvider(providerUrl);
+
+  return new ethers.Contract(contractAddress, abi, provider);
+}
