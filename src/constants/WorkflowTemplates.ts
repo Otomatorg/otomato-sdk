@@ -6,7 +6,7 @@ export const WORKFLOW_TEMPLATES_TAGS = {
     TRADING: 'Trading',
     ON_CHAIN_MONITORING: 'On-chain monitoring',
     YIELD: 'Yield',
-    NOTIFICATIONS: 'notifications',
+    NOTIFICATIONS: 'Notifications',
     ABSTRACT: 'Abstract',
     DEXES: 'Dexes',
     LENDING: 'Lending'
