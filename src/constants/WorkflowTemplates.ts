@@ -542,8 +542,9 @@ const createTwitterAiNotificationWorkflow = (username: { display: string, tag: s
     }
 }
 
-const createTwitterAiNotificationTemplate = (username: { display: string, tag: string }, wfData: { prompt: string, notification: string, wfTitle: string, description: string }, thumbnail: string) => {
+const createTwitterAiNotificationTemplate = (id: number, username: { display: string, tag: string }, wfData: { prompt: string, notification: string, wfTitle: string, description: string }, thumbnail: string) => {
     return {
+        'id': id,
         'name': wfData.wfTitle,
         'description': wfData.description,
         'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -716,6 +717,7 @@ const createMonitorHyperliquidFundingRatesWorkflow = (): Workflow => {
 
 export const WORKFLOW_TEMPLATES = [
     {
+        'id': 1,
         'name': 'Save Hyperliquid hourly funding rates in a Google Sheet',
         'description': 'Save Hyperliquid hourly funding rates for a selection of 20 assets (BTC, ETH, BNB, SOL, XRP, ADA, AVAX, DOGE, etc.) in a Google Sheet.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.DEXES, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -731,6 +733,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createMonitorHyperliquidFundingRatesWorkflow
     },
     {
+        'id': 2,
         'name': 'Instantly withdraw liquidity from AAVE if a hack is detected',
         'description': 'Instantly withdraw liquidity from AAVE if a hack is announced on Twitter either via AAVE\'s official account or by lookonchain',
         'tags': [WORKFLOW_TEMPLATES_TAGS.LENDING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -750,6 +753,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createWithdrawOnAaveHackWorkflow
     },
     {
+        'id': 3,
         'name': 'Get notified when a given uniswap position is out of range',
         'description': 'Notify me when a given uniswap position is out of range! https://app.uniswap.org/positions',
         'tags': [WORKFLOW_TEMPLATES_TAGS.DEXES, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -765,6 +769,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createUniswapPositionOutOfRangeNotificationWorkflow
     },
     createTwitterAiNotificationTemplate(
+        4,
         { display: 'Hyperliquid', tag: 'HyperliquidX' },
         {
             prompt: 'the tweet mentions or hints about a season 2, an airdrop, a liquidity mining campaign, points for trading or using the HyperEVM, or any trading incentives in $Hype',
@@ -775,6 +780,7 @@ export const WORKFLOW_TEMPLATES = [
         'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperliquid_template.webp',
     ),
     {
+        'id': 5,
         'name': 'Get notified when a new flash badge is available on Abstract',
         'description': 'Notify me when a new flash badge is available on Abstract',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -791,6 +797,7 @@ export const WORKFLOW_TEMPLATES = [
     },
 
     {
+        'id': 6,
         'name': 'When the Ethereum foundation sells ETH, notify me',
         'description': 'Notify me when the Ethereum foundation (0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe) sells ETH',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.TRADING],
@@ -806,6 +813,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createEthereumFoundationTransferNotificationWorkflow
     },
     {
+        'id': 7,
         'name': 'Receive alerts for wallet activity',
         'description': 'Get notified when a given wallet receives or sends any token on any chain',
         'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -821,6 +829,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createTokenMovementNotificationWorkflow
     },
     createTwitterAiNotificationTemplate(
+        8,
         { display: 'Strategy', tag: 'Strategy' },
         {
             prompt: 'the tweet announces that Microstrategy acquired more bitcoin',
@@ -831,6 +840,7 @@ export const WORKFLOW_TEMPLATES = [
         'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/microstrategy.webp'
     ),
     {
+        'id': 9,
         'name': 'Daily yield updates',
         'description': 'Receive an email every day with a recap from all the money market yields for ETH and USDC & the current gas price.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -863,6 +873,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createSUsdeYieldBuy
     },*/
     {
+        'id': 10,
         'name': 'sUSDE yield notification',
         'description': 'Notify me when the sUSDe yield becomes negative',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -878,6 +889,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createSusdeYieldNotification
     },
     {
+        'id': 11,
         'name': 'AAVE borrowing rate notification',
         'description': 'Notify me when the USDC borrowing rate on Base is above 5%',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.YIELD],
@@ -893,6 +905,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createAAVEBorrowingRateNotificationWorkflow
     },
     {
+        'id': 12,
         'name': 'Get notified when a new app is listed on the abstract portal',
         'description': 'Notify me when a new app is listed on the abstract portal',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -908,6 +921,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: abstractGetNotifiedOnNewAppRelease
     },
     {
+        'id': 13,
         'name': 'Get notified when insider gets a new badge',
         'description': 'Get notified when insider gets a new badge',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -955,6 +969,7 @@ export const WORKFLOW_TEMPLATES = [
     },*/
 
     {
+        'id': 14,
         'name': 'Get notified when you can unstake your Stakestone position',
         'description': 'Notify me when you can unstake your Stakestone position',
         'tags': [WORKFLOW_TEMPLATES_TAGS.YIELD, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -970,6 +985,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createStakestoneUnstakeNotificationWorkflow
     },
     {
+        'id': 15,
         'name': 'Get notified when Hyperlend raise their deposit cap for stHype',
         'description': 'Notify me when Hyperlend raise their deposit cap for stHype',
         'tags': [WORKFLOW_TEMPLATES_TAGS.LENDING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -1000,6 +1016,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createStakestoneInstantWithdrawalNotificationWorkflow
     },*/
     {
+        'id': 16,
         'name': 'Get notified when I receive USDC',
         'description': 'Notify me when I receive USDC',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -1015,6 +1032,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createUSDCReceiveNotificationWorkflow
     },
     {
+        'id': 17,
         'name': 'Save all the current yields for USDC on base (AAVE, Compound, Moonwell, Spark USDC Vault, Moonwell Flagship USDC, Seamless USDC Vault, Steakhouse USDC, Gauntlet USDC Prime) every hour',
         'description': 'Save all the current yields for USDC on base (AAVE, Compound, Moonwell, Spark USDC Vault, Moonwell Flagship USDC, Seamless USDC Vault, Steakhouse USDC, Gauntlet USDC Prime) every hour',
         'tags': [WORKFLOW_TEMPLATES_TAGS.YIELD, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -1030,6 +1048,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createUSDCYieldsStorageWorkflow
     },
     {
+        'id': 18,
         'name': 'Get notified when the difference between BTC spot and perpetual prices exceeds 0.15%',
         'description': 'Get notified when the difference between BTC spot and perpetual prices exceeds 0.15%',
         'tags': [WORKFLOW_TEMPLATES_TAGS.DEXES, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -1050,6 +1069,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createHyperliquidBTCSpotNPerpsThresholdNotificationWorkflow
     },
     {
+        'id': 19,
         'name': 'Get notified when a project announces a new raise',
         'description': 'Get notified when a project announces raising a new round',
         'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -1065,6 +1085,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createDefillamaRaiseNotificationWorkflow
     },
     {
+        'id': 20,
         'name': 'Buy cbBTC when PeterSchiff tweets a bearish tweet',
         'description': 'Buy cbBTC when PeterSchiff tweets a bearish tweet',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -1084,6 +1105,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createBuyBitcoinOnPeterSchiffBearishWorkflow
     },
     createTwitterAiNotificationTemplate(
+        21,
         { display: 'Hyperliquid', tag: 'HyperliquidX' },
         {
             prompt: 'the tweet announces a new listing',
@@ -1094,6 +1116,7 @@ export const WORKFLOW_TEMPLATES = [
         'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperliquid_template.webp'
     ),
     createTwitterAiNotificationTemplate(
+        22,
         { display: 'lookonchain', tag: 'lookonchain' },
         {
             prompt: 'the tweet mentions that AAVE has been hacked',
@@ -1104,6 +1127,7 @@ export const WORKFLOW_TEMPLATES = [
         'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/aave.webp'
     ),
     createTwitterAiNotificationTemplate(
+        23,
         { display: 'MegaETH', tag: 'megaeth_labs' },
         {
             prompt: 'the tweet announces mainnet or TGE',
@@ -1114,6 +1138,7 @@ export const WORKFLOW_TEMPLATES = [
         'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/megaeth.webp'
     ),
     createTwitterAiNotificationTemplate(
+        24,
         { display: 'Somnia', tag: 'Somnia_Network' },
         {
             prompt: 'the tweet announces mainnet or TGE',
@@ -1124,6 +1149,7 @@ export const WORKFLOW_TEMPLATES = [
         'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/somnia.webp'
     ),
     createTwitterAiNotificationTemplate(
+        25,
         { display: 'Monad', tag: 'monad' },
         {
             prompt: 'the tweet announces mainnet or TGE',
@@ -1134,6 +1160,7 @@ export const WORKFLOW_TEMPLATES = [
         'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/monad.webp'
     ),
     createTwitterAiNotificationTemplate(
+        26,
         { display: 'Binance', tag: 'binance' },
         {
             prompt: 'the tweet announces a new token listing',
@@ -1144,6 +1171,7 @@ export const WORKFLOW_TEMPLATES = [
         'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/binance.webp'
     ),
     createTwitterAiNotificationTemplate(
+        27,
         { display: 'VitalikButerin', tag: 'VitalikButerin' },
         {
             prompt: 'the tweet is bullish about Ethereum',
@@ -1154,6 +1182,7 @@ export const WORKFLOW_TEMPLATES = [
         'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/vitalik.webp'
     ),
     createTwitterAiNotificationTemplate(
+        28,
         { display: 'Aave', tag: 'aave' },
         {
             prompt: 'the tweet announces a major partnership',
@@ -1164,6 +1193,7 @@ export const WORKFLOW_TEMPLATES = [
         'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/aave.webp'
     ),
     createTwitterAiNotificationTemplate(
+        29,
         { display: 'MorphoLabs', tag: 'MorphoLabs' },
         {
             prompt: 'the tweet announces a major partnership',
@@ -1174,6 +1204,7 @@ export const WORKFLOW_TEMPLATES = [
         'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/morpho.webp'
     ),
     createTwitterAiNotificationTemplate(
+        30,
         { display: 'phtevenstrong', tag: 'phtevenstrong' },
         {
             prompt: 'the tweet is about yield opportunities',
@@ -1184,6 +1215,7 @@ export const WORKFLOW_TEMPLATES = [
         'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/twitter_yield_strat.webp'
     ),
     {
+        'id': 31,
         'name': 'Daily Fear & Greed-Based cbBTC Trading',
         'description': 'Automatically trade cbBTC daily based on the Fear & Greed Index—buy when low, sell when high.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS],
@@ -1199,6 +1231,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: createDCAFearAndGreed
     },
     {
+        'id': 32,
         'name': 'Buy ETH when the market sentiment is extremely fearful - capital efficient',
         'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 45. The idle funds are generating yield on AAVE.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.YIELD],
@@ -1219,6 +1252,7 @@ export const WORKFLOW_TEMPLATES = [
     },
 
     {
+        'id': 33,
         'name': 'Get notified when a given streamer goes live',
         'description': 'Notify me when a given streamer goes live',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -1234,6 +1268,7 @@ export const WORKFLOW_TEMPLATES = [
         createWorkflow: abstractGetNotifiedWhenStreamerIsLive
     },
     {
+        'id': 34,
         'name': 'Get Notified When Ethereum Gas drops below 6 Gwei',
         'description': 'Receive an email alert when Ethereum gas prices fall below 6 gwei.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
@@ -1250,6 +1285,7 @@ export const WORKFLOW_TEMPLATES = [
     },
 
     {
+        'id': 35, 
         'name': 'cbBTC transfer notification',
         'description': 'Receive notifications when a top cbBTC holder (0xbbbb....ffcb) transfers cbBTC',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
