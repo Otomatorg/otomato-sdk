@@ -102,7 +102,8 @@ describe('Type Validator Utility Functions', () => {
             expect(validateType('percentage', 100)).to.be.true;
             expect(validateType('percentage', -1)).to.be.false;
             expect(validateType('percentage', 101)).to.be.false;
-            expect(validateType('percentage', '50')).to.be.false;
+            expect(validateType('percentage', '50')).to.be.true;
+            expect(validateType('percentage', '150')).to.be.false;
         });
     });
 
