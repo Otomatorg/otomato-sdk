@@ -27,7 +27,7 @@ export function validateType(expectedType: string, value: any): boolean {
         case 'ufixed':
             return (typeof value === 'number') || value === MAX_BIGINT;
         case 'percentage':
-            return typeof value === 'number' && value >= 0 && value <= 100;
+            return (typeof value === 'number' || (typeof value === 'string' && isNumericString(value))) && Number(value) >= 0 && Number(value) <= 100;
         case 'url':
             return typeof value === 'string' && isValidUrl(value);
         case 'phone_number':
