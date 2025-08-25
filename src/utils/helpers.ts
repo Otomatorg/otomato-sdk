@@ -347,7 +347,7 @@ export const getDynamicNameWrapperHTML = (...elements: string[]): string => {
   const formattedElements = elements.map(formatValue);
 
   return `
-    <div style="display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-size: 12px; font-weight: 700; line-height: 20px; color: #fff;">
+    <div style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; line-height: 20px; color: #fff;">
       ${formattedElements.join('')}
     </div>
   `;
@@ -443,4 +443,44 @@ export const createEthersContract = (chainId: number, contractAddress: string, a
   const provider = new ethers.JsonRpcProvider(providerUrl);
 
   return new ethers.Contract(contractAddress, abi, provider);
+}
+
+export const jsonStringifyCircularObject = async (obj: any) => {
+  // Attempt to safely stringify obj, omitting circular references
+  function getCircularReplacer() {
+    const seen = new WeakSet();
+    return function (key: any, value: any) {
+        if (typeof value === "object" && value !== null) {
+            if (seen.has(value)) {
+                return "[Circular]";
+            }
+            seen.add(value);
+        }
+        return value;
+    };
+  }
+
+  let safeStringifiedEnv;
+  try {
+    safeStringifiedEnv = JSON.stringify(obj, getCircularReplacer(), 2);
+    console.log(safeStringifiedEnv);
+  } catch (err) {
+    console.log("[obj] Could not stringify obj due to:", err);
+  }
+
+  // Additionally, log the object using util.inspect to see non-enumerable and circular structures
+  try {
+    // Dynamically import util for browser/node compatibility
+    let util;
+    if (typeof require !== "undefined") {
+        util = require("util");
+    } else if (typeof window === "undefined") {
+        util = (await import("util")).default;
+    }
+    if (util && util.inspect) {
+        console.log(util.inspect(obj, { showHidden: false, depth: 5, colors: true }));
+    }
+  } catch (err) {
+    console.log("[obj] Could not inspect obj object due to:", err);
+  }
 }
