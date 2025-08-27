@@ -345,8 +345,8 @@ export const getDynamicNameWrapperHTML = (...elements: string[]): string => {
   // const formattedElements = elements.map(formatValue);
 
   return `
-    <div style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; line-height: 20px; color: #fff;">
-      ${elements.join('')}
+    <div style="display: inline-flex; align-items: center; font-size: 12px; font-weight: 700; line-height: 20px;">
+      ${elements.join(' ')}
     </div>
   `;
 };
