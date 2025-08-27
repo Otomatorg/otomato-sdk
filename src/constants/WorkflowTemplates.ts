@@ -9,8 +9,41 @@ export const WORKFLOW_TEMPLATES_TAGS = {
     NOTIFICATIONS: 'Notifications',
     ABSTRACT: 'Abstract',
     DEXES: 'Dexes',
-    LENDING: 'Lending'
+    LENDING: 'Lending',
+    IEXEC: 'Iexec'
 };
+
+const yieldUpdateMessage = `Daily Yield Report 🚀
+
+------------------      USDC     ------------------------
+
+📍 On Base
+    •   IONIC: {{external.functions.ionicLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}%
+    •   AAVE: {{external.functions.aaveLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}%
+    •   Compound: {{external.functions.compoundLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,0)}}%
+    •   Ironclad: {{external.functions.ironcladLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}%
+    •   Moonwell: {{external.functions.moonwellLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}%
+
+📍 On Arbitrum
+    •   AAVE: {{external.functions.aaveLendingRate(42161,0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8)}}%
+    •   Compound: {{external.functions.compoundLendingRate(42161,0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8,0)}}%
+
+------------------      ETH     ------------------------
+
+📍 On Base
+    •   IONIC: {{external.functions.ionicLendingRate(8453,0x4200000000000000000000000000000000000006)}}%
+    •   AAVE: {{external.functions.aaveLendingRate(8453,0x4200000000000000000000000000000000000006)}}%
+    •   Compound: {{external.functions.compoundLendingRate(8453,0x4200000000000000000000000000000000000006,0)}}%
+    •   Ironclad: {{external.functions.ironcladLendingRate(8453,0x4200000000000000000000000000000000000006)}}%
+    •   Moonwell: {{external.functions.moonwellLendingRate(8453,0x4200000000000000000000000000000000000006)}}%
+
+📍 On Arbitrum
+    •   AAVE: {{external.functions.aaveLendingRate(42161,0x82aF49447D8a07e3bd95BD0d56f35241523fBab1)}}%
+    •   Compound: {{external.functions.compoundLendingRate(42161,0x82aF49447D8a07e3bd95BD0d56f35241523fBab1,0)}}%
+
+The gas price on Ethereum is currently {{external.functions.mainnetGasPrice(,)}} gwei.
+
+See you tomorrow!`
 
 const createModeTransferNotificationWorkflow = () => {
     const cbBTCTransferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
@@ -194,29 +227,7 @@ const dailyYieldEmail = async () => {
     trigger.setParams('period', 86400000)
     trigger.setParams('limit', 30)
     const notificationAction = new Action(ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL);
-    notificationAction.setParams("body", `Daily Yield Report 🚀
-
-------------------      USDC     ------------------------
-
-📍 On Base
-    •   IONIC: {{external.functions.ionicLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}%
-    •   AAVE: {{external.functions.aaveLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}%
-    •   Compound: {{external.functions.compoundLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913,0)}}%
-    •   Ironclad: {{external.functions.ironcladLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}%
-    •   Moonwell: {{external.functions.moonwellLendingRate(8453,0x833589fcd6edb6e08f4c7c32d4f71b54bda02913)}}%
-
-------------------      ETH     ------------------------
-
-📍 On Base
-    •   IONIC: {{external.functions.ionicLendingRate(8453,0x4200000000000000000000000000000000000006)}}%
-    •   AAVE: {{external.functions.aaveLendingRate(8453,0x4200000000000000000000000000000000000006)}}%
-    •   Compound: {{external.functions.compoundLendingRate(8453,0x4200000000000000000000000000000000000006,0)}}%
-    •   Ironclad: {{external.functions.ironcladLendingRate(8453,0x4200000000000000000000000000000000000006)}}%
-    •   Moonwell: {{external.functions.moonwellLendingRate(8453,0x4200000000000000000000000000000000000006)}}%
-
-The gas price on Ethereum is currently {{external.functions.mainnetGasPrice(,)}} gwei.
-
-See you tomorrow!`);
+    notificationAction.setParams("body", yieldUpdateMessage);
     notificationAction.setParams("subject", "Daily yield updates");
     notificationAction.setPosition(400, 240);
 
@@ -713,6 +724,82 @@ const createMonitorHyperliquidFundingRatesWorkflow = (): Workflow => {
     );
 
     return workflow;
+}
+
+const createNFTSaleNotificationWorkflow = () => {
+  const trigger = new Trigger(TRIGGERS.NFTS.BLUR.NFT_SALE_TRIGGER);
+  trigger.setPosition(400, 120);
+
+  const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+  telegramAction.setParams('message', `New NFT sale detected on Blur: ${trigger.getOutputVariableName('message')}`);
+  telegramAction.setPosition(400, 360);
+
+  const edge1 = new Edge({ source: trigger, target: telegramAction });
+
+  const workflow = new Workflow(
+      'Get notified when a NFT is sold on Blur',
+      [trigger, telegramAction],
+      [edge1]
+  );
+
+  return workflow;
+};
+
+const createPudgyPenguinsSaleNotificationWorkflow = () => {
+  const trigger = new Trigger(TRIGGERS.NFTS.BLUR.NFT_SALE_TRIGGER);
+  trigger.setParams('contract', '0xbd3531da5cf5857e7cfaa92426877b022e612cf8');
+
+  const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+  telegramAction.setParams('message', `New Pudgy Penguins sale detected on Blur: ${trigger.getOutputVariableName('message')}`);
+
+  const edge1 = new Edge({ source: trigger, target: telegramAction });
+
+  const workflow = new Workflow(
+      'Get notified when a Pudgy Penguins is sold on Blur',
+      [trigger, telegramAction],
+      [edge1]
+  );
+
+  return workflow;
+};
+
+const createDailyHealthrateMonitoringWorkflow = (): Workflow => {
+  // Trigger: every 24 hours (1 day)
+  const trigger = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
+  trigger.setParams('period', 86400000); // 24 hours in milliseconds
+  trigger.setParams('limit', 90); // 90 days
+
+  // Action: send message to IexecTelegram
+  const telegramAction = new Action(ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM);
+  telegramAction.setParams(
+      'content',
+      `Your daily healthrate from Hyperbeat: {{external.functions.healthRatio(,0x1da89208e6cb5173e97a83461853b8400de4f7c37542cf010a10579a5f7ca451,,)}}`
+  );
+
+  // Edges
+  const edge1 = new Edge({ source: trigger, target: telegramAction });
+
+  // Workflow
+  const workflow = new Workflow(
+      'Daily Hyperbeat healthrate monitoring',
+      [trigger, telegramAction],
+      [edge1]
+  );
+
+  return workflow;
+};
+
+const dailyYieldIexecEmail = async () => {
+  const trigger = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
+  trigger.setParams('period', 86400000)
+  trigger.setParams('limit', 30)
+  const notificationAction = new Action(ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3MAIL);
+  notificationAction.setParams("content", yieldUpdateMessage);
+  notificationAction.setParams("subject", "Daily yield updates");
+
+  const edge = new Edge({ source: trigger, target: notificationAction });
+
+  return new Workflow('Daily yield updates', [trigger, notificationAction], [edge]);
 }
 
 export const WORKFLOW_TEMPLATES = [
@@ -1299,5 +1386,69 @@ export const WORKFLOW_TEMPLATES = [
             ACTIONS.NOTIFICATIONS.EMAIL.SEND_EMAIL.blockId
         ],
         createWorkflow: createModeTransferNotificationWorkflow
+    },
+    {
+        'id': 36, 
+        'name': 'Daily yield updates',
+        'description': 'Receive daily yield updates',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.IEXEC],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+        'image': [
+            TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
+            ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3MAIL.image
+        ],
+        'blockIDs': [
+            TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.blockId,
+            ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3MAIL.blockId
+        ],
+        createWorkflow: dailyYieldIexecEmail
+    },
+    {
+        'id': 37, 
+        'name': 'Daily Hyperbeat healthrate monitoring',
+        'description': 'Receive daily Hyperbeat healthrate monitoring on hbUSDT/USR market',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.IEXEC],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperbeat.webp',
+        'image': [
+            TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
+            ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM.image
+        ],
+        'blockIDs': [
+            TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.blockId,
+            ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM.blockId
+        ],
+        createWorkflow: createDailyHealthrateMonitoringWorkflow
+    },
+    {
+        'id': 38, 
+        'name': 'Get notified when a Pudgy Penguins is sold',
+        'description': 'Receive notifications when a Pudgy Penguins is sold',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.NFTS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/pudgy_penguins.webp',
+        'image': [
+            TRIGGERS.NFTS.BLUR.NFT_SALE_TRIGGER.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        'blockIDs': [
+            TRIGGERS.NFTS.BLUR.NFT_SALE_TRIGGER.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: createPudgyPenguinsSaleNotificationWorkflow
+    },
+    {
+        'id': 39, 
+        'name': 'Get notified when my NFT is sold',
+        'description': 'Receive notifications when my NFT is sold',
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.NFTS],
+        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/my_nft_sale.webp',
+        'image': [
+            TRIGGERS.NFTS.BLUR.NFT_SALE_TRIGGER.image,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+        ],
+        'blockIDs': [
+            TRIGGERS.NFTS.BLUR.NFT_SALE_TRIGGER.blockId,
+            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+        ],
+        createWorkflow: createNFTSaleNotificationWorkflow
     },
 ];
