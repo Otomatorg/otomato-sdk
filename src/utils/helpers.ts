@@ -329,24 +329,24 @@ export const getDynamicNameWrapperHTML = (...elements: string[]): string => {
    * @param value - The value to format (can be nodeMap reference or literal)
    * @returns Formatted HTML string
    */
-  // const formatValue = (value: string): string => {
-  //   // if (typeof value === 'string' && value.includes('{{nodeMap.')) {
-  //   //   // Replace only the value inside {{...}} with the HTML link, keep the rest of the string
-  //   //   return value.replace(/\{\{nodeMap\.(\d+)\.output\.(\w+)\}\}/g, (_match, nodeRef, outputProperty) => {
-  //   //     return `<a href="#" title="Node ${nodeRef} output">${nodeRef}.${outputProperty}</a>`;
-  //   //   });
-  //   // }
-  //   if (typeof value === 'string' && value.length > 0 && !value.includes('<') && !value.includes('>')) {
-  //     return `<div>${value}</div>`;
-  //   }
-  //   return value;
-  // };
+  const formatValue = (value: string): string => {
+    // if (typeof value === 'string' && value.includes('{{nodeMap.')) {
+    //   // Replace only the value inside {{...}} with the HTML link, keep the rest of the string
+    //   return value.replace(/\{\{nodeMap\.(\d+)\.output\.(\w+)\}\}/g, (_match, nodeRef, outputProperty) => {
+    //     return `<a href="#" title="Node ${nodeRef} output">${nodeRef}.${outputProperty}</a>`;
+    //   });
+    // }
+    if (typeof value === 'string' && value.length > 0 && !value.includes('<') && !value.includes('>')) {
+      return `<div>${value}</div>`;
+    }
+    return value;
+  };
 
-  // const formattedElements = elements.map(formatValue);
+  const formattedElements = elements.map(formatValue);
 
   return `
-    <div style="display: inline-flex; align-items: center; font-size: 12px; font-weight: 700; line-height: 20px;">
-      ${elements.join(' ')}
+    <div style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; line-height: 20px;">
+      ${formattedElements.join('')}
     </div>
   `;
 };
