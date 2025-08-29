@@ -802,6 +802,29 @@ const dailyYieldIexecEmail = async () => {
   return new Workflow('Daily yield updates', [trigger, notificationAction], [edge]);
 }
 
+const dailyCoinDeskNewsNotificationWorkflow = async () => {
+  const trigger = new Trigger(TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD);
+  trigger.setParams('period', 86400000)
+  trigger.setParams('limit', 30)
+
+  const httpAction = new Action(ACTIONS.CORE.HTTP_REQUEST.HTTP_REQUEST);
+  httpAction.setParams("url", "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.coindesk.com%2Farc%2Foutboundfeeds%2Frss");
+  httpAction.setParams("method", "GET");
+
+  const aiAction = new Action(ACTIONS.AI.AI.AI_TEXT);
+  aiAction.setParams('prompt', "Transform this CoinDesk API data into a clear, actionable cryptocurrency news summary. Focus on the most important stories, market trends, and developments that matter to crypto investors.");
+  aiAction.setParams('context', httpAction.getOutputVariableName('data'));
+
+  const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
+  telegramAction.setParams('message', aiAction.getOutputVariableName('result'));
+
+  const edge = new Edge({ source: trigger, target: httpAction });
+  const edge2 = new Edge({ source: httpAction, target: aiAction });
+  const edge3 = new Edge({ source: aiAction, target: telegramAction });
+
+  return new Workflow('Daily CoinDesk news notification', [trigger, httpAction, aiAction, telegramAction], [edge, edge2, edge3]);
+}
+
 export const WORKFLOW_TEMPLATES = [
     {
         'id': 1,
@@ -1451,4 +1474,24 @@ export const WORKFLOW_TEMPLATES = [
         ],
         createWorkflow: createNFTSaleNotificationWorkflow
     },
+    {
+      'id': 40, 
+      'name': 'Get daily CoinDesk News',
+      'description': 'Receive CoinDesk News everyday',
+      'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/coinDesk_news.webp',
+      'image': [
+          TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
+          ACTIONS.CORE.HTTP_REQUEST.HTTP_REQUEST.image,
+          ACTIONS.AI.AI.AI_TEXT.image,
+          ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+          TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.blockId,
+          ACTIONS.CORE.HTTP_REQUEST.HTTP_REQUEST.blockId,
+          ACTIONS.AI.AI.AI_TEXT.blockId,
+          ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: dailyCoinDeskNewsNotificationWorkflow
+  },
 ];
