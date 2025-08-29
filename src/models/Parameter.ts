@@ -6,4 +6,5 @@ export interface Parameter {
   value?: any;
   mandatory?: boolean;
   hideInUI?: boolean;
+  enum?: any;
 }
