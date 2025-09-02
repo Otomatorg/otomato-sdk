@@ -1,6 +1,7 @@
 import { Workflow, Trigger, Action, Edge, TRIGGERS, ACTIONS, CHAINS, getTokenFromSymbol, convertToTokenUnitsFromSymbol, convertToTokenUnits, WORKFLOW_LOOPING_TYPES, LOGIC_OPERATORS, ConditionGroup } from '../index.js';
 
 export const WORKFLOW_TEMPLATES_TAGS = {
+    IEXEC: 'Privacy Preserving',
     NFTS: 'NFTs',
     SOCIALS: 'Socials',
     TRADING: 'Trading',
@@ -9,8 +10,7 @@ export const WORKFLOW_TEMPLATES_TAGS = {
     NOTIFICATIONS: 'Notifications',
     ABSTRACT: 'Abstract',
     DEXES: 'Dexes',
-    LENDING: 'Lending',
-    IEXEC: 'Iexec'
+    LENDING: 'Lending'
 };
 
 const yieldUpdateMessage = `Daily Yield Report 🚀
@@ -1414,7 +1414,7 @@ export const WORKFLOW_TEMPLATES = [
         'id': 36, 
         'name': 'Daily yield updates',
         'description': 'Receive daily yield updates',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.IEXEC],
+        'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.IEXEC, WORKFLOW_TEMPLATES_TAGS.YIELD],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
         'image': [
             TRIGGERS.CORE.EVERY_PERIOD.EVERY_PERIOD.image,
