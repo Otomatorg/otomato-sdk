@@ -1413,7 +1413,7 @@ export const WORKFLOW_TEMPLATES = [
     {
         'id': 36, 
         'name': 'Daily yield updates',
-        'description': 'Receive daily yield updates',
+        'description': 'Receive privacy-preserving daily yield updates',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.IEXEC, WORKFLOW_TEMPLATES_TAGS.YIELD],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
         'image': [
@@ -1429,7 +1429,7 @@ export const WORKFLOW_TEMPLATES = [
     {
         'id': 37, 
         'name': 'Daily Hyperbeat healthrate monitoring',
-        'description': 'Receive daily Hyperbeat healthrate monitoring on hbUSDT/USR market',
+        'description': 'Receive privacy-preserving daily Hyperbeat healthrate updates on hbUSDT/USR market',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.IEXEC],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperbeat.webp',
         'image': [
