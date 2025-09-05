@@ -1261,6 +1261,37 @@ describe('Workflow Class - validateInternalVariables', () => {
 
     expect(invalidRefs).to.have.lengthOf(0);
   });
+
+  it('should accept parameters with children.filter(Boolean) pattern', () => {
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setRef('1');
+
+    const action1 = new Action(ACTIONS.CORE.SWAP.SWAP);
+    action1.setRef('2');
+
+    const action2 = new Action(ACTIONS.CORE.SWAP.SWAP);
+    action2.setRef('3');
+    action2.setParams('tokenIn', '{{nodeMap.2.children.filter(Boolean).0.output.transactionHash}}');
+
+    const workflow = new Workflow('Test Workflow', [trigger, action1, action2]);
+    const invalidRefs = workflow.validateInternalVariables();
+
+    expect(invalidRefs).to.have.lengthOf(0);
+  });
+
+  it('should accept parameters with children.filter(Boolean) pattern even for non-existent nodes', () => {
+    const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
+    trigger.setRef('1');
+
+    const action = new Action(ACTIONS.CORE.SWAP.SWAP);
+    action.setRef('2');
+    action.setParams('tokenIn', '{{nodeMap.99.children.filter(Boolean).0.output.transactionHash}}');
+
+    const workflow = new Workflow('Test Workflow', [trigger, action]);
+    const invalidRefs = workflow.validateInternalVariables();
+
+    expect(invalidRefs).to.have.lengthOf(0);
+  });
 });
 
 describe('Workflow Class - setSettings', () => {
