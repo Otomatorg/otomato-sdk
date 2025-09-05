@@ -243,7 +243,14 @@ export const getChainIconUrl = (chainId: number): string => {
       return 'https://otomato-network-images.s3.eu-west-1.amazonaws.com/chain_hyper_evm.webp';
     case CHAINS.OASIS:
       return 'https://otomato-network-images.s3.eu-west-1.amazonaws.com/chain_oasis.webp';
+    case CHAINS.ABSTRACT:
+      return 'https://otomato-network-images.s3.eu-west-1.amazonaws.com/chain_abstract.webp';
     default:
+      const chainEntry = Object.entries(CHAINS).find(([_, value]) => value === chainId);
+      if (chainEntry) {
+        const formattedName = chainEntry[0].toLowerCase();
+        return `https://otomato-network-images.s3.eu-west-1.amazonaws.com/chain_${formattedName}.webp`;
+      }
       throw new Error(`Chain icon not found for chainId: ${chainId}`);
   }
 };
