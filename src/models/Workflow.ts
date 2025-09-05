@@ -627,12 +627,6 @@ export class Workflow {
         if (match) {
           const referencedNodeRef = match[1];
           
-          // If the value contains ".children.filter(Boolean)", accept it as valid
-          if (value.includes('.children.filter(Boolean)')) {
-            // This is a valid pattern, no need to check further
-            return;
-          }
-          
           // Check if the referenced node exists in the workflow
           const referencedNode = this.getNode(referencedNodeRef);
           if (!referencedNode) {

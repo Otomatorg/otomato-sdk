@@ -1279,7 +1279,7 @@ describe('Workflow Class - validateInternalVariables', () => {
     expect(invalidRefs).to.have.lengthOf(0);
   });
 
-  it('should accept parameters with children.filter(Boolean) pattern even for non-existent nodes', () => {
+  it('should still validate node existence for parameters with children.filter(Boolean) pattern', () => {
     const trigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
     trigger.setRef('1');
 
@@ -1290,7 +1290,16 @@ describe('Workflow Class - validateInternalVariables', () => {
     const workflow = new Workflow('Test Workflow', [trigger, action]);
     const invalidRefs = workflow.validateInternalVariables();
 
-    expect(invalidRefs).to.have.lengthOf(0);
+    expect(invalidRefs).to.have.lengthOf(1);
+    expect(invalidRefs).to.deep.include.members([
+      {
+        nodeRef: '2',
+        nodeType: 'action',
+        parameterKey: 'tokenIn',
+        parameterValue: '{{nodeMap.99.children.filter(Boolean).0.output.transactionHash}}',
+        referencedNodeRef: '99'
+      }
+    ]);
   });
 });
 
