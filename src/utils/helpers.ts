@@ -292,10 +292,8 @@ export const getChainById = (chainId: number): { name: string; chainIcon: string
 export const getTokenHTML = async (chainId: number, tokenAddress: string): Promise<string> => {
   const token = await getToken(chainId, tokenAddress);
   return `
-    <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; line-height: 20px; color: #fff;">
-      <div>${token.symbol}</div>
-      <img src="${token.image}" alt="${token.name}" width="14" height="14" />
-    </div>
+      <span>${token.symbol}</span>
+      <span><img src="${token.image}" alt="${token.name}" width="14" height="14" /></span>
   `
 };
 
@@ -307,14 +305,14 @@ export const getTokenHTML = async (chainId: number, tokenAddress: string): Promi
 export const getChainHTML = (chainId: number): string => {
   const chain = getChainById(chainId);
   return `
-    <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; line-height: 20px; color: #fff;">
+    <span>
       <img 
         src="${chain.chainIcon}" 
         alt="${chain.name}" 
         width="14" 
         height="14" 
-        style="border-radius: 50%;" 
-      />
+          style="border-radius: 50%;" 
+        />
     </span>
   `;
 };
@@ -344,17 +342,17 @@ export const getDynamicNameWrapperHTML = (...elements: string[]): string => {
     //   });
     // }
     if (typeof value === 'string' && value.length > 0 && !value.includes('<') && !value.includes('>')) {
-      return `<div>${value}</div>`;
+      return `<span>${value}</span>`;
     }
-    return value;
+    return `${value}`;
   };
 
   const formattedElements = elements.map(formatValue);
 
   return `
-    <div style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; line-height: 20px;">
+    <p class="text-line-clamp-1">
       ${formattedElements.join('')}
-    </div>
+    </p>
   `;
 };
 
@@ -391,7 +389,7 @@ export const getComparisonString = (condition: string, comparisonValue: string):
   if (comparisonValue === '{{history.0.value}}') {
     return 'changes';
   }
-  return `${mapTextToLogicOperator(condition)} ${comparisonValue}`;
+  return `<span>${mapTextToLogicOperator(condition)} ${comparisonValue}</span>`;
 };
 
 /**
