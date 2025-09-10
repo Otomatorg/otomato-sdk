@@ -825,6 +825,106 @@ const dailyCoinDeskNewsNotificationWorkflow = async () => {
   return new Workflow('Daily CoinDesk news notification', [trigger, httpAction, aiAction, telegramAction], [edge, edge2, edge3]);
 }
 
+const createAaveHealthFactorAgentWorkflow = async (): Promise<Workflow> => {
+    
+  const aaveHealthFactorTrigger = new Trigger(TRIGGERS.LENDING.AAVE.HEALTH_FACTOR);
+  aaveHealthFactorTrigger.setParams('chainId', 42161);
+  aaveHealthFactorTrigger.setParams('abiParams.user', '0x9332D0cE5D45184515e0EA85bf9f4af09Cbf10Af');
+  aaveHealthFactorTrigger.setParams('condition', 'lte');
+  aaveHealthFactorTrigger.setParams('comparisonValue', 1.5);
+  aaveHealthFactorTrigger.setPosition(400, 120);
+
+  const aaveWithdrawAction = new Action(ACTIONS.LENDING.AAVE.WITHDRAW);
+  aaveWithdrawAction.setParams('chainId', 42161);
+  aaveWithdrawAction.setParams('abiParams.asset', '0x82af49447d8a07e3bd95bd0d56f35241523fbab1');
+  aaveWithdrawAction.setParams('abiParams.amount', '115792089237316195423570985008687907853269984665640564039457584007913129639935n');
+  aaveWithdrawAction.setParams('abiParams.to', null);
+  aaveWithdrawAction.setPosition(400, 240);
+
+  const iexecSendWeb3TelegramAction = new Action(ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM);
+  iexecSendWeb3TelegramAction.setParams('protectedData', '0xa0745746a3e664540b79dae6992cfd8088a0926f');
+  iexecSendWeb3TelegramAction.setParams('content', 'The health factor was above 1.5, so the funds were withdrawn to stay on the safe side.');
+  iexecSendWeb3TelegramAction.setPosition(400, 360);
+
+  const edge1 = new Edge({ source: aaveHealthFactorTrigger, target: aaveWithdrawAction });
+  const edge2 = new Edge({ source: aaveWithdrawAction, target: iexecSendWeb3TelegramAction });
+
+  const workflow = new Workflow('Withdraw from AAVE if the health factor is above 1.5', [aaveHealthFactorTrigger, aaveWithdrawAction, iexecSendWeb3TelegramAction], [edge1, edge2], null);
+
+  return workflow;
+};
+
+const createElonMuskTweeterAgentWorkflow = async (): Promise<Workflow> => {
+  const xXPostTriggerTrigger = new Trigger(TRIGGERS.TRENDING.X.X_POST_TRIGGER);
+  xXPostTriggerTrigger.setParams('username', 'elonmusk');
+  xXPostTriggerTrigger.setParams('includeRetweets', true);
+  xXPostTriggerTrigger.setPosition(400, 120);
+
+  const iexecSendWeb3TelegramAction = new Action(ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM);
+  iexecSendWeb3TelegramAction.setParams('protectedData', '0xa0745746a3e664540b79dae6992cfd8088a0926f');
+  iexecSendWeb3TelegramAction.setParams('content', `Elon Musk just tweeted. ${xXPostTriggerTrigger.getOutputVariableName('tweetContent')} ${xXPostTriggerTrigger.getOutputVariableName('tweetURL')}`);
+  iexecSendWeb3TelegramAction.setPosition(400, 240);
+
+  const edge1 = new Edge({ source: xXPostTriggerTrigger, target: iexecSendWeb3TelegramAction });
+
+  const workflow = new Workflow('Get notified when Elon Musk tweets', [xXPostTriggerTrigger, iexecSendWeb3TelegramAction], [edge1], null);
+
+  return workflow;
+};
+
+const createOrderLimitAgentWorkflow = async (): Promise<Workflow> => {
+  
+  const pricePriceMovementAgainstCurrencyTrigger = new Trigger(TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY);
+  pricePriceMovementAgainstCurrencyTrigger.setParams('chainId', 42161);
+  pricePriceMovementAgainstCurrencyTrigger.setParams('comparisonValue', 4500);
+  pricePriceMovementAgainstCurrencyTrigger.setParams('currency', 'USD');
+  pricePriceMovementAgainstCurrencyTrigger.setParams('condition', 'gt');
+  pricePriceMovementAgainstCurrencyTrigger.setParams('contractAddress', '0x82af49447d8a07e3bd95bd0d56f35241523fbab1');
+  pricePriceMovementAgainstCurrencyTrigger.setPosition(400, 120);
+
+  const odosSwapAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
+  odosSwapAction.setParams('chainId', 42161);
+  odosSwapAction.setParams('tokenIn', '0x82af49447d8a07e3bd95bd0d56f35241523fbab1');
+  odosSwapAction.setParams('tokenOut', '0xaf88d065e77c8cc2239327c5edb3a432268e5831');
+  odosSwapAction.setParams('amount', 100);
+  odosSwapAction.setParams('slippage', '0.3');
+  odosSwapAction.setPosition(400, 240);
+
+  const iexecSendWeb3TelegramAction = new Action(ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM);
+  iexecSendWeb3TelegramAction.setParams('protectedData', '0xa0745746a3e664540b79dae6992cfd8088a0926f');
+  iexecSendWeb3TelegramAction.setParams('content', 'Swapped on Odos as ETH price is above 4500');
+  iexecSendWeb3TelegramAction.setPosition(400, 360);
+
+  const edge1 = new Edge({ source: pricePriceMovementAgainstCurrencyTrigger, target: odosSwapAction });
+  const edge2 = new Edge({ source: odosSwapAction, target: iexecSendWeb3TelegramAction });
+
+  const workflow = new Workflow('Swap on Odos if ETH price is above 4500', [pricePriceMovementAgainstCurrencyTrigger, odosSwapAction, iexecSendWeb3TelegramAction], [edge1, edge2], null);
+
+  return workflow; 
+};
+
+const createPudgyPenguinHunterAgentWorkflow = async (): Promise<Workflow> => {  
+  
+  const blurListingTrigger = new Trigger(TRIGGERS.NFTS.BLUR.LISTING);
+  blurListingTrigger.setParams('contract', '0xbd3531da5cf5857e7cfaa92426877b022e612cf8');
+  blurListingTrigger.setParams('rarityCondition', 'lte');
+  blurListingTrigger.setParams('rarity', 5000);
+  blurListingTrigger.setParams('price', 30);
+  blurListingTrigger.setParams('traits', '{"Background":["Blue"],"Body":["Pineapple Suit"]}');
+  blurListingTrigger.setPosition(400, 120);
+
+  const iexecSendWeb3TelegramAction = new Action(ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM);
+  iexecSendWeb3TelegramAction.setParams('protectedData', '0xa0745746a3e664540b79dae6992cfd8088a0926f');
+  iexecSendWeb3TelegramAction.setParams('content', 'A Pudgy Penguin has just been listed.');
+  iexecSendWeb3TelegramAction.setPosition(400, 240);
+
+  const edge1 = new Edge({ source: blurListingTrigger, target: iexecSendWeb3TelegramAction });
+
+  const workflow = new Workflow('Get notified when a Pudgy Penguins is listed', [blurListingTrigger, iexecSendWeb3TelegramAction], [edge1], null);
+
+  return workflow;
+};
+
 export const WORKFLOW_TEMPLATES = [
     {
         'id': 1,
@@ -1493,5 +1593,86 @@ export const WORKFLOW_TEMPLATES = [
           ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
       ],
       createWorkflow: dailyCoinDeskNewsNotificationWorkflow
-  },
+    },
+    {
+      'id': 41, 
+      'name': 'Withdraw from AAVE if the health factor is above 1.5',
+      'description': 'Withdraw from AAVE if the health factor is above 1.5',
+      'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.LENDING, WORKFLOW_TEMPLATES_TAGS.IEXEC],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/aave.webp',
+      'image': [
+          TRIGGERS.LENDING.AAVE.HEALTH_FACTOR.image,
+          ACTIONS.LENDING.AAVE.WITHDRAW.image,
+          ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM.image
+      ],
+      'blockIDs': [
+          TRIGGERS.LENDING.AAVE.HEALTH_FACTOR.blockId,
+          ACTIONS.LENDING.AAVE.WITHDRAW.blockId,
+          ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM.blockId
+      ],
+      createWorkflow: createAaveHealthFactorAgentWorkflow
+    },
+    {
+      'id': 42,
+      'name': 'Get notified when Elon Musk tweets',
+      'description': 'Receive a notification every time Elon Musk tweets.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.SOCIALS,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.IEXEC
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/elon_tweet.webp',
+      'image': [
+        TRIGGERS.TRENDING.X.X_POST_TRIGGER.image,
+        ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM.image
+      ],
+      'blockIDs': [
+        TRIGGERS.TRENDING.X.X_POST_TRIGGER.blockId,
+        ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM.blockId
+      ],
+      createWorkflow: createElonMuskTweeterAgentWorkflow
+    },
+    {
+      'id': 43, 
+      'name': 'Swap on Odos if the price is above 4500',
+      'description': 'Automatically swap tokens on Odos when ETH price exceeds 4500 USD.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.SOCIALS,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.DEXES,
+        WORKFLOW_TEMPLATES_TAGS.IEXEC
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+      'image': [
+        TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY.image,
+        ACTIONS.SWAP.ODOS.SWAP.image,
+        ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM.image
+      ],
+      'blockIDs': [
+        TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY.blockId,
+        ACTIONS.SWAP.ODOS.SWAP.blockId,
+        ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM.blockId
+      ],
+      createWorkflow: createOrderLimitAgentWorkflow
+    },
+    {
+      'id': 44, 
+      'name': 'Get notified when a Pudgy Penguins is listed',
+      'description': 'Get notified when a Pudgy Penguin NFT with specific traits is listed on Blur.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.NFTS,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.IEXEC
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/pudgy_penguins.webp',
+      'image': [
+        TRIGGERS.NFTS.BLUR.LISTING.image,
+        ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM.image
+      ],
+      'blockIDs': [
+        TRIGGERS.NFTS.BLUR.LISTING.blockId,
+        ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM.blockId
+      ],
+      createWorkflow: createPudgyPenguinHunterAgentWorkflow
+    },
 ];
