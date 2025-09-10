@@ -341,7 +341,10 @@ export const getDynamicNameWrapperHTML = (...elements: string[]): string => {
     //     return `<a href="#" title="Node ${nodeRef} output">${nodeRef}.${outputProperty}</a>`;
     //   });
     // }
-    if (typeof value === 'string' && value.length > 0 && !value.includes('<') && !value.includes('>')) {
+    if (
+      (typeof value === 'string' && value.length > 0 && !value.includes('<') && !value.includes('>')) ||
+      (typeof value === 'number')
+    ) {
       return `<span>${value}</span>`;
     }
     return `${value}`;
