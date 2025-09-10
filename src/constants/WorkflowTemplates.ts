@@ -455,8 +455,8 @@ const createHyperliquidBTCSpotNPerpsThresholdNotificationWorkflow = () => {
 
     const mathAction = new Action(ACTIONS.CORE.MATHEMATICS.MATHEMATICS);
     mathAction.setParams('operator', '/');
-    mathAction.setParams('number1', '{{external.functions.hyperliquidSpotPrice(999,UBTC,,)}}');
-    mathAction.setParams('number2', '{{external.functions.hyperliquidPerpsPrice(999,BTC,,)}}');
+    mathAction.setParams('number1', '{{external.functions.hyperliquidSpotPrice(UBTC,,)}}');
+    mathAction.setParams('number2', '{{external.functions.hyperliquidPerpsPrice(BTC,,)}}');
     mathAction.setPosition(400, 240);
 
     const condition = new Action(ACTIONS.CORE.CONDITION.IF);
