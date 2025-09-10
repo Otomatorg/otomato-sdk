@@ -279,62 +279,11 @@ const generateSettingsCode = (settings: any): string => {
   return settingsCode;
 };
 
+// Uncomment to directly use the function
+// Otherwise, import and use the convertWFJSONToCode function at your own convenience
+
 // const jsonData = {
-//   "id": "7c7ebd16-5079-41d1-83d1-9d3d0e661e71",
-//   "name": "My new Agent 3",
-//   "state": "inactive",
-//   "dateCreated": "2025-09-09T08:48:04.510Z",
-//   "dateModified": "2025-09-09T08:58:40.538Z",
-//   "executionId": null,
-//   "agentId": null,
-//   "nodes": [
-//     {
-//       "id": "85adca53-5a19-46be-b7ac-c83632d70a3a",
-//       "ref": "6",
-//       "blockId": 35,
-//       "type": "trigger",
-//       "state": "inactive",
-//       "isOptional": null,
-//       "parameters": {
-//         "contract": "0xbd3531da5cf5857e7cfaa92426877b022e612cf8",
-//         "rarityCondition": "lte",
-//         "rarity": 5000,
-//         "price": 30,
-//         "traits": "{\"Background\":[\"Blue\"],\"Body\":[\"Pineapple Suit\"]}"
-//       },
-//       "frontendHelpers": {},
-//       "position": {
-//         "x": 400,
-//         "y": 120
-//       }
-//     },
-//     {
-//       "id": "092a2dde-7d4e-4104-9c66-8cd70d2b722f",
-//       "ref": "10",
-//       "blockId": 100018,
-//       "type": "action",
-//       "state": "inactive",
-//       "isOptional": null,
-//       "parameters": {
-//         "protectedData": "0xa0745746a3e664540b79dae6992cfd8088a0926f",
-//         "content": "A Pudgy Penguin has just been listed."
-//       },
-//       "frontendHelpers": {},
-//       "position": {
-//         "x": 400,
-//         "y": 240
-//       }
-//     }
-//   ],
-//   "edges": [
-//     {
-//       "id": "47bf90ea-f255-4c32-84a6-17526ae28379",
-//       "source": "6",
-//       "target": "10"
-//     }
-//   ],
-//   "notes": [],
-//   "settings": null
+//   YOUR JSON DATA HERE
 // }
 
 // console.log(convertWFJSONToCode(jsonData));
