@@ -948,7 +948,7 @@ const createOrderLimitAgentWorkflow = async (): Promise<Workflow> => {
   odosSwapAction.setParams('chainId', 42161);
   odosSwapAction.setParams('tokenIn', '0x82af49447d8a07e3bd95bd0d56f35241523fbab1');
   odosSwapAction.setParams('tokenOut', '0xaf88d065e77c8cc2239327c5edb3a432268e5831');
-  odosSwapAction.setParams('amount', 100);
+  odosSwapAction.setParams('amount', 0.1);
   odosSwapAction.setParams('slippage', '0.3');
   odosSwapAction.setPosition(400, 240);
 
