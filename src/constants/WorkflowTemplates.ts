@@ -842,7 +842,6 @@ const createAaveHealthFactorAgentWorkflow = async (): Promise<Workflow> => {
   aaveWithdrawAction.setPosition(400, 240);
 
   const iexecSendWeb3TelegramAction = new Action(ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM);
-  iexecSendWeb3TelegramAction.setParams('protectedData', '0xa0745746a3e664540b79dae6992cfd8088a0926f');
   iexecSendWeb3TelegramAction.setParams('content', 'The health factor was above 1.5, so the funds were withdrawn to stay on the safe side.');
   iexecSendWeb3TelegramAction.setPosition(400, 360);
 
@@ -861,7 +860,6 @@ const createElonMuskTweeterAgentWorkflow = async (): Promise<Workflow> => {
   xXPostTriggerTrigger.setPosition(400, 120);
 
   const iexecSendWeb3TelegramAction = new Action(ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM);
-  iexecSendWeb3TelegramAction.setParams('protectedData', '0xa0745746a3e664540b79dae6992cfd8088a0926f');
   iexecSendWeb3TelegramAction.setParams('content', `Elon Musk just tweeted. ${xXPostTriggerTrigger.getOutputVariableName('tweetContent')} ${xXPostTriggerTrigger.getOutputVariableName('tweetURL')}`);
   iexecSendWeb3TelegramAction.setPosition(400, 240);
 
@@ -891,7 +889,6 @@ const createOrderLimitAgentWorkflow = async (): Promise<Workflow> => {
   odosSwapAction.setPosition(400, 240);
 
   const iexecSendWeb3TelegramAction = new Action(ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM);
-  iexecSendWeb3TelegramAction.setParams('protectedData', '0xa0745746a3e664540b79dae6992cfd8088a0926f');
   iexecSendWeb3TelegramAction.setParams('content', 'Swapped on Odos as ETH price is above 4500');
   iexecSendWeb3TelegramAction.setPosition(400, 360);
 
@@ -914,7 +911,6 @@ const createPudgyPenguinHunterAgentWorkflow = async (): Promise<Workflow> => {
   blurListingTrigger.setPosition(400, 120);
 
   const iexecSendWeb3TelegramAction = new Action(ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM);
-  iexecSendWeb3TelegramAction.setParams('protectedData', '0xa0745746a3e664540b79dae6992cfd8088a0926f');
   iexecSendWeb3TelegramAction.setParams('content', 'A Pudgy Penguin has just been listed.');
   iexecSendWeb3TelegramAction.setPosition(400, 240);
 
