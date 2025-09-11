@@ -54,9 +54,9 @@ export const DEFAULT_WORKFLOW_LOOP_SETTINGS = {
         limit: 1000,
         timeout: 365 * 24 * 60 * 60 * 1000,
     },
-    polling1s: {
+    polling5s: {
         loopingType: 'polling',
-        period: 1000,
+        period: 5000,
         limit: 100,
     },
     polling1h: {
@@ -304,7 +304,7 @@ const abstractGetNotifiedOnNewFlashBadge = async () => {
 
     const edge = new Edge({ source: trigger, target: telegramAction });
 
-    return new Workflow('Get notified when a new flash badge is available on Abstract', [trigger, telegramAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s);
+    return new Workflow('Get notified when a new flash badge is available on Abstract', [trigger, telegramAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling5s);
 }
 
 const abstractGetNotifiedWhenStreamerIsLive = async () => {
@@ -339,7 +339,7 @@ const abstractGetNotifiedOnNewAppRelease = async () => {
     const edge2 = new Edge({ source: trigger2, target: telegramAction });
     const edge3 = new Edge({ source: trigger3, target: telegramAction });
 
-    return new Workflow('Get notified when a new app is available on Abstract', [trigger1, trigger2, trigger3, telegramAction], [edge, edge2, edge3], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s);
+    return new Workflow('Get notified when a new app is available on Abstract', [trigger1, trigger2, trigger3, telegramAction], [edge, edge2, edge3], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling5s);
 }
 
 const abstractGetNotifiedOnNewUserBadge = async () => {
@@ -351,7 +351,7 @@ const abstractGetNotifiedOnNewUserBadge = async () => {
 
     const edge = new Edge({ source: trigger, target: telegramAction });
 
-    return new Workflow('Get notified when a given abstract power user gets a new badge', [trigger, telegramAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s);
+    return new Workflow('Get notified when a given abstract power user gets a new badge', [trigger, telegramAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling5s);
 }
 
 // notify me when I can unstake my stakestone
@@ -502,7 +502,7 @@ const createEthereumFoundationTransferNotificationWorkflow = () => {
 
     const edge = new Edge({ source: ethTransferTrigger, target: notificationAction });
 
-    return new Workflow('Ethereum Foundation transfer notification', [ethTransferTrigger, notificationAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s);
+    return new Workflow('Ethereum Foundation transfer notification', [ethTransferTrigger, notificationAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling5s);
 }
 
 const createHyperliquidBTCSpotNPerpsThresholdNotificationWorkflow = () => {
@@ -550,7 +550,7 @@ const createDefillamaRaiseNotificationWorkflow = () => {
         'Get notified when a project announces a new raise',
         [trigger, telegramAction],
         [edge1],
-        DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s
+        DEFAULT_WORKFLOW_LOOP_SETTINGS.polling5s
     );
 
     return workflow;
@@ -571,7 +571,7 @@ const createTokenMovementNotificationWorkflow = () => {
         'Token Movement Notification',
         [trigger, telegramAction],
         [edge],
-        DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s
+        DEFAULT_WORKFLOW_LOOP_SETTINGS.polling5s
     );
 
     return workflow;
@@ -803,7 +803,7 @@ const createNFTSaleNotificationWorkflow = () => {
       'Get notified when a NFT is sold on Blur',
       [trigger, telegramAction],
       [edge1],
-      DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s
+      DEFAULT_WORKFLOW_LOOP_SETTINGS.polling5s
   );
 
   return workflow;
@@ -822,7 +822,7 @@ const createPudgyPenguinsSaleNotificationWorkflow = () => {
       'Get notified when a Pudgy Penguins is sold on Blur',
       [trigger, telegramAction],
       [edge1],
-      DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s
+      DEFAULT_WORKFLOW_LOOP_SETTINGS.polling5s
   );
 
   return workflow;
