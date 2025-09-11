@@ -89,6 +89,16 @@ export const DEFAULT_WORKFLOW_LOOP_SETTINGS = {
         period: 7 * 24 * 60 * 60 * 1000,
         limit: 100,
     },
+    subscription1m20rep: {
+        loopingType: 'subscription',
+        limit: 20,
+        timeout: 30 * 24 * 60 * 60 * 1000,
+    },
+    subscription1m30rep: {
+        loopingType: 'subscription',
+        limit: 30,
+        timeout: 30 * 24 * 60 * 60 * 1000,
+    },
 } as const;
 
 const createModeTransferNotificationWorkflow = () => {
@@ -882,7 +892,6 @@ const createAaveHealthFactorAgentWorkflow = async (): Promise<Workflow> => {
     
   const aaveHealthFactorTrigger = new Trigger(TRIGGERS.LENDING.AAVE.HEALTH_FACTOR);
   aaveHealthFactorTrigger.setParams('chainId', 42161);
-  aaveHealthFactorTrigger.setParams('abiParams.user', '0x9332D0cE5D45184515e0EA85bf9f4af09Cbf10Af');
   aaveHealthFactorTrigger.setParams('condition', 'lte');
   aaveHealthFactorTrigger.setParams('comparisonValue', 1.5);
   aaveHealthFactorTrigger.setPosition(400, 120);
@@ -901,7 +910,7 @@ const createAaveHealthFactorAgentWorkflow = async (): Promise<Workflow> => {
   const edge1 = new Edge({ source: aaveHealthFactorTrigger, target: aaveWithdrawAction });
   const edge2 = new Edge({ source: aaveWithdrawAction, target: iexecSendWeb3TelegramAction });
 
-  const workflow = new Workflow('Withdraw from AAVE if the health factor is above 1.5', [aaveHealthFactorTrigger, aaveWithdrawAction, iexecSendWeb3TelegramAction], [edge1, edge2], null);
+  const workflow = new Workflow('Withdraw from AAVE if the health factor is above 1.5', [aaveHealthFactorTrigger, aaveWithdrawAction, iexecSendWeb3TelegramAction], [edge1, edge2], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1d);
 
   return workflow;
 };
@@ -918,7 +927,7 @@ const createElonMuskTweeterAgentWorkflow = async (): Promise<Workflow> => {
 
   const edge1 = new Edge({ source: xXPostTriggerTrigger, target: iexecSendWeb3TelegramAction });
 
-  const workflow = new Workflow('Get notified when Elon Musk tweets', [xXPostTriggerTrigger, iexecSendWeb3TelegramAction], [edge1], null);
+  const workflow = new Workflow('Get notified when Elon Musk tweets', [xXPostTriggerTrigger, iexecSendWeb3TelegramAction], [edge1], DEFAULT_WORKFLOW_LOOP_SETTINGS.subscription1m30rep);
 
   return workflow;
 };
@@ -969,7 +978,7 @@ const createPudgyPenguinHunterAgentWorkflow = async (): Promise<Workflow> => {
 
   const edge1 = new Edge({ source: blurListingTrigger, target: iexecSendWeb3TelegramAction });
 
-  const workflow = new Workflow('Get notified when a Pudgy Penguins is listed', [blurListingTrigger, iexecSendWeb3TelegramAction], [edge1], null);
+  const workflow = new Workflow('Get notified when a Pudgy Penguins is listed', [blurListingTrigger, iexecSendWeb3TelegramAction], [edge1], DEFAULT_WORKFLOW_LOOP_SETTINGS.subscription1m20rep);
 
   return workflow;
 };
