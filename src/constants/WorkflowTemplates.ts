@@ -101,6 +101,8 @@ export const DEFAULT_WORKFLOW_LOOP_SETTINGS = {
     },
 } as const;
 
+const specialSettingTemplates = [5, 12, 13, 6, 19, 7, 39, 38];
+
 const createModeTransferNotificationWorkflow = () => {
     const cbBTCTransferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
 
@@ -1733,4 +1735,12 @@ export const WORKFLOW_TEMPLATES = [
       ],
       createWorkflow: createPudgyPenguinHunterAgentWorkflow
     },
-];
+].map((template) => {
+  if (specialSettingTemplates.includes(template.id)) {
+    return {
+      ...template,
+      hasSpecialInterval: true,
+    }
+  }
+  return template;
+});
