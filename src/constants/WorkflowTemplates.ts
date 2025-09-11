@@ -1630,7 +1630,7 @@ export const WORKFLOW_TEMPLATES = [
     },
     {
       'id': 43, 
-      'name': 'Swap on Odos if the price is above 4500',
+      'name': 'Swap on Odos if ETH price is above 4500',
       'description': 'Automatically swap tokens on Odos when ETH price exceeds 4500 USD.',
       'tags': [
         WORKFLOW_TEMPLATES_TAGS.SOCIALS,
@@ -1638,7 +1638,7 @@ export const WORKFLOW_TEMPLATES = [
         WORKFLOW_TEMPLATES_TAGS.DEXES,
         WORKFLOW_TEMPLATES_TAGS.IEXEC
       ],
-      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyYieldUpdates.jpg',
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/odos_sell_eth.webp',
       'image': [
         TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY.image,
         ACTIONS.SWAP.ODOS.SWAP.image,
