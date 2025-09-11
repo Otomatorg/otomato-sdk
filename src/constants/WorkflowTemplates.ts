@@ -45,6 +45,52 @@ The gas price on Ethereum is currently {{external.functions.mainnetGasPrice(,)}}
 
 See you tomorrow!`
 
+/**
+ * Default workflow loop settings for various workflow types.
+ */
+export const DEFAULT_WORKFLOW_LOOP_SETTINGS = {
+    subscription: {
+        loopingType: 'subscription',
+        limit: 1000,
+        timeout: 365 * 24 * 60 * 60 * 1000,
+    },
+    polling1s: {
+        loopingType: 'polling',
+        period: 1000,
+        limit: 100,
+    },
+    polling1h: {
+        loopingType: 'polling',
+        period: 1 * 60 * 60 * 1000,
+        limit: 100,
+    },
+    polling4h: {
+        loopingType: 'polling',
+        period: 4 * 60 * 60 * 1000,
+        limit: 100,
+    },
+    polling1d: {
+        loopingType: 'polling',
+        period: 24 * 60 * 60 * 1000,
+        limit: 100,
+    },
+    polling12h: {
+        loopingType: 'polling',
+        period: 12 * 60 * 60 * 1000,
+        limit: 100,
+    },
+    polling3d: {
+        loopingType: 'polling',
+        period: 3 * 24 * 60 * 60 * 1000,
+        limit: 100,
+    },
+    polling7d: {
+        loopingType: 'polling',
+        period: 7 * 24 * 60 * 60 * 1000,
+        limit: 100,
+    },
+} as const;
+
 const createModeTransferNotificationWorkflow = () => {
     const cbBTCTransferTrigger = new Trigger(TRIGGERS.TOKENS.TRANSFER.TRANSFER);
 
@@ -60,7 +106,7 @@ const createModeTransferNotificationWorkflow = () => {
 
     const edge = new Edge({ source: cbBTCTransferTrigger, target: notificationAction });
 
-    return new Workflow('cbBTC transfer notification', [cbBTCTransferTrigger, notificationAction], [edge]);
+    return new Workflow('cbBTC transfer notification', [cbBTCTransferTrigger, notificationAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.subscription);
 }
 
 const createETHFearAndGreedBuy = async () => {
@@ -80,7 +126,7 @@ const createETHFearAndGreedBuy = async () => {
 
     const edge = new Edge({ source: trigger, target: odosAction });
 
-    return new Workflow('Buy ETH when the market sentiment is extremely fearful', [trigger, odosAction], [edge]);
+    return new Workflow('Buy ETH daily as long as the market sentiment is extremely fearful', [trigger, odosAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1d);
 }
 
 const createDCAFearAndGreed = async () => {
@@ -121,7 +167,7 @@ const createETHFearAndGreedCapitalEfficientBuy = async () => {
     const edge2 = new Edge({ source: ionicWithdraw, target: odosAction });
     const edge3 = new Edge({ source: odosAction, target: ionicDeposit });
 
-    return new Workflow('Buy ETH when the market sentiment is extremely fearful - capital efficient', [trigger, odosAction, ionicWithdraw, ionicDeposit], [edge1, edge2, edge3]);
+    return new Workflow('Buy ETH daily as long as the market sentiment is extremely fearful - capital efficient', [trigger, odosAction, ionicWithdraw, ionicDeposit], [edge1, edge2, edge3], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1d);
 }
 
 const createSUsdeYieldBuy = async () => {
@@ -164,7 +210,7 @@ const createSusdeYieldNotification = async () => {
 
     const edge = new Edge({ source: trigger, target: notificationAction });
 
-    return new Workflow('sUSDE yield notification', [trigger, notificationAction], [edge]);
+    return new Workflow('sUSDE yield notification', [trigger, notificationAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling7d);
 }
 
 const createAAVEBorrowingRateNotificationWorkflow = async () => {
@@ -181,7 +227,7 @@ const createAAVEBorrowingRateNotificationWorkflow = async () => {
 
     const edge = new Edge({ source: trigger, target: notificationAction });
 
-    return new Workflow('AAVE borrowing rate notification', [trigger, notificationAction], [edge]);
+    return new Workflow('AAVE borrowing rate notification', [trigger, notificationAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling7d);
 }
 
 const copyTradeVitalikOdos = async () => {
@@ -202,7 +248,7 @@ const copyTradeVitalikOdos = async () => {
 
     const edge = new Edge({ source: trigger, target: swap });
 
-    return new Workflow('Copy-trade the trades done on Odos by vitalik.eth', [trigger, swap], [edge]);
+    return new Workflow('Copy-trade the trades done on Odos by vitalik.eth', [trigger, swap], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.subscription);
 }
 
 const gasMonitoring = async () => {
@@ -219,7 +265,7 @@ const gasMonitoring = async () => {
 
     const edge = new Edge({ source: trigger, target: notificationAction });
 
-    return new Workflow('Get Notified When Ethereum Gas drops below 6 Gwei', [trigger, notificationAction], [edge]);
+    return new Workflow('Get Notified When Ethereum Gas drops below 6 Gwei', [trigger, notificationAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1d);
 }
 
 const dailyYieldEmail = async () => {
@@ -246,7 +292,7 @@ const abstractGetNotifiedOnNewFlashBadge = async () => {
 
     const edge = new Edge({ source: trigger, target: telegramAction });
 
-    return new Workflow('Get notified when a new flash badge is available on Abstract', [trigger, telegramAction], [edge]);
+    return new Workflow('Get notified when a new flash badge is available on Abstract', [trigger, telegramAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s);
 }
 
 const abstractGetNotifiedWhenStreamerIsLive = async () => {
@@ -258,7 +304,7 @@ const abstractGetNotifiedWhenStreamerIsLive = async () => {
 
     const edge = new Edge({ source: trigger, target: telegramAction });
 
-    return new Workflow('Get notified when a given streamer goes live', [trigger, telegramAction], [edge]);
+    return new Workflow('Get notified when a given streamer goes live', [trigger, telegramAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1h);
 }
 
 const abstractGetNotifiedOnNewAppRelease = async () => {
@@ -281,7 +327,7 @@ const abstractGetNotifiedOnNewAppRelease = async () => {
     const edge2 = new Edge({ source: trigger2, target: telegramAction });
     const edge3 = new Edge({ source: trigger3, target: telegramAction });
 
-    return new Workflow('Get notified when a new app is available on Abstract', [trigger1, trigger2, trigger3, telegramAction], [edge, edge2, edge3]);
+    return new Workflow('Get notified when a new app is available on Abstract', [trigger1, trigger2, trigger3, telegramAction], [edge, edge2, edge3], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s);
 }
 
 const abstractGetNotifiedOnNewUserBadge = async () => {
@@ -293,7 +339,7 @@ const abstractGetNotifiedOnNewUserBadge = async () => {
 
     const edge = new Edge({ source: trigger, target: telegramAction });
 
-    return new Workflow('Get notified when a new badge is available on Abstract', [trigger, telegramAction], [edge]);
+    return new Workflow('Get notified when a given abstract power user gets a new badge', [trigger, telegramAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s);
 }
 
 // notify me when I can unstake my stakestone
@@ -311,7 +357,7 @@ const createStakestoneUnstakeNotificationWorkflow = async () => {
 
     const edge = new Edge({ source: trigger, target: notificationAction });
 
-    return new Workflow('Get notified when you can unstake your Stakestone position', [trigger, notificationAction], [edge]);
+    return new Workflow('Get notified when you can unstake your Stakestone position', [trigger, notificationAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1d);
 }
 
 // notify me when a given uniswap position is out of range [looping enabled - 5 times]
@@ -444,7 +490,7 @@ const createEthereumFoundationTransferNotificationWorkflow = () => {
 
     const edge = new Edge({ source: ethTransferTrigger, target: notificationAction });
 
-    return new Workflow('Ethereum Foundation transfer notification', [ethTransferTrigger, notificationAction], [edge]);
+    return new Workflow('Ethereum Foundation transfer notification', [ethTransferTrigger, notificationAction], [edge], DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s);
 }
 
 const createHyperliquidBTCSpotNPerpsThresholdNotificationWorkflow = () => {
@@ -491,7 +537,8 @@ const createDefillamaRaiseNotificationWorkflow = () => {
     const workflow = new Workflow(
         'Get notified when a project announces a new raise',
         [trigger, telegramAction],
-        [edge1]
+        [edge1],
+        DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s
     );
 
     return workflow;
@@ -511,7 +558,8 @@ const createTokenMovementNotificationWorkflow = () => {
     const workflow = new Workflow(
         'Token Movement Notification',
         [trigger, telegramAction],
-        [edge]
+        [edge],
+        DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s
     );
 
     return workflow;
@@ -546,7 +594,8 @@ const createTwitterAiNotificationWorkflow = (username: { display: string, tag: s
         const workflow = new Workflow(
             wfData.wfTitle,
             [trigger, aiAction, ifAction, telegramAction],
-            [edge, edge2, edge3]
+            [edge, edge2, edge3],
+            DEFAULT_WORKFLOW_LOOP_SETTINGS.subscription
         );
 
         return workflow;
@@ -607,7 +656,8 @@ const createBuyBitcoinOnPeterSchiffBearishWorkflow = (): Workflow => {
     const workflow = new Workflow(
         `Buy cbBTC when PeterSchiff tweets a bearish tweet`,
         [trigger, aiAction, ifAction, swapAction],
-        [edge, edge2, edge3]
+        [edge, edge2, edge3],
+        DEFAULT_WORKFLOW_LOOP_SETTINGS.subscription
     );
 
     return workflow;
@@ -653,7 +703,8 @@ const createWithdrawOnAaveHackWorkflow = (): Workflow => {
     const workflow = new Workflow(
         `Withdraw liquidity from AAVE if hack is detected via AAVE or lookonchain tweets`,
         [aaveTrigger, lookonchainTrigger, aiAction, ifAction, withdrawAction],
-        [edge1, edge2, edge3, edge5]
+        [edge1, edge2, edge3, edge5],
+        DEFAULT_WORKFLOW_LOOP_SETTINGS.subscription
     );
 
     return workflow;
@@ -739,7 +790,8 @@ const createNFTSaleNotificationWorkflow = () => {
   const workflow = new Workflow(
       'Get notified when a NFT is sold on Blur',
       [trigger, telegramAction],
-      [edge1]
+      [edge1],
+      DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s
   );
 
   return workflow;
@@ -757,7 +809,8 @@ const createPudgyPenguinsSaleNotificationWorkflow = () => {
   const workflow = new Workflow(
       'Get notified when a Pudgy Penguins is sold on Blur',
       [trigger, telegramAction],
-      [edge1]
+      [edge1],
+      DEFAULT_WORKFLOW_LOOP_SETTINGS.polling1s
   );
 
   return workflow;
@@ -1032,8 +1085,8 @@ export const WORKFLOW_TEMPLATES = [
     },
     {
         'id': 13,
-        'name': 'Get notified when insider gets a new badge',
-        'description': 'Get notified when insider gets a new badge',
+        'name': 'Get notified when a given abstract power user gets a new badge',
+        'description': 'Get notified when a given abstract power user gets a new badge',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ABSTRACT, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/abstract_badge.webp',
         'image': [
@@ -1342,8 +1395,8 @@ export const WORKFLOW_TEMPLATES = [
     },
     {
         'id': 32,
-        'name': 'Buy ETH when the market sentiment is extremely fearful - capital efficient',
-        'description': 'Buy ETH when the Bitcoin Fear and Greed Index is below 45. The idle funds are generating yield on AAVE.',
+        'name': 'Buy ETH daily as long as the market sentiment is extremely fearful - capital efficient',
+        'description': 'Buy ETH daily as long as the Bitcoin Fear and Greed Index is below 45. The idle funds are generating yield on AAVE.',
         'tags': [WORKFLOW_TEMPLATES_TAGS.TRADING, WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.YIELD],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dca_fear_and_greed_eth.webp',
         'image': [
