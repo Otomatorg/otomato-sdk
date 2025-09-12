@@ -923,13 +923,27 @@ const createElonMuskTweeterAgentWorkflow = async (): Promise<Workflow> => {
   xXPostTriggerTrigger.setParams('includeRetweets', true);
   xXPostTriggerTrigger.setPosition(400, 120);
 
+  const aiAction = new Action(ACTIONS.AI.AI.AI);
+  aiAction.setParams('prompt', `Return true if the tweet mentions either one of the following crypto: Bitcoin (BTC) or Dogecoin (DOGE)`);
+  aiAction.setParams('context', xXPostTriggerTrigger.getOutputVariableName('tweetContent'));
+  aiAction.setPosition(400, 240);
+
+  const ifAction = new Action(ACTIONS.CORE.CONDITION.IF);
+  ifAction.setParams('logic', LOGIC_OPERATORS.OR);
+  const group = new ConditionGroup(LOGIC_OPERATORS.OR);
+  group.addConditionCheck(aiAction.getOutputVariableName('result'), 'eq', 'true');
+  ifAction.setParams('groups', [group]);
+  ifAction.setPosition(400, 360);
+
   const iexecSendWeb3TelegramAction = new Action(ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM);
-  iexecSendWeb3TelegramAction.setParams('content', `Elon Musk just tweeted. ${xXPostTriggerTrigger.getOutputVariableName('tweetContent')} ${xXPostTriggerTrigger.getOutputVariableName('tweetURL')}`);
+  iexecSendWeb3TelegramAction.setParams('content', `Elon Musk just tweeted about Bitcoin or Dogecoin. ${xXPostTriggerTrigger.getOutputVariableName('tweetContent')} ${xXPostTriggerTrigger.getOutputVariableName('tweetURL')}`);
   iexecSendWeb3TelegramAction.setPosition(400, 240);
 
-  const edge1 = new Edge({ source: xXPostTriggerTrigger, target: iexecSendWeb3TelegramAction });
+  const edge1 = new Edge({ source: xXPostTriggerTrigger, target: aiAction });
+  const edge2 = new Edge({ source: aiAction, target: ifAction });
+  const edge3 = new Edge({ source: ifAction, target: iexecSendWeb3TelegramAction });
 
-  const workflow = new Workflow('Get notified when Elon Musk tweets', [xXPostTriggerTrigger, iexecSendWeb3TelegramAction], [edge1], DEFAULT_WORKFLOW_LOOP_SETTINGS.subscription1m30rep);
+  const workflow = new Workflow('Get notified when Elon Musk tweets about Bitcoin or Dogecoin', [xXPostTriggerTrigger, aiAction, ifAction, iexecSendWeb3TelegramAction], [edge1, edge2, edge3], DEFAULT_WORKFLOW_LOOP_SETTINGS.subscription1m30rep);
 
   return workflow;
 };
@@ -1684,10 +1698,14 @@ export const WORKFLOW_TEMPLATES = [
       'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/elon_tweet.webp',
       'image': [
         TRIGGERS.TRENDING.X.X_POST_TRIGGER.image,
+        ACTIONS.AI.AI.AI.image,
+        ACTIONS.CORE.CONDITION.IF.image,
         ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM.image
       ],
       'blockIDs': [
         TRIGGERS.TRENDING.X.X_POST_TRIGGER.blockId,
+        ACTIONS.AI.AI.AI.blockId,
+        ACTIONS.CORE.CONDITION.IF.blockId,
         ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM.blockId
       ],
       createWorkflow: createElonMuskTweeterAgentWorkflow
