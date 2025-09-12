@@ -1688,8 +1688,8 @@ export const WORKFLOW_TEMPLATES = [
     },
     {
       'id': 42,
-      'name': 'Get notified when Elon Musk tweets',
-      'description': 'Receive a notification every time Elon Musk tweets.',
+      'name': 'Get notified when Elon Musk tweets about Bitcoin or Dogecoin',
+      'description': 'Receive a notification every time Elon Musk tweets about BTC or DOGE.',
       'tags': [
         WORKFLOW_TEMPLATES_TAGS.SOCIALS,
         WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
