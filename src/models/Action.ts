@@ -74,7 +74,8 @@ export const findActionByBlockId = (blockId: number): { parentInfo: ParentInfo; 
               name: service,
               description: (ACTIONS as any)[category][service].description,
               image: (ACTIONS as any)[category][service].image,
-              functionName: actionKey
+              functionName: actionKey,
+              chains: (ACTIONS as any)[category][service].chains
             },
             block: (ACTIONS as any)[category][service][actionKey],
           };
