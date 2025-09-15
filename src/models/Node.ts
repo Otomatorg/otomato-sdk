@@ -13,6 +13,7 @@ export interface ParentInfo {
   description: string;
   image: string;
   functionName?: string;
+  chains?: number[];
 }
 
 export type NodeState = 'inactive' | 'active' | 'failed' | 'completed';
