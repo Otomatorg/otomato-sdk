@@ -17,7 +17,7 @@ async function hyperbeat() {
   xXPostTriggerTrigger.setPosition(400, 120);
   
   const aiAiAction = new Action(ACTIONS.TRENDING.AI.AI);
-  aiAiAction.setParams('prompt', 'mentions any security alerts');
+  aiAiAction.setParams('prompt', 'the tweet mentions any security alerts');
   aiAiAction.setParams('context', `${xXPostTriggerTrigger.getOutputVariableName('tweetContent')}`);
   aiAiAction.setParams('defaultMode', false);
   aiAiAction.setPosition(400, 240);
