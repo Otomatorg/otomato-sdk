@@ -46,7 +46,11 @@ async function hyperbeat() {
   const edge2 = new Edge({ source: aiAiAction, target: conditionIfAction });
   const edge3 = new Edge({ source: conditionIfAction, target: telegramSendMessageAction });
   
-  const workflow = new Workflow('Get notified when Hyperbeat mentions airdrop claim', [xXPostTriggerTrigger, aiAiAction, conditionIfAction, telegramSendMessageAction], [edge1, edge2, edge3], null);
+  const workflow = new Workflow('Get notified when Hyperbeat mentions airdrop claim', [xXPostTriggerTrigger, aiAiAction, conditionIfAction, telegramSendMessageAction], [edge1, edge2, edge3], {
+    loopingType: 'subscription',
+    limit: 1000,
+    timeout: 365 * 24 * 60 * 60 * 1000,
+  });
   
   const creationResult = await workflow.create();
 
