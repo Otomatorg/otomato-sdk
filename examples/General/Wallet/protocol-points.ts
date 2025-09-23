@@ -17,9 +17,6 @@ async function wallet_point() {
   
   const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
   telegramSendMessageAction.setParams('message', `Wallet's points have increased:  ${pointsPointsMovementTrigger.getOutputVariableName('pointsChange')}`);
-  telegramSendMessageAction.setParams('chat_id', null);
-  telegramSendMessageAction.setParams('webhook', null);
-  telegramSendMessageAction.setParams('message_thread_id', null);
   telegramSendMessageAction.setPosition(400, 240);
   
   const edge1 = new Edge({ source: pointsPointsMovementTrigger, target: telegramSendMessageAction });
