@@ -838,7 +838,7 @@ const createDailyHealthrateMonitoringWorkflow = (): Workflow => {
   const telegramAction = new Action(ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM);
   telegramAction.setParams(
       'content',
-      `Your daily healthrate from Hyperbeat: {{external.functions.healthRatio(,0x1da89208e6cb5173e97a83461853b8400de4f7c37542cf010a10579a5f7ca451,,)}}`
+      `Your daily healthrate from Hyperbeat: {{external.functions.healthRatio(0x1da89208e6cb5173e97a83461853b8400de4f7c37542cf010a10579a5f7ca451,,)}}`
   );
 
   // Edges
