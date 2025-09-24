@@ -838,7 +838,7 @@ const createDailyHealthrateMonitoringWorkflow = (): Workflow => {
   const telegramAction = new Action(ACTIONS.NOTIFICATIONS.IEXEC.SEND_WEB3_TELEGRAM);
   telegramAction.setParams(
       'content',
-      `Your daily healthrate from Hyperbeat: {{external.functions.healthRatio({{smartAccountAddress}},0x1da89208e6cb5173e97a83461853b8400de4f7c37542cf010a10579a5f7ca451,,)}}`
+      `Your daily healthrate of 0xBB5b...8b75 from Hyperbeat: {{external.functions.healthRatio(0xBB5b91A184A00521993A6Fe2325F36e94D9a8b75,0x216bd19960f140177a4a3fb9cf258edcbadb1f5d54740fc944503bff4a00e65e,,)}}`
   );
 
   // Edges
@@ -1603,7 +1603,7 @@ export const WORKFLOW_TEMPLATES = [
     {
         'id': 37, 
         'name': 'Daily Hyperbeat healthrate monitoring',
-        'description': 'Receive privacy-preserving daily Hyperbeat healthrate updates on hbUSDT/USR market',
+        'description': 'Receive privacy-preserving daily Hyperbeat healthrate updates on WHYPE/rUSDC market of a wallet',
         'tags': [WORKFLOW_TEMPLATES_TAGS.ON_CHAIN_MONITORING, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, WORKFLOW_TEMPLATES_TAGS.IEXEC],
         'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperbeat.webp',
         'image': [
