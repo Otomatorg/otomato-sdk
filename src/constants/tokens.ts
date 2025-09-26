@@ -1905,6 +1905,62 @@ export const TOKENS: Tokens = {
       symbol: "USDC",
       decimals: 6,
       image: "https://static.debank.com/image/coin/logo_url/usdc/e87790bfe0b3f2ea855dc29069b38818.png"
+    },
+    {
+      contractAddress: "0xc061d38903b99aC12713B550C2CB44B221674F94",
+      symbol: "hbBTC",
+      name: "Hyperbeat Ultra uBTC",
+      decimals: 8,
+      image: "https://app.hyperbeat.org/assets/images/vaults/hbBTC.svg"
+    },
+    {
+      contractAddress: "0x6EB6724D8D3D4FF9E24d872E8c38403169dC05f8",
+      symbol: "hbXAUt",
+      name: "Hyperbeat XAUt",
+      decimals: 18,
+      image: "https://app.hyperbeat.org/assets/images/vaults/hbXAUt.svg"
+    },
+    {
+      contractAddress: "0x81e064d0eB539de7c3170EDF38C1A42CBd752A76",
+      symbol: "lstHYPE",
+      name: "Hyperbeat LST Vault",
+      decimals: 18,
+      image: "https://app.hyperbeat.org/assets/images/vaults/lstTokenhb.svg"
+    },
+    {
+      contractAddress: "0x441794D6a8F9A3739F5D4E98a728937b33489D29",
+      symbol: "liquidHYPE",
+      name: "Liquid HYPE Yield",
+      decimals: 18,
+      image: "https://app.hyperbeat.org/assets/images/vaults/bhype.svg"
+    },
+    {
+      contractAddress: "0xD66d69c288d9a6FD735d7bE8b2e389970fC4fD42",
+      symbol: "wVLP",
+      name: "Hyperbeat VLP",
+      decimals: 18,
+      image: "https://app.hyperbeat.org/assets/images/vaults/wvlp.svg"
+    },
+    {
+      contractAddress: "0x949a7250Bb55Eb79BC6bCC97fCd1C473DB3e6F29",
+      symbol: "dnHYPE",
+      name: "Delta Neutral HYPE",
+      decimals: 18,
+      image: "https://app.hyperbeat.org/assets/images/vaults/dnHYPE.svg"
+    },
+    {
+      contractAddress: "0x8858A307a85982c2B3CB2AcE1720237f2f09c39B",
+      symbol: "dnPUMP",
+      name: "Delta Neutral PUMP",
+      decimals: 18,
+      image: "https://app.hyperbeat.org/assets/images/vaults/dnPUMP.svg"
+    },
+    {
+      contractAddress: "0x057ced81348D57Aad579A672d521d7b4396E8a61",
+      symbol: "hbUSDC",
+      name: "Hyperbeat USDC",
+      decimals: 18,
+      image: "https://app.hyperbeat.org/assets/images/vaults/hbUSDC.svg"
     }
   ]
 };
