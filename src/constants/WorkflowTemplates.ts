@@ -164,8 +164,8 @@ const createETHFearAndGreedCapitalEfficientBuy = async () => {
 
     const odosAction = new Action(ACTIONS.CORE.SWAP.SWAP);
     odosAction.setChainId(chain);
-    odosAction.setParams("tokenIn", getTokenFromSymbol(chain, tokenIn).contractAddress);
-    odosAction.setParams("tokenOut", getTokenFromSymbol(chain, tokenOut).contractAddress);
+    odosAction.setParams("tokenToSell", getTokenFromSymbol(chain, tokenIn).contractAddress);
+    odosAction.setParams("tokenToBuy", getTokenFromSymbol(chain, tokenOut).contractAddress);
     odosAction.setParams("amount", ionicWithdraw.getParameterVariableName('amount'));
     odosAction.setPosition(400, 360);
 
@@ -192,8 +192,8 @@ const createSUsdeYieldBuy = async () => {
     const odosAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
     const chain = CHAINS.MODE;
     odosAction.setChainId(chain);
-    odosAction.setParams("tokenIn", getTokenFromSymbol(chain, 'USDC').contractAddress);
-    odosAction.setParams("tokenOut", getTokenFromSymbol(chain, 'sUSDE').contractAddress);
+    odosAction.setParams("tokenToSell", getTokenFromSymbol(chain, 'USDC').contractAddress);
+    odosAction.setParams("tokenToBuy", getTokenFromSymbol(chain, 'sUSDE').contractAddress);
     odosAction.setParams("amount", await convertToTokenUnitsFromSymbol(100, chain, 'USDC'));
     odosAction.setPosition(400, 240);
 
@@ -253,8 +253,8 @@ const copyTradeVitalikOdos = async () => {
 
     const swap = new Action(ACTIONS.CORE.SWAP.SWAP);
     swap.setChainId(CHAINS.MODE);
-    swap.setParams('tokenIn', tokenIn);
-    swap.setParams('tokenOut', trigger.getOutputVariableName('outputToken'));
+    swap.setParams('tokenToSell', tokenIn);
+    swap.setParams('tokenToBuy', trigger.getOutputVariableName('outputToken'));
     swap.setParams('amount', await convertToTokenUnits(1, CHAINS.MODE, tokenIn));
     swap.setPosition(400, 240);
 
@@ -657,8 +657,8 @@ const createBuyBitcoinOnPeterSchiffBearishWorkflow = (): Workflow => {
 
     const swapAction = new Action(ACTIONS.CORE.SWAP.SWAP);
     swapAction.setChainId(CHAINS.BASE);
-    swapAction.setParams('tokenIn', getTokenFromSymbol(8453, 'USDC').contractAddress);
-    swapAction.setParams('tokenOut', getTokenFromSymbol(8453, 'cbBTC').contractAddress);
+    swapAction.setParams('tokenToSell', getTokenFromSymbol(8453, 'USDC').contractAddress);
+    swapAction.setParams('tokenToBuy', getTokenFromSymbol(8453, 'cbBTC').contractAddress);
     swapAction.setPosition(400, 480);
 
     const edge = new Edge({ source: trigger, target: aiAction });
