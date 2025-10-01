@@ -19,8 +19,8 @@ const main = async () => {
 
     const odosAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
     odosAction.setChainId(CHAINS.MODE);
-    odosAction.setParams("tokenIn", getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress);
-    odosAction.setParams("tokenOut", getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
+    odosAction.setParams("tokenToSell", getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress);
+    odosAction.setParams("tokenToBuy", getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
     odosAction.setParams("amount", 100);
     odosAction.setParams("slippage", 1);
     odosAction.setPosition(400, 240);

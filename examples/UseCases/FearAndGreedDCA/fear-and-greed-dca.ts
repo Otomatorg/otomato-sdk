@@ -72,8 +72,8 @@ import {
     const swap = new Action(ACTIONS.CORE.SWAP.SWAP);
     swap.setChainId(VARIABLES.CHAIN);
   
-    swap.setParams('tokenIn', VARIABLES.TOKEN_BTC);
-    swap.setParams('tokenOut', VARIABLES.TOKEN_USDC);
+    swap.setParams('tokenToSell', VARIABLES.TOKEN_BTC);
+    swap.setParams('tokenToBuy', VARIABLES.TOKEN_USDC);
     swap.setParams('amount', VARIABLES.SELL_AMOUNT_BTC);
     swap.setParams('slippage', 0.1); // todo: put to 0.1
   
@@ -101,8 +101,8 @@ import {
     const swap = new Action(ACTIONS.CORE.SWAP.SWAP);
     swap.setChainId(VARIABLES.CHAIN);
   
-    swap.setParams('tokenIn', VARIABLES.TOKEN_USDC);
-    swap.setParams('tokenOut', VARIABLES.TOKEN_BTC);
+    swap.setParams('tokenToSell', VARIABLES.TOKEN_USDC);
+    swap.setParams('tokenToBuy', VARIABLES.TOKEN_BTC);
     swap.setParams('amount', VARIABLES.SELL_AMOUNT_USDC);
     swap.setParams('slippage', 0.3);
   

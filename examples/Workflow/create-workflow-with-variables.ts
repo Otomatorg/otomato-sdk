@@ -78,8 +78,8 @@ async function withERC20FormattedAmount() {
 
     const swap = new Action(ACTIONS.SWAP.ODOS.SWAP);
     swap.setChainId(CHAINS.MODE)
-    swap.setParams("tokenIn", getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
-    swap.setParams("tokenOut", getTokenFromSymbol(CHAINS.MODE, 'USDC').contractAddress);
+    swap.setParams("tokenToSell", getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
+    swap.setParams("tokenToBuy", getTokenFromSymbol(CHAINS.MODE, 'USDC').contractAddress);
     swap.setParams("slippage", 1);
     swap.setParams("amount", getComputeERC20Variable('0.0000001', trigger.getParameterVariableName('chainId'), getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress));
     swap.setPosition(400, 240);

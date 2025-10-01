@@ -1214,7 +1214,7 @@ describe('Workflow Class - validateInternalVariables', () => {
 
     const action = new Action(ACTIONS.CORE.SWAP.SWAP);
     action.setRef('2');
-    action.setParams('tokenIn', '{{nodeMap.3.output.amount}}');
+    action.setParams('tokenToSell', '{{nodeMap.3.output.amount}}');
 
     const workflow = new Workflow('Test Workflow', [trigger, action]);
     const invalidRefs = workflow.validateInternalVariables();
@@ -1224,7 +1224,7 @@ describe('Workflow Class - validateInternalVariables', () => {
       {
         nodeRef: '2',
         nodeType: 'action',
-        parameterKey: 'tokenIn',
+        parameterKey: 'tokenToSell',
         parameterValue: '{{nodeMap.3.output.amount}}',
         referencedNodeRef: '3'
       }
@@ -1240,7 +1240,7 @@ describe('Workflow Class - validateInternalVariables', () => {
 
     const action2 = new Action(ACTIONS.CORE.SWAP.SWAP);
     action2.setRef('3');
-    action2.setParams('tokenIn', '{{nodeMap.1.output.amount}}');
+    action2.setParams('tokenToSell', '{{nodeMap.1.output.amount}}');
 
     const workflow = new Workflow('Test Workflow', [trigger, action1, action2]);
     const invalidRefs = workflow.validateInternalVariables();
@@ -1254,7 +1254,7 @@ describe('Workflow Class - validateInternalVariables', () => {
 
     const action = new Action(ACTIONS.CORE.SWAP.SWAP);
     action.setRef('2');
-    action.setParams('tokenIn', '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9');
+    action.setParams('tokenToSell', '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9');
 
     const workflow = new Workflow('Test Workflow', [trigger, action]);
     const invalidRefs = workflow.validateInternalVariables();
@@ -1271,7 +1271,7 @@ describe('Workflow Class - validateInternalVariables', () => {
 
     const action2 = new Action(ACTIONS.CORE.SWAP.SWAP);
     action2.setRef('3');
-    action2.setParams('tokenIn', '{{nodeMap.2.children.filter(Boolean).0.output.transactionHash}}');
+    action2.setParams('tokenToSell', '{{nodeMap.2.children.filter(Boolean).0.output.transactionHash}}');
 
     const workflow = new Workflow('Test Workflow', [trigger, action1, action2]);
     const invalidRefs = workflow.validateInternalVariables();
@@ -1285,7 +1285,7 @@ describe('Workflow Class - validateInternalVariables', () => {
 
     const action = new Action(ACTIONS.CORE.SWAP.SWAP);
     action.setRef('2');
-    action.setParams('tokenIn', '{{nodeMap.99.children.filter(Boolean).0.output.transactionHash}}');
+    action.setParams('tokenToSell', '{{nodeMap.99.children.filter(Boolean).0.output.transactionHash}}');
 
     const workflow = new Workflow('Test Workflow', [trigger, action]);
     const invalidRefs = workflow.validateInternalVariables();

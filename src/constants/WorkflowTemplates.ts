@@ -131,8 +131,8 @@ const createETHFearAndGreedBuy = async () => {
     const odosAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
     const chain = CHAINS.MODE;
     odosAction.setChainId(chain);
-    odosAction.setParams("tokenIn", getTokenFromSymbol(chain, 'USDC').contractAddress);
-    odosAction.setParams("tokenOut", getTokenFromSymbol(chain, 'WETH').contractAddress);
+    odosAction.setParams("tokenToSell", getTokenFromSymbol(chain, 'USDC').contractAddress);
+    odosAction.setParams("tokenToBuy", getTokenFromSymbol(chain, 'WETH').contractAddress);
     odosAction.setParams("amount", await convertToTokenUnitsFromSymbol(100, chain, 'USDC'));
     odosAction.setPosition(400, 240);
 
@@ -143,7 +143,7 @@ const createETHFearAndGreedBuy = async () => {
 
 const createDCAFearAndGreed = async () => {
     // created with examples/UseCases/FearAndGreedDCA
-    return Workflow.fromJSON({ "id": null, "name": "Daily Fear & Greed-Based cbBTC Trading", "state": "inactive", "dateCreated": null, "dateModified": null, "executionId": null, "agentId": null, "nodes": [{ "id": null, "ref": "1", "blockId": 18, "type": "trigger", "state": "inactive", "parameters": { "period": 86400000, "timeout": null, "limit": 30 }, "frontendHelpers": {}, "position": { "x": 400, "y": 120 } }, { "id": null, "ref": "2", "blockId": 100015, "type": "action", "state": "inactive", "parameters": { "branchesAmount": 2 }, "frontendHelpers": {}, "position": { "x": 400, "y": 240 } }, { "id": null, "ref": "3", "blockId": 100016, "type": "action", "state": "inactive", "parameters": { "logic": "or", "groups": [{ "logic": "and", "checks": [{ "value1": "{{external.functions.btcFearAndGreed()}}", "condition": "gt", "value2": "80" }] }] }, "frontendHelpers": {}, "position": { "x": 150, "y": 360 } }, { "id": null, "ref": "4", "blockId": 100013, "type": "action", "state": "inactive", "parameters": { "chainId": 8453, "tokenIn": "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf", "tokenOut": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", "amount": 0.0001, "slippage": 0.1 }, "frontendHelpers": { "output": { "amountIn": { "formatAmount": false, "erc20Token": { "contractAddress": "{{output.tokenIn}}", "chainId": "{{parameters.chainId}}" } }, "amountOut": { "formatAmount": false, "erc20Token": { "contractAddress": "{{output.tokenOut}}", "chainId": "{{parameters.chainId}}" } } } }, "position": { "x": 150, "y": 480 } }, { "id": null, "ref": "5", "blockId": 100016, "type": "action", "state": "inactive", "parameters": { "logic": "or", "groups": [{ "logic": "and", "checks": [{ "value1": "{{external.functions.btcFearAndGreed()}}", "condition": "lt", "value2": "20" }] }] }, "frontendHelpers": {}, "position": { "x": 650, "y": 360 } }, { "id": null, "ref": "6", "blockId": 100013, "type": "action", "state": "inactive", "parameters": { "chainId": 8453, "tokenIn": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", "tokenOut": "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf", "amount": 10, "slippage": 0.3 }, "frontendHelpers": { "output": { "amountIn": { "formatAmount": false, "erc20Token": { "contractAddress": "{{output.tokenIn}}", "chainId": "{{parameters.chainId}}" } }, "amountOut": { "formatAmount": false, "erc20Token": { "contractAddress": "{{output.tokenOut}}", "chainId": "{{parameters.chainId}}" } } } }, "position": { "x": 650, "y": 480 } }], "edges": [{ "id": null, "source": "1", "target": "2" }, { "id": null, "source": "2", "target": "3" }, { "id": null, "source": "3", "target": "4", "label": "true", "value": "true" }, { "id": null, "source": "2", "target": "5" }, { "id": null, "source": "5", "target": "6", "label": "true", "value": "true" }], "notes": [] });
+    return Workflow.fromJSON({ "id": null, "name": "Daily Fear & Greed-Based cbBTC Trading", "state": "inactive", "dateCreated": null, "dateModified": null, "executionId": null, "agentId": null, "nodes": [{ "id": null, "ref": "1", "blockId": 18, "type": "trigger", "state": "inactive", "parameters": { "period": 86400000, "timeout": null, "limit": 30 }, "frontendHelpers": {}, "position": { "x": 400, "y": 120 } }, { "id": null, "ref": "2", "blockId": 100015, "type": "action", "state": "inactive", "parameters": { "branchesAmount": 2 }, "frontendHelpers": {}, "position": { "x": 400, "y": 240 } }, { "id": null, "ref": "3", "blockId": 100016, "type": "action", "state": "inactive", "parameters": { "logic": "or", "groups": [{ "logic": "and", "checks": [{ "value1": "{{external.functions.btcFearAndGreed()}}", "condition": "gt", "value2": "80" }] }] }, "frontendHelpers": {}, "position": { "x": 150, "y": 360 } }, { "id": null, "ref": "4", "blockId": 100013, "type": "action", "state": "inactive", "parameters": { "chainId": 8453, "tokenToSell": "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf", "tokenToBuy": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", "amount": 0.0001, "slippage": 0.1 }, "frontendHelpers": { "output": { "amountIn": { "formatAmount": false, "erc20Token": { "contractAddress": "{{output.tokenToSell}}", "chainId": "{{parameters.chainId}}" } }, "amountOut": { "formatAmount": false, "erc20Token": { "contractAddress": "{{output.tokenToBuy}}", "chainId": "{{parameters.chainId}}" } } } }, "position": { "x": 150, "y": 480 } }, { "id": null, "ref": "5", "blockId": 100016, "type": "action", "state": "inactive", "parameters": { "logic": "or", "groups": [{ "logic": "and", "checks": [{ "value1": "{{external.functions.btcFearAndGreed()}}", "condition": "lt", "value2": "20" }] }] }, "frontendHelpers": {}, "position": { "x": 650, "y": 360 } }, { "id": null, "ref": "6", "blockId": 100013, "type": "action", "state": "inactive", "parameters": { "chainId": 8453, "tokenToSell": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", "tokenToBuy": "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf", "amount": 10, "slippage": 0.3 }, "frontendHelpers": { "output": { "amountIn": { "formatAmount": false, "erc20Token": { "contractAddress": "{{output.tokenToSell}}", "chainId": "{{parameters.chainId}}" } }, "amountOut": { "formatAmount": false, "erc20Token": { "contractAddress": "{{output.tokenToBuy}}", "chainId": "{{parameters.chainId}}" } } } }, "position": { "x": 650, "y": 480 } }], "edges": [{ "id": null, "source": "1", "target": "2" }, { "id": null, "source": "2", "target": "3" }, { "id": null, "source": "3", "target": "4", "label": "true", "value": "true" }, { "id": null, "source": "2", "target": "5" }, { "id": null, "source": "5", "target": "6", "label": "true", "value": "true" }], "notes": [] });
 }
 
 const createETHFearAndGreedCapitalEfficientBuy = async () => {
@@ -154,24 +154,24 @@ const createETHFearAndGreedCapitalEfficientBuy = async () => {
     trigger.setPosition(400, 120);
 
     const chain = CHAINS.BASE;
-    const tokenIn = 'USDC';
-    const tokenOut = 'WETH';
+    const tokenToSell = 'USDC';
+    const tokenToBuy = 'WETH';
     const ionicWithdraw = new Action(ACTIONS.LENDING.AAVE.WITHDRAW);
     ionicWithdraw.setChainId(chain);
-    ionicWithdraw.setParams('asset', getTokenFromSymbol(chain, tokenIn).contractAddress);
+    ionicWithdraw.setParams('asset', getTokenFromSymbol(chain, tokenToSell).contractAddress);
     ionicWithdraw.setParams('amount', 10);
     ionicWithdraw.setPosition(400, 240);
 
     const odosAction = new Action(ACTIONS.CORE.SWAP.SWAP);
     odosAction.setChainId(chain);
-    odosAction.setParams("tokenToSell", getTokenFromSymbol(chain, tokenIn).contractAddress);
-    odosAction.setParams("tokenToBuy", getTokenFromSymbol(chain, tokenOut).contractAddress);
+    odosAction.setParams("tokenToSell", getTokenFromSymbol(chain, tokenToSell).contractAddress);
+    odosAction.setParams("tokenToBuy", getTokenFromSymbol(chain, tokenToBuy).contractAddress);
     odosAction.setParams("amount", ionicWithdraw.getParameterVariableName('amount'));
     odosAction.setPosition(400, 360);
 
     const ionicDeposit = new Action(ACTIONS.LENDING.AAVE.SUPPLY);
     ionicDeposit.setChainId(chain);
-    ionicDeposit.setParams('asset', getTokenFromSymbol(chain, tokenOut).contractAddress);
+    ionicDeposit.setParams('asset', getTokenFromSymbol(chain, tokenToBuy).contractAddress);
     ionicDeposit.setParams('amount', odosAction.getOutputVariableName('amountOut'));
     ionicDeposit.setPosition(400, 480);
 
@@ -249,13 +249,13 @@ const copyTradeVitalikOdos = async () => {
     trigger.setParams('sender', '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045');
     trigger.setPosition(400, 120);
 
-    const tokenIn = (await getTokenFromSymbol(CHAINS.MODE, 'USDC')).contractAddress;
+    const tokenToSell = (await getTokenFromSymbol(CHAINS.MODE, 'USDC')).contractAddress;
 
     const swap = new Action(ACTIONS.CORE.SWAP.SWAP);
     swap.setChainId(CHAINS.MODE);
-    swap.setParams('tokenToSell', tokenIn);
+    swap.setParams('tokenToSell', tokenToSell);
     swap.setParams('tokenToBuy', trigger.getOutputVariableName('outputToken'));
-    swap.setParams('amount', await convertToTokenUnits(1, CHAINS.MODE, tokenIn));
+    swap.setParams('amount', await convertToTokenUnits(1, CHAINS.MODE, tokenToSell));
     swap.setPosition(400, 240);
 
     const edge = new Edge({ source: trigger, target: swap });
@@ -960,8 +960,8 @@ const createOrderLimitAgentWorkflow = async (): Promise<Workflow> => {
 
   const odosSwapAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
   odosSwapAction.setParams('chainId', 42161);
-  odosSwapAction.setParams('tokenIn', '0x82af49447d8a07e3bd95bd0d56f35241523fbab1');
-  odosSwapAction.setParams('tokenOut', '0xaf88d065e77c8cc2239327c5edb3a432268e5831');
+  odosSwapAction.setParams('tokenToSell', '0x82af49447d8a07e3bd95bd0d56f35241523fbab1');
+  odosSwapAction.setParams('tokenToBuy', '0xaf88d065e77c8cc2239327c5edb3a432268e5831');
   odosSwapAction.setParams('amount', 0.1);
   odosSwapAction.setParams('slippage', '0.3');
   odosSwapAction.setPosition(400, 240);

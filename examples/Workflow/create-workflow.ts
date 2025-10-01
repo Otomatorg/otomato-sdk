@@ -22,8 +22,8 @@ async function main() {
     const odosAction = new Action(ACTIONS.SWAP.ODOS.SWAP);
     odosAction.setChainId(CHAINS.MODE);
     odosAction.setParams("amount", await convertToTokenUnitsFromSymbol(1, CHAINS.MODE, 'USDT'));
-    odosAction.setParams("tokenIn", getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress);
-    odosAction.setParams("tokenOut", getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
+    odosAction.setParams("tokenToSell", getTokenFromSymbol(CHAINS.MODE, 'USDT').contractAddress);
+    odosAction.setParams("tokenToBuy", getTokenFromSymbol(CHAINS.MODE, 'WETH').contractAddress);
     odosAction.setPosition(400, 240);
 
     const ionicDeposit = new Action(ACTIONS.LENDING.IONIC.DEPOSIT);
