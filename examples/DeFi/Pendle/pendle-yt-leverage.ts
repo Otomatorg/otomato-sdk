@@ -11,7 +11,7 @@ async function pendleYtLeverage() {
   apiServices.setUrl(process.env.API_URL);
   apiServices.setAuth(process.env.AUTH_TOKEN); 
 
-  const pendleYtImpliedYieldTrigger = new Trigger(TRIGGERS.YIELD.PENDLE.YT_IMPLIED_YIELD);
+  const pendleYtImpliedYieldTrigger = new Trigger(TRIGGERS.YIELD.PENDLE.YT_LEVERAGE);
   pendleYtImpliedYieldTrigger.setParams('chainId', 999);
   pendleYtImpliedYieldTrigger.setParams('abiParams.marketAddress', '0x97d985a71131afc02c320b636a268df34c6f42a4');
   pendleYtImpliedYieldTrigger.setParams('condition', 'gt');
