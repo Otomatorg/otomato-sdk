@@ -10,7 +10,8 @@ export const WORKFLOW_TEMPLATES_TAGS = {
     NOTIFICATIONS: 'Notifications',
     ABSTRACT: 'Abstract',
     DEXES: 'Dexes',
-    LENDING: 'Lending'
+    LENDING: 'Lending',
+    HYPER_EVM: 'Hyper EVM',
 };
 
 const yieldUpdateMessage = `Daily Yield Report 🚀
@@ -614,12 +615,12 @@ const createTwitterAiNotificationWorkflow = (username: { display: string, tag: s
     }
 }
 
-const createTwitterAiNotificationTemplate = (id: number, username: { display: string, tag: string }, wfData: { prompt: string, notification: string, wfTitle: string, description: string }, thumbnail: string) => {
+const createTwitterAiNotificationTemplate = (id: number, username: { display: string, tag: string }, wfData: { prompt: string, notification: string, wfTitle: string, description: string }, thumbnail: string, tags?: string[]) => {
     return {
         'id': id,
         'name': wfData.wfTitle,
         'description': wfData.description,
-        'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
+        'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS, ...(tags || [])],
         'thumbnail': thumbnail,
         'image': [
             TRIGGERS.SOCIALS.X.image,
@@ -996,6 +997,340 @@ const createPudgyPenguinHunterAgentWorkflow = async (): Promise<Workflow> => {
 
   const workflow = new Workflow('Get notified when a Pudgy Penguins is listed', [blurListingTrigger, iexecSendWeb3TelegramAction], [edge1], DEFAULT_WORKFLOW_LOOP_SETTINGS.subscription1m20rep);
 
+  return workflow;
+};
+
+const createWalletPointsIncreaseWorkflow = async (): Promise<Workflow> => {
+  
+  const pointsPointsMovementTrigger = new Trigger(TRIGGERS.SOCIALS.HYPER_EVM_PROTOCOLS_POINTS.ON_NEW_POINTS);
+  pointsPointsMovementTrigger.setParams('walletAddress', '0x9f5362c5ad18e5a3f9c06e9cf26d5ae0c5833f3f');
+  pointsPointsMovementTrigger.setPosition(400, 120);
+  
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', `Wallet's points have increased:  ${pointsPointsMovementTrigger.getOutputVariableName('pointsChange')}`);
+  telegramSendMessageAction.setPosition(400, 240);
+  
+  const edge1 = new Edge({ source: pointsPointsMovementTrigger, target: telegramSendMessageAction });
+  
+  const workflow = new Workflow('Get notified when wallet\'s points increase', [pointsPointsMovementTrigger, telegramSendMessageAction], [edge1], {
+    loopingType: WORKFLOW_LOOPING_TYPES.SUBSCRIPTION,
+    limit: 1000,
+    timeout: 31536000000
+  });
+
+  return workflow;
+};
+
+const createHyperbeatLendingYieldDropWorkflow = async (): Promise<Workflow> => {
+  
+  const hyperlendLendingRateTrigger = new Trigger(TRIGGERS.LENDING.HYPERLEND.LENDING_RATE);
+  hyperlendLendingRateTrigger.setParams('chainId', 999);
+  hyperlendLendingRateTrigger.setParams('abiParams.asset', '0x5555555555555555555555555555555555555555');
+  hyperlendLendingRateTrigger.setParams('condition', 'gt');
+  hyperlendLendingRateTrigger.setParams('comparisonValue', 7);
+  hyperlendLendingRateTrigger.setPosition(400, 120);
+
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', 'Hyperlend wHYPE lending rate is above 7%');
+  telegramSendMessageAction.setPosition(400, 240);
+
+  const edge1 = new Edge({ source: hyperlendLendingRateTrigger, target: telegramSendMessageAction });
+
+  const workflow = new Workflow('Get notified when when wHYPE lending rate above 7%', [hyperlendLendingRateTrigger, telegramSendMessageAction], [edge1], null);
+
+  return workflow;
+};
+
+const createHyperlendHealthFactorWorkflow = async (): Promise<Workflow> => {
+  
+const hyperlendHealthFactorTrigger = new Trigger(TRIGGERS.LENDING.HYPERLEND.HEALTH_FACTOR);
+  hyperlendHealthFactorTrigger.setParams('chainId', 999);
+  hyperlendHealthFactorTrigger.setParams('abiParams.user', '');
+  hyperlendHealthFactorTrigger.setParams('condition', 'lte');
+  hyperlendHealthFactorTrigger.setParams('comparisonValue', 1.2);
+  hyperlendHealthFactorTrigger.setPosition(400, 120);
+
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', 'Wallet {{nodeMap.1.parameters.abi.parameters.user}}\'s health factor dropped below 1.2');
+  telegramSendMessageAction.setPosition(400, 240);
+
+  const edge1 = new Edge({ source: hyperlendHealthFactorTrigger, target: telegramSendMessageAction });
+
+  const workflow = new Workflow('Notify me when HF reach a treshold on HyperLend', [hyperlendHealthFactorTrigger, telegramSendMessageAction], [edge1], null);
+
+  return workflow;
+};
+
+const createHyperlendLendingYieldDropWorkflow = async (): Promise<Workflow> => {
+
+  const hyperlendLendingRateTrigger = new Trigger(TRIGGERS.LENDING.HYPERLEND.LENDING_RATE);
+  hyperlendLendingRateTrigger.setParams('chainId', 999);
+  hyperlendLendingRateTrigger.setParams('abiParams.asset', '0x5555555555555555555555555555555555555555');
+  hyperlendLendingRateTrigger.setParams('condition', 'gt');
+  hyperlendLendingRateTrigger.setParams('comparisonValue', 7);
+  hyperlendLendingRateTrigger.setPosition(400, 120);
+  
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', 'Hyperlend wHYPE lending rate is above 7%');
+  telegramSendMessageAction.setPosition(400, 240);
+  
+  const edge1 = new Edge({ source: hyperlendLendingRateTrigger, target: telegramSendMessageAction });
+  
+  const workflow = new Workflow('Get notified when when wHYPE lending rate above 7%', [hyperlendLendingRateTrigger, telegramSendMessageAction], [edge1], null);
+  
+  return workflow;
+};
+
+const createHyperlendBorrowingYieldIncreaseWorkflow = async (): Promise<Workflow> => {
+  
+  const hyperlendBorrowingRatesTrigger = new Trigger(TRIGGERS.LENDING.HYPERLEND.BORROWING_RATES);
+  hyperlendBorrowingRatesTrigger.setParams('chainId', 999);
+  hyperlendBorrowingRatesTrigger.setParams('abiParams.asset', '0x5555555555555555555555555555555555555555');
+  hyperlendBorrowingRatesTrigger.setParams('condition', 'lt');
+  hyperlendBorrowingRatesTrigger.setParams('comparisonValue', 6);
+  hyperlendBorrowingRatesTrigger.setPosition(400, 120);
+
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', 'Hyperlend wHYPE borrowing rate is below 6%');
+  telegramSendMessageAction.setPosition(400, 240);
+
+  const edge1 = new Edge({ source: hyperlendBorrowingRatesTrigger, target: telegramSendMessageAction });
+
+  const workflow = new Workflow('Get notified when when wHYPE borrowing rate below 6%', [hyperlendBorrowingRatesTrigger, telegramSendMessageAction], [edge1], null);
+
+  return workflow;
+};
+
+const createPendleTokenExpiresWorkflow = async (): Promise<Workflow> => {
+    
+  const hyperEvmProtocolsPointsOnNewPointsTrigger = new Trigger(TRIGGERS.SOCIALS.HYPER_EVM_PROTOCOLS_POINTS.ON_NEW_POINTS);
+  hyperEvmProtocolsPointsOnNewPointsTrigger.setParams('chainId', 999);
+  hyperEvmProtocolsPointsOnNewPointsTrigger.setParams('marketAddress', '0x97d985a71131afc02c320b636a268df34c6f42a4');
+  hyperEvmProtocolsPointsOnNewPointsTrigger.setPosition(400, 120);
+
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', 'LP hbHYPE market on Pendle HyperEVM expired');
+  telegramSendMessageAction.setPosition(400, 240);
+
+  const edge1 = new Edge({ source: hyperEvmProtocolsPointsOnNewPointsTrigger, target: telegramSendMessageAction });
+
+  const workflow = new Workflow('Notify me when LP hbHYPE is expired on pendle', [hyperEvmProtocolsPointsOnNewPointsTrigger, telegramSendMessageAction], [edge1], null);
+
+  return workflow;
+};
+
+const createPendlePtYieldIncreaseWorkflow = async (): Promise<Workflow> => {
+  
+  const pendlePtImpliedYieldTrigger = new Trigger(TRIGGERS.YIELD.PENDLE.PT_IMPLIED_YIELD);
+  pendlePtImpliedYieldTrigger.setParams('chainId', 999);
+  pendlePtImpliedYieldTrigger.setParams('abiParams.marketAddress', '0x97d985a71131afc02c320b636a268df34c6f42a4');
+  pendlePtImpliedYieldTrigger.setParams('condition', 'gt');
+  pendlePtImpliedYieldTrigger.setParams('comparisonValue', 10);
+  pendlePtImpliedYieldTrigger.setPosition(400, 120);
+  
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', 'Pendle hbHYPE\'s PT yield is above 10%');
+  telegramSendMessageAction.setPosition(400, 240);
+  
+  const edge1 = new Edge({ source: pendlePtImpliedYieldTrigger, target: telegramSendMessageAction });
+  
+  const workflow = new Workflow('Get notified when when hbHYPE PT yield above 10%', [pendlePtImpliedYieldTrigger, telegramSendMessageAction], [edge1], null);
+  
+  return workflow;
+};
+
+const createPendlePtYieldDecreaseWorkflow = async (): Promise<Workflow> => {
+  
+  const pendlePtImpliedYieldTrigger = new Trigger(TRIGGERS.YIELD.PENDLE.PT_IMPLIED_YIELD);
+  pendlePtImpliedYieldTrigger.setParams('chainId', 999);
+  pendlePtImpliedYieldTrigger.setParams('abiParams.marketAddress', '0x97d985a71131afc02c320b636a268df34c6f42a4');
+  pendlePtImpliedYieldTrigger.setParams('condition', 'lt');
+  pendlePtImpliedYieldTrigger.setParams('comparisonValue', 10);
+  pendlePtImpliedYieldTrigger.setPosition(400, 120);
+  
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', 'Pendle hbHYPE\'s PT yield is below 7%');
+  telegramSendMessageAction.setPosition(400, 240);
+  
+  const edge1 = new Edge({ source: pendlePtImpliedYieldTrigger, target: telegramSendMessageAction });
+  
+  const workflow = new Workflow('Get notified when when hbHYPE PT yield below 7%', [pendlePtImpliedYieldTrigger, telegramSendMessageAction], [edge1], null);
+  
+  return workflow;
+};
+
+const createPendlePtExpiresWorkflow = async (): Promise<Workflow> => {
+  
+  const pendlePtExpiredTrigger = new Trigger(TRIGGERS.YIELD.PENDLE.PT_EXPIRED);
+  pendlePtExpiredTrigger.setParams('chainId', 999);
+  pendlePtExpiredTrigger.setParams('marketAddress', '0x810f9d4a751cafd5193617022b35fa0b0c166b4c');
+  pendlePtExpiredTrigger.setPosition(400, 120);
+  
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', 'PT hbHYPE market on HyperEVM expired');
+  telegramSendMessageAction.setPosition(400, 240);
+  
+  const edge1 = new Edge({ source: pendlePtExpiredTrigger, target: telegramSendMessageAction });
+  
+  const workflow = new Workflow('Notify me when PT hbHYPE is expired on pendle', [pendlePtExpiredTrigger, telegramSendMessageAction], [edge1], null);
+  
+  return workflow;
+};
+
+const createPendleYtExpiresWorkflow = async (): Promise<Workflow> => {
+  
+  const pendleYtExpiredTrigger = new Trigger(TRIGGERS.YIELD.PENDLE.YT_EXPIRED);
+  pendleYtExpiredTrigger.setParams('chainId', 999);
+  pendleYtExpiredTrigger.setParams('marketAddress', '0x2b55b35d9be63d016ee902d87af29d2c4f397dc1');
+  pendleYtExpiredTrigger.setPosition(400, 120);
+  
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', 'YT hbHYPE market on HyperEVM expired');
+  telegramSendMessageAction.setPosition(400, 240);
+  
+  const edge1 = new Edge({ source: pendleYtExpiredTrigger, target: telegramSendMessageAction });
+  
+  const workflow = new Workflow('Notify me when YT hbHYPE is expired on pendle', [pendleYtExpiredTrigger, telegramSendMessageAction], [edge1], null);
+  
+  return workflow;
+};
+
+const createPendleYtLeverageIncreaseWorkflow = async (): Promise<Workflow> => {
+  
+  const pendleYtImpliedYieldTrigger = new Trigger(TRIGGERS.YIELD.PENDLE.YT_LEVERAGE);
+  pendleYtImpliedYieldTrigger.setParams('chainId', 999);
+  pendleYtImpliedYieldTrigger.setParams('abiParams.marketAddress', '0x97d985a71131afc02c320b636a268df34c6f42a4');
+  pendleYtImpliedYieldTrigger.setParams('condition', 'gt');
+  pendleYtImpliedYieldTrigger.setParams('comparisonValue', 60);
+  pendleYtImpliedYieldTrigger.setPosition(400, 120);
+  
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', 'Pendle hbHYPE\'s YT leverage  is above 60');
+  telegramSendMessageAction.setPosition(400, 240);
+  
+  const edge1 = new Edge({ source: pendleYtImpliedYieldTrigger, target: telegramSendMessageAction });
+  
+  const workflow = new Workflow('Get notified when when hbHYPE YT leverage above 60', [pendleYtImpliedYieldTrigger, telegramSendMessageAction], [edge1], null);
+  
+  return workflow;
+};
+
+const createPendleYtLeverageDecreaseWorkflow = async (): Promise<Workflow> => {
+  
+  const pendleYtImpliedYieldTrigger = new Trigger(TRIGGERS.YIELD.PENDLE.YT_LEVERAGE);
+  pendleYtImpliedYieldTrigger.setParams('chainId', 999);
+  pendleYtImpliedYieldTrigger.setParams('abiParams.marketAddress', '0x97d985a71131afc02c320b636a268df34c6f42a4');
+  pendleYtImpliedYieldTrigger.setParams('condition', 'lt');
+  pendleYtImpliedYieldTrigger.setParams('comparisonValue', 40);
+  pendleYtImpliedYieldTrigger.setPosition(400, 120);
+  
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', 'Pendle hbHYPE\'s YT leverage  is below 40');
+  telegramSendMessageAction.setPosition(400, 240);
+  
+  const edge1 = new Edge({ source: pendleYtImpliedYieldTrigger, target: telegramSendMessageAction });
+  
+  const workflow = new Workflow('Get notified when when hbHYPE YT leverage below 40', [pendleYtImpliedYieldTrigger, telegramSendMessageAction], [edge1], null);
+  
+  return workflow;
+};
+
+const createPendleLpExpiresWorkflow = async (): Promise<Workflow> => {
+  
+  const pendleLpExpiredTrigger = new Trigger(TRIGGERS.YIELD.PENDLE.LP_EXPIRED);
+  pendleLpExpiredTrigger.setParams('chainId', 999);
+  pendleLpExpiredTrigger.setParams('marketAddress', '0x97d985a71131afc02c320b636a268df34c6f42a4');
+  pendleLpExpiredTrigger.setPosition(400, 120);
+  
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', 'LP hbHYPE market on Pendle HyperEVM expired');
+  telegramSendMessageAction.setPosition(400, 240);
+  
+  const edge1 = new Edge({ source: pendleLpExpiredTrigger, target: telegramSendMessageAction });
+  
+  const workflow = new Workflow('Notify me when LP hbHYPE is expired on pendle', [pendleLpExpiredTrigger, telegramSendMessageAction], [edge1], null);
+    
+  return workflow;
+};
+
+const createHyperswapOutOfRangeWorkflow = async (): Promise<Workflow> => {
+  
+  const hyperswapIsInRangeTrigger = new Trigger(TRIGGERS.DEXES.HYPERSWAP.IS_IN_RANGE);
+  hyperswapIsInRangeTrigger.setParams('chainId', 999);
+  hyperswapIsInRangeTrigger.setParams('abiParams.tokenId', 146508);
+  hyperswapIsInRangeTrigger.setParams('condition', 'eq');
+  hyperswapIsInRangeTrigger.setParams('comparisonValue', false);
+  hyperswapIsInRangeTrigger.setPosition(400, 120);
+
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', `Hyperswap position with id ${hyperswapIsInRangeTrigger.getOutputVariableName('tokenId')} is out of range`);
+  telegramSendMessageAction.setPosition(400, 240);
+
+  const edge1 = new Edge({ source: hyperswapIsInRangeTrigger, target: telegramSendMessageAction });
+
+  const workflow = new Workflow('Notify me when Hyperswap position with id #146508 is out of range', [hyperswapIsInRangeTrigger, telegramSendMessageAction], [edge1], null);
+
+  return workflow;
+};
+
+const createHyperswapBackInRangeWorkflow = async (): Promise<Workflow> => {
+  
+
+  const hyperswapIsInRangeTrigger = new Trigger(TRIGGERS.DEXES.HYPERSWAP.IS_IN_RANGE);
+  hyperswapIsInRangeTrigger.setParams('chainId', 999);
+  hyperswapIsInRangeTrigger.setParams('abiParams.tokenId', 146508);
+  hyperswapIsInRangeTrigger.setParams('condition', 'eq');
+  hyperswapIsInRangeTrigger.setParams('comparisonValue', true);
+  hyperswapIsInRangeTrigger.setPosition(400, 120);
+
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', `Hyperswap position with id ${hyperswapIsInRangeTrigger.getOutputVariableName('tokenId')} is out of range`);
+  telegramSendMessageAction.setPosition(400, 240);
+
+  const edge1 = new Edge({ source: hyperswapIsInRangeTrigger, target: telegramSendMessageAction });
+
+  const workflow = new Workflow('Notify me when Hyperswap position with id #146508 is out of range', [hyperswapIsInRangeTrigger, telegramSendMessageAction], [edge1], null);
+
+  return workflow;
+};
+
+const createProjectXOutOfRangeWorkflow = async (): Promise<Workflow> => {
+  
+  const projectXIsInRangeTrigger = new Trigger(TRIGGERS.DEXES.PROJECT_X.IS_IN_RANGE);
+  projectXIsInRangeTrigger.setParams('chainId', 999);
+  projectXIsInRangeTrigger.setParams('abiParams.tokenId', 158259);
+  projectXIsInRangeTrigger.setParams('condition', 'eq');
+  projectXIsInRangeTrigger.setParams('comparisonValue', false);
+  projectXIsInRangeTrigger.setPosition(400, 120);
+  
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', `ProjectX position with id ${projectXIsInRangeTrigger.getOutputVariableName('tokenId')} is out of range`);
+  telegramSendMessageAction.setPosition(400, 240);
+  
+  const edge1 = new Edge({ source: projectXIsInRangeTrigger, target: telegramSendMessageAction });
+  
+  const workflow = new Workflow('Notify me when ProjectX position with id #158259 is out of range', [projectXIsInRangeTrigger, telegramSendMessageAction], [edge1], null);
+  
+  return workflow;
+};
+
+const createProjectXBackInRangeWorkflow = async (): Promise<Workflow> => {
+  
+  const projectXIsInRangeTrigger = new Trigger(TRIGGERS.DEXES.PROJECT_X.IS_IN_RANGE);
+  projectXIsInRangeTrigger.setParams('chainId', 999);
+  projectXIsInRangeTrigger.setParams('abiParams.tokenId', 158259);
+  projectXIsInRangeTrigger.setParams('condition', 'eq');
+  projectXIsInRangeTrigger.setParams('comparisonValue', true);
+  projectXIsInRangeTrigger.setPosition(400, 120);
+  
+  const telegramSendMessageAction = new Action(ACTIONS.TRENDING.TELEGRAM.SEND_MESSAGE);
+  telegramSendMessageAction.setParams('message', `ProjectX position with id ${projectXIsInRangeTrigger.getOutputVariableName('tokenId')} is out of range`);
+  telegramSendMessageAction.setPosition(400, 240);
+  
+  const edge1 = new Edge({ source: projectXIsInRangeTrigger, target: telegramSendMessageAction });
+  
+  const workflow = new Workflow('Notify me when ProjectX position with id #158259 is out of range', [projectXIsInRangeTrigger, telegramSendMessageAction], [edge1], null);
+  
   return workflow;
 };
 
@@ -1753,6 +2088,457 @@ export const WORKFLOW_TEMPLATES = [
       ],
       createWorkflow: createPudgyPenguinHunterAgentWorkflow
     },
+    {
+      'id': 45,
+      'name': 'Get notified when I receive points on any protocols',
+      'description': 'Get notified when I receive points on any protocols.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.SOCIALS,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/dailyPoints.webp',
+      'image': [
+        TRIGGERS.SOCIALS.HYPER_EVM_PROTOCOLS_POINTS.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.SOCIALS.HYPER_EVM_PROTOCOLS_POINTS.ON_NEW_POINTS.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createWalletPointsIncreaseWorkflow
+    },
+    createTwitterAiNotificationTemplate(
+      46,
+      { display: 'Hyperbeat', tag: 'hyperbeat_fi' },
+      {
+        prompt: 'the tweet mentions hearts, their token, airdrop or TGE',
+        notification: 'Hyperbeat talks about hearts, their token, airdrop or TGE',
+        description: 'Get notified when Hyperbeat talks about hearts, their token, airdrop or TGE.',
+        wfTitle: 'Get notified when Hyperbeat talks about hearts, their token, airdrop or TGE',
+      },
+      'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperbeat.webp',
+      [WORKFLOW_TEMPLATES_TAGS.HYPER_EVM]
+    ),
+    createTwitterAiNotificationTemplate(
+      47,
+      { display: 'Hyperbeat', tag: 'hyperbeat_fi' },
+      {
+        prompt: 'the tweet mentions security issues, exploit, hack, or vulnerability',
+        notification: 'Hyperbeat tweets about security issues',
+        description: 'Get notified when Hyperbeat tweets about security issues.',
+        wfTitle: 'Get notified when Hyperbeat tweets about security issues',
+      },
+      'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperbeat.webp',
+      [WORKFLOW_TEMPLATES_TAGS.HYPER_EVM]
+    ),
+    {
+      'id': 48,
+      'name': 'Get notified when wHYPE lending rate is above 7%',
+      'description': 'Get notified when the wHYPE lending rate exceeds 7%.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.YIELD,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.LENDING
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperbeat.webp',
+      'image': [
+        TRIGGERS.LENDING.HYPERLEND.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.LENDING.HYPERLEND.LENDING_RATE.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createHyperbeatLendingYieldDropWorkflow
+    },
+    {
+      'id': 49,
+      'name': 'Get notified when Hyperlend health factor falls below 1.05',
+      'description': 'Get notified when your Hyperlend health factor falls below 1.05',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.LENDING,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperlend_health_factor.webp',
+      'image': [
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createHyperlendHealthFactorWorkflow
+    },
+    createTwitterAiNotificationTemplate(
+      50,
+      { display: 'Hyperlend', tag: 'HyperlendHQ' },
+      {
+        prompt: 'the tweet mentions security issues, exploit, hack, or vulnerability',
+        notification: 'Hyperlend tweets about security issues',
+        description: 'Get notified when Hyperlend tweets about security issues.',
+        wfTitle: 'Get notified when Hyperlend tweets about security issues',
+      },
+      'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperlend_x.webp',
+      [WORKFLOW_TEMPLATES_TAGS.HYPER_EVM]
+    ),
+    createTwitterAiNotificationTemplate(
+      51,
+      { display: 'Hyperlend', tag: 'HyperlendHQ' },
+      {
+        prompt: 'the tweet mentions points, their token, airdrop or TGE',
+        notification: 'Hyperlend talks about points, their token, airdrop or TGE',
+        description: 'Get notified when Hyperlend talks about points, their token, airdrop or TGE.',
+        wfTitle: 'Get notified when Hyperlend talks about points, their token, airdrop or TGE',
+      },
+      'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperlend_x.webp',
+      [WORKFLOW_TEMPLATES_TAGS.HYPER_EVM]
+    ),
+    {
+      'id': 52,
+      'name': 'Get notified when wHYPE lending rate is above 7%',
+      'description': 'Get notified when the wHYPE lending rate on Hyperlend rises above 7%.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.YIELD,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.LENDING,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperlend_x.webp',
+      'image': [
+        TRIGGERS.LENDING.HYPERLEND.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.LENDING.HYPERLEND.LENDING_RATE.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createHyperlendLendingYieldDropWorkflow
+    },
+    {
+      'id': 53,
+      'name': 'Get notified when wHYPE borrowing rate is below 6%',
+      'description': 'Get notified when the wHYPE borrowing rate on Hyperlend falls below 6%.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.YIELD,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.LENDING,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperlend_x.webp',
+      'image': [
+        TRIGGERS.LENDING.HYPERLEND.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.LENDING.HYPERLEND.BORROWING_RATES.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createHyperlendBorrowingYieldIncreaseWorkflow
+    },
+    {
+      'id': 55,
+      'name': 'Get notified when hbHYPE PT yield is above 10%',
+      'description': 'Get notified when the hbHYPE PT yield on Pendle rises above 10%.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.YIELD,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/pendle_yield.webp',
+      'image': [
+        TRIGGERS.YIELD.PENDLE.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.YIELD.PENDLE.PT_IMPLIED_YIELD.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createPendlePtYieldIncreaseWorkflow
+    },
+    {
+      'id': 56,
+      'name': 'Get notified when hbHYPE PT yield is below 7%',
+      'description': 'Get notified when the hbHYPE PT yield on Pendle falls below 7%.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.YIELD,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/pendle_yield.webp',
+      'image': [
+        TRIGGERS.YIELD.PENDLE.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.YIELD.PENDLE.PT_IMPLIED_YIELD.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createPendlePtYieldDecreaseWorkflow
+    },
+    {
+      'id': 57,
+      'name': 'Get notified when my Pendle PT tokens expire',
+      'description': 'Get notified when my PT tokens expire on Pendle.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.YIELD,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/pendle_yield.webp',
+      'image': [
+        TRIGGERS.YIELD.PENDLE.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.YIELD.PENDLE.PT_EXPIRED.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createPendlePtExpiresWorkflow
+    },
+    createTwitterAiNotificationTemplate(
+      58,
+      { display: 'Pendle', tag: 'pendle_fi' },
+      {
+        prompt: 'the tweet mentions security issues, exploit, hack, or vulnerability',
+        notification: 'Pendle tweets about security issues',
+        description: 'Get notified when Pendle tweets about any security issues.',
+        wfTitle: 'Get notified when Pendle tweets about any security issues',
+      },
+      'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/pendle_x.webp',
+      [WORKFLOW_TEMPLATES_TAGS.HYPER_EVM]
+    ),
+    {
+      'id': 59,
+      'name': 'Get notified when my Pendle YT tokens expire',
+      'description': 'Get notified when my YT tokens expire on Pendle.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.YIELD,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/pendle_yield.webp',
+      'image': [
+        TRIGGERS.YIELD.PENDLE.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.YIELD.PENDLE.YT_EXPIRED.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createPendleYtExpiresWorkflow
+    },
+    {
+      'id': 60,
+      'name': 'Get notified when when hbHYPE YT leverage above 60',
+      'description': 'Get notified when hbHYPE YT leverage goes above 60 on Pendle.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.YIELD,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/pendle_yield.webp',
+      'image': [
+        TRIGGERS.YIELD.PENDLE.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.YIELD.PENDLE.YT_LEVERAGE.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createPendleYtLeverageIncreaseWorkflow
+    },
+    {
+      'id': 61,
+      'name': 'Get notified when when hbHYPE YT leverage below 40',
+      'description': 'Get notified when hbHYPE YT leverage goes below 40 on Pendle.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.YIELD,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/pendle_yield.webp',
+      'image': [
+        TRIGGERS.YIELD.PENDLE.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.YIELD.PENDLE.YT_LEVERAGE.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createPendleYtLeverageDecreaseWorkflow
+    },
+    {
+      'id': 62,
+      'name': 'Get notified when my Pendle LP positions expire',
+      'description': 'Get notified when my LP positions expire on Pendle.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.YIELD,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/pendle_yield.webp',
+      'image': [
+        TRIGGERS.YIELD.PENDLE.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.YIELD.PENDLE.LP_EXPIRED.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createPendleLpExpiresWorkflow
+    },
+    {
+      'id': 63,
+      'name': 'Get notified when my HyperSwap positions are out of range',
+      'description': 'Get notified when my HyperSwap positions are out of range.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.DEXES,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperswap_template.webp',
+      'image': [
+        TRIGGERS.DEXES.HYPERSWAP.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.DEXES.HYPERSWAP.IS_IN_RANGE.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createHyperswapOutOfRangeWorkflow
+    },
+    {
+      'id': 64,
+      'name': 'Get notified when my HyperSwap positions are back in range',
+      'description': 'Get notified when my HyperSwap positions are back in range.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.DEXES,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperswap_template.webp',
+      'image': [
+        TRIGGERS.DEXES.HYPERSWAP.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.DEXES.HYPERSWAP.IS_IN_RANGE.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createHyperswapBackInRangeWorkflow
+    },
+    createTwitterAiNotificationTemplate(
+      65,
+      { display: 'HyperSwap', tag: 'hyperswap_io' },
+      {
+        prompt: 'the tweet mentions security issues, exploit, hack, or vulnerability',
+        notification: 'HyperSwap tweets about security issues',
+        description: 'Get notified when HyperSwap tweets about any security issues.',
+        wfTitle: 'Get notified when HyperSwap tweets about any security issues',
+      },
+      'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperswap_template.webp',
+      [WORKFLOW_TEMPLATES_TAGS.HYPER_EVM]
+    ),
+    createTwitterAiNotificationTemplate(
+      66,
+      { display: 'HyperSwap', tag: 'hyperswap_io' },
+      {
+        prompt: 'the tweet mentions points, their token, airdrop or TGE',
+        notification: 'HyperSwap talks about points, their token, airdrop or TGE',
+        description: 'Get notified when HyperSwap talks about points, their token, airdrop or TGE.',
+        wfTitle: 'Get notified when HyperSwap talks about points, their token, airdrop or TGE',
+      },
+      'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/hyperswap_template.webp',
+      [WORKFLOW_TEMPLATES_TAGS.HYPER_EVM]
+    ),
+    {
+      'id': 67,
+      'name': 'Get notified when my ProjectX positions are out of range',
+      'description': 'Get notified when my ProjectX positions are out of range.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.DEXES,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/projectx_template.webp',
+      'image': [
+        TRIGGERS.DEXES.PROJECT_X.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.DEXES.PROJECT_X.IS_IN_RANGE.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createProjectXOutOfRangeWorkflow
+    },
+    {
+      'id': 68,
+      'name': 'Get notified when my ProjectX positions are back in range',
+      'description': 'Get notified when my ProjectX positions are back in range.',
+      'tags': [
+        WORKFLOW_TEMPLATES_TAGS.DEXES,
+        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS,
+        WORKFLOW_TEMPLATES_TAGS.HYPER_EVM
+      ],
+      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/projectx_template.webp',
+      'image': [
+        TRIGGERS.DEXES.PROJECT_X.image,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
+      ],
+      'blockIDs': [
+        TRIGGERS.DEXES.PROJECT_X.IS_IN_RANGE.blockId,
+        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
+      ],
+      createWorkflow: createProjectXBackInRangeWorkflow
+    },
+    createTwitterAiNotificationTemplate(
+      69,
+      { display: 'ProjectX', tag: 'projectx_io' },
+      {
+        prompt: 'the tweet mentions security issues, exploit, hack, or vulnerability',
+        notification: 'ProjectX tweets about security issues',
+        description: 'Get notified when ProjectX tweets about any security issues.',
+        wfTitle: 'Get notified when ProjectX tweets about any security issues',
+      },
+      'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/projectx_template.webp',
+      [WORKFLOW_TEMPLATES_TAGS.HYPER_EVM]
+    ),
+    createTwitterAiNotificationTemplate(
+      70,
+      { display: 'ProjectX', tag: 'projectx_io' },
+      {
+        prompt: 'the tweet mentions points, their token, airdrop or TGE',
+        notification: 'ProjectX talks about points, their token, airdrop or TGE',
+        description: 'Get notified when ProjectX talks about points, their token, airdrop or TGE.',
+        wfTitle: 'Get notified when ProjectX talks about points, their token, airdrop or TGE',
+      },
+      'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/projectx_template.webp',
+      [WORKFLOW_TEMPLATES_TAGS.HYPER_EVM]
+    ),
+    createTwitterAiNotificationTemplate(
+      71,
+      { display: 'Kinetiq', tag: 'kinetiq_fi' },
+      {
+        prompt: 'the tweet mentions security issues, exploit, hack, or vulnerability',
+        notification: 'Kinetiq tweets about security issues',
+        description: 'Get notified when Kinetiq tweets about any security issues.',
+        wfTitle: 'Get notified when Kinetiq tweets about any security issues',
+      },
+      'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/kinetiq_template.webp',
+      [WORKFLOW_TEMPLATES_TAGS.HYPER_EVM]
+    ),
+    createTwitterAiNotificationTemplate(
+      72,
+      { display: 'Kinetiq', tag: 'kinetiq_fi' },
+      {
+        prompt: 'the tweet mentions points, their token, airdrop or TGE',
+        notification: 'Kinetiq talks about points, their token, airdrop or TGE',
+        description: 'Get notified when Kinetiq talks about points, their token, airdrop or TGE.',
+        wfTitle: 'Get notified when Kinetiq talks about points, their token, airdrop or TGE',
+      },
+      'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/kinetiq_template.webp',
+      [WORKFLOW_TEMPLATES_TAGS.HYPER_EVM]
+    ),
 ].map((template) => {
   if (specialSettingTemplates.includes(template.id)) {
     return {
