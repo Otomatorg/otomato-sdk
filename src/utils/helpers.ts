@@ -167,7 +167,14 @@ export function formatNonZeroDecimals(value: number, nonZeroDecimals: number = 2
 
 export const getTokenPrice = async (chainId: number, contractAddress: string): Promise<number> => {
   if (chainId === 999) {
-    const tokenPriceList = await fetch(`https://li.quest/v1/tokens?chains=999`);
+    const tokenPriceList = await fetch(
+      `https://li.quest/v1/tokens?chains=999`,
+      {
+        headers: {
+          'x-lifi-api-key': process.env.LIFI_API_KEY ?? ''
+        }
+      }
+    );
     const tokenPriceListJson = await tokenPriceList.json();
     const tokenPrice = tokenPriceListJson.tokens?.[999]?.find((token: any) => token.address === contractAddress);
     return tokenPrice?.priceUSD;
