@@ -95,9 +95,10 @@ export function getComputeERC20Variable(amount: string, chainId: any, contractAd
  * 
  * @param value - The number to format.
  * @param nonZeroDecimals - The number of non-zero decimal digits to show (default is 2).
+ * @param maxLeadingZeros - The maximum number of leading zeros after decimal point before rounding (default is -1 for no limit).
  * @returns string - The formatted number as a string.
  */
-export function formatNonZeroDecimals(value: number, nonZeroDecimals: number = 2): string {
+export function formatNonZeroDecimals(value: number, nonZeroDecimals: number = 2, maxLeadingZeros: number = -1): string {
     if (value === 0) {
         return "0";
     }
@@ -129,19 +130,31 @@ export function formatNonZeroDecimals(value: number, nonZeroDecimals: number = 2
     const integerPart = str.substring(0, decimalIndex);
     const decimalPart = str.substring(decimalIndex + 1);
     
-    let nonZeroCount = 0;
-    let result = integerPart + ".";
-    
+    // Count leading zeros after decimal point
+    let leadingZeros = 0;
     for (let i = 0; i < decimalPart.length; i++) {
-        result += decimalPart[i];
-        
-        if (decimalPart[i] !== '0') {
-            nonZeroCount++;
-            if (nonZeroCount === nonZeroDecimals) {
-                break;
-            }
+        if (decimalPart[i] === '0') {
+            leadingZeros++;
+        } else {
+            break;
         }
     }
+    
+    // If leading zeros exceed threshold, round the number
+    if (maxLeadingZeros !== -1 && leadingZeros > maxLeadingZeros) {
+        const rounded = Math.round(absValue);
+        return sign + rounded.toString();
+    }
+    
+    let result = integerPart + ".";
+    
+    // Add leading zeros
+    result += decimalPart.substring(0, leadingZeros);
+    
+    // Take up to nonZeroDecimals non-zero decimal places after leading zeros
+    const remainingDigits = decimalPart.substring(leadingZeros);
+    const maxDigits = Math.min(nonZeroDecimals, remainingDigits.length);
+    result += remainingDigits.substring(0, maxDigits);
 
     // Remove trailing zeros and decimal point if needed
     result = result.replace(/\.?0+$/, '');
@@ -153,6 +166,12 @@ export function formatNonZeroDecimals(value: number, nonZeroDecimals: number = 2
 }
 
 export const getTokenPrice = async (chainId: number, contractAddress: string): Promise<number> => {
+  if (chainId === 999) {
+    const tokenPriceList = await fetch(`https://li.quest/v1/tokens?chains=999`);
+    const tokenPriceListJson = await tokenPriceList.json();
+    const tokenPrice = tokenPriceListJson.tokens?.[999]?.find((token: any) => token.address === contractAddress);
+    return tokenPrice?.priceUSD;
+  }
   const tokenPrice = await fetch(`https://api.odos.xyz/pricing/token/${chainId}/${contractAddress}`);
   const tokenPriceJson = await tokenPrice.json();
   return tokenPriceJson?.price;
@@ -175,7 +194,8 @@ export const getETHAlternativeTokensSymbols = () => {
     146:  "WETH",
     56:  "ETH",
     250:  "ETH",
-    252:  "frxETH"
+    252:  "frxETH",
+    999:  "ETH"
   }
 }
 
@@ -488,5 +508,20 @@ export const jsonStringifyCircularObject = async (obj: any) => {
     }
   } catch (err) {
     console.log("[obj] Could not inspect obj object due to:", err);
+  }
+}
+
+export const callWithRetry = async (callback: () => Promise<any>, maxRetries: number = 3, retryDelayMs: number = 1000) => {
+  let retryCount = 0;
+  while (retryCount <= maxRetries) {
+    try {
+      return await callback();
+    } catch (error) {
+      retryCount++;
+      if (retryCount >= maxRetries) {
+        throw error;
+      }
+      await new Promise(resolve => setTimeout(resolve, retryDelayMs));
+    }
   }
 }
