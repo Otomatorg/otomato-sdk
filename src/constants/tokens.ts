@@ -1962,7 +1962,10 @@ export const TOKENS: Tokens = {
       decimals: 18,
       image: "https://app.hyperbeat.org/assets/images/vaults/hbUSDC.svg"
     }
-  ]
+  ],
+  5031: [
+
+  ],
 };
 
 export interface NFT {
