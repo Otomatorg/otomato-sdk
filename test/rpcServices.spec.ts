@@ -8,7 +8,7 @@ const tokenContractAddress = '0xFDa619b6d20975be80A10332cD39b9a4b0FAa8BB'; // Re
 
 // Set RPCs for testing
 rpcServices.setRPCs({
-    34443: 'https://1rpc.io/mode', // Chain 43334 (Mode network mainnet RPC)
+    34443: 'https://mainnet.mode.network/', // Chain 43334 (Mode network mainnet RPC)
 });
 
 describe('RPCServices', () => {

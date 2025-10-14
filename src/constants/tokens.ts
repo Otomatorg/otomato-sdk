@@ -1961,6 +1961,104 @@ export const TOKENS: Tokens = {
       name: "Hyperbeat USDC",
       decimals: 18,
       image: "https://app.hyperbeat.org/assets/images/vaults/hbUSDC.svg"
+    },
+    {
+      contractAddress: "0xca79db4B49f608eF54a5CB813FbEd3a6387bC645",
+      image: "https://app.hypurr.fi/tokens/usdxl.svg?url",
+      decimals: 18,
+      name: "Last USD",
+      symbol: "USDXL"
+    },
+    {
+      contractAddress: "0x5748ae796AE46A4F1348a1693de4b50560485562",
+      image: "https://app.hypurr.fi/tokens/lhype.png",
+      decimals: 18,
+      name: "Looped HYPE",
+      symbol: "LHYPE"
+    },
+    {
+      contractAddress: "0x9b498C3c8A0b8CD8BA1D9851d40D186F1872b44E",
+      image: "https://app.hyperliquid.xyz/coins/PURR_USDC.svg",
+      decimals: 18,
+      name: "Purr",
+      symbol: "PURR"
+    },
+    {
+      contractAddress: "0xa320D9f65ec992EfF38622c63627856382Db726c",
+      image: "https://app.hyperliquid.xyz/coins/HFUN_USDC.svg",
+      decimals: 18,
+      name: "HFUN",
+      symbol: "HFUN"
+    },
+    {
+      contractAddress: "0xdAbB040c428436d41CECd0Fb06bCFDBAaD3a9AA8",
+      image: "https://app.hypurr.fi/tokens/mhype.png",
+      decimals: 18,
+      name: "Hyperpie Staked mHYPE",
+      symbol: "mHYPE"
+    },
+    {
+      contractAddress: "0x47bb061C0204Af921F43DC73C7D7768d2672DdEE",
+      decimals: 6,
+      image: "https://app.hypurr.fi/tokens/buddy.jpg",
+      name: "alright buddy",
+      symbol: "BUDDY"
+    },
+    {
+      contractAddress: "0xf4D9235269a96aaDaFc9aDAe454a0618eBE37949",
+      decimals: 6,
+      image: "https://app.hypurr.fi/tokens/xaut0.svg?url",
+      name: "XAUt0",
+      symbol: "XAUt0"
+    },
+    {
+      contractAddress: "0x9FD7466f987Fd4C45a5BBDe22ED8aba5BC8D72d1",
+      decimals: 6,
+      image: "https://app.hypurr.fi/tokens/hwhlp.svg?url",
+      name: "hwHLP",
+      symbol: "hwHLP"
+    },
+    {
+      contractAddress: "0x1359b05241cA5076c9F59605214f4F84114c0dE8",
+      decimals: 6,
+      image: "https://app.hypurr.fi/tokens/whlp.png",
+      name: "Wrapped HLP",
+      symbol: "WHLP"
+    },
+    {
+      contractAddress: "0x3D75F2BB8aBcDBd1e27443cB5CBCE8A668046C81",
+      decimals: 6,
+      image: "https://app.hypurr.fi/tokens/hlp0.png",
+      name: "HLP0",
+      symbol: "HLP0"
+    },
+    {
+      contractAddress: "0x27eC642013bcB3D80CA3706599D3cdA04F6f4452",
+      decimals: 6,
+      image: "https://app.hypurr.fi/tokens/upump.svg?url",
+      name: "Unit Pump",
+      symbol: "UPUMP"
+    },
+    {
+      contractAddress: "0xfdF1704a7D60Ab07D9889f33951633e7a80E34a3",
+      decimals: 6,
+      image: "https://app.hypurr.fi/tokens/hwhlp.svg?url",
+      name: "PT Hyperwave hwHLP 18DEC2025",
+      symbol: "PT-HWHLP-18DEC2025"
+    },
+    {
+      contractAddress: "0xFde5B0626fC80E36885e2fA9cD5ad9d7768D725c",
+      decimals: 18,
+      image: "https://app.hypurr.fi/tokens/hahype.png",
+      name: "haHYPE",
+      symbol: "haHYPE"
+    },
+    {
+      contractAddress: "0x31CC92a2f8c02b8F9f427c48f12E21a848e69847",
+      decimals: 18,
+      image: "https://app.hypurr.fi/tokens/pt-vkhype.svg?url",
+      name: "PT Kinetiq vkHYPE 13NOV2025",
+      symbol: "PT-vkHYPE-13NOV2025"
     }
   ],
   5031: [

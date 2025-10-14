@@ -10,7 +10,7 @@ describe('getUserProtocolBalances', function() {
     // Suppose we set the RPC for chain 8453 (Base) and 34443 (Mode)
     rpcServices.setRPCs({
       8453: process.env.BASE_HTTPS_PROVIDER || 'https://base.llamarpc.com',
-      34443: process.env.MODE_HTTPS_PROVIDER || 'https://mainnet.mode.network/',
+      34443: 'https://mainnet.mode.network/',
     });
   });
 
