@@ -11,7 +11,7 @@ async function hypurrIsolatedLendingRate() {
   apiServices.setUrl(process.env.API_URL);
   apiServices.setAuth(process.env.AUTH_TOKEN); 
 
-  const hypurrLendingRateIsolatedTrigger = new Trigger(TRIGGERS.LENDING.HYPURR.LENDING_RATE_ISOLATED);
+  const hypurrLendingRateIsolatedTrigger = new Trigger(TRIGGERS.LENDING.HYPURRFI.LENDING_RATE_ISOLATED);
   hypurrLendingRateIsolatedTrigger.setParams('chainId', 999);
   hypurrLendingRateIsolatedTrigger.setParams('market', '0xAeedD5B6d42e0F077ccF3E7A78ff70b8cB217329');
   hypurrLendingRateIsolatedTrigger.setParams('condition', 'gt');

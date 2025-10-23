@@ -11,7 +11,7 @@ async function hypurrHealthFactor() {
   apiServices.setUrl(process.env.API_URL);
   apiServices.setAuth(process.env.AUTH_TOKEN); 
 
-  const hypurrHealthFactorTrigger = new Trigger(TRIGGERS.LENDING.HYPURR.HEALTH_FACTOR);
+  const hypurrHealthFactorTrigger = new Trigger(TRIGGERS.LENDING.HYPURRFI.HEALTH_FACTOR);
   hypurrHealthFactorTrigger.setParams('chainId', 999);
   hypurrHealthFactorTrigger.setParams('abiParams.user', '0x91191d0ebdbf928829c2e66c7bfe23d6d241a260');
   hypurrHealthFactorTrigger.setParams('condition', 'lte');

@@ -11,7 +11,7 @@ async function hypurrBorrowingRate() {
   apiServices.setUrl(process.env.API_URL);
   apiServices.setAuth(process.env.AUTH_TOKEN); 
 
-  const hypurrBorrowingRatesTrigger = new Trigger(TRIGGERS.LENDING.HYPURR.BORROWING_RATES);
+  const hypurrBorrowingRatesTrigger = new Trigger(TRIGGERS.LENDING.HYPURRFI.BORROWING_RATES);
   hypurrBorrowingRatesTrigger.setParams('chainId', 999);
   hypurrBorrowingRatesTrigger.setParams('abiParams.asset', '0x5555555555555555555555555555555555555555');
   hypurrBorrowingRatesTrigger.setParams('condition', 'gt');
