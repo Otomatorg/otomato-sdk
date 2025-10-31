@@ -23,6 +23,8 @@ export class Workflow {
   agentId: string | null = null;
   notes: Note[] = [];
   settings: WorkflowSettings | null = null;
+  hasContractNodes: boolean = false;
+  hasZerodevApproval: boolean = false;
 
   constructor(name: string = '', nodes: Node[] = [], edges: Edge[] = [], settings: WorkflowSettings | null = null) {
     this.name = name;
@@ -525,6 +527,8 @@ export class Workflow {
       this.edges = response.edges.map((edgeData: any) => Edge.fromJSON(edgeData, this.nodes));
       this.notes = response.notes.map((noteData: any) => Note.fromJSON(noteData));
       this.settings = response.settings;
+      this.hasContractNodes = response.hasContractNodes;
+      this.hasZerodevApproval = response.hasZerodevApproval;
       positionWorkflowNodes(this);
       return this;
     } catch (error: any) {
