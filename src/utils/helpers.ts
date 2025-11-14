@@ -184,6 +184,30 @@ export const getTokenPrice = async (chainId: number, contractAddress: string): P
   return tokenPriceJson?.price;
 }
 
+export const getTokenPrices = async (chainId: number, contractAddresses: string[]): Promise<{ contractAddress: string, symbol: string, decimals: number, priceUSD: number }[]> => {
+  if (chainId === 999) {
+    const tokenPriceList = await fetch(
+      `https://li.quest/v1/tokens?chains=999`,
+      {
+        headers: {
+          'x-lifi-api-key': process.env.LIFI_API_KEY ?? ''
+        }
+      }
+    );
+    const tokenPriceListJson = await tokenPriceList.json();
+    const tokenPrices = tokenPriceListJson.tokens?.[999]?.filter((token: any) => contractAddresses.includes(token.address));
+    return tokenPrices.map((token: any) => {
+      return {
+        contractAddress: token.address,
+        symbol: token.symbol,
+        decimals: token.decimals,
+        priceUSD: token.priceUSD
+      };
+    });
+  }
+  return [];
+}
+
 export const getETHAlternativeTokensSymbols = () => {
   return {
     1:  "ETH",
