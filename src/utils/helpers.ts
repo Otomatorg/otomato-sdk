@@ -556,3 +556,391 @@ export const callWithRetry = async (callback: () => Promise<any>, maxRetries: nu
     }
   }
 }
+
+// ============================================================================
+// Position Helpers - Generic utilities for DeFi position operations
+// ============================================================================
+
+export interface TokenInfo {
+  symbol: string;
+  decimals: number;
+  name: string;
+  address: string;
+}
+
+const ERC20_ABI = [
+  'function decimals() external view returns (uint8)',
+  'function symbol() external view returns (string)',
+  'function name() external view returns (string)',
+];
+
+/**
+ * Fetches token information from an ERC20 contract.
+ * Generic function that works with any ERC20-compliant token.
+ */
+export async function getTokenInfo(
+  tokenAddress: string,
+  provider: ethers.Provider
+): Promise<TokenInfo> {
+  const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
+  
+  try {
+    const [symbol, decimals, name] = await Promise.all([
+      tokenContract.symbol(),
+      tokenContract.decimals(),
+      tokenContract.name(),
+    ]);
+    
+    return {
+      symbol: String(symbol),
+      decimals: Number(decimals),
+      name: String(name),
+      address: tokenAddress,
+    };
+  } catch (error: any) {
+    throw new Error(
+      `Failed to fetch token info for ${tokenAddress}: ${error.message}`
+    );
+  }
+}
+
+/**
+ * Fetches token info with fallback values if contract call fails.
+ */
+export async function getTokenInfoWithFallback(
+  tokenAddress: string,
+  provider: ethers.Provider
+): Promise<TokenInfo> {
+  try {
+    return await getTokenInfo(tokenAddress, provider);
+  } catch (error) {
+    const truncatedAddress = `${tokenAddress.slice(0, 6)}...${tokenAddress.slice(-4)}`;
+    return {
+      symbol: truncatedAddress,
+      decimals: 18,
+      name: '',
+      address: tokenAddress,
+    };
+  }
+}
+
+/**
+ * Fetches multiple token info objects in parallel.
+ */
+export async function getMultipleTokenInfo(
+  tokenAddresses: string[],
+  provider: ethers.Provider
+): Promise<TokenInfo[]> {
+  return Promise.all(
+    tokenAddresses.map(address => getTokenInfoWithFallback(address, provider))
+  );
+}
+
+/**
+ * Known stablecoin symbols for token classification.
+ */
+export const KNOWN_STABLE_SYMBOLS = new Set([
+  'USDT', 'USDC', 'DAI', 'BUSD', 'TUSD',
+  'USDP', 'GUSD', 'LUSD', 'USDD', 'FRAX',
+  'USDC.E', 'USDC.N', 'USDC.B',
+  'FDUSD', 'PYUSD', 'XAUT',
+  'SUSD', 'MUSD', 'HUSD',
+  'USDN', 'USDX', 'USDJ',
+  'WUSDT', 'WUSDC', 'WDAI',
+  'USDB', 'USDE', 'USDL',
+  'USDbC', 'USDT0',
+]);
+
+/**
+ * Gas asset symbols by chain ID.
+ */
+export const GAS_ASSET_SYMBOLS: Record<number, string> = {
+  [CHAINS.BASE]: 'WETH',
+  [CHAINS.BINANCE]: 'WBNB',
+  [CHAINS.ETHEREUM]: 'WETH',
+  [CHAINS.POLYGON]: 'WMATIC',
+  [CHAINS.ARBITRUM]: 'WETH',
+  [CHAINS.AVALANCHE]: 'WAVAX',
+  [CHAINS.OPTIMISM]: 'WETH',
+  [CHAINS.HYPER_EVM]: 'WHYPE',
+};
+
+/**
+ * Check if a symbol is a known stablecoin.
+ */
+export function isStableCoin(symbol: string | null | undefined): boolean {
+  if (!symbol || typeof symbol !== 'string') {
+    return false;
+  }
+  const upperSymbol = symbol.toUpperCase();
+  return upperSymbol.includes('USD') || KNOWN_STABLE_SYMBOLS.has(upperSymbol);
+}
+
+/**
+ * Check if a symbol is a gas asset for the given chain.
+ */
+export function isGasAsset(symbol: string | null | undefined, chainId: number): boolean {
+  if (!symbol || typeof symbol !== 'string') {
+    return false;
+  }
+  const upperSymbol = symbol.toUpperCase();
+  const gasAsset = GAS_ASSET_SYMBOLS[chainId];
+  return gasAsset?.toUpperCase() === upperSymbol;
+}
+
+/**
+ * Get the gas asset symbol for a given chain.
+ */
+export function getGasAssetSymbol(chainId: number): string | null {
+  return GAS_ASSET_SYMBOLS[chainId] || null;
+}
+
+/**
+ * Converts a Uniswap V3-style tick to a human-readable price.
+ * Price formula: price = 1.0001^tick * (10^(decimals1 - decimals0))
+ */
+export function tickToPrice(tick: number, decimals0: number, decimals1: number): number {
+  const tickMathBase = 1.0001;
+  const powResult = Math.pow(tickMathBase, tick);
+  const decimalsAdjustment = Math.pow(10, decimals0 - decimals1);
+  const price = powResult * decimalsAdjustment;
+  
+  if (!isFinite(price) || isNaN(price)) {
+    throw new Error(`Invalid price calculation: tick=${tick}, decimals0=${decimals0}, decimals1=${decimals1}`);
+  }
+  
+  return price;
+}
+
+/**
+ * Converts a price to the nearest tick.
+ */
+export function priceToTick(price: number, decimals0: number, decimals1: number): number {
+  const decimalsAdjustment = Math.pow(10, decimals0 - decimals1);
+  const adjustedPrice = price / decimalsAdjustment;
+  const tick = Math.log(adjustedPrice) / Math.log(1.0001);
+  return Math.round(tick);
+}
+
+/**
+ * Calculates price from sqrtPriceX96 (used in Uniswap V3 slot0).
+ */
+export function calculatePriceFromSqrtPriceX96(
+  sqrtPriceX96: bigint | string,
+  decimals0: number,
+  decimals1: number
+): number {
+  const sqrtPrice = Number(sqrtPriceX96) / Math.pow(2, 96);
+  const price = Math.pow(sqrtPrice, 2);
+  const decimalsAdjustment = Math.pow(10, decimals0 - decimals1);
+  return price * decimalsAdjustment;
+}
+
+/**
+ * Inverts a price (converts from token1/token0 to token0/token1).
+ */
+export function invertPrice(price: number): number {
+  if (price === 0) {
+    throw new Error('Cannot invert zero price');
+  }
+  return 1 / price;
+}
+
+/**
+ * Format a price number to avoid scientific notation and round appropriately.
+ */
+export function formatPrice(price: number | null | undefined, isStableQuoted: boolean = false): string | null {
+  if (price === null || price === undefined || isNaN(price) || !isFinite(price)) {
+    return null;
+  }
+  
+  const decimals = isStableQuoted ? 2 : 6;
+  const rounded = Number(price.toFixed(decimals));
+  return rounded.toString();
+}
+
+/**
+ * Format two prices based on the difference between them.
+ */
+export function formatPriceRange(
+  price1: number | null | undefined,
+  price2: number | null | undefined
+): { price1: string | null; price2: string | null } {
+  if (
+    price1 === null || price1 === undefined || isNaN(price1) || !isFinite(price1) ||
+    price2 === null || price2 === undefined || isNaN(price2) || !isFinite(price2)
+  ) {
+    return {
+      price1: price1 !== null && price1 !== undefined ? formatPrice(price1, false) : null,
+      price2: price2 !== null && price2 !== undefined ? formatPrice(price2, false) : null,
+    };
+  }
+  
+  const diff = Math.abs(price1 - price2);
+  let decimalPlaces: number;
+  
+  if (diff < 0.0001) {
+    decimalPlaces = 5;
+  } else if (diff < 0.001) {
+    decimalPlaces = 4;
+  } else if (diff < 0.01) {
+    decimalPlaces = 4;
+  } else if (diff < 0.1) {
+    decimalPlaces = 3;
+  } else if (diff < 1) {
+    decimalPlaces = 2;
+  } else if (diff < 10) {
+    decimalPlaces = 1;
+  } else {
+    decimalPlaces = 0;
+  }
+  
+  const formatted1 = price1.toFixed(decimalPlaces);
+  const formatted2 = price2.toFixed(decimalPlaces);
+  
+  return {
+    price1: formatted1,
+    price2: formatted2,
+  };
+}
+
+/**
+ * Format a price with a specific number of decimal places.
+ */
+export function formatPriceWithDecimals(
+  price: number | null | undefined,
+  decimals: number
+): string | null {
+  if (price === null || price === undefined || isNaN(price) || !isFinite(price)) {
+    return null;
+  }
+  
+  return price.toFixed(decimals);
+}
+
+export interface TokenPairInfo {
+  symbol: string;
+  address?: string;
+  decimals?: number;
+}
+
+export interface RearrangedPair {
+  base: TokenPairInfo;
+  quote: TokenPairInfo;
+  baseSymbol: string;
+  quoteSymbol: string;
+}
+
+/**
+ * Rearrange token pair so stablecoin or gas asset is the quote token.
+ */
+export function rearrangeTokenPair(
+  token1: string | TokenPairInfo,
+  token2: string | TokenPairInfo,
+  chainId?: number | null
+): RearrangedPair {
+  const symbol1 = typeof token1 === 'string' ? token1 : token1?.symbol;
+  const symbol2 = typeof token2 === 'string' ? token2 : token2?.symbol;
+  
+  if (!symbol1 || !symbol2) {
+    throw new Error('Both tokens must have valid symbols');
+  }
+  
+  const isToken1Stable = isStableCoin(symbol1);
+  const isToken2Stable = isStableCoin(symbol2);
+  
+  if (isToken1Stable && !isToken2Stable) {
+    return {
+      base: typeof token2 === 'string' ? { symbol: symbol2 } : token2,
+      quote: typeof token1 === 'string' ? { symbol: symbol1 } : token1,
+      baseSymbol: symbol2,
+      quoteSymbol: symbol1,
+    };
+  }
+  
+  if (!isToken1Stable && isToken2Stable) {
+    return {
+      base: typeof token1 === 'string' ? { symbol: symbol1 } : token1,
+      quote: typeof token2 === 'string' ? { symbol: symbol2 } : token2,
+      baseSymbol: symbol1,
+      quoteSymbol: symbol2,
+    };
+  }
+  
+  if (!isToken1Stable && !isToken2Stable && chainId) {
+    const chainIdNum = Number(chainId);
+    const isToken1Gas = isGasAsset(symbol1, chainIdNum);
+    const isToken2Gas = isGasAsset(symbol2, chainIdNum);
+    
+    if (isToken1Gas && !isToken2Gas) {
+      return {
+        base: typeof token2 === 'string' ? { symbol: symbol2 } : token2,
+        quote: typeof token1 === 'string' ? { symbol: symbol1 } : token1,
+        baseSymbol: symbol2,
+        quoteSymbol: symbol1,
+      };
+    }
+    
+    if (!isToken1Gas && isToken2Gas) {
+      return {
+        base: typeof token1 === 'string' ? { symbol: symbol1 } : token1,
+        quote: typeof token2 === 'string' ? { symbol: symbol2 } : token2,
+        baseSymbol: symbol1,
+        quoteSymbol: symbol2,
+      };
+    }
+  }
+  
+  return {
+    base: typeof token1 === 'string' ? { symbol: symbol1 } : token1,
+    quote: typeof token2 === 'string' ? { symbol: symbol2 } : token2,
+    baseSymbol: symbol1,
+    quoteSymbol: symbol2,
+  };
+}
+
+/**
+ * Get a formatted pair label from two token symbols.
+ */
+export function getPairLabel(baseSymbol: string, quoteSymbol: string): string {
+  return `${baseSymbol}/${quoteSymbol}`;
+}
+
+/**
+ * Check if a current tick is within the specified range.
+ */
+export function isTickInRange(
+  currentTick: number | null,
+  tickLower: number,
+  tickUpper: number
+): boolean {
+  console.log('[nauht] - check currentTickdasdas', currentTick);
+  console.log('[nauht] - check tickLower', tickLower);
+  console.log('[nauht] - check tickUpper', tickUpper);
+  if (currentTick === null || currentTick === undefined) {
+    return false;
+  }
+  
+  return currentTick >= tickLower && currentTick <= tickUpper;
+}
+
+/**
+ * Calculate the percentage of the range that the current tick occupies.
+ */
+export function calculateRangePercentage(
+  currentTick: number | null,
+  tickLower: number,
+  tickUpper: number
+): number | null {
+  if (currentTick === null || currentTick === undefined) {
+    return null;
+  }
+  
+  const range = tickUpper - tickLower;
+  if (range === 0) {
+    return 0.5;
+  }
+  
+  const position = currentTick - tickLower;
+  return position / range;
+}
