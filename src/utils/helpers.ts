@@ -914,9 +914,6 @@ export function isTickInRange(
   tickLower: number,
   tickUpper: number
 ): boolean {
-  console.log('[nauht] - check currentTickdasdas', currentTick);
-  console.log('[nauht] - check tickLower', tickLower);
-  console.log('[nauht] - check tickUpper', tickUpper);
   if (currentTick === null || currentTick === undefined) {
     return false;
   }
