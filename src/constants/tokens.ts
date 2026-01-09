@@ -44,7 +44,7 @@ export const TOKENS: Tokens = {
       contractAddress: "0xdac17f958d2ee523a2206206994597c13d831ec7",
       name: "USDT",
       symbol: "USDT",
-      decimals: 18,
+      decimals: 6,
       image: "https://static.debank.com/image/coin/logo_url/usdt/23af7472292cb41dc39b3f1146ead0fe.png"
     },
     {
