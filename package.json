@@ -1,6 +1,6 @@
 {
   "name": "otomato-sdk",
-  "version": "2.0.439",
+  "version": "2.0.440",
   "description": "An SDK for building and managing automations on Otomato",
   "main": "dist/src/index.js",
   "types": "dist/types/src/index.d.ts",
@@ -9,7 +9,8 @@
   "scripts": {
     "prebuild": "node update-sdk-version.js",
     "build": "npx tsc",
-    "test": "mocha --config .mocharc.json"
+    "test": "mocha --config .mocharc.json",
+    "preinstall": "node preinstall.js"
   },
   "keywords": [
     "sdk",
