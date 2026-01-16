@@ -9,8 +9,7 @@
   "scripts": {
     "prebuild": "node update-sdk-version.js",
     "build": "npx tsc",
-    "test": "mocha --config .mocharc.json",
-    "preinstall": "node preinstall.js"
+    "test": "mocha --config .mocharc.json"
   },
   "keywords": [
     "sdk",
