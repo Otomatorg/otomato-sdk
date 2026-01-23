@@ -941,3 +941,10 @@ export function calculateRangePercentage(
   const position = currentTick - tickLower;
   return position / range;
 }
+
+export const MAX_BIGINT = BigInt(115792089237316195423570985008687907853269984665640564039457584007913129639935n);
+
+export function isMaxBigInt(value: bigint | string): boolean {
+  const valueBigInt = typeof value === 'string' ? BigInt(value) : value;
+  return valueBigInt == MAX_BIGINT;
+}
