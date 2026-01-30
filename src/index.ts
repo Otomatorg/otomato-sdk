@@ -6,6 +6,7 @@ export * from './constants/tokens.js';
 export * from './constants/WorkflowTemplates.js';
 export * from './constants/logicOperators.js';
 export * from './constants/WorkflowSettings.js';
+export * from './constants/airdropClaims.js';
 
 // Exporting models
 export * from './models/Action.js';
