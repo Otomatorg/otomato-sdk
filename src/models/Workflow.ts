@@ -562,6 +562,25 @@ export class Workflow {
     }
   }
 
+  async stop(): Promise<{ success: boolean; error?: string }> {
+    if (!this.id) {
+      throw new Error('The workflow needs to be published first');
+    }
+
+    try {
+      const response = await apiServices.post(`/workflows/${this.id}/stop`, {});
+
+      if (response.status === 200) {
+        this.state = 'inactive';
+        return { success: true };
+      } else {
+        return { success: false, error: response.data?.error || 'Unknown error' };
+      }
+    } catch (error: any) {
+      return { success: false, error: error.message || 'Unknown error' };
+    }
+  }
+
   async delete(): Promise<{ success: boolean; error?: string }> {
     if (!this.id) {
       throw new Error('Cannot delete a workflow without an ID.');
@@ -686,7 +705,7 @@ export class Workflow {
     workflow.edges = json.edges.map((edgeData: any) => Edge.fromJSON(edgeData, workflow.nodes));
 
     // Convert notes from JSON
-    workflow.notes = json.notes.map((noteData: any) => Note.fromJSON(noteData));
+    // workflow.notes = json.notes.map((noteData: any) => Note.fromJSON(noteData));
 
     // Recalculate positions
     positionWorkflowNodes(workflow);
