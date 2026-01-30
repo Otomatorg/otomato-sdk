@@ -705,7 +705,7 @@ export class Workflow {
     workflow.edges = json.edges.map((edgeData: any) => Edge.fromJSON(edgeData, workflow.nodes));
 
     // Convert notes from JSON
-    // workflow.notes = json.notes.map((noteData: any) => Note.fromJSON(noteData));
+    workflow.notes = json.notes.map((noteData: any) => Note.fromJSON(noteData));
 
     // Recalculate positions
     positionWorkflowNodes(workflow);
