@@ -2,7 +2,7 @@
  * Airdrop Claim Contract Registry
  *
  * Contains claim contract addresses, chains, event signatures, and metadata
- * for the top 43 airdrops by total value. This registry enables querying
+ * for top airdrops by total value. This registry enables querying
  * on-chain claim logs for each airdrop.
  *
  * Distribution types:
@@ -11,6 +11,7 @@
  *  - "direct_transfer" : Tokens sent directly to recipients (no claim needed; track via Transfer events)
  *  - "nft_mint"        : NFT free-mint (Loot style); claim logs are mint Transfer events
  *  - "voucher_redeem"  : Voucher token (vTORN) redeemed 1:1 for the real token
+ *  - "non_evm"         : Not standard EVM events; see notes/claimResource for details
  */
 
 import { CHAINS } from './chains.js';
@@ -43,13 +44,16 @@ export interface AirdropInfo {
     | 'token_claim'
     | 'direct_transfer'
     | 'nft_mint'
-    | 'voucher_redeem';
+    | 'voucher_redeem'
+    | 'non_evm';
   /** Event(s) emitted when tokens are claimed */
   claimEvents: AirdropClaimEvent[];
   /** Optional: for direct_transfer airdrops, the sender address to filter Transfer from */
   distributorAddress?: string;
   /** Optional notes about the airdrop */
   notes?: string;
+  /** Optional: URL or resource to find claim data for non-EVM or non-standard airdrops */
+  claimResource?: string;
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -67,6 +71,12 @@ const TRANSFER =
 
 const TOKENS_CLAIMED =
   'event TokensClaimed(uint256 claimID, address claimant, uint256 amount)';
+
+const CLAIMED_ACCOUNT_REWARD_AMOUNT =
+  'event Claimed(address indexed account, address indexed reward, uint256 amount)';
+
+const HAS_CLAIMED =
+  'event HasClaimed(address indexed recipient, uint256 amount)';
 
 // ─────────────────────────────────────────────────────────────
 // Full registry
@@ -130,7 +140,7 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     claimContractAddress: '0x67a24CE4321aB3aF51c2D0a4801c3E111D88C9d9',
     distributionType: 'merkle_claim',
     claimEvents: [
-      { abi: 'event HasClaimed(address indexed recipient, uint256 amount)' },
+      { abi: HAS_CLAIMED },
     ],
     notes:
       'TokenDistributor on Arbitrum One. Uses storage-based claims (not Merkle proofs). Self-destructed after claim period.',
@@ -785,6 +795,351 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     ],
     notes:
       'DappRadar: Airdrop Claim. ECDSA-signed claims (not Merkle). Claim period until Mar 14, 2022.',
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  //  Additional airdrops (newer / non-ranked)
+  // ═══════════════════════════════════════════════════════════════
+
+  // ───── 44. LayerZero ─────
+  {
+    rank: 44,
+    project: 'LayerZero',
+    totalValue: '',
+    tokenSymbol: 'ZRO',
+    tokenAddress: '0x6985884C4392D348587B19cb9eAAf157F13271cd',
+    chainId: CHAINS.ETHEREUM,
+    claimContractAddress: '0xf19ccb20726Eab44754A59EFC4Ad331e3bF4F248',
+    distributionType: 'merkle_claim',
+    claimEvents: [
+      { abi: CLAIMED_ACCOUNT_AMOUNT },
+    ],
+    notes:
+      'LayerZero: Airdrop Claim (multichain). Same address deployed on Ethereum, Arbitrum, Optimism, Base, Polygon, BSC, Avalanche. ' +
+      '85M ZRO distributed to ~1.28M users. Proof-of-Donation mechanism ($0.10/ZRO to Protocol Guild). Claim: Jun 20 - Sep 20, 2024. ' +
+      'Ethereum-specific claim contract: 0xc28c2b2f5a9b2af1ad5878e5b1af5f9baea2f971. ' +
+      'BSC-specific: 0x9c26831a80ef7fb60ca940eb9aa22023476b3468.',
+    claimResource: 'https://layerzero.foundation/claim',
+  },
+
+  // ───── 45. Hyperliquid ─────
+  {
+    rank: 45,
+    project: 'Hyperliquid',
+    totalValue: '',
+    tokenSymbol: 'HYPE',
+    tokenAddress: '',
+    chainId: CHAINS.HYPER_EVM,
+    claimContractAddress: '',
+    distributionType: 'non_evm',
+    claimEvents: [],
+    notes:
+      'HYPE is the native token of Hyperliquid L1 — NOT an ERC-20. 310M tokens airdropped to 90K+ users via Genesis Portal on Nov 29, 2024. ' +
+      'No on-chain claim contract. Distributed natively through the Hyperliquid platform. ' +
+      'WHYPE (Wrapped HYPE) on HyperEVM: 0x5555555555555555555555555555555555555555.',
+    claimResource: 'https://hyperfoundation.org/',
+  },
+
+  // ───── 46. Pengu (Pudgy Penguins) ─────
+  {
+    rank: 46,
+    project: 'Pengu',
+    totalValue: '',
+    tokenSymbol: 'PENGU',
+    tokenAddress: '2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv',
+    chainId: 0,
+    claimContractAddress: '',
+    distributionType: 'non_evm',
+    claimEvents: [],
+    notes:
+      'PENGU is a Solana SPL token — NOT an ERC-20. 88.8B total supply. 50% airdropped to NFT holders + communities. ' +
+      'Launched Dec 17, 2024. Claim window 88 days until Mar 15, 2025. Claimed via claim.pudgypenguins.com connecting both Solana and Ethereum wallets. ' +
+      'Solana token address: 2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv. ' +
+      'Related Ethereum NFTs: Pudgy Penguins 0xBd3531dA5CF5857e7CfAA92426877b022e612cf8.',
+    claimResource: 'https://claim.pudgypenguins.com/',
+  },
+
+  // ───── 47. Morpho ─────
+  {
+    rank: 47,
+    project: 'Morpho',
+    totalValue: '',
+    tokenSymbol: 'MORPHO',
+    tokenAddress: '0x58D97B57BB95320F9a05dC918Aef65434969c2B2',
+    chainId: CHAINS.ETHEREUM,
+    claimContractAddress: '0x330eefa8a787552DC5cAd3C3cA644844B1E61Ddb',
+    distributionType: 'merkle_claim',
+    claimEvents: [
+      { abi: CLAIMED_ACCOUNT_REWARD_AMOUNT },
+    ],
+    notes:
+      'Morpho uses Universal Rewards Distributor (URD) contracts. Multiple URD instances exist. ' +
+      'URD Factory: 0x9baA51245CDD28D8D74Afe8B3959b616E9ee7c8D. ' +
+      'Example MORPHO URD: 0x330eefa8a787552DC5cAd3C3cA644844B1E61Ddb. ' +
+      'New rewards distributed via Merkl (0x3Ef3D8bA38EBe18DB133cEc108f4D14CE00Dd9Ae). ' +
+      'Claim event: Claimed(address indexed account, address indexed reward, uint256 amount). ' +
+      'API: https://rewards.morpho.org/docs',
+    claimResource: 'https://docs.morpho.org/build/rewards/tutorials/claim-rewards',
+  },
+
+  // ───── 48. Scroll ─────
+  {
+    rank: 48,
+    project: 'Scroll',
+    totalValue: '',
+    tokenSymbol: 'SCR',
+    tokenAddress: '0xd29687c813d741e2f938f4ac377128810e217b1b',
+    chainId: CHAINS.SCROLL,
+    claimContractAddress: '0xe8be8eb940c0ca3bd19d911cd3bebc97bea0ed62',
+    distributionType: 'merkle_claim',
+    claimEvents: [
+      { abi: CLAIMED_INDEX_ACCOUNT_AMOUNT },
+    ],
+    notes:
+      'Scroll: Token Distributor on Scroll L2. MerkleProof-based. 7% of SCR supply to 570K+ wallets. ' +
+      'Snapshot: Oct 19, 2024. Claim: Oct 22, 2024 - Jan 20, 2025. ' +
+      'Merkle Root: 0x69f36c589fe3a8daf0d835c4e7717460d22fdcd512765653dec5e8e302d3b8c0. ' +
+      'Query via Scroll RPC (chainId 534352) or scrollscan.com.',
+    claimResource: 'https://scrollscan.com/address/0xe8be8eb940c0ca3bd19d911cd3bebc97bea0ed62',
+  },
+
+  // ───── 49. Berachain ─────
+  {
+    rank: 49,
+    project: 'Berachain',
+    totalValue: '',
+    tokenSymbol: 'BERA',
+    tokenAddress: '',
+    chainId: CHAINS.BERACHAIN,
+    claimContractAddress: '',
+    distributionType: 'non_evm',
+    claimEvents: [],
+    notes:
+      'BERA is the native gas token of Berachain L1 (like ETH on Ethereum) — no ERC-20 contract. ' +
+      '15.75% of supply airdropped to community on Feb 6, 2025. ~79M BERA. ' +
+      'Claim via airdrop.berachain.com (Feb 6 - Mar 20, 2025). ' +
+      'WBERA: 0x6969696969696969696969696969696969696969. ' +
+      'Explorer: berascan.com.',
+    claimResource: 'https://docs.berachain.com/learn/claim-bera-airdrop',
+  },
+
+  // ───── 50. Linea ─────
+  {
+    rank: 50,
+    project: 'Linea',
+    totalValue: '',
+    tokenSymbol: 'LINEA',
+    tokenAddress: '0x1789e0043623282D5DCc7F213d703C6D8BAfBB04',
+    chainId: CHAINS.LINEA,
+    claimContractAddress: '0x87bAa1694381aE3eCaE2660d97fe60404080Eb64',
+    distributionType: 'merkle_claim',
+    claimEvents: [
+      { abi: CLAIMED_ACCOUNT_AMOUNT },
+    ],
+    notes:
+      'Linea: Airdrop Contract (TokenAirdrop) on Linea mainnet by Consensys. ' +
+      '9.36B LINEA to ~750K addresses. Claim: Sep 10 - Dec 9, 2025. ' +
+      'Requires min 2,000 LXP or 15,000 LXP-L + Proof of Humanity. ' +
+      'LXP soulbound token: 0xd83af4fbD77f3AB65C3B1Dc4B38D7e67AEcf599A. ' +
+      'Query via Linea RPC (chainId 59144) or lineascan.build.',
+    claimResource: 'https://lineascan.build/address/0x87baa1694381ae3ecae2660d97fe60404080eb64',
+  },
+
+  // ───── 51. Mode ─────
+  {
+    rank: 51,
+    project: 'Mode',
+    totalValue: '',
+    tokenSymbol: 'MODE',
+    tokenAddress: '0xDfc7C877a950e49D2610114102175A06C2e3167a',
+    chainId: CHAINS.MODE,
+    claimContractAddress: '0xDfc7C877a950e49D2610114102175A06C2e3167a',
+    distributionType: 'direct_transfer',
+    claimEvents: [
+      { abi: TRANSFER },
+    ],
+    notes:
+      'MODE token on Mode Network L2 (OP Stack, chainId 34443). ' +
+      'Season 1 claim via claim.mode.network (May 7, 2024). Season 2: Oct 18, 2024. ' +
+      'Ethereum address: 0x084382d1cc4f4dfd1769b1cc1ac2a9b1f8365e90. ' +
+      'Mode Explorer: explorer.mode.network.',
+    claimResource: 'https://explorer.mode.network/token/0xDfc7C877a950e49D2610114102175A06C2e3167a',
+  },
+
+  // ───── 52. Zircuit ─────
+  {
+    rank: 52,
+    project: 'Zircuit',
+    totalValue: '',
+    tokenSymbol: 'ZRC',
+    tokenAddress: '0xfd418e42783382e86ae91e445406600ba144d162',
+    chainId: CHAINS.ZIRCUIT,
+    claimContractAddress: '0xfd418e42783382e86ae91e445406600ba144d162',
+    distributionType: 'direct_transfer',
+    claimEvents: [
+      { abi: TRANSFER },
+    ],
+    notes:
+      'ZRC token on both Ethereum and Zircuit (chainId 48900). 10B total supply. ' +
+      '7% for Season 1 (262K addresses). Claimed via claim.zircuit.com. ' +
+      'Ethereum address: 0xfd418e42783382e86ae91e445406600ba144d162 (same address). ' +
+      'Snapshot: Jul 7, 2024.',
+    claimResource: 'https://claim.zircuit.com',
+  },
+
+  // ───── 53. Optimism (Airdrop 4) ─────
+  {
+    rank: 53,
+    project: 'Optimism (Airdrop 4)',
+    totalValue: '',
+    tokenSymbol: 'OP',
+    tokenAddress: '0x4200000000000000000000000000000000000042',
+    chainId: CHAINS.OPTIMISM,
+    claimContractAddress: '0xFeDFAF1A10335448b7FA0268F56D2B44DBD357de',
+    distributionType: 'merkle_claim',
+    claimEvents: [{ abi: CLAIMED_INDEX_ACCOUNT_AMOUNT }],
+    notes:
+      'Airdrop 4: Superchain Creators. 10.3M OP to 22K+ NFT creator addresses. ' +
+      'Same MerkleDistributor contract as Airdrop 1. Claim via app.optimism.io/airdrops/4. ' +
+      'Eligibility: NFT creators on Ethereum L1, Base, OP Mainnet, Zora before Jan 10, 2024.',
+    claimResource: 'https://app.optimism.io/airdrops/4',
+  },
+
+  // ───── 54. Spark ─────
+  {
+    rank: 54,
+    project: 'Spark',
+    totalValue: '',
+    tokenSymbol: 'SPK',
+    tokenAddress: '0xc20059e0317DE91738d13af027DfC4a50781b066',
+    chainId: CHAINS.ETHEREUM,
+    claimContractAddress: '0xc20059e0317DE91738d13af027DfC4a50781b066',
+    distributionType: 'merkle_claim',
+    claimEvents: [
+      { abi: TRANSFER },
+    ],
+    notes:
+      'Spark (formerly MakerDAO/Sky lending). SPK token: 10B total supply. ' +
+      'Ignition airdrop: 300M SPK on Jun 17, 2025 (claim until Jul 29, 2025). ' +
+      'Pre-farming: claim until Dec 17, 2025. Ethereum mainnet only. ' +
+      'Claim via app.spark.fi/spk/airdrop. Exact claim contract TBD — check sparkdotfi/spark-address-registry on GitHub.',
+    claimResource: 'https://app.spark.fi/spk/airdrop',
+  },
+
+  // ───── 55. Sonic ─────
+  {
+    rank: 55,
+    project: 'Sonic',
+    totalValue: '',
+    tokenSymbol: 'S',
+    tokenAddress: '',
+    chainId: CHAINS.SONIC,
+    claimContractAddress: '',
+    distributionType: 'non_evm',
+    claimEvents: [],
+    notes:
+      'S is the native token of Sonic L1 (formerly Fantom, chainId 146). FTM converts to S at 1:1 ratio. ' +
+      '190.5M S airdrop via Sonic Points/Gems. Season 1 ended Jun 18, 2025; claim window Jul 15-22, 2025. ' +
+      '25% unlocked immediately, 75% vests over 270 days as a tradable NFT position. ' +
+      'Official claim: airdrop.soniclabs.com.',
+    claimResource: 'https://airdrop.soniclabs.com/',
+  },
+
+  // ───── 56. Lighter ─────
+  {
+    rank: 56,
+    project: 'Lighter',
+    totalValue: '',
+    tokenSymbol: 'LIT',
+    tokenAddress: '0x232ce3bd40fcd6f80f3d55a522d03f25df784ee2',
+    chainId: CHAINS.ETHEREUM,
+    claimContractAddress: '0x232ce3bd40fcd6f80f3d55a522d03f25df784ee2',
+    distributionType: 'direct_transfer',
+    claimEvents: [
+      { abi: TRANSFER },
+    ],
+    notes:
+      'Lighter DEX (Ethereum L2 perps). LIT token: 1B total supply. ' +
+      '25% (250M) airdropped from Seasons 1 & 2 at token launch (Dec 30, 2025). ' +
+      'Tokens directly distributed to Lighter wallets. No separate claim contract.',
+    claimResource: 'https://lighter.xyz/',
+  },
+
+  // ───── 57. Monad ─────
+  {
+    rank: 57,
+    project: 'Monad',
+    totalValue: '',
+    tokenSymbol: 'MON',
+    tokenAddress: '',
+    chainId: 0,
+    claimContractAddress: '',
+    distributionType: 'non_evm',
+    claimEvents: [],
+    notes:
+      'MON is the native token of Monad L1. 4.73B MON allocated to 289K eligible accounts. ' +
+      'Claim: Oct 14 - Nov 3, 2025 via claim.monad.xyz. 3.33B claimed (70.4%). ' +
+      'Escrowed Nov 9, 2025; released at mainnet launch Nov 24, 2025. ' +
+      'Not a standard EVM ERC-20 airdrop — MON is Monad\'s native gas token.',
+    claimResource: 'https://www.monad.xyz/announcements/the-mon-airdrop-results',
+  },
+
+  // ───── 58. Plasma ─────
+  {
+    rank: 58,
+    project: 'Plasma',
+    totalValue: '',
+    tokenSymbol: 'XPL',
+    tokenAddress: '',
+    chainId: 0,
+    claimContractAddress: '',
+    distributionType: 'non_evm',
+    claimEvents: [],
+    notes:
+      'Plasma is a dedicated stablecoin L1. XPL: 10B total supply. ' +
+      'Mainnet beta launch: Sep 25, 2025. Binance HODLer airdrop: 75M XPL (0.75%). ' +
+      'Pre-depositors received allocations automatically. ' +
+      'No standard EVM claim contract — tokens distributed via Plasma mainnet and Binance.',
+    claimResource: 'https://www.plasma.to/',
+  },
+
+  // ───── 59. Stable ─────
+  {
+    rank: 59,
+    project: 'Stable',
+    totalValue: '',
+    tokenSymbol: 'STABLE',
+    tokenAddress: '',
+    chainId: 0,
+    claimContractAddress: '',
+    distributionType: 'non_evm',
+    claimEvents: [],
+    notes:
+      'Stable is a stablechain (USDT-native L1). STABLE: 100B max supply, 17.6B initial. ' +
+      'Airdrop via Merkl on Stable network. Claim: Dec 8, 2025 - Mar 2, 2026. ' +
+      'Eligible: vault receipt holders from staking deposit phases. ' +
+      'Requires gUSDT for gas on Stable network. ' +
+      'Claim only via official Merkl portal.',
+    claimResource: 'https://blog.stable.xyz/the-stable-airdrop',
+  },
+
+  // ───── 60. Somnia ─────
+  {
+    rank: 60,
+    project: 'Somnia',
+    totalValue: '',
+    tokenSymbol: 'SOMI',
+    tokenAddress: '',
+    chainId: CHAINS.SOMNIA,
+    claimContractAddress: '',
+    distributionType: 'non_evm',
+    claimEvents: [],
+    notes:
+      'Somnia L1 (chainId 5031). SOMI: 1B total supply with deflationary gas burning. ' +
+      '~5% airdropped to testnet users, community contributors, and NFT holders. ' +
+      '20% unlocked at claim, 80% vests over 60 days via weekly quests. 90-day claim window. ' +
+      'TGE expected Q4 2025. Requires EVM-compatible wallet for claim.',
+    claimResource: 'https://docs.somnia.network/concepts/miscellaneous/legal/airdrop-policy',
   },
 ];
 
