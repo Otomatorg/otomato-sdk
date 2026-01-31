@@ -270,13 +270,11 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     tokenSymbol: 'PSP',
     tokenAddress: '0xcAfE001067cDEF266AfB7Eb5A286dCFD277f3dE5',
     chainId: CHAINS.ETHEREUM,
-    claimContractAddress: '0xcAfE001067cDEF266AfB7Eb5A286dCFD277f3dE5',
-    distributionType: 'token_claim',
-    claimEvents: [
-      { abi: TRANSFER },
-    ],
+    claimContractAddress: '0x090e53c44e8a9b6b1bca800e881455b921aec420',
+    distributionType: 'merkle_claim',
+    claimEvents: [{ abi: CLAIMED_INDEX_ACCOUNT_AMOUNT }],
     notes:
-      'PSP retroactive airdrop. 150M PSP to ~20,000 accounts. Track via Transfer events from distributor.',
+      'PSP retroactive airdrop via MerkleDistributor (Uniswap-style). 150M PSP to ~20,000 accounts. ~35M PSP remain unclaimed. Now rebranded to Velora.',
   },
 
   // ───── 14. Tornado Cash ─────
@@ -440,13 +438,11 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     tokenSymbol: 'RBN',
     tokenAddress: '0x6123B0049F904d730dB3C36a31167D9d4121fA6B',
     chainId: CHAINS.ETHEREUM,
-    claimContractAddress: '0x6123B0049F904d730dB3C36a31167D9d4121fA6B',
+    claimContractAddress: '0x7902e4bfb1eb9f4559d55417aee1dc6e4b8cc1bf',
     distributionType: 'merkle_claim',
-    claimEvents: [
-      { abi: TRANSFER },
-    ],
+    claimEvents: [{ abi: CLAIMED_INDEX_ACCOUNT_AMOUNT }],
     notes:
-      'RBN airdrop: 30M RBN (3% of supply) to Hegic, Opyn, Charm, Primitive users and vault depositors. Track Transfer events from distributor.',
+      'RBN airdrop via MerkleDistributor. 30M RBN (3% of supply) to Hegic/Opyn/Charm/Primitive users and vault depositors. Deployed by Ribbon deployer 0x69FE...bbd on May 24 2021. ~10M RBN remain unclaimed. Now merged with Aevo.',
   },
 
   // ───── 24. 1inch Network (Airdrop 2) ─────
@@ -509,12 +505,10 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     tokenAddress: '0x5fAa989Af96Af85384b8a938c2EdE4A7378D9875',
     chainId: CHAINS.ETHEREUM,
     claimContractAddress: '0x5fAa989Af96Af85384b8a938c2EdE4A7378D9875',
-    distributionType: 'direct_transfer',
-    claimEvents: [
-      { abi: TRANSFER },
-    ],
+    distributionType: 'merkle_claim',
+    claimEvents: [{ abi: CLAIMED_INDEX_ACCOUNT_AMOUNT }],
     notes:
-      'GAL (Project Galaxy) tokens. 200M total supply. Track Transfer events from treasury.',
+      'GAL Early Adopter Rewards via MerkleDistributor (Uniswap fork, see github.com/Galxe/galaxy-airdrop). ~3.65M GAL (1.83% of supply) to Space Expedition Pisces NFT holders (~25,102 addresses) + community roles. Snapshot Apr 28 2022, TGE May 5 2022. Deployed claim contract address not publicly documented — needs Etherscan trace of GAL token transfers around block 14,700,000. Now migrated to Gravity (G).',
   },
 
   // ───── 28. Optimism (Airdrop 3) ─────
@@ -544,11 +538,10 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     chainId: CHAINS.ETHEREUM,
     claimContractAddress: '0x2d94AA3e47d9D5024503Ca8491fcE9A2fB4DA198',
     distributionType: 'direct_transfer',
-    claimEvents: [
-      { abi: TRANSFER },
-    ],
+    distributorAddress: '0xf26d1Bb347a59F6C283C53156519cC1B1ABacA51',
+    claimEvents: [{ abi: TRANSFER }],
     notes:
-      'Bankless DAO. 35,000 BANK per Bankless premium subscriber. Sent directly. Track Transfer events.',
+      'Bankless DAO Ad1. 1B BANK minted to Treasury multisig 0xf26d...ca51, which distributed 35,000 BANK per Bankless premium subscriber. Filter Transfer(from=treasury). ~426M BANK still in treasury.',
   },
 
   // ───── 30. Space ID ─────
@@ -595,11 +588,9 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     chainId: CHAINS.ETHEREUM,
     claimContractAddress: '0x14778860E937f509e651192a90589dE711Fb88a9',
     distributionType: 'direct_transfer',
-    claimEvents: [
-      { abi: TRANSFER },
-    ],
+    claimEvents: [{ abi: TRANSFER }],
     notes:
-      'CYBER claimed via CyberAccount. Available on Optimism, Ethereum, BSC. 30-day window from Aug 15, 2023.',
+      'CYBER claimed via CyberAccount abstraction, primarily on Optimism (not a traditional Ethereum claim contract). 2.39M CYBER to 130K+ addresses (Mystery Box, Shards, W3ST, CyberProfile NFT holders). Snapshot Aug 1 2023, 30-day window from Aug 15. Claim contract on Ethereum not identified — may need to check Optimism Etherscan for the CyberAccount distributor.',
   },
 
   // ───── 33. Arkham ─────
@@ -628,12 +619,10 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     tokenAddress: '0x7448c7456a97769F6cD04F1E83A4a23cCdC46aBD',
     chainId: CHAINS.ETHEREUM,
     claimContractAddress: '0x7448c7456a97769F6cD04F1E83A4a23cCdC46aBD',
-    distributionType: 'direct_transfer',
-    claimEvents: [
-      { abi: TRANSFER },
-    ],
+    distributionType: 'merkle_claim',
+    claimEvents: [{ abi: CLAIMED_INDEX_ACCOUNT_AMOUNT }],
     notes:
-      'MAV Pre-Season Airdrop. 30M MAV (1.5% of supply). Claimed via governance.mav.xyz. Track Transfer events.',
+      'MAV Pre-Season Airdrop. 30M MAV (1.5% of supply) to 26,155 Ethereum addresses (also 96,075 on zkSync, out of scope). Snapshot Jun 22 2023, claimed via governance.mav.xyz starting Jun 28. Deployer 0xdc01...bc29 only created the MAV token — claim contract deployed by a different address. Needs Etherscan trace of MAV token transfers around block 17,580,000 to find the distributor.',
   },
 
   // ───── 35. Notional Finance ─────
@@ -646,11 +635,9 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     chainId: CHAINS.ETHEREUM,
     claimContractAddress: '0xCFEAead4947f0705A14ec42aC3D44129E1Ef3eD5',
     distributionType: 'direct_transfer',
-    claimEvents: [
-      { abi: TRANSFER },
-    ],
+    claimEvents: [{ abi: TRANSFER }],
     notes:
-      'NOTE airdrop. 0.75% of supply to 741 addresses. Claimed via notional.finance/airdrop. Track Transfer events.',
+      'NOTE airdrop. 0.75% of supply to 741 addresses (borrowers/lenders/LPs with >=50 DAI/USDC as of Jul 4 2021). 600-1800 NOTE per address based on first interaction date. Claimed via notional.finance/airdrop. NOTE token is an nProxy (ERC1967). Treasury: 0x22341fB5...18A05. Claim may be integrated into main Notional protocol contract 0x1344a36a...0369 — needs further trace.',
   },
 
   // ───── 36. Unlock Protocol ─────
@@ -662,12 +649,10 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     tokenAddress: '0x90DE74265a416e1393A450752175AED98fe11517',
     chainId: CHAINS.ETHEREUM,
     claimContractAddress: '0x90DE74265a416e1393A450752175AED98fe11517',
-    distributionType: 'direct_transfer',
-    claimEvents: [
-      { abi: TRANSFER },
-    ],
+    distributionType: 'merkle_claim',
+    claimEvents: [{ abi: CLAIMED_INDEX_ACCOUNT_AMOUNT }],
     notes:
-      'UDT airdrop to contributors before Sep 1, 2021. Up to 7,314 UDT. Claimed via airdrop.unlock-protocol.com.',
+      'UDT airdrop via modified MerkleDistributor (claimAndDelegate fork of Uniswap merkle-distributor). Required delegation before claiming. Eligible: UDT holders >=3 UDT + Uniswap v2 LPs before Sep 1 2021. Cleanup after 1M blocks (~Mar 4 2022) returned unclaimed to DAO timelock. See github.com/unlock-protocol/pindrop for eligible addresses. Deployed claim contract address not yet identified — needs Etherscan trace.',
   },
 
   // ───── 37. Forefront ─────
@@ -679,12 +664,10 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     tokenAddress: '0x7E9D8f07A64e363e97A648904a89fb4cd5fB94CD',
     chainId: CHAINS.ETHEREUM,
     claimContractAddress: '0x7E9D8f07A64e363e97A648904a89fb4cd5fB94CD',
-    distributionType: 'direct_transfer',
-    claimEvents: [
-      { abi: TRANSFER },
-    ],
+    distributionType: 'merkle_claim',
+    claimEvents: [{ abi: CLAIMED_INDEX_ACCOUNT_AMOUNT }],
     notes:
-      'FF token airdrop. Snapshot Mar 12, 2021. Claim period ended Apr 14, 2021. 10M total supply.',
+      'FF community airdrop via MerkleDistributor (Uniswap-style). 2M FF (20% of 10M supply) to ~6,742 social token holders. Snapshot Mar 12 2021 12PM UTC. Base allocation ~238 FF per token (SWAGG 2x, FWB 1.25x, WHALE 1.15x). 14-day claim window ending Mar 14 2021 11PM UTC, unclaimed rolled to treasury. Deployed claim contract address not yet identified — needs Etherscan trace of FF token transfers around block 12,100,000.',
   },
 
   // ───── 38. Bank (Airdrop 2) ─────
@@ -697,11 +680,10 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     chainId: CHAINS.ETHEREUM,
     claimContractAddress: '0x2d94AA3e47d9D5024503Ca8491fcE9A2fB4DA198',
     distributionType: 'direct_transfer',
-    claimEvents: [
-      { abi: TRANSFER },
-    ],
+    distributorAddress: '0xf26d1Bb347a59F6C283C53156519cC1B1ABacA51',
+    claimEvents: [{ abi: TRANSFER }],
     notes:
-      'Bankless DAO second distribution. Sent directly to eligible wallets.',
+      'Bankless DAO Ad2 for 2020/2021 Bankless Badge holders (~Jun 2021). Same Treasury multisig 0xf26d...ca51 as Ad1. May use same or different distribution method. Filter Transfer(from=treasury).',
   },
 
   // ───── 39. Hop Protocol ─────
@@ -745,12 +727,10 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     tokenAddress: '0x4104b135DBC9609Fc1A9490E61369036497660c8',
     chainId: CHAINS.ETHEREUM,
     claimContractAddress: '0x4104b135DBC9609Fc1A9490E61369036497660c8',
-    distributionType: 'direct_transfer',
-    claimEvents: [
-      { abi: TRANSFER },
-    ],
+    distributionType: 'merkle_claim',
+    claimEvents: [{ abi: CLAIMED_INDEX_ACCOUNT_AMOUNT }],
     notes:
-      'APWine (now Spectra) token. Migrated to SPECTRA token on Dec 17, 2024. Track Transfer events.',
+      'APWine Genesis Airdrop (Dec 2021). 588,430 APW (1.18% of supply) to Alpha/Beta testers and Liquidity Bootstrapping Event participants. 1-month claim window with 25% reduction every 2 weeks after. 50% of claim auto-locked as veAPW for 6 months. Unclaimed tokens distributed to veAPW holders over 2 years. Migrated to SPECTRA Dec 2024. Claim contract address not yet identified — token is AdminUpgradeabilityProxy (ERC1967).',
   },
 
   // ───── 42. Snowswap ─────
@@ -763,11 +743,10 @@ export const AIRDROP_CLAIMS: AirdropInfo[] = [
     chainId: CHAINS.ETHEREUM,
     claimContractAddress: '0xfe9A29aB92522D14Fc65880d817214261D8479AE',
     distributionType: 'direct_transfer',
-    claimEvents: [
-      { abi: TRANSFER },
-    ],
+    distributorAddress: '0x0822d138aae127789ea42abae034d39f7dcd5dc1',
+    claimEvents: [{ abi: TRANSFER }],
     notes:
-      'SNOW token. 500,000 total supply. Track Transfer events from deployer/treasury.',
+      'SNOW token. 500,000 total supply. Deployer 0x0822...5dc1 distributed tokens directly (~Sep 2020, block ~10,900,000). Caution: deployer also sent SNOW to LP contracts — need to separate airdrop transfers from LP funding. Filter Transfer(from=deployer) and exclude known LP/pool addresses.',
   },
 
   // ───── 43. DappRadar ─────
