@@ -3,6 +3,7 @@ export * from './constants/Blocks.js';
 export * from './constants/chains.js';
 export * from './constants/version.js';
 export * from './constants/tokens.js';
+export * from './constants/topTokens.js';
 export * from './constants/WorkflowTemplates.js';
 export * from './constants/logicOperators.js';
 export * from './constants/WorkflowSettings.js';
