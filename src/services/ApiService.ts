@@ -14,39 +14,49 @@ const axiosInstance = axios.create({
 
 class ApiServices {
   private auth: string | null = null;
+  private apiKey: string | null = null;
 
   setAuth(auth: string) {
     this.auth = auth;
+  }
+
+  setApiKey(apiKey: string) {
+    this.apiKey = apiKey;
   }
 
   setUrl(baseUrl: string) {
     axiosInstance.defaults.baseURL = baseUrl;
   }
 
+  private getAuthHeaders(): Record<string, string> {
+    if (this.apiKey) {
+      return { 'X-API-KEY': this.apiKey };
+    }
+    if (this.auth) {
+      return { 'Authorization': this.auth };
+    }
+    return {};
+  }
+
   async post(url: string, data: any) {
-    const headers = this.auth ? { 'Authorization': this.auth } : {};
-    return await axiosInstance.post(url, data, { headers });
+    return await axiosInstance.post(url, data, { headers: this.getAuthHeaders() });
   }
 
   async patch(url: string, data: any) {
-    const headers = this.auth ? { 'Authorization': this.auth } : {};
-    return await axiosInstance.patch(url, data, { headers });
+    return await axiosInstance.patch(url, data, { headers: this.getAuthHeaders() });
   }
 
   async put(url: string, data: any) {
-    const headers = this.auth ? { 'Authorization': this.auth } : {};
-    return await axiosInstance.put(url, data, { headers });
+    return await axiosInstance.put(url, data, { headers: this.getAuthHeaders() });
   }
 
   async get(url: string) {
-    const headers = this.auth ? { 'Authorization': this.auth } : {};
-    const response = await axiosInstance.get(url, { headers });
+    const response = await axiosInstance.get(url, { headers: this.getAuthHeaders() });
     return response.data;
   }
 
   async delete(url: string) {
-    const headers = this.auth ? { 'Authorization': this.auth } : {};
-    return await axiosInstance.delete(url, { headers });
+    return await axiosInstance.delete(url, { headers: this.getAuthHeaders() });
   }
 
   async generateLoginPayload(address: string, chainId: number, referralCode: string, ownerWalletAddress: string) {
@@ -74,11 +84,11 @@ class ApiServices {
   }
 
   async getWorkflowsOfUser(offset?: number, limit?: number, isActive?: boolean, query?: string) {
-    if (!this.auth) {
-      throw new Error('Authorization token is required');
+    if (!this.auth && !this.apiKey) {
+      throw new Error('Authorization token or API key is required');
     }
-  
-    const headers = { 'Authorization': this.auth };
+
+    const headers = this.getAuthHeaders();
   
     // Set defaults for offset and limit if not provided
     const finalOffset = offset ?? 0;
@@ -104,13 +114,13 @@ class ApiServices {
   }
 
   async getSessionKeyPermissions(workflowId: string) {
-    if (!this.auth) {
-      throw new Error('Authorization token is required');
+    if (!this.auth && !this.apiKey) {
+      throw new Error('Authorization token or API key is required');
     }
 
     try {
       const url = `/workflows/${workflowId}/verify-contracts`;
-      const headers = { Authorization: this.auth };
+      const headers = this.getAuthHeaders();
 
       const response = await axiosInstance.post(url, {}, { headers });
 

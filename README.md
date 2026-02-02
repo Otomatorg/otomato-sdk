@@ -37,7 +37,7 @@ npm install otomato-sdk
 
 For the first example, set the following environment variables:
 *   `API_URL`: Should be set to `https://api.otomato.xyz/api`.
-*   `AUTH_TOKEN`: Obtain this by following the [Authentication](#authentication) instructions.
+*   `AUTH_TOKEN`: Obtain this by following the [Authentication](#authentication) instructions. Alternatively, you can use an `API_KEY` instead.
 
 Alternatively, you can replace these placeholder values directly in the example code.
 
@@ -55,15 +55,18 @@ async function simpleEthPriceMonitor() {
   const API_URL = process.env.API_URL || "https://api.otomato.xyz/api";
   const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS || "your-email@example.com"; // Replace with your email or set as ENV var
   const AUTH_TOKEN = process.env.AUTH_TOKEN;
+  const API_KEY = process.env.API_KEY;
 
-  if (!AUTH_TOKEN) {
-    console.error("Error: AUTH_TOKEN is not set. Please set it as an environment variable or directly in the code.");
+  if (!AUTH_TOKEN || !API_KEY) {
+    console.error("Error: AUTH_TOKEN or API_KEY is not set. Please set it as an environment variable or directly in the code.");
     return;
   }
   if (EMAIL_ADDRESS === "your-email@example.com") {
     console.warn("Warning: EMAIL_ADDRESS is set to the default. Replace with your email to receive notifications.");
   }
   apiServices.setUrl(API_URL);
+  // Use either an API key or an auth token:
+  // apiServices.setApiKey(process.env.API_KEY);
   apiServices.setAuth(AUTH_TOKEN);
 
   const priceTrigger = new Trigger(TRIGGERS.TOKENS.PRICE.PRICE_MOVEMENT_AGAINST_CURRENCY);
@@ -133,7 +136,35 @@ simpleEthPriceMonitor();
 
 ### Authentication
 
-Before interacting with the Otomato SDK, you need to authenticate your account. This is done by obtaining an `AUTH_TOKEN`.
+Before interacting with the Otomato SDK, you need to authenticate. There are two approaches:
+
+#### Option 1: API Key (Recommended)
+
+API keys are the simplest way to authenticate.
+
+```js
+import { apiServices } from 'otomato-sdk';
+
+apiServices.setUrl('https://api.otomato.xyz/api');
+apiServices.setApiKey('sk_live_xxxx_...');
+```
+
+Set it via environment variable:
+```
+API_URL=https://api.otomato.xyz/api
+API_KEY=sk_live_xxxx_...
+```
+
+```js
+apiServices.setUrl(process.env.API_URL);
+apiServices.setApiKey(process.env.API_KEY);
+```
+
+> **Note:** If both an API key and an auth token are set, the API key takes priority.
+
+#### Option 2: Auth Token
+
+You can also authenticate using an `AUTH_TOKEN` obtained from the web app or programmatically.
 
 **How to get an `AUTH_TOKEN`:**
 
@@ -150,9 +181,9 @@ Before interacting with the Otomato SDK, you need to authenticate your account. 
     async function getAuthToken(walletAddress, accessCode, ownerAddress, signFunction) {
       try {
         // Ensure chainId is defined, e.g., CHAINS.ETHEREUM or your specific chain
-        const chainId = CHAINS.ETHEREUM; 
+        const chainId = CHAINS.ETHEREUM;
         const loginPayload = await apiServices.generateLoginPayload(walletAddress, chainId, accessCode, ownerAddress);
-        
+
         // The signFunction needs to be implemented by you, using your preferred wallet library (ethers.js, web3.js, etc.)
         // It takes the JSON string of loginPayload and returns a signature.
         // Example: const signature = await ethersSigner.signMessage(JSON.stringify(loginPayload));
