@@ -27,6 +27,7 @@ jobs:
       - name: Echo multiline secret to file
         run: |
           echo -e '${{ secrets.ENV }}' >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
 
       - name: Run tests
         run: npm test
