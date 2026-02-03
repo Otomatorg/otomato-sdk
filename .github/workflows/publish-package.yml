@@ -30,6 +30,15 @@ jobs:
           echo "" >> .env
           echo "API_KEY=${{ secrets.API_KEY }}" >> .env
 
+      - name: Debug env file structure
+        run: |
+          echo "=== .env variable names (values hidden) ==="
+          grep -o '^[^=]*' .env || echo "No variables found"
+          echo "=== API_KEY length ==="
+          echo "${#API_KEY}"
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+
       - name: Run tests
         run: npm test
 
