@@ -29,6 +29,8 @@ jobs:
           echo -e '${{ secrets.ENV }}' >> .env
           echo "" >> .env
           echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+          echo "" >> .env
+          echo "API_URL=${{ secrets.API_URL }}" >> .env
 
       - name: Debug env file structure
         run: |
