@@ -54,8 +54,16 @@ jobs:
 
       - name: Publish to npm
         run: |
-          npm config delete "//registry.npmjs.org/:_authToken" --location=user
-          unset NODE_AUTH_TOKEN
           echo "npm version: $(npm --version)"
-          echo "OIDC available: ${ACTIONS_ID_TOKEN_REQUEST_URL:+yes}"
-          npm publish --provenance --access public
+          echo "OIDC URL set: ${ACTIONS_ID_TOKEN_REQUEST_URL:+yes}"
+          echo "OIDC Token set: ${ACTIONS_ID_TOKEN_REQUEST_TOKEN:+yes}"
+          echo "=== .npmrc contents (tokens redacted) ==="
+          sed 's/_authToken=.*/_authToken=REDACTED/' "$NPM_CONFIG_USERCONFIG"
+          echo "=== npm config list ==="
+          npm config list
+          echo "=== attempting publish ==="
+          npm publish --provenance --access public 2>&1 || {
+            echo "=== publish failed, dumping debug log ==="
+            cat /home/runner/.npm/_logs/*-debug-0.log 2>/dev/null | tail -100
+            exit 1
+          }
