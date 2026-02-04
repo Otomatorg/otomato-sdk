@@ -98,7 +98,11 @@ export function getComputeERC20Variable(amount: string, chainId: any, contractAd
  * @param maxLeadingZeros - The maximum number of leading zeros after decimal point before rounding (default is -1 for no limit).
  * @returns string - The formatted number as a string.
  */
-export function formatNonZeroDecimals(value: number, nonZeroDecimals: number = 2, maxLeadingZeros: number = -1): string {
+export function formatNonZeroDecimals(value: number | bigint, nonZeroDecimals: number = 2, maxLeadingZeros: number = -1): string {
+    if (typeof value === 'bigint') {
+        return value.toString();
+    }
+
     if (value === 0) {
         return "0";
     }
