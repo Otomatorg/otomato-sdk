@@ -53,4 +53,7 @@ jobs:
         run: npm run build
 
       - name: Publish to npm
-        run: npm publish --access public
+        run: |
+          npm config delete "//registry.npmjs.org/:_authToken" --location=user
+          unset NODE_AUTH_TOKEN
+          npm publish --access public
