@@ -2,6 +2,10 @@
   "name": "otomato-sdk",
   "version": "2.0.459",
   "description": "An SDK for building and managing automations on Otomato",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Otomatorg/otomato-sdk"
+  },
   "main": "dist/src/index.js",
   "types": "dist/types/src/index.d.ts",
   "type": "module",
