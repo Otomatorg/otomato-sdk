@@ -609,15 +609,29 @@ export async function getTokenInfo(
 }
 
 /**
+ * In-memory cache for token info. Token symbol, decimals, and name are
+ * immutable on-chain, so we cache indefinitely within the process lifetime.
+ */
+const tokenInfoCache = new Map<string, TokenInfo>();
+
+/**
  * Fetches token info with fallback values if contract call fails.
+ * Results are cached in-memory to avoid redundant RPC calls for immutable data.
  */
 export async function getTokenInfoWithFallback(
   tokenAddress: string,
   provider: ethers.Provider
 ): Promise<TokenInfo> {
+  const cacheKey = tokenAddress.toLowerCase();
+  const cached = tokenInfoCache.get(cacheKey);
+  if (cached) return cached;
+
   try {
-    return await getTokenInfo(tokenAddress, provider);
+    const info = await getTokenInfo(tokenAddress, provider);
+    tokenInfoCache.set(cacheKey, info);
+    return info;
   } catch (error) {
+    // Don't cache fallback values — next call might succeed with a working provider
     const truncatedAddress = `${tokenAddress.slice(0, 6)}...${tokenAddress.slice(-4)}`;
     return {
       symbol: truncatedAddress,
