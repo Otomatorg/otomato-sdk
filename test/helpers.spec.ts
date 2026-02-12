@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { convertToTokenUnits, getTokenFromSymbol, CHAINS, convertTokenUnitsFromSymbol, convertTokenUnitsFromAddress, formatNonZeroDecimals } from '../src/index.js';
+import { convertToTokenUnits, getTokenFromSymbol, CHAINS, convertTokenUnitsFromSymbol, convertTokenUnitsFromAddress, formatNonZeroDecimals, formatDisplayPrice } from '../src/index.js';
 
 describe('convertToTokenUnits', () => {
   it('should return 10^6 for 1 USDC', async () => {
@@ -208,5 +208,53 @@ describe('formatNonZeroDecimals', () => {
     expect(formatNonZeroDecimals(Infinity)).to.equal('Infinity');
     expect(formatNonZeroDecimals(-Infinity)).to.equal('-Infinity');
     expect(formatNonZeroDecimals(NaN)).to.equal('NaN');
+  });
+});
+
+describe('formatDisplayPrice', () => {
+  it('should format prices >= 1000 with 0 decimal places', () => {
+    expect(formatDisplayPrice(71000.000000)).to.equal('71000');
+    expect(formatDisplayPrice(2130.450000)).to.equal('2130');
+    expect(formatDisplayPrice(70975.920635)).to.equal('70976');
+    expect(formatDisplayPrice(1000)).to.equal('1000');
+  });
+
+  it('should format prices >= 100 and < 1000 with 1 decimal place', () => {
+    expect(formatDisplayPrice(500.789)).to.equal('500.8');
+    expect(formatDisplayPrice(500.000000)).to.equal('500');
+    expect(formatDisplayPrice(100.0)).to.equal('100');
+    expect(formatDisplayPrice(999.95)).to.equal('1000');
+  });
+
+  it('should format prices >= 10 and < 100 with 2 decimal places', () => {
+    expect(formatDisplayPrice(32.100000)).to.equal('32.1');
+    expect(formatDisplayPrice(10.999)).to.equal('11');
+    expect(formatDisplayPrice(10.0)).to.equal('10');
+    expect(formatDisplayPrice(99.999)).to.equal('100');
+  });
+
+  it('should format prices < 10 with 2 meaningful digits (rounded)', () => {
+    expect(formatDisplayPrice(9.87654)).to.equal('9.88');
+    expect(formatDisplayPrice(5.4321)).to.equal('5.43');
+    expect(formatDisplayPrice(0.091562)).to.equal('0.092');
+    expect(formatDisplayPrice(0.00004523)).to.equal('0.000045');
+    expect(formatDisplayPrice(0.005678)).to.equal('0.0057');
+    expect(formatDisplayPrice(0.9999)).to.equal('1');
+  });
+
+  it('should handle zero', () => {
+    expect(formatDisplayPrice(0)).to.equal('0');
+  });
+
+  it('should handle negative prices', () => {
+    expect(formatDisplayPrice(-32.1)).to.equal('-32.1');
+    expect(formatDisplayPrice(-71000)).to.equal('-71000');
+    expect(formatDisplayPrice(-0.091562)).to.equal('-0.092');
+  });
+
+  it('should handle edge cases', () => {
+    expect(formatDisplayPrice(Infinity)).to.equal('Infinity');
+    expect(formatDisplayPrice(-Infinity)).to.equal('-Infinity');
+    expect(formatDisplayPrice(NaN)).to.equal('NaN');
   });
 });
