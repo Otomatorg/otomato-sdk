@@ -836,6 +836,94 @@ export function formatPriceWithDecimals(
   return price.toFixed(decimals);
 }
 
+/**
+ * Format a price for display using magnitude-based rules with standard mathematical rounding.
+ *
+ * Rules:
+ *   price >= 1000  → 0 decimal places
+ *   price >= 100   → 1 decimal place
+ *   price >= 10    → 2 decimal places
+ *   price < 10     → 2 meaningful (non-zero) digits after leading zeros, rounded
+ *
+ * Unlike `formatNonZeroDecimals`, this function rounds instead of truncating.
+ *
+ * @param price - The price value to format.
+ * @returns The formatted price string.
+ */
+export function formatDisplayPrice(price: number): string {
+  if (!isFinite(price) || isNaN(price)) {
+    return String(price);
+  }
+
+  const absPrice = Math.abs(price);
+  const sign = price < 0 ? '-' : '';
+
+  if (absPrice === 0) {
+    return '0';
+  }
+
+  // Apply magnitude-based formatting, then re-check in case rounding
+  // pushes the value into a higher tier (e.g. 999.95 → "1000.0" should become "1000").
+  const formatted = formatByMagnitude(absPrice);
+  const rounded = parseFloat(formatted);
+
+  let result = formatted;
+  if (rounded !== absPrice && getMagnitudeTier(rounded) !== getMagnitudeTier(absPrice)) {
+    result = formatByMagnitude(rounded);
+  }
+
+  return sign + stripTrailingZeros(result);
+}
+
+function stripTrailingZeros(value: string): string {
+  if (!value.includes('.')) return value;
+  let result = value.replace(/0+$/, '');
+  if (result.endsWith('.')) result = result.slice(0, -1);
+  return result;
+}
+
+function getMagnitudeTier(value: number): number {
+  if (value >= 1000) return 3;
+  if (value >= 100) return 2;
+  if (value >= 10) return 1;
+  return 0;
+}
+
+function formatByMagnitude(absPrice: number): string {
+  if (absPrice >= 1000) {
+    return Math.round(absPrice).toString();
+  }
+
+  if (absPrice >= 100) {
+    return absPrice.toFixed(1);
+  }
+
+  if (absPrice >= 10) {
+    return absPrice.toFixed(2);
+  }
+
+  // For prices < 10: count leading zeros after decimal, then show 2 meaningful digits
+  const str = absPrice.toString();
+  const decimalIndex = str.indexOf('.');
+
+  if (decimalIndex === -1) {
+    return str;
+  }
+
+  const decimalPart = str.substring(decimalIndex + 1);
+  let leadingZeros = 0;
+  for (let i = 0; i < decimalPart.length; i++) {
+    if (decimalPart[i] === '0') {
+      leadingZeros++;
+    } else {
+      break;
+    }
+  }
+
+  const decimals = leadingZeros + 2;
+  return absPrice.toFixed(decimals);
+}
+
 export interface TokenPairInfo {
   symbol: string;
   address?: string;
