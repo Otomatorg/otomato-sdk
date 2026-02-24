@@ -13,4 +13,5 @@ export const CHAINS = {
   BINANCE: 56,
   SOMNIA: 5031,
   HYPER_EVM: 999,
+  SCROLL: 534352
 };
