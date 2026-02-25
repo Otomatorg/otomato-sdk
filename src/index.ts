@@ -28,3 +28,4 @@ export * from './utils/typeValidator.js';
 export * from './utils/addressBalance.js';
 export * from './utils/externalVariables.js';
 export * from './utils/renderEnum.js';
+export * from './utils/polymarket.js';
