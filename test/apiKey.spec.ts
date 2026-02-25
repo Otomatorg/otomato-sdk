@@ -51,8 +51,8 @@ describe("API Key Authentication", function () {
 
   it("should be able to call GET /workflows directly", async () => {
     const result = await apiServices.get("/workflows?offset=0&limit=5");
-    console.log(`res:`, result);
-    expect(result).to.be.an("object");
-    expect(result).to.have.property("data");
+    const parsed = typeof result === "string" ? JSON.parse(result) : result;
+    expect(parsed).to.be.an("object");
+    expect(parsed).to.have.property("data");
   });
 });
