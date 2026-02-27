@@ -22,22 +22,25 @@ export function isENSName(value: string): boolean {
 
 /**
  * Resolves an ENS name to its resolved wallet address.
- * Tries multiple public RPC endpoints in order; returns null if all fail or the name is not registered.
+ * Queries all RPC endpoints in parallel and returns the first successful result.
+ * Returns null if the name is not registered or all endpoints fail.
  *
  * @param name - The ENS name to resolve (e.g. "vitalik.eth")
  * @returns The resolved wallet address, or null if not found
  */
 export async function resolveENSName(name: string): Promise<string | null> {
-  for (const rpc of ETH_MAINNET_RPCS) {
-    try {
-      const provider = new ethers.JsonRpcProvider(rpc);
-      const address = await provider.resolveName(name);
-      if (address !== null) return address;
-    } catch {
-      // try next RPC
-    }
+  try {
+    return await Promise.any(
+      ETH_MAINNET_RPCS.map(async (rpc) => {
+        const provider = new ethers.JsonRpcProvider(rpc);
+        const address = await provider.resolveName(name);
+        if (address === null) throw new Error('not found');
+        return address;
+      })
+    );
+  } catch {
+    return null;
   }
-  return null;
 }
 
 /**
