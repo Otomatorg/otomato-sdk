@@ -1,7 +1,14 @@
 import { ethers } from 'ethers';
 
-// Public Ethereum mainnet RPC (publicnode supports ENS contract calls)
-const ETH_MAINNET_RPC = 'https://ethereum.publicnode.com';
+// Public Ethereum mainnet RPC endpoints with ENS contract call support
+const ETH_MAINNET_RPCS = [
+  'https://ethereum-rpc.publicnode.com',
+  'https://eth.llamarpc.com',
+  'https://eth-mainnet.public.blastapi.io',
+  'https://ethereum.public.blockpi.network/v1/rpc/public',
+  'https://eth.rpc.blxrbdn.com',
+  'https://0xrpc.io/eth',
+];
 
 /**
  * Checks whether the given string looks like an ENS name.
@@ -14,19 +21,23 @@ export function isENSName(value: string): boolean {
 }
 
 /**
- * Resolves an ENS name to its owner's wallet address.
- * Returns null if the name is not registered or the resolution fails.
+ * Resolves an ENS name to its resolved wallet address.
+ * Tries multiple public RPC endpoints in order; returns null if all fail or the name is not registered.
  *
  * @param name - The ENS name to resolve (e.g. "vitalik.eth")
- * @returns The owner's wallet address, or null if not found
+ * @returns The resolved wallet address, or null if not found
  */
 export async function resolveENSName(name: string): Promise<string | null> {
-  try {
-    const provider = new ethers.JsonRpcProvider(ETH_MAINNET_RPC);
-    return await provider.resolveName(name);
-  } catch {
-    return null;
+  for (const rpc of ETH_MAINNET_RPCS) {
+    try {
+      const provider = new ethers.JsonRpcProvider(rpc);
+      const address = await provider.resolveName(name);
+      if (address !== null) return address;
+    } catch {
+      // try next RPC
+    }
   }
+  return null;
 }
 
 /**
