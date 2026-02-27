@@ -1760,6 +1760,15 @@ export const TOKENS: Tokens = {
   ],
   999: [
     {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "HYPE",
+      symbol: "HYPE",
+      decimals: 18,
+      image: "https://static.debank.com/image/hyper_token/logo_url/hyper/0b3e288cfe418e9ce69eef4c96374583.png",
+      nativeCurrency: true,
+      equivalentERC20: "0x5555555555555555555555555555555555555555",
+    },
+    {
       contractAddress: "0x5555555555555555555555555555555555555555",
       name: "wHYPE",
       symbol: "wHYPE",
@@ -2062,7 +2071,14 @@ export const TOKENS: Tokens = {
     }
   ],
   5031: [
-
+    {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "Somnia",
+      symbol: "STT",
+      decimals: 18,
+      image: null,
+      nativeCurrency: true,
+    },
   ],
 };
 
