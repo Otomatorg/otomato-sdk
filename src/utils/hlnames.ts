@@ -1,4 +1,6 @@
 const HL_NAMES_API_BASE_URL = 'https://api.hlnames.xyz';
+// This API key is a public free key provided in the official HyperLiquid Names documentation:
+// https://hyperliquid-names.gitbook.io/hyperliquid-names/dapp-integration/dapp-integration
 const HL_NAMES_API_KEY = 'CPEPKMI-HUSUX6I-SE2DHEA-YYWFG5Y';
 
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
