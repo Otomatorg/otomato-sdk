@@ -212,18 +212,18 @@ describe('formatNonZeroDecimals', () => {
 });
 
 describe('formatDisplayPrice', () => {
-  it('should format prices >= 1000 with 0 decimal places', () => {
-    expect(formatDisplayPrice(71000.000000)).to.equal('71000');
-    expect(formatDisplayPrice(2130.450000)).to.equal('2130');
-    expect(formatDisplayPrice(70975.920635)).to.equal('70976');
-    expect(formatDisplayPrice(1000)).to.equal('1000');
+  it('should format prices >= 1000 with 0 decimal places and thousands separators', () => {
+    expect(formatDisplayPrice(71000.000000)).to.equal('71,000');
+    expect(formatDisplayPrice(2130.450000)).to.equal('2,130');
+    expect(formatDisplayPrice(70975.920635)).to.equal('70,976');
+    expect(formatDisplayPrice(1000)).to.equal('1,000');
   });
 
   it('should format prices >= 100 and < 1000 with 1 decimal place', () => {
     expect(formatDisplayPrice(500.789)).to.equal('500.8');
     expect(formatDisplayPrice(500.000000)).to.equal('500');
     expect(formatDisplayPrice(100.0)).to.equal('100');
-    expect(formatDisplayPrice(999.95)).to.equal('1000');
+    expect(formatDisplayPrice(999.95)).to.equal('1,000');
   });
 
   it('should format prices >= 10 and < 100 with 2 decimal places', () => {
@@ -248,7 +248,7 @@ describe('formatDisplayPrice', () => {
 
   it('should handle negative prices', () => {
     expect(formatDisplayPrice(-32.1)).to.equal('-32.1');
-    expect(formatDisplayPrice(-71000)).to.equal('-71000');
+    expect(formatDisplayPrice(-71000)).to.equal('-71,000');
     expect(formatDisplayPrice(-0.091562)).to.equal('-0.092');
   });
 

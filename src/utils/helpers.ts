@@ -872,7 +872,13 @@ export function formatDisplayPrice(price: number): string {
     result = formatByMagnitude(rounded);
   }
 
-  return sign + stripTrailingZeros(result);
+  return sign + addThousandsSeparators(stripTrailingZeros(result));
+}
+
+function addThousandsSeparators(value: string): string {
+  const [intPart, decPart] = value.split('.');
+  const withCommas = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return decPart !== undefined ? `${withCommas}.${decPart}` : withCommas;
 }
 
 function stripTrailingZeros(value: string): string {
