@@ -1060,3 +1060,30 @@ export function isMaxBigInt(value: bigint | string): boolean {
   const valueBigInt = typeof value === 'string' ? BigInt(value) : value;
   return valueBigInt == MAX_BIGINT;
 }
+
+/**
+ * Format a Health Factor for display.
+ *
+ * Rules:
+ *   - If value is MAX_BIGINT (or equivalent sentinel) → return MAX_BIGINT (no-op, caller emits as-is).
+ *   - If HF < 1.04 → 4 decimals (users need precision near liquidation).
+ *   - Otherwise → 2 decimals.
+ *
+ * Accepts number | bigint | string. Non-finite / unparseable inputs fall back to MAX_BIGINT
+ * so unhealthy-but-unknown positions are treated as "safe/max" (matches existing sentinel
+ * convention used by AAVE/Hyperlend/Hypurr/Moonwell handlers).
+ */
+export function formatHealthFactor(value: number | bigint | string): string | bigint {
+  if (typeof value === 'bigint') {
+    return isMaxBigInt(value) ? MAX_BIGINT : formatHealthFactor(Number(value));
+  }
+
+  const num = typeof value === 'string' ? parseFloat(value) : value;
+
+  if (!Number.isFinite(num)) {
+    return MAX_BIGINT;
+  }
+
+  const decimals = num < 1.04 ? 4 : 2;
+  return num.toFixed(decimals);
+}
