@@ -2080,6 +2080,12 @@ export const TOKENS: Tokens = {
       nativeCurrency: true,
     },
   ],
+  9745: [
+
+  ],
+  57073: [
+    
+  ]
 };
 
 export interface NFT {
