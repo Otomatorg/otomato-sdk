@@ -47,6 +47,15 @@ class RPCServices {
     if (env.HYPER_EVM_HTTPS_PROVIDER) {
       this.rpcUrls[CHAINS.HYPER_EVM] = env.HYPER_EVM_HTTPS_PROVIDER;
     }
+    if (env.PLASMA_HTTPS_PROVIDER) {
+      this.rpcUrls[CHAINS.PLASMA] = env.PLASMA_HTTPS_PROVIDER;
+    }
+    if (env.MANTLE_HTTPS_PROVIDER) {
+      this.rpcUrls[CHAINS.MANTLE] = env.MANTLE_HTTPS_PROVIDER;
+    }
+    if (env.INK_HTTPS_PROVIDER) {
+      this.rpcUrls[CHAINS.INK] = env.INK_HTTPS_PROVIDER;
+    }
   }
 
   // Function to get the RPC URL for a specific chainId
