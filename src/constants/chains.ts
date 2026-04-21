@@ -14,7 +14,7 @@ export const CHAINS = {
   SOMNIA: 5031,
   HYPER_EVM: 999,
   SCROLL: 534352,
-  MANTLE: 5000,
-  INK: 57073,
+  MANTLE: 5000,   
+  INK: 57073,                                                                                                               
   PLASMA: 9745,
 };
