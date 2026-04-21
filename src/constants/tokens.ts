@@ -2081,10 +2081,57 @@ export const TOKENS: Tokens = {
     },
   ],
   9745: [
-
+    {
+      contractAddress: "0x6100e367285b01f48d07953803a2d8dca5d19873",
+      name: "Wrapped XPL",
+      symbol: "WXPL",
+      decimals: 18,
+      image: null,
+    },
+    {
+      contractAddress: "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
+      name: "USDe",
+      symbol: "USDe",
+      decimals: 18,
+      image: null,
+    },
+    {
+      contractAddress: "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+      name: "USDT0",
+      symbol: "USDT0",
+      decimals: 6,
+      image: null,
+    },
+    {
+      contractAddress: "0x211Cc4DD073734dA055fbF44a2b4667d5E5fE5d2",
+      name: "Staked USDe",
+      symbol: "sUSDe",
+      decimals: 18,
+      image: null,
+    },
+    {
+      contractAddress: "0x09Bc4E0D864854c6aFB6eB9A9cdF58aC190D0dF9",
+      name: "USDC",
+      symbol: "USDC",
+      decimals: 6,
+      image: null,
+    },
   ],
   57073: [
-    
+    {
+      contractAddress: "0x0200C29006150606B650577BBE7B6248F58470c1",
+      name: "USD₮0",
+      symbol: "USDT0",
+      decimals: 6,
+      image: null,
+    },
+    {
+      contractAddress: "0x4200000000000000000000000000000000000006",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+      decimals: 18,
+      image: null,
+    },
   ]
 };
 
