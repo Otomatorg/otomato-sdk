@@ -557,28 +557,10 @@ const createDefillamaRaiseNotificationWorkflow = () => {
     return workflow;
 };
 
-const createTokenMovementNotificationWorkflow = () => {
-    const trigger = new Trigger(TRIGGERS.TOKENS.BALANCE.BALANCE_MOVEMENT);
-    // trigger.setParams('walletAddress', '{{smartAccountAddress}}');
-    trigger.setPosition(400, 120);
+// #2763: createTokenMovementNotificationWorkflow removed — its trigger
+// (BALANCE_MOVEMENT, block 6) polls the sunsetted Dune Sim API and no longer works.
 
-    const telegramAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-    telegramAction.setParams('message', trigger.getOutputVariableName('balanceChanges'));
-    telegramAction.setPosition(400, 240);
-
-    const edge = new Edge({ source: trigger, target: telegramAction });
-
-    const workflow = new Workflow(
-        'Token Movement Notification',
-        [trigger, telegramAction],
-        [edge],
-        DEFAULT_WORKFLOW_LOOP_SETTINGS.polling5s
-    );
-
-    return workflow;
-};
-
-const createTwitterAiNotificationWorkflow = (username: { display: string, tag: string }, wfData: { prompt: string, notification: string, wfTitle: string }) => {
+const createTwitterAiNotificationWorkflow =(username: { display: string, tag: string }, wfData: { prompt: string, notification: string, wfTitle: string }) => {
     return () => {
         const trigger = new Trigger(TRIGGERS.SOCIALS.X.X_POST_TRIGGER);
         trigger.setParams('username', username.tag);
@@ -1431,22 +1413,8 @@ export const WORKFLOW_TEMPLATES = [
         ],
         createWorkflow: createEthereumFoundationTransferNotificationWorkflow
     },
-    {
-        'id': 7,
-        'name': 'Receive alerts for wallet activity',
-        'description': 'Get notified when a given wallet receives or sends any token on any chain',
-        'tags': [WORKFLOW_TEMPLATES_TAGS.SOCIALS, WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS],
-        'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/transfer_alert.webp',
-        'image': [
-            TRIGGERS.TOKENS.BALANCE.image,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.image
-        ],
-        'blockIDs': [
-            TRIGGERS.TOKENS.BALANCE.BALANCE_MOVEMENT.blockId,
-            ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
-        ],
-        createWorkflow: createTokenMovementNotificationWorkflow
-    },
+    // #2763: template id 7 'Receive alerts for wallet activity' removed — built on the
+    // BALANCE_MOVEMENT block (id 6) which polls the sunsetted Dune Sim API and is now broken.
     createTwitterAiNotificationTemplate(
         8,
         { display: 'Strategy', tag: 'Strategy' },
