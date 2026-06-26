@@ -1101,46 +1101,6 @@ const createHyperlendBorrowingYieldIncreaseWorkflow = async (): Promise<Workflow
   return workflow;
 };
 
-const createMorphoMarketUtilizationWorkflow = async (): Promise<Workflow> => {
-
-  const morphoMarketUtilizationTrigger = new Trigger(TRIGGERS.LENDING.MORPHO.MARKET_UTILIZATION);
-  morphoMarketUtilizationTrigger.setParams('chainId', CHAINS.BASE);
-  morphoMarketUtilizationTrigger.setParams('marketId', '0xf9ed1dba3b6ba1ede10e2115a9554e9c52091c9f1b1af21f9e0fecc855ee74bf');
-  morphoMarketUtilizationTrigger.setParams('condition', 'gt');
-  morphoMarketUtilizationTrigger.setParams('comparisonValue', 90);
-  morphoMarketUtilizationTrigger.setPosition(400, 120);
-
-  const telegramSendMessageAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-  telegramSendMessageAction.setParams('message', 'Morpho market utilization is above 90%');
-  telegramSendMessageAction.setPosition(400, 240);
-
-  const edge1 = new Edge({ source: morphoMarketUtilizationTrigger, target: telegramSendMessageAction });
-
-  const workflow = new Workflow('Get notified when a Morpho market utilization rises above 90%', [morphoMarketUtilizationTrigger, telegramSendMessageAction], [edge1], null);
-
-  return workflow;
-};
-
-const createMorphoVaultUtilizationWorkflow = async (): Promise<Workflow> => {
-
-  const morphoVaultUtilizationTrigger = new Trigger(TRIGGERS.LENDING.MORPHO.VAULT_UTILIZATION);
-  morphoVaultUtilizationTrigger.setParams('chainId', CHAINS.BASE);
-  morphoVaultUtilizationTrigger.setParams('vault', '0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183');
-  morphoVaultUtilizationTrigger.setParams('condition', 'gt');
-  morphoVaultUtilizationTrigger.setParams('comparisonValue', 90);
-  morphoVaultUtilizationTrigger.setPosition(400, 120);
-
-  const telegramSendMessageAction = new Action(ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE);
-  telegramSendMessageAction.setParams('message', 'Steakhouse USDC vault utilization is above 90%');
-  telegramSendMessageAction.setPosition(400, 240);
-
-  const edge1 = new Edge({ source: morphoVaultUtilizationTrigger, target: telegramSendMessageAction });
-
-  const workflow = new Workflow('Get notified when a Morpho vault utilization rises above 90%', [morphoVaultUtilizationTrigger, telegramSendMessageAction], [edge1], null);
-
-  return workflow;
-};
-
 const createPendleTokenExpiresWorkflow = async (): Promise<Workflow> => {
     
   const hyperEvmProtocolsPointsOnNewPointsTrigger = new Trigger(TRIGGERS.SOCIALS.HYPER_EVM_PROTOCOLS_POINTS.ON_NEW_POINTS);
@@ -2579,46 +2539,6 @@ export const WORKFLOW_TEMPLATES = [
       'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/kinetiq_template.webp',
       [WORKFLOW_TEMPLATES_TAGS.HYPER_EVM]
     ),
-    {
-      'id': 73,
-      'name': 'Get notified when a Morpho market utilization rises above a threshold',
-      'description': 'Pick a Morpho market and get notified when its utilization crosses your threshold.',
-      'tags': [
-        WORKFLOW_TEMPLATES_TAGS.LENDING,
-        WORKFLOW_TEMPLATES_TAGS.YIELD,
-        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS
-      ],
-      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/morpho.webp',
-      'image': [
-        TRIGGERS.LENDING.MORPHO.image,
-        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
-      ],
-      'blockIDs': [
-        TRIGGERS.LENDING.MORPHO.MARKET_UTILIZATION.blockId,
-        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
-      ],
-      createWorkflow: createMorphoMarketUtilizationWorkflow
-    },
-    {
-      'id': 74,
-      'name': 'Get notified when a Morpho vault utilization rises above a threshold',
-      'description': 'Pick a Morpho vault and get notified when its utilization crosses your threshold.',
-      'tags': [
-        WORKFLOW_TEMPLATES_TAGS.LENDING,
-        WORKFLOW_TEMPLATES_TAGS.YIELD,
-        WORKFLOW_TEMPLATES_TAGS.NOTIFICATIONS
-      ],
-      'thumbnail': 'https://otomato-sdk-images.s3.eu-west-1.amazonaws.com/templates/morpho.webp',
-      'image': [
-        TRIGGERS.LENDING.MORPHO.image,
-        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.image
-      ],
-      'blockIDs': [
-        TRIGGERS.LENDING.MORPHO.VAULT_UTILIZATION.blockId,
-        ACTIONS.NOTIFICATIONS.TELEGRAM.SEND_MESSAGE.blockId
-      ],
-      createWorkflow: createMorphoVaultUtilizationWorkflow
-    },
 ].map((template) => {
   if (specialSettingTemplates.includes(template.id)) {
     return {
