@@ -1,6 +1,6 @@
 {
   "name": "otomato-sdk",
-  "version": "2.0.624",
+  "version": "2.0.625",
   "description": "An SDK for building and managing automations on Otomato",
   "repository": {
     "type": "git",
