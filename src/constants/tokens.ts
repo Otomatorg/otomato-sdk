@@ -2132,6 +2132,52 @@ export const TOKENS: Tokens = {
       decimals: 18,
       image: null,
     },
+  ],
+  143: [
+    {
+      contractAddress: "0x0000000000000000000000000000000000000000",
+      name: "Monad",
+      symbol: "MON",
+      decimals: 18,
+      nativeCurrency: true,
+      equivalentERC20: "0x3bd359c1119da7da1d913d1c4d2b7c461115433a",
+      image: null,
+    },
+    {
+      contractAddress: "0x3bd359c1119da7da1d913d1c4d2b7c461115433a",
+      name: "Wrapped Monad",
+      symbol: "WMON",
+      decimals: 18,
+      image: null,
+    },
+    {
+      contractAddress: "0x754704bc059f8c67012fed69bc8a327a5aafb603",
+      name: "USDC",
+      symbol: "USDC",
+      decimals: 6,
+      image: null,
+    },
+    {
+      contractAddress: "0xe7cd86e13ac4309349f30b3435a9d337750fc82d",
+      name: "USDT0",
+      symbol: "USDT0",
+      decimals: 6,
+      image: null,
+    },
+    {
+      contractAddress: "0xee8c0e9f1bffb4eb878d8f15f368a02a35481242",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+      decimals: 18,
+      image: null,
+    },
+    {
+      contractAddress: "0xfc421ad3c883bf9e7c4f42de845c4e4405799e73",
+      name: "GHO",
+      symbol: "GHO",
+      decimals: 18,
+      image: null,
+    },
   ]
 };
 
