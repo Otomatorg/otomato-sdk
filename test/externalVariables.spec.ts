@@ -68,7 +68,10 @@ describe('external variables construction from object', () => {
             [{"key": "chainId", "value": 34443}, {"key": "token", "value": "0xf0F161fDA2712DB8b566946122a5af183995e2eD"}],
         );
 
-        expect(variable).to.equal('{{external.functions.ionicLendingRate(34443,0xf0F161fDA2712DB8b566946122a5af183995e2eD,,)}}');
+        // 5th arg `false` is the `smartAlert` block param default added post-#2656
+        // (rates rearm). `getExternalVariableFromParameters` emits block defaults for
+        // params the user didn't provide, so `smartAlert:false` becomes a trailing arg.
+        expect(variable).to.equal('{{external.functions.ionicLendingRate(34443,0xf0F161fDA2712DB8b566946122a5af183995e2eD,,,false)}}');
     });
 
     it('should create sUSDE yield', () => {
