@@ -15,6 +15,7 @@ export const CHAINS = {
   HYPER_EVM: 999,
   SCROLL: 534352,
   MANTLE: 5000,   
-  INK: 57073,                                                                                                               
+  INK: 57073,
   PLASMA: 9745,
+  MONAD: 143,
 };
