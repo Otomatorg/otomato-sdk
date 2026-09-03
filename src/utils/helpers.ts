@@ -185,6 +185,13 @@ export function formatNonZeroDecimals(value: number | bigint, nonZeroDecimals: n
  *
  * li.quest is kept as a fallback for HyperEVM so the one path that still worked
  * before this change cannot regress.
+ *
+ * These functions are deliberately STATELESS. The SDK is a public npm package with
+ * no Redis and no DI container, and an in-process cache would be per-instance —
+ * the very thing webserver's priceStoreService warns against ("no in-memory maps
+ * per the two-instance rule"). Server-side callers must go through sharedlibs
+ * `WalletService.getCachedPrice`, which wraps these in the shared Redis cache
+ * under the `price:{chainId}:{address}:{currency}` key.
  */
 
 /** chainId -> DeFi Llama coins-API chain slug. Every entry verified live against a real token. */
@@ -211,7 +218,6 @@ export const CHAIN_ID_TO_LLAMA_SLUG: Record<number, string> = {
 
 const LLAMA_PRICES_URL = 'https://coins.llama.fi/prices/current/';
 const PRICE_TIMEOUT_MS = 8_000;
-const PRICE_CACHE_TTL_MS = 60_000;
 /** Keep each request URL well inside any gateway limit. */
 const LLAMA_BATCH_SIZE = 40;
 
@@ -221,18 +227,6 @@ interface PricedToken {
   decimals: number;
   priceUSD: number;
 }
-
-const priceCache = new Map<string, { at: number; value: PricedToken }>();
-
-const cacheGet = (key: string): PricedToken | undefined => {
-  const hit = priceCache.get(key);
-  if (!hit) return undefined;
-  if (Date.now() - hit.at > PRICE_CACHE_TTL_MS) {
-    priceCache.delete(key);
-    return undefined;
-  }
-  return hit.value;
-};
 
 const chunk = <T>(items: T[], size: number): T[][] => {
   const out: T[][] = [];
@@ -303,17 +297,14 @@ const fetchFromLifi = async (contractAddresses: string[]): Promise<Map<string, P
 
 /**
  * Resolve USD prices for a list of tokens on one chain.
- * Cached for 60s per (chain, address). Never throws — unresolved tokens are omitted.
+ * Never throws — unresolved tokens are simply omitted from the result.
  */
 const resolvePrices = async (chainId: number, contractAddresses: string[]): Promise<Map<string, PricedToken>> => {
   const resolved = new Map<string, PricedToken>();
   const missing: string[] = [];
 
   for (const address of contractAddresses) {
-    if (!address) continue;
-    const cached = cacheGet(`${chainId}:${String(address).toLowerCase()}`);
-    if (cached) resolved.set(address, { ...cached, contractAddress: address });
-    else if (!missing.includes(address)) missing.push(address);
+    if (address && !missing.includes(address)) missing.push(address);
   }
   if (missing.length === 0) return resolved;
 
@@ -326,15 +317,13 @@ const resolvePrices = async (chainId: number, contractAddresses: string[]): Prom
     for (const [address, priced] of fromLifi) resolved.set(address, priced);
   }
 
-  for (const [address, priced] of resolved) {
-    priceCache.set(`${chainId}:${String(address).toLowerCase()}`, { at: Date.now(), value: priced });
-  }
   return resolved;
 };
 
 /**
  * USD price of one token, or `null` when it cannot be resolved.
  * Callers already treat `null`/`undefined` as "no price"; this function never throws.
+ * Uncached — server-side callers should use sharedlibs `WalletService.getCachedPrice`.
  */
 export const getTokenPrice = async (chainId: number, contractAddress: string): Promise<number | null> => {
   const resolved = await resolvePrices(chainId, [contractAddress]);

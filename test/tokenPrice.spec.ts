@@ -1,5 +1,8 @@
 import { expect } from 'chai';
-import { CHAINS, CHAIN_ID_TO_LLAMA_SLUG, getTokenPrice, getTokenPrices } from '../src/index.js';
+// Imported from the modules directly rather than through ../src/index.js: the barrel pulls in
+// the 30MB generated Blocks.ts, which ts-node cannot compile in reasonable time.
+import { CHAINS } from '../src/constants/chains.js';
+import { CHAIN_ID_TO_LLAMA_SLUG, getTokenPrice, getTokenPrices } from '../src/utils/helpers.js';
 
 /**
  * #3032 — api.odos.xyz was shut down on 2026-07-30 and now serves a Cloudflare
@@ -10,8 +13,10 @@ import { CHAINS, CHAIN_ID_TO_LLAMA_SLUG, getTokenPrice, getTokenPrices } from '.
  * HyperEVM fallback, and — the part that actually bit us — a dead upstream
  * degrading to `null` instead of throwing.
  *
- * The module caches for 60s per (chain, address), so each case uses its own
- * fake addresses and cannot be served a previous case's result.
+ * These helpers are stateless by design: the SDK is a public npm package with no
+ * Redis, and a process-local cache would be per-instance. Redis caching lives in
+ * sharedlibs `WalletService.getCachedPrice`. Each case still uses its own fake
+ * addresses so intent stays readable.
  */
 
 const realFetch = globalThis.fetch;
@@ -95,12 +100,12 @@ describe('#3032 getTokenPrice — DeFi Llama replaces api.odos.xyz', () => {
     expect(await getTokenPrice(CHAINS.BASE, addr(0x108))).to.equal(null);
   });
 
-  it('caches for 60s — a repeat lookup issues no new request', async () => {
+  it('is stateless — a repeat lookup issues a fresh request (caching lives in sharedlibs Redis)', async () => {
     stubFetch(() => jsonResponse(llamaBody({ [`base:${addr(0x109)}`]: { symbol: 'C', decimals: 18, price: 7 } })));
     expect(await getTokenPrice(CHAINS.BASE, addr(0x109))).to.equal(7);
     const after = calls.length;
     expect(await getTokenPrice(CHAINS.BASE, addr(0x109))).to.equal(7);
-    expect(calls.length).to.equal(after);
+    expect(calls.length, 'the SDK must not hold a process-local cache').to.be.greaterThan(after);
   });
 });
 
@@ -177,6 +182,23 @@ describe('#3032 HyperEVM keeps its li.quest fallback', () => {
     stubFetch(() => jsonResponse(llamaBody({})));
     expect(await getTokenPrice(CHAINS.BASE, addr(0x503))).to.equal(null);
     expect(calls.some((u) => u.includes('li.quest'))).to.equal(false);
+  });
+});
+
+describe('#3032 native-token sentinels', () => {
+  // The SDK's own TOKENS list uses 0x0000..0 as the native-token address on most chains.
+  // Odos never priced it; DeFi Llama resolves it (and 0xEeEe..eE) to the chain's gas token,
+  // so a native-balance alert can be priced for the first time.
+  it('prices the zero address as the chain native token', async () => {
+    stubFetch(() =>
+      jsonResponse(llamaBody({ ['base:0x0000000000000000000000000000000000000000']: { symbol: 'ETH', decimals: 18, price: 2403.25 } })),
+    );
+    expect(await getTokenPrice(CHAINS.BASE, '0x0000000000000000000000000000000000000000')).to.equal(2403.25);
+  });
+
+  it('live: the zero address prices above zero on Base', async () => {
+    const price = await getTokenPrice(CHAINS.BASE, '0x0000000000000000000000000000000000000000');
+    expect(price as number).to.be.greaterThan(0);
   });
 });
 
