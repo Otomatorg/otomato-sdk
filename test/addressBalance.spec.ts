@@ -2,15 +2,64 @@
 import { expect } from 'chai';
 import { getUserProtocolBalances, rpcServices } from '../src/index.js';
 
+/** Ionic mUSDT on Mode — a wrapper this suite actually reads. */
+const MODE_PROBE_TOKEN = '0x94812F2eEa03A49869f95e1b5868C6f3206ee3D3';
+
+/**
+ * First candidate that can serve the calls getUserProtocolBalances makes.
+ *
+ * Probing eth_chainId is NOT sufficient: mode.drpc.org answers eth_chainId and
+ * balanceOf/decimals fine but returns "Temporary internal error" for symbol().
+ * Because the implementation reads all three under one Promise.all, that single
+ * rejection drops the whole entry — and Promise.allSettled then swallows it, so
+ * the caller sees [] instead of an error (otomato-dapp#3046). Probe with the
+ * discriminating call, not the cheap one.
+ */
+async function firstLiveRpc(candidates: (string | undefined)[], token: string): Promise<string> {
+  const urls = candidates.filter((u): u is string => Boolean(u));
+  const symbolSelector = '0x95d89b41';
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'eth_call',
+          params: [{ to: token, data: symbolSelector }, 'latest'],
+        }),
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!res.ok) continue;
+      const body = await res.json();
+      if (body?.result && !body?.error) return url;
+    } catch {
+      // unreachable or timed out — try the next candidate
+    }
+  }
+  return urls[urls.length - 1];
+}
+
 describe('getUserProtocolBalances', function() {
   // Adjust timeouts if calling real networks
   this.timeout(30000);
 
-  before(() => {
-    // Suppose we set the RPC for chain 8453 (Base) and 34443 (Mode)
+  before(async () => {
+    // These are live-network reads, so pinning one RPC makes the suite hostage
+    // to a single host. Probe candidates and take the first that serves the
+    // calls this code actually makes (see firstLiveRpc).
     rpcServices.setRPCs({
       8453: process.env.BASE_HTTPS_PROVIDER || 'https://base.llamarpc.com',
-      34443: 'https://mainnet.mode.network/',
+      34443: await firstLiveRpc(
+        [
+          process.env.MODE_HTTPS_PROVIDER,
+          'https://mainnet.mode.network',
+          'https://1rpc.io/mode',
+          'https://mode.drpc.org',
+        ],
+        MODE_PROBE_TOKEN,
+      ),
     });
   });
 
