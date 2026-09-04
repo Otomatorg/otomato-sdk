@@ -18,4 +18,5 @@ export const CHAINS = {
   INK: 57073,
   PLASMA: 9745,
   MONAD: 143,
+  ROBINHOOD: 4663,
 };

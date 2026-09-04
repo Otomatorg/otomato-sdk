@@ -2080,6 +2080,57 @@ export const TOKENS: Tokens = {
       nativeCurrency: true,
     },
   ],
+  4663: [
+    {
+      contractAddress: "0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73",
+      name: "WETH",
+      symbol: "WETH",
+      decimals: 18,
+      image: null,
+    },
+    {
+      contractAddress: "0x117cc2133c37B721F49dE2A7a74833232B3B4C0C",
+      name: "SPDR S&P 500 ETF Trust • Robinhood Token",
+      symbol: "SPY",
+      decimals: 18,
+      image: null,
+    },
+    {
+      contractAddress: "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+      name: "Global Dollar",
+      symbol: "USDG",
+      decimals: 6,
+      image: null,
+    },
+    {
+      contractAddress: "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
+      name: "USDe",
+      symbol: "USDe",
+      decimals: 18,
+      image: null,
+    },
+    {
+      contractAddress: "0x40858070814a57FdF33a613ae84fE0a8b4a874f7",
+      name: "syrupUSDG",
+      symbol: "syrupUSDG",
+      decimals: 6,
+      image: null,
+    },
+    {
+      contractAddress: "0xFEd493F38c1aAcb4EA4e6A11F8b9287849EE0096",
+      name: "Midas Fasanara Global Open",
+      symbol: "mGLO",
+      decimals: 18,
+      image: null,
+    },
+    {
+      contractAddress: "0xde770c84FE66E063336b31737cFE9790f18c4087",
+      name: "Spark Savings USDG",
+      symbol: "spUSDG",
+      decimals: 6,
+      image: null,
+    },
+  ],
   9745: [
     {
       contractAddress: "0x6100e367285b01f48d07953803a2d8dca5d19873",

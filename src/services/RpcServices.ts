@@ -59,6 +59,9 @@ class RPCServices {
     if (env.MONAD_HTTPS_PROVIDER) {
       this.rpcUrls[CHAINS.MONAD] = env.MONAD_HTTPS_PROVIDER;
     }
+    if (env.ROBINHOOD_HTTPS_PROVIDER) {
+      this.rpcUrls[CHAINS.ROBINHOOD] = env.ROBINHOOD_HTTPS_PROVIDER;
+    }
   }
 
   // Function to get the RPC URL for a specific chainId
