@@ -256,8 +256,8 @@ export async function getUserProtocolBalances(
 
   const results: ProtocolBalanceResult[] = [];
 
-  await Promise.allSettled(addressesToCheck.map(async ({ protocol, token }) => {
-    
+  const settled = await Promise.allSettled(addressesToCheck.map(async ({ protocol, token }) => {
+
     const contract = new ethers.Contract(token, readABI, provider);
 
     const [rawBalanceBN, decimals, symbol] = await Promise.all([
@@ -310,6 +310,33 @@ export async function getUserProtocolBalances(
       underlyingBalance,               // computed by getBalanceInUnderlying
     });
   }));
+
+  // A rejected entry is discarded from `results` above — log it so a failed
+  // read is never silently indistinguishable from "this protocol has no
+  // balance". See otomato-dapp#3046.
+  settled.forEach((outcome, i) => {
+    if (outcome.status === 'rejected') {
+      const { protocol, token } = addressesToCheck[i];
+      const reason = outcome.reason instanceof Error ? outcome.reason.message : String(outcome.reason);
+      console.error(
+        `getUserProtocolBalances: balance read failed for protocol=${protocol} token=${token} chainId=${chainId}: ${reason}`
+      );
+    }
+  });
+
+  // If every read rejected, `results` is `[]` for the same reason a genuinely
+  // empty wallet would be — a caller cannot tell "no positions" from "the RPC
+  // is down" (otomato-dapp#3046). Surface it instead of returning silently.
+  const allFailed = settled.length > 0 && settled.every((s) => s.status === 'rejected');
+  if (allFailed) {
+    const firstRejected = settled.find((s): s is PromiseRejectedResult => s.status === 'rejected')!;
+    const reason = firstRejected.reason instanceof Error ? firstRejected.reason.message : String(firstRejected.reason);
+    throw new Error(
+      `getUserProtocolBalances: all ${settled.length} balance read(s) failed for chainId=${chainId} ` +
+      `address=${address} contractAddress=${contractAddress} — likely an RPC failure, not an empty portfolio. ` +
+      `First error: ${reason}`
+    );
+  }
 
   return results;
 }
