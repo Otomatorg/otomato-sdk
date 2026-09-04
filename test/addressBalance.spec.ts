@@ -151,4 +151,32 @@ describe('getUserProtocolBalances', function() {
       expect(err.message).to.include('No token map for chainId=99999');
     }
   });
+
+  // Regression test for otomato-dapp#3046: an all-failed read must be a
+  // visible error, never a silent [] indistinguishable from "no positions".
+  it('should throw a descriptive error when every protocol balance read fails (RPC down)', async () => {
+    const chainId = 8453;
+    const address = '0x757A004bE766f745fd4CD75966CF6C8Bb84FD7c1';
+    const baseUSDC = '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913';
+
+    // Point Base at an unreachable host so every contract call rejects with a
+    // deterministic ECONNREFUSED — no network flakiness, no timeout wait.
+    rpcServices.setRPCs({ 8453: 'http://127.0.0.1:1' });
+
+    try {
+      await getUserProtocolBalances({ chainId, address, contractAddress: baseUSDC });
+      expect.fail('Expected getUserProtocolBalances to throw when every read fails');
+    } catch (err: any) {
+      expect(err.message).to.include('all');
+      expect(err.message).to.include('balance read(s) failed');
+      expect(err.message).to.include(`chainId=${chainId}`);
+      expect(err.message).to.not.equal('No token map for chainId=99999'); // sanity: didn't hit the wrong branch
+    } finally {
+      // Restore — this is the last test in the file, but keep the suite
+      // order-independent for anything added after it later.
+      rpcServices.setRPCs({
+        8453: process.env.BASE_HTTPS_PROVIDER || 'https://base.llamarpc.com',
+      });
+    }
+  });
 });
