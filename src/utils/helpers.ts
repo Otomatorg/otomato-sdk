@@ -214,6 +214,11 @@ export const CHAIN_ID_TO_LLAMA_SLUG: Record<number, string> = {
   [CHAINS.AVALANCHE]: 'avax',
   [CHAINS.INK]: 'ink',
   [CHAINS.SCROLL]: 'scroll',
+  // #3038 added Robinhood Chain to CHAINS after #3032 was written. Slug probed 2026-09-08:
+  // 'robinhood' prices GOOGL 0x2e0847E8... AND USDG 0x5fc5360D...; 'robinhoodchain' is a
+  // partial alias returning USDG only. Native 0x0 resolves to ETH on BOTH, so the native
+  // sentinel alone does not disambiguate them - always probe a real ERC20.
+  [CHAINS.ROBINHOOD]: 'robinhood',
 };
 
 const LLAMA_PRICES_URL = 'https://coins.llama.fi/prices/current/';
