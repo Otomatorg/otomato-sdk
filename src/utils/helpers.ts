@@ -169,48 +169,175 @@ export function formatNonZeroDecimals(value: number | bigint, nonZeroDecimals: n
     return sign + result;
 }
 
-export const getTokenPrice = async (chainId: number, contractAddress: string): Promise<number> => {
-  if (chainId === 999) {
-    const tokenPriceList = await fetch(
-      `https://li.quest/v1/tokens?chains=999`,
-      {
-        headers: {
-          'x-lifi-api-key': process.env.LIFI_API_KEY ?? ''
-        }
-      }
-    );
-    const tokenPriceListJson = await tokenPriceList.json();
-    const tokenPrice = tokenPriceListJson.tokens?.[999]?.find((token: any) => token.address === contractAddress);
-    return tokenPrice?.priceUSD;
-  }
-  const tokenPrice = await fetch(`https://api.odos.xyz/pricing/token/${chainId}/${contractAddress}`);
-  const tokenPriceJson = await tokenPrice.json();
-  return tokenPriceJson?.price;
+/**
+ * #3032 — token pricing.
+ *
+ * `api.odos.xyz` was shut down on 2026-07-30 and the whole host now serves a
+ * Cloudflare error page (HTTP 530, `error code: 1033`). Because the old code did
+ * `response.json()` on it, the failure surfaced as a JSON *parse* error
+ * (`Unexpected token '<', "<!doctype "...`) thrown out of every caller, not as an
+ * HTTP error — so block `after`/`handler` functions blew up instead of degrading.
+ *
+ * Prices now come from DeFi Llama's keyless coins API, which is the same upstream
+ * our own price store admits from (`source: "defillama"`), covers every chain in
+ * CHAINS, and prices arbitrary tokens on demand — including unclaimed reward
+ * tokens the holdings-driven internal store can never admit.
+ *
+ * li.quest is kept as a fallback for HyperEVM so the one path that still worked
+ * before this change cannot regress.
+ *
+ * These functions are deliberately STATELESS. The SDK is a public npm package with
+ * no Redis and no DI container, and an in-process cache would be per-instance —
+ * the very thing webserver's priceStoreService warns against ("no in-memory maps
+ * per the two-instance rule"). Server-side callers must go through sharedlibs
+ * `WalletService.getCachedPrice`, which wraps these in the shared Redis cache
+ * under the `price:{chainId}:{address}:{currency}` key.
+ */
+
+/** chainId -> DeFi Llama coins-API chain slug. Every entry verified live against a real token. */
+export const CHAIN_ID_TO_LLAMA_SLUG: Record<number, string> = {
+  [CHAINS.ETHEREUM]: 'ethereum',
+  [CHAINS.OPTIMISM]: 'optimism',
+  [CHAINS.BINANCE]: 'bsc',
+  [CHAINS.POLYGON]: 'polygon',
+  [CHAINS.MONAD]: 'monad',
+  [CHAINS.SONIC]: 'sonic',
+  [CHAINS.HYPER_EVM]: 'hyperliquid',
+  [CHAINS.ABSTRACT]: 'abstract',
+  [CHAINS.MANTLE]: 'mantle',
+  [CHAINS.SOMNIA]: 'somnia',
+  [CHAINS.BASE]: 'base',
+  [CHAINS.PLASMA]: 'plasma',
+  [CHAINS.OASIS]: 'sapphire',
+  [CHAINS.MODE]: 'mode',
+  [CHAINS.ARBITRUM]: 'arbitrum',
+  [CHAINS.AVALANCHE]: 'avax',
+  [CHAINS.INK]: 'ink',
+  [CHAINS.SCROLL]: 'scroll',
+};
+
+const LLAMA_PRICES_URL = 'https://coins.llama.fi/prices/current/';
+const PRICE_TIMEOUT_MS = 8_000;
+/** Keep each request URL well inside any gateway limit. */
+const LLAMA_BATCH_SIZE = 40;
+
+interface PricedToken {
+  contractAddress: string;
+  symbol: string;
+  decimals: number;
+  priceUSD: number;
 }
 
-export const getTokenPrices = async (chainId: number, contractAddresses: string[]): Promise<{ contractAddress: string, symbol: string, decimals: number, priceUSD: number }[]> => {
-  if (chainId === 999) {
-    const tokenPriceList = await fetch(
-      `https://li.quest/v1/tokens?chains=999`,
-      {
-        headers: {
-          'x-lifi-api-key': process.env.LIFI_API_KEY ?? ''
-        }
-      }
-    );
-    const tokenPriceListJson = await tokenPriceList.json();
-    const tokenPrices = tokenPriceListJson.tokens?.[999]?.filter((token: any) => contractAddresses.includes(token.address));
-    return tokenPrices.map((token: any) => {
-      return {
-        contractAddress: token.address,
-        symbol: token.symbol,
-        decimals: token.decimals,
-        priceUSD: token.priceUSD
-      };
+const chunk = <T>(items: T[], size: number): T[][] => {
+  const out: T[][] = [];
+  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
+  return out;
+};
+
+const fetchJson = async (url: string, init?: any): Promise<any | null> => {
+  try {
+    const response = await fetch(url, { ...(init ?? {}), signal: AbortSignal.timeout(PRICE_TIMEOUT_MS) });
+    if (!response.ok) return null;
+    return await response.json();
+  } catch {
+    // A dead host, a timeout, or an HTML error page must degrade to "no price",
+    // never throw into the caller. See the #3032 note above.
+    return null;
+  }
+};
+
+/** Look tokens up on DeFi Llama. Unknown tokens are simply absent from the result. */
+const fetchFromLlama = async (chainId: number, contractAddresses: string[]): Promise<Map<string, PricedToken>> => {
+  const found = new Map<string, PricedToken>();
+  const slug = CHAIN_ID_TO_LLAMA_SLUG[chainId];
+  if (!slug || contractAddresses.length === 0) return found;
+
+  for (const batch of chunk(contractAddresses, LLAMA_BATCH_SIZE)) {
+    const json = await fetchJson(LLAMA_PRICES_URL + batch.map((a) => `${slug}:${a}`).join(','));
+    const coins = json?.coins ?? {};
+    for (const address of batch) {
+      const coin = coins[`${slug}:${address}`];
+      const price = Number(coin?.price);
+      if (!Number.isFinite(price) || price <= 0) continue;
+      found.set(address, {
+        contractAddress: address,
+        symbol: coin.symbol,
+        decimals: Number(coin.decimals),
+        priceUSD: price,
+      });
+    }
+  }
+  return found;
+};
+
+/** HyperEVM-only fallback: the source that kept working while Odos was down. */
+const fetchFromLifi = async (contractAddresses: string[]): Promise<Map<string, PricedToken>> => {
+  const found = new Map<string, PricedToken>();
+  if (contractAddresses.length === 0) return found;
+
+  const json = await fetchJson(`https://li.quest/v1/tokens?chains=${CHAINS.HYPER_EVM}`, {
+    headers: { 'x-lifi-api-key': process.env.LIFI_API_KEY ?? '' },
+  });
+  const tokens: any[] = json?.tokens?.[CHAINS.HYPER_EVM] ?? [];
+  const byAddress = new Map(tokens.map((t: any) => [String(t.address).toLowerCase(), t]));
+
+  for (const address of contractAddresses) {
+    const token = byAddress.get(String(address).toLowerCase());
+    const price = Number(token?.priceUSD);
+    if (!Number.isFinite(price) || price <= 0) continue;
+    found.set(address, {
+      contractAddress: address,
+      symbol: token.symbol,
+      decimals: Number(token.decimals),
+      priceUSD: price,
     });
   }
-  return [];
-}
+  return found;
+};
+
+/**
+ * Resolve USD prices for a list of tokens on one chain.
+ * Never throws — unresolved tokens are simply omitted from the result.
+ */
+const resolvePrices = async (chainId: number, contractAddresses: string[]): Promise<Map<string, PricedToken>> => {
+  const resolved = new Map<string, PricedToken>();
+  const missing: string[] = [];
+
+  for (const address of contractAddresses) {
+    if (address && !missing.includes(address)) missing.push(address);
+  }
+  if (missing.length === 0) return resolved;
+
+  const fromLlama = await fetchFromLlama(chainId, missing);
+  for (const [address, priced] of fromLlama) resolved.set(address, priced);
+
+  const stillMissing = missing.filter((a) => !fromLlama.has(a));
+  if (stillMissing.length > 0 && chainId === CHAINS.HYPER_EVM) {
+    const fromLifi = await fetchFromLifi(stillMissing);
+    for (const [address, priced] of fromLifi) resolved.set(address, priced);
+  }
+
+  return resolved;
+};
+
+/**
+ * USD price of one token, or `null` when it cannot be resolved.
+ * Callers already treat `null`/`undefined` as "no price"; this function never throws.
+ * Uncached — server-side callers should use sharedlibs `WalletService.getCachedPrice`.
+ */
+export const getTokenPrice = async (chainId: number, contractAddress: string): Promise<number | null> => {
+  const resolved = await resolvePrices(chainId, [contractAddress]);
+  return resolved.get(contractAddress)?.priceUSD ?? null;
+};
+
+/**
+ * USD prices for many tokens on one chain, in a single upstream request.
+ * Tokens that cannot be resolved are omitted, so the result may be shorter than the input.
+ */
+export const getTokenPrices = async (chainId: number, contractAddresses: string[]): Promise<PricedToken[]> => {
+  const resolved = await resolvePrices(chainId, contractAddresses);
+  return contractAddresses.map((a) => resolved.get(a)).filter((p): p is PricedToken => Boolean(p));
+};
 
 export const getETHAlternativeTokensSymbols = () => {
   return {
