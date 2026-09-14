@@ -301,6 +301,34 @@ const fetchFromLifi = async (contractAddresses: string[]): Promise<Map<string, P
 };
 
 /**
+ * otomato-dapp#3059 — an optional price source consulted BEFORE DeFi Llama.
+ *
+ * Otomato runs an internal price registry (#2817) that its own alerts and portfolio
+ * read, so the same token shows one price everywhere. This SDK is published to npm and
+ * cannot reach that registry — it is behind a private host and auth — so DeFi Llama
+ * stays the default and third-party users see no change at all.
+ *
+ * Our own infrastructure injects a resolver at boot instead. In practice sharedlibs
+ * does this, so anything running inside the platform gets registry prices even when it
+ * reaches for the SDK helper directly.
+ *
+ * Contract for an implementer: return a positive number to answer, `null`/`undefined`
+ * to defer to DeFi Llama, and NEVER throw — a resolver that throws is ignored and the
+ * lookup carries on, because a price lookup must not be able to take down its caller.
+ */
+export type PriceResolver = (chainId: number, contractAddress: string) => Promise<number | null | undefined>;
+
+let injectedPriceResolver: PriceResolver | null = null;
+
+/** Install the resolver above. Pass `null` to go back to the DeFi Llama default. */
+export const setPriceResolver = (resolver: PriceResolver | null): void => {
+  injectedPriceResolver = resolver;
+};
+
+/** Whether a resolver is currently installed — for diagnostics, not control flow. */
+export const hasPriceResolver = (): boolean => injectedPriceResolver !== null;
+
+/**
  * Resolve USD prices for a list of tokens on one chain.
  * Never throws — unresolved tokens are simply omitted from the result.
  */
@@ -331,6 +359,18 @@ const resolvePrices = async (chainId: number, contractAddresses: string[]): Prom
  * Uncached — server-side callers should use sharedlibs `WalletService.getCachedPrice`.
  */
 export const getTokenPrice = async (chainId: number, contractAddress: string): Promise<number | null> => {
+  // #3059 an injected resolver answers first; anything it declines falls through to the
+  // DeFi Llama path below, unchanged. Only the singular helper takes this route: the
+  // plural one promises symbol and decimals too, which a price resolver has no way to
+  // supply, so fabricating them there would be worse than not answering.
+  if (injectedPriceResolver) {
+    try {
+      const price = await injectedPriceResolver(chainId, contractAddress);
+      if (typeof price === 'number' && price > 0) return price;
+    } catch {
+      // a broken resolver must never break the lookup
+    }
+  }
   const resolved = await resolvePrices(chainId, [contractAddress]);
   return resolved.get(contractAddress)?.priceUSD ?? null;
 };
